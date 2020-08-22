@@ -1,7 +1,7 @@
 baseURL: http://example.org/                  # URL of the website
 languageCode: en-us                           # Locale
 title: Acme Corporation                       # Name of the website
-theme: github.com/hugoinaction/Eclectic       # Name of the theme
+theme: github.com/hugoinaction/Universal       # Name of the theme, Eclectic or Universal
 publishDir: docs
 author:                                       # Information about the website author
   facebook: "https://facebook.com/example"
