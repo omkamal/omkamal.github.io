@@ -1,0 +1,9 @@
+{
+  "name": "Acme Corporation",
+  "short_name": "Acme Corporation",
+  "start_url": "/",
+  "scope": "/",
+  "theme_color": "#71B180",
+  "background_color": "#71B180",
+  "display": "standalone"
+}
