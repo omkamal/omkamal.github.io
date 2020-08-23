@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>Fiting mtcars dynamically.</title>
+	<meta name="description" content="Fiting mtcars dynamically.">
+	<meta name="author" content="A student in Cairo">
+	<meta name="generator" content="slidify" />
+	
+	<!-- LOAD STYLE SHEETS -->
+	<link rel="stylesheet" href="libraries/frameworks/html5slides/default/styles.css">
+	<link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />  <link rel="stylesheet" href = "assets/css/ribbons.css">
+  
+</head>
+<body style='display: none'>
+	<section class='slides layout-regular template-regular'>
+     <article class="" id="slide-1" style="background:;">
+  <h3>Project Idea</h3>
+  <ul>
+<li>The project loads the popular <strong>mtcars</strong> data frame.</li>
+<li>It allow the user to fit dynamically any column in the data frame on any set of predictors.</li>
+<li>The left side panel is used to select the <strong>outcome</strong> and the <strong>predictors</strong>.</li>
+<li>The server then process dynamically the inputs and generate the output on the right panel.</li>
+</ul>
+
+</article>
+
+<article class="class" id="id" style="background:;">
+  <h3>Server processing</h3>
+  <ul>
+<li>The server carryout several processing:
+
+<ol>
+<li>It subsets the <strong>mtcars</strong> data frame based on the user selection.</li>
+<li>It draw a pairs plot holding both the <strong>predictors</strong> and the <strong>outcome</strong>.</li>
+<li>It fits a linear model based on that selection and dumps a summary of the fit.</li>
+<li>It prints out the subset of the dataframe for the user.</li>
+</ol></li>
+</ul>
+
+</article>
+
+<article class="" id="slide-3" style="background:;">
+  <h3>Sample of the user plot</h3>
+  <p><img src="assets/fig/unnamed-chunk-1.png" alt="plot of chunk unnamed-chunk-1"> </p>
+
+</article>
+
+<article class="" id="slide-4" style="background:;">
+  <h3>Sample of the server R code</h3>
+  <pre><code class="r">prepare_data_frame &lt;- function(outcome,predictors) {
+  df &lt;- cbind(mtcars[,outcome],mtcars[,predictors])
+  colnames(df) &lt;- c(outcome,predictors)
+  return(df)
+}
+
+require(shiny)
+shinyServer(
+  function(input, output) {
+    output$y &lt;- renderPrint({input$outcome})
+    output$x &lt;- renderPrint({input$predictors})
+    output$df &lt;- renderPrint({prepare_data_frame(input$outcome,input$predictors)})
+    output$pair_plot &lt;- renderPlot({
+      df1 &lt;- prepare_data_frame(input$outcome,input$predictors)
+      pairs(df1)})
+    output$my_model &lt;- renderPrint({
+      f0 &lt;- paste(input$outcome,&quot;~&quot;,paste(input$predictors,collapse=&quot;+&quot;),sep=&quot;&quot;)
+      f1 &lt;- formula(f0)
+      lm1 &lt;- lm(f1,data=mtcars)
+      summary(lm1)
+    })})
+</code></pre>
+
+</article>
+
+<article class="" id="slide-5" style="background:;">
+  <h3>User Interface code</h3>
+  <pre><code class="r">shinyUI(
+  pageWithSidebar(
+    headerPanel(&quot;Fitting mtcars variables and predictors&quot;),
+    sidebarPanel(
+      h2(&quot;Introduction&quot;),
+      p(&quot;This application fits any outcome in the mtcars data frame with any number of predictors within the mtcars. It visualize the output and predictors relationship in scatter matrix and the linear model summary is displayed below the scatter matrix.&quot;),
+      h2(&quot;Choosing Outcome and Predictors&quot;),
+      h3(&quot;Chossing Outcome&quot;),
+      selectInput(&quot;outcome&quot;, &quot;Choose Outcome&quot;, colnames(mtcars), selected = &quot;mpg&quot;, multiple = FALSE,selectize = TRUE),
+      h3(&quot;Chossing predictors&quot;),
+      checkboxGroupInput(&quot;predictors&quot;,&quot;Choose Predictors&quot;,colnames(mtcars),selected = &quot;wt&quot;),
+      includeMarkdown(path=&quot;./help.Rmd&quot;)),    
+    mainPanel(
+      h2(&quot;Scattar Plot and Model Results&quot;),
+      h3(&quot;Scatter Plot&quot;),
+      plotOutput(&#39;pair_plot&#39;),
+      h3(&quot;Model Results&quot;),
+      verbatimTextOutput(&quot;my_model&quot;),
+      h3(&quot;Data&quot;),
+      verbatimTextOutput(&quot;df&quot;))))
+</code></pre>
+
+</article>
+
+  </section>
+</body>
+  <!-- LOAD JAVASCRIPTS  -->
+	<script src='libraries/frameworks/html5slides/default/slides.js'></script>
+	<!-- LOAD HIGHLIGHTER JS FILES -->
+	<script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	<!-- DONE LOADING HIGHLIGHTER JS FILES -->
+	 
+	</html>
