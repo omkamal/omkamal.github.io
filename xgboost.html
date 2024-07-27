@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xgboost Cheatsheet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+            min-height: calc(100vh - 20mm);
+        }
+
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+
+        li {
+            margin-bottom: 3px;
+        }
+
+        .emoji {
+            font-style: normal;
+        }
+
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+
+        code {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 8px;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 4px;
+            padding: 3px;
+            margin: 3px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        strong {
+            color: #2980b9;
+        }
+
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+            .container {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn</a></div>
+    <h1>Xgboost Cheatsheet</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Introduction</h2>
+            <ul>
+                <li><span class="emoji">🚀</span> <strong>Xgboost</strong> is an optimized gradient boosting library.</li>
+                <li><span class="emoji">📈</span> Used for <strong>supervised learning</strong> problems.</li>
+                <li><span class="emoji">🔍</span> Efficiently handles <strong>large datasets</strong>.</li>
+            </ul>
+            <h2>Core Concepts</h2>
+            <ul>
+                <li><span class="emoji">🌳</span> <strong>Boosting</strong>: Ensemble technique combining weak learners.</li>
+                <li><span class="emoji">🔥</span> <strong>Gradient Boosting</strong>: Minimizes loss by adding models sequentially.</li>
+                <li><span class="emoji">⚙️</span> <strong>Regularization</strong>: Prevents overfitting with L1/L2 penalties.</li>
+            </ul>
+            <h2>Installation</h2>
+            <ul>
+                <li><span class="emoji">💻</span> Install via pip: <code>pip install xgboost</code></li>
+                <li><span class="emoji">📦</span> Install via conda: <code>conda install -c conda-forge xgboost</code></li>
+            </ul>
+            <h2>Xgboost Regression</h2>
+            <ul>
+                <li><span class="emoji">📉</span> Used for predicting continuous values.</li>
+                <li><span class="emoji">🔧</span> <code>model = xgb.XGBRegressor()</code></li>
+                <li><span class="emoji">⚙️</span> <code>model.fit(X_train, y_train)</code></li>
+                <li><span class="emoji">🔍</span> <code>y_pred = model.predict(X_test)</code></li>
+            </ul>
+            <h2>Xgboost Classifier</h2>
+            <ul>
+                <li><span class="emoji">🔢</span> Used for predicting categorical values.</li>
+                <li><span class="emoji">🔧</span> <code>model = xgb.XGBClassifier()</code></li>
+                <li><span class="emoji">⚙️</span> <code>model.fit(X_train, y_train)</code></li>
+                <li><span class="emoji">🔍</span> <code>y_pred = model.predict(X_test)</code></li>
+            </ul>
+            <h2>Multilabel Classifier</h2>
+            <ul>
+                <li><span class="emoji">🏷️</span> Used for predicting multiple labels for each instance.</li>
+                <li><span class="emoji">🔧</span> <code>from sklearn.multioutput import MultiOutputClassifier</code></li>
+                <li><span class="emoji">⚙️</span> <code>model = MultiOutputClassifier(xgb.XGBClassifier())</code></li>
+                <li><span class="emoji">🛠️</span> <code>model.fit(X_train, y_train)</code></li>
+                <li><span class="emoji">🔍</span> <code>y_pred = model.predict(X_test)</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Basic Usage</h2>
+            <ul>
+                <li><span class="emoji">📝</span> Import library: <code>import xgboost as xgb</code></li>
+                <li><span class="emoji">🔢</span> Create DMatrix: <code>data = xgb.DMatrix(data, label=labels)</code></li>
+                <li><span class="emoji">⚡</span> Train model: <code>model = xgb.train(params, data, num_rounds)</code></li>
+            </ul>
+            <h2>Parameters</h2>
+            <ul>
+                <li><span class="emoji">🔧</span> <strong>eta</strong>: Learning rate, default 0.3</li>
+                <li><span class="emoji">🌲</span> <strong>max_depth</strong>: Max depth of tree, default 6</li>
+                <li><span class="emoji">💡</span> <strong>objective</strong>: Defines the loss function to be minimized.</li>
+            </ul>
+            <h2>Evaluation</h2>
+            <ul>
+                <li><span class="emoji">📊</span> Use <strong>cross-validation</strong> with <code>xgb.cv()</code></li>
+                <li><span class="emoji">🔍</span> Evaluate with metrics like <strong>rmse</strong>, <strong>logloss</strong>.</li>
+            </ul>
+            <h2>Hyperparameter Tuning</h2>
+            <ul>
+                <li><span class="emoji">🔄</span> Use GridSearchCV for hyperparameter optimization.</li>
+                <li><code>
+from sklearn.model_selection import GridSearchCV<br>
+param_grid = {<br>
+	'max_depth': [3, 4, 5],<br>
+	'eta': [0.01, 0.1, 0.2],<br>
+	'n_estimators': [100, 200 , 300]<br>
+	}<br>
+grid_search = GridSearchCV(estimator=xgb.XGBClassifier(),<br>
+param_grid=param_grid,<br>
+scoring='accuracy',<br>
+cv=3,<br>
+verbose=1)<br>
+grid_search.fit(X_train, y_train)<br>
+print(grid_search.best_params_)
+</code></li>
+<li><span class="emoji">🚀</span> Perform RandomizedSearchCV for faster tuning.</li>
+<li><code>
+from sklearn.model_selection import RandomizedSearchCV<br>
+random_search = RandomizedSearchCV(estimator=xgb.XGBClassifier(),<br>
+param_distributions=param_grid,<br>
+	n_iter=10,<br>
+	scoring='accuracy',<br>
+	cv=3,<br>
+	verbose=1)<br>
+random_search.fit(X_train, y_train)<br>
+print(random_search.best_params_)
+</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Advanced Features</h2>
+            <ul>
+                <li><span class="emoji">🚀</span> <strong>GPU acceleration</strong>: Use <code>tree_method='gpu_hist'</code>.</li>
+                <li><span class="emoji">⚙️</span> <strong>Custom objective</strong>: Define your own loss function.</li>
+                <li><span class="emoji">🌐</span> <strong>Distributed training</strong>: Scale Xgboost with Dask or Spark.</li>
+            </ul>
+            <h2>Tuning</h2>
+            <ul>
+                <li><span class="emoji">🎯</span> Use <strong>GridSearchCV</strong> for hyperparameter tuning.</li>
+                <li><span class="emoji">🔄</span> Perform <strong>early stopping</strong> to prevent overfitting.</li>
+            </ul>
+            <h2>Model Saving and Loading</h2>
+            <ul>
+                <li><span class="emoji">💾</span> Save model: <code>model.save_model('model.json')</code></li>
+                <li><span class="emoji">📂</span> Load model: <code>model = xgb.Booster()</code> <code>model.load_model('model.json')</code></li>
+            </ul>
+            <h2>Feature Importance</h2>
+            <ul>
+                <li><span class="emoji">🔍</span> Plot importance: <code>xgb.plot_importance(model)</code></li>
+                <li><span class="emoji">📊</span> Get importance: <code>model.get_score()</code></li>
+            </ul>
+            <h2>Export Model as ONNX</h2>
+            <ul>
+                <li><span class="emoji">📦</span> Install ONNX: <code>pip install onnxruntime skl2onnx</code></li>
+                <li><span class="emoji">🔧</span> Convert model: <code>
+import skl2onnx<br>
+from skl2onnx import convert_sklearn<br>
+from skl2onnx.common.data_types import FloatTensorType<br>
+initial_type = [('float_input', FloatTensorType([None, X_train.shape[1]]))]<br>
+onnx_model = convert_sklearn(model, initial_types=initial_type)<br>
+with open("model.onnx", "wb") as f:<br>
+f.write(onnx_model.SerializeToString())
+                    </code></li>
+                <li><span class="emoji">⚙️</span> Load and run with ONNX Runtime: <code>
+import onnxruntime as rt<br>
+sess = rt.InferenceSession("model.onnx")<br>
+input_name = sess.get_inputs()[0].name<br>
+label_name = sess.get_outputs()[0].name<br>
+pred_onx = sess.run([label_name], {input_name: X_test.astype(np.float32)})[0]
+                    </code></li>
+            </ul>
+            <h2>Resources</h2>
+            <ul>
+                <li><span class="emoji">📚</span> Official Documentation: <a href="https://xgboost.readthedocs.io/">xgboost.readthedocs.io</a></li>
+                <li><span class="emoji">📝</span> Tutorials: <a href="https://github.com/dmlc/xgboost">github.com/dmlc/xgboost</a></li>
+                <li><span class="emoji">🌟</span> Kaggle: Explore Xgboost kernels on <a href="https://www.kaggle.com/">Kaggle</a>.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
