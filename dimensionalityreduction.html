@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>t-SNE and UMAP Dimensionality Reduction Cheat Sheet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+            min-height: calc(100vh - 20mm);
+        }
+        
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        .emoji {
+            font-style: normal;
+        }
+        
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        
+        code {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 8px;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 4px;
+            padding: 3px;
+            margin: 3px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        strong {
+            color: #2980b9;
+        }
+        
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+            .container {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn Profile</a></div>
+    <h1>t-SNE and UMAP Dimensionality Reduction Cheat Sheet</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Introduction to Dimensionality Reduction <i class="fas fa-compress-arrows-alt"></i></h2>
+            <ul>
+                <li><span class="emoji">🧮</span> <strong>Reduces</strong> high-dimensional data to lower dimensions.</li>
+                <li><span class="emoji">👁️</span> Enables <strong>visualization</strong> of complex datasets.</li>
+                <li><span class="emoji">🏃</span> Improves <strong>computational efficiency</strong> for ML algorithms.</li>
+                <li><span class="emoji">🔍</span> Helps in <strong>feature selection</strong> and data exploration.</li>
+                <li><span class="emoji">🧠</span> Preserves <strong>important structures</strong> in the data.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>t-SNE Overview <i class="fas fa-project-diagram"></i></h2>
+            <ul>
+                <li><span class="emoji">📊</span> <strong>t-Distributed Stochastic Neighbor Embedding</strong></li>
+                <li><span class="emoji">🎯</span> Focuses on preserving <strong>local structures</strong> in data.</li>
+                <li><span class="emoji">🔄</span> Uses <strong>probability distributions</strong> to map similarities.</li>
+                <li><span class="emoji">🧮</span> Employs <strong>t-distribution</strong> in low-dimensional space.</li>
+                <li><span class="emoji">👥</span> Excels at revealing <strong>clusters</strong> and patterns.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>UMAP Overview <i class="fas fa-network-wired"></i></h2>
+            <ul>
+                <li><span class="emoji">📊</span> <strong>Uniform Manifold Approximation and Projection</strong></li>
+                <li><span class="emoji">🌐</span> Based on <strong>topological data analysis</strong> and manifold learning.</li>
+                <li><span class="emoji">⚡</span> Generally <strong>faster</strong> than t-SNE for large datasets.</li>
+                <li><span class="emoji">🔗</span> Preserves both <strong>local and global</strong> data structures.</li>
+                <li><span class="emoji">🔢</span> Can handle <strong>larger datasets</strong> more efficiently.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>t-SNE Algorithm Steps <i class="fas fa-list-ol"></i></h2>
+            <ul>
+                <li><span class="emoji">1️⃣</span> Compute <strong>pairwise similarities</strong> in high-dimensional space.</li>
+                <li><span class="emoji">2️⃣</span> Initialize <strong>random points</strong> in low-dimensional space.</li>
+                <li><span class="emoji">3️⃣</span> Compute <strong>pairwise similarities</strong> in low-dimensional space.</li>
+                <li><span class="emoji">4️⃣</span> Minimize <strong>KL divergence</strong> between distributions.</li>
+                <li><span class="emoji">5️⃣</span> <strong>Iterate</strong> until convergence or max iterations reached.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>UMAP Algorithm Steps <i class="fas fa-list-ol"></i></h2>
+            <ul>
+                <li><span class="emoji">1️⃣</span> Construct <strong>fuzzy topological representation</strong> of data.</li>
+                <li><span class="emoji">2️⃣</span> Create <strong>weighted graph</strong> from fuzzy union.</li>
+                <li><span class="emoji">3️⃣</span> Optimize <strong>low-dimensional layout</strong> to match graph.</li>
+                <li><span class="emoji">4️⃣</span> Apply <strong>force-directed layout algorithm</strong>.</li>
+                <li><span class="emoji">5️⃣</span> <strong>Refine</strong> layout to balance local and global structure.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>t-SNE Parameters <i class="fas fa-sliders-h"></i></h2>
+            <ul>
+                <li><span class="emoji">🎛️</span> <strong>Perplexity</strong>: Balance between local and global aspects.</li>
+                <li><span class="emoji">🔢</span> <strong>Number of iterations</strong>: Affects convergence quality.</li>
+                <li><span class="emoji">🏃</span> <strong>Learning rate</strong>: Controls step size in optimization.</li>
+                <li><span class="emoji">🌱</span> <strong>Random state</strong>: Seed for reproducibility.</li>
+                <li><span class="emoji">📏</span> <strong>Metric</strong>: Distance measure (e.g., Euclidean, cosine).</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>UMAP Parameters <i class="fas fa-sliders-h"></i></h2>
+            <ul>
+                <li><span class="emoji">👥</span> <strong>n_neighbors</strong>: Size of local neighborhood.</li>
+                <li><span class="emoji">📏</span> <strong>min_dist</strong>: Minimum distance between points.</li>
+                <li><span class="emoji">🔢</span> <strong>n_components</strong>: Dimensionality of output.</li>
+                <li><span class="emoji">📊</span> <strong>metric</strong>: Distance function to use.</li>
+                <li><span class="emoji">🌱</span> <strong>random_state</strong>: Seed for reproducibility.</li>
+            </ul>
+        </div>
+        
+        
+                <div class="section">
+            <h2>t-SNE Code Example <i class="fas fa-code"></i></h2>
+            <code>
+import numpy as np
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+
+# Generate sample data
+X = np.random.randn(1000, 50)
+y = np.random.randint(0, 5, 1000)
+
+# Apply t-SNE
+tsne = TSNE(n_components=2, random_state=42)
+X_tsne = tsne.fit_transform(X)
+
+# Plot results
+plt.figure(figsize=(10, 8))
+scatter = plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y, cmap='viridis')
+plt.colorbar(scatter)
+plt.title('t-SNE visualization of random data')
+plt.show()
+            </code>
+        </div>
+        
+        <div class="section">
+            <h2>UMAP Code Example <i class="fas fa-code"></i></h2>
+            <code>
+import numpy as np
+import umap
+import matplotlib.pyplot as plt
+
+# Generate sample data
+X = np.random.randn(1000, 50)
+y = np.random.randint(0, 5, 1000)
+
+# Apply UMAP
+reducer = umap.UMAP(random_state=42)
+X_umap = reducer.fit_transform(X)
+
+# Plot results
+plt.figure(figsize=(10, 8))
+scatter = plt.scatter(X_umap[:, 0], X_umap[:, 1], c=y, cmap='viridis')
+plt.colorbar(scatter)
+plt.title('UMAP visualization of random data')
+plt.show()
+            </code>
+        </div>
+        
+        <div class="section">
+            <h2>Comparing t-SNE and UMAP <i class="fas fa-balance-scale"></i></h2>
+            <code>
+import numpy as np
+from sklearn.manifold import TSNE
+import umap
+import matplotlib.pyplot as plt
+
+# Generate sample data
+X = np.random.randn(1000, 50)
+y = np.random.randint(0, 5, 1000)
+
+# Apply t-SNE
+tsne = TSNE(n_components=2, random_state=42)
+X_tsne = tsne.fit_transform(X)
+
+# Apply UMAP
+reducer = umap.UMAP(random_state=42)
+X_umap = reducer.fit_transform(X)
+
+# Plot results
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 8))
+
+scatter1 = ax1.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y, cmap='viridis')
+ax1.set_title('t-SNE visualization')
+plt.colorbar(scatter1, ax=ax1)
+
+scatter2 = ax2.scatter(X_umap[:, 0], X_umap[:, 1], c=y, cmap='viridis')
+ax2.set_title('UMAP visualization')
+plt.colorbar(scatter2, ax=ax2)
+
+plt.show()
+            </code>
+        </div>
+        
+        <div class="section">
+            <h2>Advantages of t-SNE <i class="fas fa-plus-circle"></i></h2>
+            <ul>
+                <li><span class="emoji">🎯</span> Excellent at preserving <strong>local structures</strong>.</li>
+                <li><span class="emoji">👥</span> Reveals <strong>clusters</strong> effectively in the data.</li>
+                <li><span class="emoji">🔄</span> Handles <strong>non-linear</strong> relationships well.</li>
+                <li><span class="emoji">🖼️</span> Produces <strong>visually appealing</strong> results.</li>
+                <li><span class="emoji">🧠</span> Widely used in <strong>machine learning</strong> visualization.</li>
+            </ul>
+             <h2>Advantages of UMAP <i class="fas fa-plus-circle"></i></h2>
+            <ul>
+                <li><span class="emoji">⚡</span> Generally <strong>faster</strong> than t-SNE, especially for large datasets.</li>
+                <li><span class="emoji">🌐</span> Better preserves <strong>global structure</strong> of the data.</li>
+                <li><span class="emoji">🔢</span> Can handle <strong>larger datasets</strong> more efficiently.</li>
+                <li><span class="emoji">🔄</span> Supports <strong>supervised</strong> dimensionality reduction.</li>
+                <li><span class="emoji">📈</span> Often provides more <strong>stable</strong> results across runs.</li>
+                
+            </ul>
+                        <h2>Limitations of t-SNE <i class="fas fa-minus-circle"></i></h2>
+            <ul>
+                <li><span class="emoji">🐢</span> Can be <strong>computationally expensive</strong> for large datasets.</li>
+                <li><span class="emoji">🌐</span> May not preserve <strong>global structure</strong> well.</li>
+                <li><span class="emoji">🔄</span> Results can vary with different <strong>random initializations</strong>.</li>
+                <li><span class="emoji">⏱️</span> Can be <strong>slow</strong> for high-dimensional data.</li>
+                <li><span class="emoji">🧮</span> Struggles with <strong>very sparse</strong> data.</li>
+            </ul>
+            
+        </div>
+
+
+        <div class="section">
+            <h2>Limitations of UMAP <i class="fas fa-minus-circle"></i></h2>
+            <ul>
+                <li><span class="emoji">🧠</span> Can be more <strong>difficult to interpret</strong> than t-SNE.</li>
+                <li><span class="emoji">🎛️</span> Sensitive to choice of <strong>hyperparameters</strong>.</li>
+                <li><span class="emoji">📚</span> Less <strong>theoretical foundation</strong> compared to t-SNE.</li>
+                <li><span class="emoji">🔄</span> May produce different results across <strong>runs</strong>.</li>
+                <li><span class="emoji">🖼️</span> Visualizations may be less <strong>aesthetically pleasing</strong> than t-SNE.</li>
+            </ul>
+        <h2>When to Use t-SNE <i class="fas fa-check-circle"></i></h2>
+            <ul>
+                <li><span class="emoji">👁️</span> For <strong>visualizing</strong> high-dimensional data.</li>
+                <li><span class="emoji">🔍</span> When focusing on <strong>local structure</strong> preservation.</li>
+                <li><span class="emoji">👥</span> For <strong>cluster analysis</strong> and pattern recognition.</li>
+                <li><span class="emoji">🧠</span> In <strong>exploratory data analysis</strong> of complex datasets.</li>
+                <li><span class="emoji">📊</span> When dealing with <strong>moderate-sized</strong> datasets.</li>
+            </ul>
+                        <h2>When to Use UMAP <i class="fas fa-check-circle"></i></h2>
+            <ul>
+                <li><span class="emoji">📈</span> For <strong>large-scale</strong> data visualization.</li>
+                <li><span class="emoji">🌐</span> When preserving <strong>global structure</strong> is important.</li>
+                <li><span class="emoji">⚡</span> For <strong>faster</strong> dimensionality reduction on big data.</li>
+                <li><span class="emoji">🔄</span> In <strong>supervised</strong> learning scenarios.</li>
+                <li><span class="emoji">🔗</span> When needing to <strong>preserve relationships</strong> across multiple scales.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
