@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CatBoost Python Library Cheat Sheet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+            min-height: calc(100vh - 20mm);
+        }
+        
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        .emoji {
+            font-style: normal;
+        }
+        
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        
+        code {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 8px;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 4px;
+            padding: 3px;
+            margin: 3px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        strong {
+            color: #2980b9;
+        }
+        
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+            .container {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin">
+        <a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/" target="_blank">
+            <i class="fab fa-linkedin"></i> LinkedIn Profile
+        </a>
+    </div>
+    
+    <div class="container">
+        <h1>CatBoost Python Library Cheat Sheet <span class="emoji">🐱🚀</span></h1>
+        
+        <div class="section">
+    <h2>1. Getting Started <i class="fas fa-rocket"></i></h2>
+    <ul>
+        <li><strong>Installation:</strong> <code>pip install catboost</code></li>
+        <li><strong>Importing:</strong> <code>import catboost as cb</code></li>
+        <li><strong>Basic usage:</strong></li>
+        <ul>
+            <li><strong>Classifier:</strong>
+                <code>
+model = cb.CatBoostClassifier()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+                </code>
+            </li>
+            <li><strong>Regressor:</strong>
+                <code>
+model = cb.CatBoostRegressor()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+                </code>
+            </li>
+        </ul>
+    </ul>
+</div>
+
+       
+<div class="section">
+            <h2>2. Basic Concepts <i class="fas fa-book"></i></h2>
+            <ul>
+                <li><strong>What is CatBoost?</strong> A <strong>gradient boosting</strong> library for ML, developed by Yandex.</li>
+                <li><strong>Differences:</strong> Handles <strong>categorical features</strong> automatically, uses ordered boosting.</li>
+                <li><strong>Key features:</strong> Fast training, <strong>GPU support</strong>, built-in <strong>feature importance</strong>.</li>
+                <li><strong>Pros:</strong>
+                    <ul>
+                        <li>Excellent performance on categorical data</li>
+                        <li>Less prone to overfitting</li>
+                        <li>Handles missing values automatically</li>
+                        <li>Fast prediction time</li>
+                        <li>Built-in GPU acceleration</li>
+                    </ul>
+                </li>
+                <li><strong>Cons:</strong>
+                    <ul>
+                        <li>Can be slower to train than other boosting algorithms</li>
+                        <li>May require more memory for large datasets</li>
+                        <li>Less community support compared to some alternatives</li>
+                        <li>Fewer customization options for advanced users</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+ 
+        <div class="section">
+            <h2>3. Model Training <i class="fas fa-cogs"></i></h2>
+            <ul>
+                <li><strong>Training:</strong> 
+                <code>
+model = cb.CatBoostClassifier(iterations=1000, learning_rate=0.1)
+model.fit(X_train, y_train, cat_features=['category1', 'category2'])
+                </code>
+                </li>
+                <li><strong>Parameters:</strong> Set <code>learning_rate</code>, <code>iterations</code>, <code>depth</code>.</li>
+                <li><strong>Categorical features:</strong> Specify with <code>cat_features</code> parameter.</li>
+                <li><strong>Missing values:</strong> Handled <strong>automatically</strong>.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>4. Model Evaluation <i class="fas fa-chart-line"></i></h2>
+            <ul>
+                <li><strong>Metrics:</strong> 
+                <code>
+from sklearn.metrics import accuracy_score, f1_score
+accuracy = accuracy_score(y_true, y_pred)
+f1 = f1_score(y_true, y_pred, average='weighted')
+                </code>
+                </li>
+                <li><strong>Cross-validation:</strong> 
+                <code>
+scores = model.cross_validate(X, y, cv=5)
+                </code>
+                </li>
+                <li><strong>Hyperparameter tuning:</strong> 
+                <code>
+from sklearn.model_selection import GridSearchCV
+params = {'depth': [4, 6, 8], 'learning_rate': [0.01, 0.1]}
+grid_search = GridSearchCV(model, params, cv=3)
+grid_search.fit(X, y)
+                </code>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>5. Model Interpretation <i class="fas fa-search"></i></h2>
+            <ul>
+                <li><strong>Feature importance:</strong> 
+                <code>
+importances = model.get_feature_importance()
+                </code>
+                </li>
+                <li><strong>Partial dependence:</strong> 
+                <code>
+pd_results = model.calc_partial_dependence(X[['feature1', 'feature2']])
+                </code>
+                </li>
+                <li><strong>SHAP values:</strong> 
+                <code>
+import shap
+explainer = shap.TreeExplainer(model)
+shap_values = explainer.shap_values(X)
+                </code>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>6. Hyperparameter Tuning <i class="fas fa-sliders-h"></i></h2>
+            <ul>
+                <li><strong>Grid search:</strong> See Model Evaluation section.</li>
+                <li><strong>Random search:</strong> 
+                <code>
+from sklearn.model_selection import RandomizedSearchCV
+random_search = RandomizedSearchCV(model, param_distributions, n_iter=10)
+                </code>
+                </li>
+                <li><strong>Bayesian optimization:</strong> 
+                <code>
+import optuna
+def objective(trial):
+    params = {
+        'depth': trial.suggest_int('depth', 4, 10),
+        'learning_rate': trial.suggest_loguniform('learning_rate', 1e-3, 1.0)
+    }
+    model = cb.CatBoostClassifier(**params)
+    return model.cross_validate(X, y, cv=3)['test-accuracy'].mean()
+
+study = optuna.create_study(direction='maximize')
+study.optimize(objective, n_trials=100)
+                </code>
+                </li>
+            </ul>
+        </div>
+        
+
+    </div>
+</body>
+</html>
