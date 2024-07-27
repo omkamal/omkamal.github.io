@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scikit-learn Cheatsheet</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+            min-height: calc(100vh - 20mm);
+        }
+        
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        .emoji {
+            font-style: normal;
+        }
+        
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        
+        code {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 8px;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 4px;
+            padding: 3px;
+            margin: 3px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        strong {
+            color: #2980b9;
+        }
+        
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+            .container {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">My LinkedIn</a></div>
+    <h1>Scikit-learn Cheatsheet</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Supervised Learning 📊</h2>
+            <ul>
+                <li><strong>Linear Regression:</strong> Fit a linear model.</li>
+                <code>from sklearn.linear_model import LinearRegression<br>model = LinearRegression()<br>model.fit(X, y)</code>
+                <li><strong>Logistic Regression:</strong> Classification using logistic function.</li>
+                <code>from sklearn.linear_model import LogisticRegression<br>model = LogisticRegression()<br>model.fit(X, y)</code>
+                <li><strong>Decision Tree:</strong> Non-linear decision boundaries.</li>
+                <code>from sklearn.tree import DecisionTreeClassifier<br>model = DecisionTreeClassifier()<br>model.fit(X, y)</code>
+                <li><strong>Support Vector Machine:</strong> Classification using hyperplanes.</li>
+                <code>from sklearn.svm import SVC<br>model = SVC()<br>model.fit(X, y)</code>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Unsupervised Learning 🌐</h2>
+            <ul>
+                <li><strong>K-Means:</strong> Clustering data into K groups.</li>
+                <code>from sklearn.cluster import KMeans<br>kmeans = KMeans(n_clusters=3)<br>kmeans.fit(X)</code>
+                <li><strong>PCA:</strong> Dimensionality reduction technique.</li>
+                <code>from sklearn.decomposition import PCA<br>pca = PCA(n_components=2)<br>X_reduced = pca.fit_transform(X)</code>
+                <li><strong>DBSCAN:</strong> Density-based clustering.</li>
+                <code>from sklearn.cluster import DBSCAN<br>dbscan = DBSCAN()<br>dbscan.fit(X)</code>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Data Preprocessing 🔄</h2>
+            <ul>
+                <li><strong>Standardization:</strong> Scale features to zero mean and unit variance.</li>
+                <code>from sklearn.preprocessing import StandardScaler<br>scaler = StandardScaler()<br>X_scaled = scaler.fit_transform(X)</code>
+                <li><strong>Normalization:</strong> Scale features to a range [0, 1].</li>
+                <code>from sklearn.preprocessing import MinMaxScaler<br>scaler = MinMaxScaler()<br>X_normalized = scaler.fit_transform(X)</code>
+                <li><strong>Encoding Categorical:</strong> Convert categories to numbers.</li>
+                <code>from sklearn.preprocessing import OneHotEncoder<br>encoder = OneHotEncoder()<br>X_encoded = encoder.fit_transform(X)</code>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Ensemble Methods 🧩</h2>
+            <ul>
+                <li><strong>Random Forest:</strong> Ensemble of decision trees.</li>
+                <code>from sklearn.ensemble import RandomForestClassifier<br>model = RandomForestClassifier()<br>model.fit(X, y)</code>
+                <li><strong>Gradient Boosting:</strong> Sequential tree boosting.</li>
+                <code>from sklearn.ensemble import GradientBoostingClassifier<br>model = GradientBoostingClassifier()<br>model.fit(X, y)</code>
+                <li><strong>AdaBoost:</strong> Adaptive boosting method.</li>
+                <code>from sklearn.ensemble import AdaBoostClassifier<br>model = AdaBoostClassifier()<br>model.fit(X, y)</code>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Export Model 💾</h2>
+            <ul>
+                <li><strong>Save Model:</strong> Save trained model to a file.</li>
+                <code>from sklearn.externals import joblib<br>joblib.dump(model, 'model.pkl')</code>
+                <li><strong>Load Model:</strong> Load trained model from a file.</li>
+                <code>from sklearn.externals import joblib<br>model = joblib.load('model.pkl')</code>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Pipeline ⏩</h2>
+            <ul>
+                <li><strong>Pipeline:</strong> Chain preprocessing and modeling steps.</li>
+                <code>from sklearn.pipeline import Pipeline<br>pipeline = Pipeline([('scaler', StandardScaler()), ('model', SVC())])<br>pipeline.fit(X, y)</code>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Dimensionality Reduction 🔻</h2>
+            <ul>
+                <li><strong>PCA:</strong> Principal Component Analysis.</li>
+                <code>from sklearn.decomposition import PCA<br>pca = PCA(n_components=2)<br>X_reduced = pca.fit_transform(X)</code>
+                <li><strong>LDA:</strong> Linear Discriminant Analysis.</li>
+                <code>from sklearn.discriminant_analysis import LinearDiscriminantAnalysis<br>lda = LinearDiscriminantAnalysis(n_components=2)<br>X_reduced = lda.fit_transform(X, y)</code>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
