@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyTorch Cheat Sheet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap');
+        
+        body {
+            font-family: 'Caveat', cursive;
+            font-size: 9px;
+            line-height: 1.1;
+            margin: 0;
+            padding: 5px;
+            background-color: #f0f0f0;
+        }
+        
+        .container {
+            width: 297mm;
+            height: 210mm;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 5px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 3px;
+            color: #4a4a4a;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            background-color: #f8f8f8;
+            padding: 3px;
+            border-radius: 3px;
+        }
+        
+        .author {
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .linkedin {
+            font-size: 10px;
+            color: #0077B5;
+            text-decoration: none;
+        }
+        
+        .content {
+            column-count: 3;
+            column-gap: 8px;
+            column-rule: 1px solid #e0e0e0;
+        }
+        
+        h2 {
+            font-size: 12px;
+            margin-top: 0;
+            margin-bottom: 3px;
+            break-after: avoid;
+            color: #2c3e50;
+            border-bottom: 1px solid #3498db;
+            padding-bottom: 1px;
+        }
+        
+        ul {
+            padding-left: 12px;
+            margin: 2px 0 6px 0;
+        }
+        
+        li {
+            margin-bottom: 2px;
+            position: relative;
+        }
+        
+        li::before {
+            content: '•';
+            color: #e74c3c;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        
+        code {
+            font-family: 'Courier New', monospace;
+            background-color: #f9f2f4;
+            color: #c7254e;
+            padding: 1px;
+            border-radius: 2px;
+            font-size: 8px;
+            display: block;
+            margin: 2px 0;
+            white-space: pre-wrap;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        
+        strong {
+            font-weight: bold;
+            color: #16a085;
+        }
+        
+        .section {
+            break-inside: avoid;
+            margin-bottom: 6px;
+            background-color: #ecf0f1;
+            padding: 3px;
+            border-radius: 3px;
+        }
+        
+        .icon {
+            margin-right: 2px;
+            color: #3498db;
+        }
+
+        .mermaid {
+            font-size: 7px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="author">Omar Hosney</span>
+            <h1>🔥 Comprehensive PyTorch Cheat Sheet 🧠</h1>
+            <a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/" class="linkedin">
+                <i class="fab fa-linkedin"></i> LinkedIn Profile
+            </a>
+        </div>
+        <div class="content">
+            <div class="section">
+                <h2><i class="fas fa-cube icon"></i>PyTorch Basics</h2>
+                <ul>
+                    <li><strong>Tensors</strong>: Multi-dimensional arrays for <strong>numerical computations</strong> and <strong>GPU acceleration</strong>.</li>
+                    <li><strong>Autograd</strong>: Automatic differentiation for <strong>efficient gradient calculations</strong> in backpropagation.</li>
+                    <li><strong>nn Module</strong>: High-level API for building <strong>complex neural network architectures</strong>.</li>
+                    <li><strong>Device management</strong>: Easily move computations between <strong>CPU and GPU</strong>.</li>
+                </ul>
+                <code>
+import torch
+x = torch.tensor([1, 2, 3], device='cuda')
+y = torch.nn.Linear(3, 1)
+y = y.to('cuda')  # Move to GPU
+                </code>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-dumbbell icon"></i>Training</h2>
+                <ul>
+                    <li><strong>Loss functions</strong>: Measure model performance (e.g., <strong>MSELoss, CrossEntropyLoss</strong>).</li>
+                    <li><strong>Backpropagation</strong>: Compute gradients for <strong>efficient parameter updates</strong>.</li>
+                    <li><strong>Optimizers</strong>: Update model parameters to <strong>minimize loss</strong> (e.g., SGD, Adam).</li>
+                    <li><strong>Learning rate schedulers</strong>: Adjust learning rates for <strong>better convergence</strong>.</li>
+                </ul>
+                <code>
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
+
+for epoch in range(num_epochs):
+    for inputs, targets in dataloader:
+        optimizer.zero_grad()
+        outputs = model(inputs)
+        loss = criterion(outputs, targets)
+        loss.backward()
+        optimizer.step()
+    scheduler.step()
+                </code>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-magic icon"></i>Inference</h2>
+                <ul>
+                    <li><strong>Model evaluation</strong>: Set model to <strong>eval mode</strong> to disable dropout and batch normalization updates.</li>
+                    <li><strong>No gradient computation</strong>: Use <strong>torch.no_grad()</strong> for memory efficiency during inference.</li>
+                    <li><strong>Model deployment</strong>: Export models using <strong>TorchScript</strong> or <strong>ONNX</strong> for production environments.</li>
+                </ul>
+                <code>
+model.eval()
+with torch.no_grad():
+    predictions = model(test_data)
+
+# TorchScript export
+scripted_model = torch.jit.script(model)
+scripted_model.save("model.pt")
+                </code>
+                <h3>torch.nn Module Class Hierarchy</h3>
+                <div class="mermaid">
+                    classDiagram
+                    Module <|-- Container
+                    Module <|-- Linear
+                    Module <|-- Conv2d
+                    Module <|-- RNN
+                    Container <|-- Sequential
+                    Container <|-- ModuleList
+                    Container <|-- ModuleDict
+                    RNN <|-- LSTM
+                    RNN <|-- GRU
+                    class Module{
+                        +forward()
+                        +parameters()
+                        +to(device)
+                    }
+                    class Container{
+                        +add_module()
+                    }
+                    class Linear{
+                        +in_features
+                        +out_features
+                    }
+                    class Conv2d{
+                        +in_channels
+                        +out_channels
+                        +kernel_size
+                    }
+                    class RNN{
+                        +input_size
+                        +hidden_size
+                    }
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-stopwatch icon"></i>Early Stopping</h2>
+                <ul>
+                    <li><strong>Monitor validation loss</strong>: Track performance on <strong>unseen data</strong> to prevent overfitting.</li>
+                    <li><strong>Patience</strong>: Set a threshold for <strong>epochs without improvement</strong> before stopping.</li>
+                    <li><strong>Best model checkpoint</strong>: Save the model with the <strong>lowest validation loss</strong>.</li>
+                    <li><strong>Restore best model</strong>: Load the best checkpoint after training.</li>
+                </ul>
+                <code>
+best_loss, patience, counter = float('inf'), 10, 0
+for epoch in range(num_epochs):
+    train_loss = train(model, train_loader, optimizer)
+    val_loss = validate(model, val_loader)
+    if val_loss < best_loss:
+        best_loss = val_loss
+        torch.save(model.state_dict(), 'best_model.pth')
+        counter = 0
+    else:
+        counter += 1
+        if counter >= patience:
+            print(f"Early stopping at epoch {epoch}")
+            break
+model.load_state_dict(torch.load('best_model.pth'))
+                </code>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-sliders-h icon"></i>Hyperparameter Tuning</h2>
+                <ul>
+                    <li><strong>Grid search</strong>: Exhaustive search over <strong>specified parameter values</strong>.</li>
+                    <li><strong>Random search</strong>: Sample from <strong>parameter distributions</strong> for efficient exploration.</li>
+                    <li><strong>Bayesian optimization</strong>: Efficient search using <strong>probabilistic model</strong> (e.g., GPyOpt).</li>
+                    <li><strong>Population-based training</strong>: Evolve hyperparameters during training.</li>
+                </ul>
+                <code>
+from ray import tune
+from ray.tune.schedulers import ASHAScheduler
+
+def train_func(config):
+    model = Net(config["hidden_size"])
+    optimizer = torch.optim.Adam(model.parameters(), lr=config["lr"])
+    for epoch in range(10):
+        loss = train_epoch(model, optimizer)
+        tune.report(loss=loss)
+
+analysis = tune.run(
+    train_func,
+    config={
+        "hidden_size": tune.choice([32, 64, 128]),
+        "lr": tune.loguniform(1e-4, 1e-1)
+    },
+    scheduler=ASHAScheduler(),
+    num_samples=50
+)
+best_config = analysis.get_best_config(metric="loss")
+                </code>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-database icon"></i>DataLoaders</h2>
+                <ul>
+                    <li><strong>Dataset</strong>: Define custom datasets for <strong>efficient data handling</strong>.</li>
+                    <li><strong>DataLoader</strong>: Batch loading with <strong>multi-processing</strong> and <strong>prefetching</strong>.</li>
+                    <li><strong>Transforms</strong>: Apply <strong>data augmentation</strong> and preprocessing on-the-fly.</li>
+                    <li><strong>Samplers</strong>: Control the <strong>order of iteration</strong> over dataset.</li>
+                </ul>
+                <code>
+class CustomDataset(Dataset):
+    def __init__(self, data, labels, transform=None):
+        self.data, self.labels = data, labels
+        self.transform = transform
+    def __len__(self): return len(self.data)
+    def __getitem__(self, idx):
+        sample = self.data[idx]
+        if self.transform: sample = self.transform(sample)
+        return sample, self.labels[idx]
+
+transform = transforms.Compose([
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
+
+dataset = CustomDataset(data, labels, transform=transform)
+dataloader = DataLoader(dataset, batch_size=32, shuffle=True, num_workers=4)
+                </code>
+            </div>
+
+           <div class="section">
+                <h2><i class="fas fa-cogs icon"></i>Optimizers</h2>
+                <ul>
+                    <li><strong>SGD</strong>: Stochastic Gradient Descent with <strong>momentum and weight decay</strong> options.</li>
+                    <li><strong>Adam</strong>: Adaptive Moment Estimation for <strong>per-parameter learning rates</strong>.</li>
+                    <li><strong>RMSprop</strong>: Root Mean Square Propagation, adapts learning rates based on <strong>moving average of squared gradients</strong>.</li>
+                    <li><strong>AdamW</strong>: Adam variant with <strong>improved weight decay regularization</strong>.</li>
+                </ul>
+                <code>
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-5)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-8)
+optimizer = torch.optim.RMSprop(model.parameters(), lr=0.01, alpha=0.99)
+optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, weight_decay=0.01)
+                </code>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-cubes icon"></i>Layer Types</h2>
+                <ul>
+                    <li><strong>Linear (Dense)</strong>: Fully connected layer for <strong>linear transformations</strong>.</li>
+                    <li><strong>Conv2d</strong>: 2D convolution for <strong>image processing tasks</strong>.</li>
+                    <li><strong>LSTM/GRU</strong>: Recurrent layers for <strong>sequential data processing</strong>.</li>
+                    <li><strong>Transformer</strong>: Self-attention based layers for <strong>NLP and beyond</strong>.</li>
+                    <li><strong>BatchNorm</strong>: Normalize activations for <strong>stable training</strong>.</li>
+                    <li><strong>Dropout</strong>: Regularization technique to <strong>prevent overfitting</strong>.</li>
+                </ul>
+                <code>
+class ComplexModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv = nn.Conv2d(3, 64, kernel_size=3, padding=1)
+        self.bn = nn.BatchNorm2d(64)
+        self.pool = nn.MaxPool2d(2)
+        self.lstm = nn.LSTM(64, 128, batch_first=True)
+        self.fc = nn.Linear(128, 10)
+        self.dropout = nn.Dropout(0.5)
+    
+    def forward(self, x):
+        x = self.pool(F.relu(self.bn(self.conv(x))))
+        x = x.view(x.size(0), -1, 64)  # Flatten for LSTM
+        x, _ = self.lstm(x)
+        x = self.dropout(x[:, -1, :])  # Take last LSTM output
+        return self.fc(x)
+
+model = ComplexModel()
+                </code>
+            </div>
+        </div>
