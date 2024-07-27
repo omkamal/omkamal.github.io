@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric: Amazing Command Line AI Ecosystem</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+            min-height: calc(100vh - 20mm);
+        }
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        li {
+            margin-bottom: 3px;
+        }
+        .emoji {
+            font-style: normal;
+        }
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        code {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 8px;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 4px;
+            padding: 3px;
+            margin: 3px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        strong {
+            color: #2980b9;
+        }
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+            .container {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn Profile</a></div>
+    <h1>Fabric: Amazing Command Line AI Ecosystem</h1>
+    <div class="container">
+        <div class="section">
+            <h2>What is Fabric?</h2>
+            <ul>
+                <li><strong>Philosophy:</strong> Fabric amplifies human creativity, making AI accessible to everyone.</li>
+                <li><strong>Problem Solving:</strong> Breaks down complex challenges into manageable components with AI Patterns.</li>
+                <li><strong>Library of Patterns:</strong> Provides pre-built Patterns for tasks like summarizing articles and creating social media posts.</li>
+                <li><strong>Command-line Native:</strong> Integrates seamlessly with the command line for quick execution.</li>
+                <li><strong>Customizable:</strong> Create and integrate custom Patterns into your workflow.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Why use Fabric?</h2>
+            <ul>
+                <li><strong>Simplicity:</strong> Streamlines interaction with LLMs without complex prompts.</li>
+                <li><strong>Efficiency:</strong> Saves time with pre-built Patterns for common AI tasks.</li>
+                <li><strong>Flexibility:</strong> Compatible with various AI applications like ChatGPT and OpenAI’s API.</li>
+                <li><strong>Extensibility:</strong> Open-source nature allows tailoring to specific needs.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Installing Fabric</h2>
+            <ul>
+                <li><strong>Step 1:</strong> Install Python 3.10 or higher from the official site.</li>
+                <li><strong>Step 2:</strong> Clone the Fabric repository using <code>git clone https://github.com/danielmiessler/fabric.git</code>.</li>
+                <li><strong>Step 3:</strong> Install pipx using commands for your OS (e.g., <code>brew install pipx</code> for macOS).</li>
+                <li><strong>Step 4:</strong> Install Fabric with <code>pipx install .</code>.</li>
+                <li><strong>Step 5:</strong> Run the setup command <code>fabric --setup</code> to configure.</li>
+                <li><strong>Step 6:</strong> Restart your terminal to make Fabric commands available.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Sample Fabric Pattern Usage</h2>
+            <ul>
+                <li><strong>Summarize Pattern:</strong> <code>echo "Text" | fabric --pattern summarize</code></li>
+                <li><strong>Extract Wisdom Pattern:</strong> <code>cat transcript.txt | fabric --pattern extract_wisdom</code></li>
+                <li><strong>Analyze Claims Pattern:</strong> <code>echo "Claims" | fabric --pattern analyze_claims</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Fabric’s LLM Support</h2>
+            <ul>
+                <li><strong>Default Model:</strong> Set with <code>fabric --changeDefaultModel gpt-4-turbo-preview</code>.</li>
+                <li><strong>Local Models:</strong> Ensure local model is running and set environment variables appropriately.</li>
+                <li><strong>Use Commands:</strong> Fabric will utilize the set model for inference.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Fabric Patterns Overview</h2>
+            <ul>
+                <li><strong>Writing:</strong> Patterns like <code>analyze_paper</code>, <code>write_code</code>, and <code>write_essay</code>.</li>
+                <li><strong>Analysis:</strong> Patterns like <code>analyze_claims</code>, <code>extract_wisdom</code>, and <code>summarize</code>.</li>
+                <li><strong>Business:</strong> Patterns like <code>create_ai_jobs_analysis</code> and <code>answer_interview_question</code>.</li>
+                <li><strong>Research:</strong> Patterns like <code>extract_article_wisdom</code> and <code>extract_book_ideas</code>.</li>
+                <li><strong>Other:</strong> Patterns like <code>get_youtube_rss</code> and <code>create_quiz</code>.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+```
