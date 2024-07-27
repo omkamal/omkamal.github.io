@@ -3,273 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CatBoost Python Library Cheat Sheet</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <title>Data Science Cheatsheets</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #f0f3f5;
+            --text-color: #34495e;
+            --card-background: #ffffff;
+        }
+        
         body {
-            font-family: 'Roboto', sans-serif;
-            font-size: 10px;
-            line-height: 1.2;
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--background-color);
             margin: 0;
-            padding: 10mm;
-            background-color: #f0f8ff;
-            color: #333;
-            box-sizing: border-box;
+            padding: 0;
         }
         
         .container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 10px;
-            width: 100%;
-            min-height: calc(100vh - 20mm);
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 40px;
+            background-color: var(--card-background);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-top: 0;
         }
         
         h1 {
-            grid-column: 1 / -1;
+            font-size: 2.5em;
             text-align: center;
-            font-size: 24px;
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            position: relative;
         }
         
-        h2 {
-            font-size: 14px;
-            margin: 0 0 5px 0;
-            color: #e74c3c;
-            border-bottom: 2px solid #e74c3c;
-            padding-bottom: 3px;
-        }
-        
-        ul {
-            margin: 0;
-            padding-left: 15px;
-        }
-        
-        li {
-            margin-bottom: 3px;
-        }
-        
-        .emoji {
-            font-style: normal;
-        }
-        
-        .author {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            font-size: 8px;
-            color: #7f8c8d;
-        }
-        
-        .linkedin {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 8px;
-        }
-        
-        .linkedin a {
-            color: #0077b5;
-            text-decoration: none;
-        }
-        
-        code {
-            font-family: 'Source Code Pro', monospace;
-            font-size: 8px;
-            background-color: #f1f8e9;
-            border: 1px solid #c5e1a5;
-            border-radius: 4px;
-            padding: 3px;
-            margin: 3px 0;
+        h1::after {
+            content: '';
             display: block;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            color: #333;
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            width: 50px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            margin: 20px auto 0;
         }
         
-        .section {
-            background-color: #fff;
+        p {
+            margin-bottom: 20px;
+        }
+        
+        .cheatsheet-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .cheatsheet-list li {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
             border-radius: 8px;
-            padding: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            overflow: hidden;
+            transition: all 0.3s ease;
         }
         
-        strong {
-            color: #2980b9;
+        .cheatsheet-list li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
-        @media print {
-            body {
-                width: 297mm;
-                padding: 10mm;
-            }
+        .cheatsheet-list a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .cheatsheet-list p {
+            margin: 0;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .about {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #ecf0f1;
+        }
+        
+        .about h2 {
+            color: var(--secondary-color);
+        }
+        
+        .about ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .about ul li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .about ul li::before {
+            content: '•';
+            color: var(--secondary-color);
+            font-size: 1.5em;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+        
+        .blog-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .blog-link:hover {
+            background-color: #2980b9;
+        }
+        
+        @media (max-width: 768px) {
             .container {
-                min-height: auto;
+                padding: 20px;
+                margin: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="author">Omar Hosney</div>
-    <div class="linkedin">
-        <a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/" target="_blank">
-            <i class="fab fa-linkedin"></i> LinkedIn Profile
-        </a>
-    </div>
-    
     <div class="container">
-        <h1>CatBoost Python Library Cheat Sheet <span class="emoji">🐱🚀</span></h1>
+        <h1>Data Science Cheatsheets</h1>
         
-        <div class="section">
-    <h2>1. Getting Started <i class="fas fa-rocket"></i></h2>
-    <ul>
-        <li><strong>Installation:</strong> <code>pip install catboost</code></li>
-        <li><strong>Importing:</strong> <code>import catboost as cb</code></li>
-        <li><strong>Basic usage:</strong></li>
-        <ul>
-            <li><strong>Classifier:</strong>
-                <code>
-model = cb.CatBoostClassifier()
-model.fit(X_train, y_train)
-predictions = model.predict(X_test)
-                </code>
+        <h2>What are Cheatsheets?</h2>
+        <p>Cheatsheets are concise reference guides that provide quick access to essential information, commands, or concepts. They are especially useful in data science and programming, where remembering numerous functions, parameters, and best practices can be challenging.</p>
+        
+        <h2>Available Cheatsheets</h2>
+        <ul class="cheatsheet-list">
+            <li>
+                <a href="xgboost.html">XGBoost Cheatsheet</a>
+                <p>Quick reference for XGBoost, a popular gradient boosting library</p>
             </li>
-            <li><strong>Regressor:</strong>
-                <code>
-model = cb.CatBoostRegressor()
-model.fit(X_train, y_train)
-predictions = model.predict(X_test)
-                </code>
+            <li>
+                <a href="catboost.html">CatBoost Cheatsheet</a>
+                <p>Essential information about CatBoost, a gradient boosting library with built-in categorical feature support</p>
+            </li>
+            <li>
+                <a href="fabric.html">Fabric Cheatsheet</a>
+                <p>Key concepts and commands for Fabric, a Python library for streamlining SSH-based application deployment</p>
             </li>
         </ul>
-    </ul>
-</div>
-
-       
-<div class="section">
-            <h2>2. Basic Concepts <i class="fas fa-book"></i></h2>
-            <ul>
-                <li><strong>What is CatBoost?</strong> A <strong>gradient boosting</strong> library for ML, developed by Yandex.</li>
-                <li><strong>Differences:</strong> Handles <strong>categorical features</strong> automatically, uses ordered boosting.</li>
-                <li><strong>Key features:</strong> Fast training, <strong>GPU support</strong>, built-in <strong>feature importance</strong>.</li>
-                <li><strong>Pros:</strong>
-                    <ul>
-                        <li>Excellent performance on categorical data</li>
-                        <li>Less prone to overfitting</li>
-                        <li>Handles missing values automatically</li>
-                        <li>Fast prediction time</li>
-                        <li>Built-in GPU acceleration</li>
-                    </ul>
-                </li>
-                <li><strong>Cons:</strong>
-                    <ul>
-                        <li>Can be slower to train than other boosting algorithms</li>
-                        <li>May require more memory for large datasets</li>
-                        <li>Less community support compared to some alternatives</li>
-                        <li>Fewer customization options for advanced users</li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
- 
-        <div class="section">
-            <h2>3. Model Training <i class="fas fa-cogs"></i></h2>
-            <ul>
-                <li><strong>Training:</strong> 
-                <code>
-model = cb.CatBoostClassifier(iterations=1000, learning_rate=0.1)
-model.fit(X_train, y_train, cat_features=['category1', 'category2'])
-                </code>
-                </li>
-                <li><strong>Parameters:</strong> Set <code>learning_rate</code>, <code>iterations</code>, <code>depth</code>.</li>
-                <li><strong>Categorical features:</strong> Specify with <code>cat_features</code> parameter.</li>
-                <li><strong>Missing values:</strong> Handled <strong>automatically</strong>.</li>
-            </ul>
-        </div>
         
-        <div class="section">
-            <h2>4. Model Evaluation <i class="fas fa-chart-line"></i></h2>
+        <div class="about">
+            <h2>About Me</h2>
+            <h3>Omar Kamal Hosney</h3>
+            <p>Senior Data Scientist at CaaStle with over 23 years of experience in the telecom industry. My career includes roles at prestigious companies such as Lucent, HP, and IBM. I specialize in enhancing business operations through data-driven insights and solutions.</p>
+            <p>My interests include:</p>
             <ul>
-                <li><strong>Metrics:</strong> 
-                <code>
-from sklearn.metrics import accuracy_score, f1_score
-accuracy = accuracy_score(y_true, y_pred)
-f1 = f1_score(y_true, y_pred, average='weighted')
-                </code>
-                </li>
-                <li><strong>Cross-validation:</strong> 
-                <code>
-scores = model.cross_validate(X, y, cv=5)
-                </code>
-                </li>
-                <li><strong>Hyperparameter tuning:</strong> 
-                <code>
-from sklearn.model_selection import GridSearchCV
-params = {'depth': [4, 6, 8], 'learning_rate': [0.01, 0.1]}
-grid_search = GridSearchCV(model, params, cv=3)
-grid_search.fit(X, y)
-                </code>
-                </li>
+                <li>Artificial Intelligence</li>
+                <li>Data Science</li>
+                <li>Large Language Models</li>
             </ul>
+            <p>I'm passionate about sharing knowledge and regularly write articles on various topics in data science and AI.</p>
+            <a href="https://medium.com/@omkamal" target="_blank" class="blog-link">Read My Blog on Medium</a>
         </div>
-        
-        <div class="section">
-            <h2>5. Model Interpretation <i class="fas fa-search"></i></h2>
-            <ul>
-                <li><strong>Feature importance:</strong> 
-                <code>
-importances = model.get_feature_importance()
-                </code>
-                </li>
-                <li><strong>Partial dependence:</strong> 
-                <code>
-pd_results = model.calc_partial_dependence(X[['feature1', 'feature2']])
-                </code>
-                </li>
-                <li><strong>SHAP values:</strong> 
-                <code>
-import shap
-explainer = shap.TreeExplainer(model)
-shap_values = explainer.shap_values(X)
-                </code>
-                </li>
-            </ul>
-        </div>
-        
-        <div class="section">
-            <h2>6. Hyperparameter Tuning <i class="fas fa-sliders-h"></i></h2>
-            <ul>
-                <li><strong>Grid search:</strong> See Model Evaluation section.</li>
-                <li><strong>Random search:</strong> 
-                <code>
-from sklearn.model_selection import RandomizedSearchCV
-random_search = RandomizedSearchCV(model, param_distributions, n_iter=10)
-                </code>
-                </li>
-                <li><strong>Bayesian optimization:</strong> 
-                <code>
-import optuna
-def objective(trial):
-    params = {
-        'depth': trial.suggest_int('depth', 4, 10),
-        'learning_rate': trial.suggest_loguniform('learning_rate', 1e-3, 1.0)
-    }
-    model = cb.CatBoostClassifier(**params)
-    return model.cross_validate(X, y, cv=3)['test-accuracy'].mean()
-
-study = optuna.create_study(direction='maximize')
-study.optimize(objective, n_trials=100)
-                </code>
-                </li>
-            </ul>
-        </div>
-        
-
     </div>
 </body>
 </html>
