@@ -100,6 +100,27 @@
             margin-top: 50px;
             padding-top: 30px;
             border-top: 2px solid #ecf0f1;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .about-content {
+            flex: 1;
+        }
+        
+        .about-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-left: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .about h2 {
@@ -146,6 +167,16 @@
                 padding: 20px;
                 margin: 20px;
             }
+            
+            .about {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .about-image {
+                margin-left: 0;
+                margin-top: 20px;
+            }
         }
     </style>
 </head>
@@ -175,35 +206,43 @@
                 <p>Dimensionality reduction using UMAP (Uniform Manifold Approximation and Projection) and t-SNE (t-Distributed Stochastic Neighbor Embedding) transforms high-dimensional data into lower dimensions, facilitating visualization and revealing underlying patterns by preserving local and global data structures, respectively</p>
             </li>
             <li>
+                <a href="pca.html">Principal Component Analysis Cheatsheet</a>
+                <p>PCA is a dimensionality reduction technique that finds the directions of maximum variance in high-dimensional data and projects it onto a lower-dimensional subspace.</p>
+            </li>
+            <li>
                 <a href="pytorch.html">Pytorch Cheatsheet</a>
                 <p>Quick reference for Pytorch, one of the top deep learning library written in Python</p>
             </li>
-
         </ul>
       
-      <h3>Large Language Models</h3>
-       <ul class="cheatsheet-list">
-                  <li>
+        <h3>Large Language Models</h3>
+        <ul class="cheatsheet-list">
+            <li>
                 <a href="fabric.html">Fabric Cheatsheet</a>
-                <p>Fabric is a excellent open-source framework designed to seamlessly integrate AI into your everyday life and work. It empowers you to leverage the power of large language models (LLMs) by providing a user-friendly interface and a vast library of reusable AI prompts called Patterns.</p>
+                <p>Fabric is an excellent open-source framework designed to seamlessly integrate AI into your everyday life and work. It empowers you to leverage the power of large language models (LLMs) by providing a user-friendly interface and a vast library of reusable AI prompts called Patterns.</p>
             </li>
-      </ul>
+        </ul>
         
         <div class="about">
-            <h2>About Me</h2>
-            <h3>Omar Kamal Hosney</h3>
-            <p> I am a seasoned data scientist and machine learning software engineer with over 26 years of experience. 
-                I did contributed his expertise to several renowned companies, including Tribal Credit, Reveel, TA Telecom, Mentor Graphics, and IBM. 
-                My career has encompassed various roles in AI-driven underwriting, algorithm development, data analytics integration, and 
-                software testing leadership. </p>
-            <p>My interests include:</p>
-            <ul>
-                <li>Artificial Intelligence</li>
-                <li>Data Science</li>
-                <li>Large Language Models</li>
-            </ul>
-            <p>I'm passionate about sharing knowledge and regularly write articles on various topics in data science and AI.</p>
-            <a href="https://medium.com/@omkamal" target="_blank" class="blog-link">Read My Blog on Medium</a>
+            <div class="about-content">
+                <h2>About Me</h2>
+                <h3>Omar Kamal Hosney</h3>
+                <p>I am a seasoned data scientist and machine learning software engineer with over 26 years of experience. 
+                   I have contributed my expertise to several renowned companies, including Tribal Credit, Reveel, TA Telecom, Mentor Graphics, and IBM. 
+                   My career has encompassed various roles in AI-driven underwriting, algorithm development, data analytics integration, and 
+                   software testing leadership.</p>
+                <p>My interests include:</p>
+                <ul>
+                    <li>Artificial Intelligence</li>
+                    <li>Data Science</li>
+                    <li>Large Language Models</li>
+                </ul>
+                <p>I'm passionate about sharing knowledge and regularly write articles on various topics in data science and AI.</p>
+                <a href="https://medium.com/@omkamal" target="_blank" class="blog-link">Read My Blog on Medium</a>
+            </div>
+            <div class="about-image">
+                <img src="omar.jpeg" alt="Omar Kamal Hosney">
+            </div>
         </div>
     </div>
 </body>
