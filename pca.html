@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Principal Component Analysis (PCA) Cheat Sheet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+            min-height: calc(100vh - 20mm);
+        }
+        
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        .emoji {
+            font-style: normal;
+        }
+        
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        
+        code {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 8px;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 4px;
+            padding: 3px;
+            margin: 3px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        strong {
+            color: #2980b9;
+        }
+        
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+            .container {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn Profile</a></div>
+    <h1>Principal Component Analysis (PCA) Cheat Sheet</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Introduction to PCA <i class="fas fa-info-circle"></i></h2>
+            <ul>
+                <li><span class="emoji">📊</span> <strong>Linear</strong> dimensionality reduction technique.</li>
+                <li><span class="emoji">🎯</span> Identifies <strong>principal components</strong> of variance in data.</li>
+                <li><span class="emoji">🔄</span> <strong>Orthogonal transformation</strong> to uncorrelated variables.</li>
+                <li><span class="emoji">📉</span> Reduces dimensionality while <strong>preserving variance</strong>.</li>
+                <li><span class="emoji">🧮</span> Based on <strong>eigenvalue decomposition</strong> of covariance matrix.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>PCA Algorithm Steps <i class="fas fa-list-ol"></i></h2>
+            <ul>
+                <li><span class="emoji">1️⃣</span> <strong>Standardize</strong> the dataset (mean=0, variance=1).</li>
+                <li><span class="emoji">2️⃣</span> Compute the <strong>covariance matrix</strong>.</li>
+                <li><span class="emoji">3️⃣</span> Calculate <strong>eigenvectors and eigenvalues</strong>.</li>
+                <li><span class="emoji">4️⃣</span> <strong>Sort eigenvectors</strong> by decreasing eigenvalues.</li>
+                <li><span class="emoji">5️⃣</span> Choose top k eigenvectors as <strong>principal components</strong>.</li>
+                <li><span class="emoji">6️⃣</span> <strong>Project</strong> data onto new k-dimensional space.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>PCA Applications <i class="fas fa-laptop-code"></i></h2>
+            <ul>
+                <li><span class="emoji">📉</span> <strong>Dimensionality reduction</strong> for high-dimensional data.</li>
+                <li><span class="emoji">👁️</span> <strong>Data visualization</strong> in 2D or 3D space.</li>
+                <li><span class="emoji">🔍</span> <strong>Feature extraction</strong> and selection.</li>
+                <li><span class="emoji">🧹</span> <strong>Noise reduction</strong> in datasets.</li>
+                <li><span class="emoji">📊</span> <strong>Compression</strong> of large datasets.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Advantages of PCA <i class="fas fa-plus-circle"></i></h2>
+            <ul>
+                <li><span class="emoji">⚡</span> <strong>Efficient</strong> computation for large datasets.</li>
+                <li><span class="emoji">🔄</span> Removes <strong>correlated features</strong>.</li>
+                <li><span class="emoji">📉</span> Reduces <strong>overfitting</strong> in machine learning models.</li>
+                <li><span class="emoji">🧮</span> Provides <strong>interpretable</strong> components.</li>
+                <li><span class="emoji">🎯</span> <strong>Unsupervised</strong> method (no target variable needed).</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Limitations of PCA <i class="fas fa-minus-circle"></i></h2>
+            <ul>
+                <li><span class="emoji">📊</span> Assumes <strong>linear relationships</strong> in data.</li>
+                <li><span class="emoji">🔢</span> Sensitive to <strong>feature scaling</strong>.</li>
+                <li><span class="emoji">🧠</span> May lose <strong>interpretability</strong> of original features.</li>
+                <li><span class="emoji">📉</span> Can be affected by <strong>outliers</strong>.</li>
+                <li><span class="emoji">🔍</span> May not capture <strong>complex patterns</strong> in data.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>PCA Parameters <i class="fas fa-sliders-h"></i></h2>
+            <ul>
+                <li><span class="emoji">🔢</span> <strong>n_components</strong>: Number of principal components to keep.</li>
+                <li><span class="emoji">📊</span> <strong>svd_solver</strong>: Algorithm to compute SVD ('auto', 'full', 'arpack', 'randomized').</li>
+                <li><span class="emoji">🎚️</span> <strong>whiten</strong>: Whether to whiten the data after PCA.</li>
+                <li><span class="emoji">🔄</span> <strong>random_state</strong>: Seed for reproducibility.</li>
+                <li><span class="emoji">📏</span> <strong>tol</strong>: Tolerance for singular values in SVD solver.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>PCA in Python (sklearn) <i class="fab fa-python"></i></h2>
+            <code>
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+
+# Generate sample data
+X = np.random.rand(100, 10)
+
+# Standardize the data
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Apply PCA
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+
+# Access explained variance ratio
+print(pca.explained_variance_ratio_)
+
+# Access principal components
+print(pca.components_)
+            </code>
+        </div>
+        
+        <div class="section">
+            <h2>Visualizing PCA Results <i class="fas fa-chart-scatter"></i></h2>
+            <code>
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 8))
+plt.scatter(X_pca[:, 0], X_pca[:, 1])
+plt.xlabel('First Principal Component')
+plt.ylabel('Second Principal Component')
+plt.title('PCA of Random Data')
+plt.show()
+
+# Scree plot
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, len(pca.explained_variance_ratio_) + 1),
+         np.cumsum(pca.explained_variance_ratio_))
+plt.xlabel('Number of Components')
+plt.ylabel('Cumulative Explained Variance')
+plt.title('Scree Plot')
+plt.show()
+            </code>
+        </div>
+        
+        <div class="section">
+            <h2>Choosing Number of Components <i class="fas fa-chart-line"></i></h2>
+            <code>
+# Determine number of components for 95% variance
+pca = PCA(n_components=0.95)
+X_pca = pca.fit_transform(X_scaled)
+print(f"Number of components: {pca.n_components_}")
+
+# Alternatively, use a for loop
+total_variance = 0
+for i, variance in enumerate(pca.explained_variance_ratio_):
+    total_variance += variance
+    if total_variance >= 0.95:
+        print(f"95% variance reached at {i+1} components")
+        break
+            </code>
+        </div>
+        
+        <div class="section">
+            <h2>PCA for Feature Selection <i class="fas fa-filter"></i></h2>
+            <code>
+# Get feature importance
+feature_importance = np.abs(pca.components_).sum(axis=0)
+feature_names = [f"Feature_{i}" for i in range(X.shape[1])]
+
+# Sort features by importance
+sorted_idx = np.argsort(feature_importance)
+for idx in sorted_idx[::-1]:
+    print(f"{feature_names[idx]}: {feature_importance[idx]:.4f}")
+            </code>
+        </div>
+        
+        <div class="section">
+            <h2>PCA for Noise Reduction <i class="fas fa-broom"></i></h2>
+            <code>
+# Add noise to data
+X_noisy = X + np.random.normal(0, 0.1, X.shape)
+
+# Apply PCA for denoising
+pca = PCA(n_components=0.95)
+X_denoised = pca.inverse_transform(pca.fit_transform(X_noisy))
+
+# Compare original, noisy, and denoised data
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 5))
+ax1.imshow(X[:10].T)
+ax1.set_title("Original Data")
+ax2.imshow(X_noisy[:10].T)
+ax2.set_title("Noisy Data")
+ax3.imshow(X_denoised[:10].T)
+ax3.set_title("Denoised Data")
+plt.show()
+            </code>
+        </div>
+        
+        <div class="section">
+            <h2>PCA vs. Other Techniques <i class="fas fa-balance-scale"></i></h2>
+            <ul>
+                <li><span class="emoji">🆚</span> <strong>t-SNE/UMAP</strong>: PCA is faster but less effective for non-linear data.</li>
+                <li><span class="emoji">🆚</span> <strong>Factor Analysis</strong>: PCA assumes all variance is important.</li>
+                <li><span class="emoji">🆚</span> <strong>ICA</strong>: PCA finds uncorrelated components, ICA finds independent ones.</li>
+                <li><span class="emoji">🆚</span> <strong>LDA</strong>: PCA is unsupervised, LDA is supervised.</li>
+                <li><span class="emoji">🆚</span> <strong>Autoencoder</strong>: PCA is linear, autoencoders can capture non-linear relationships.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
