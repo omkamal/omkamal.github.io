@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyCaret Cheat Sheet</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+            min-height: calc(100vh - 20mm);
+        }
+        
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        .emoji {
+            font-style: normal;
+        }
+        
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        
+        code {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 8px;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 4px;
+            padding: 3px;
+            margin: 3px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        strong {
+            color: #2980b9;
+        }
+        
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+            .container {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn Profile</a></div>
+    <h1>PyCaret Cheat Sheet</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Setup and Installation 🛠️</h2>
+            <ul>
+                <li><strong>Install PyCaret</strong>: Use <code>pip install pycaret</code> to get started.</li>
+                <li><strong>Dependencies</strong>: Ensure all <strong>required packages</strong> are installed.</li>
+            </ul>
+            <h2>Data Preprocessing 📊</h2>
+            <ul>
+                <li><strong>Preprocess data</strong>: Utilize PyCaret's <strong>preprocessing functions</strong> for cleaning data.</li>
+                <li><strong>Handle missing values</strong>: Automatically <strong>impute missing values</strong> in your dataset using <code>setup(data, target='target_column')</code>.</li>
+                <li><strong>Encoding categorical data</strong>: Convert categorical columns to numeric using <code>setup(data, target='target_column', categorical_features=['col1', 'col2'])</code>.</li>
+            </ul>
+            <h2>Classification 📂</h2>
+            <ul>
+                <li><strong>Model setup</strong>: Initialize your classification model with <code>setup(data, target='target_column')</code>.</li>
+                <li><strong>Compare models</strong>: Use <code>best_model = compare_models()</code> to find the best classifier.</li>
+                <li><strong>Create model</strong>: Build a specific model with <code>model = create_model('lr')</code> for logistic regression.</li>
+                <li><strong>Tune model</strong>: Optimize model hyperparameters using <code>tuned_model = tune_model(model)</code>.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Regression 📈</h2>
+            <ul>
+                <li><strong>Model setup</strong>: Initialize regression with <code>setup(data, target='target_column')</code>.</li>
+                <li><strong>Compare models</strong>: Evaluate different regressors using <code>best_model = compare_models()</code>.</li>
+                <li><strong>Create model</strong>: Build a regression model with <code>model = create_model('lr')</code> for linear regression.</li>
+                <li><strong>Tune model</strong>: Optimize model parameters with <code>tuned_model = tune_model(model)</code>.</li>
+            </ul>
+            <h2>Time Series ⏳</h2>
+            <ul>
+                <li><strong>Setup</strong>: Start with <code>setup(data, target='target_column', fold=3, session_id=123)</code> for time series analysis.</li>
+                <li><strong>Create model</strong>: Use <code>model = create_model('ets')</code> to create an exponential smoothing model.</li>
+                <li><strong>Forecasting</strong>: Generate forecasts with <code>predict_model(model, fh=10)</code>.</li>
+            </ul>
+            <h2>Clustering 🗃️</h2>
+            <ul>
+                <li><strong>Model setup</strong>: Prepare data for clustering with <code>setup(data)</code>.</li>
+                <li><strong>Create model</strong>: Build a clustering model with <code>model = create_model('kmeans')</code>.</li>
+                <li><strong>Evaluate clusters</strong>: Analyze cluster quality with <code>evaluate_model(model)</code>.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Anomaly Detection 🚨</h2>
+            <ul>
+                <li><strong>Setup</strong>: Initialize anomaly detection with <code>setup(data)</code>.</li>
+                <li><strong>Detect anomalies</strong>: Identify outliers using <code>model = create_model('iforest')</code>.</li>
+                <li><strong>Plot anomalies</strong>: Visualize anomalies with <code>plot_model(model, plot='tsne')</code>.</li>
+            </ul>
+            <h2>Model Training 🤖</h2>
+            <ul>
+                <li><strong>Train model</strong>: Fit your model with <code>model = create_model('lr')</code>.</li>
+                <li><strong>Tune model</strong>: Improve performance with <code>tuned_model = tune_model(model)</code>.</li>
+                <li><strong>Ensemble model</strong>: Combine models using <code>ensemble_model = ensemble_model(model)</code>.</li>
+            </ul>
+            <h2>Model Evaluation 📉</h2>
+            <ul>
+                <li><strong>Evaluate model</strong>: Use <code>evaluate_model(model)</code> to assess performance.</li>
+                <li><strong>Interpret results</strong>: Understand model outcomes with <code>interpret_model(model)</code>.</li>
+                <li><strong>Plot model</strong>: Visualize model performance with <code>plot_model(model, plot='auc')</code>.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Prediction and Deployment 🚀</h2>
+            <ul>
+                <li><strong>Make predictions</strong>: Generate predictions with <code>predictions = predict_model(model, data=new_data)</code>.</li>
+                <li><strong>Deploy model</strong>: Deploy your model using <code>deploy_model(model, model_name='my_model')</code>.</li>
+                <li><strong>Save model</strong>: Save the trained model with <code>save_model(model, 'model_name')</code>.</li>
+                <li><strong>Load model</strong>: Load a saved model with <code>loaded_model = load_model('model_name')</code>.</li>
+            </ul>
+                    </div>
+                    <div class="section">
+            <h2>Advanced Features 🌟</h2>
+           
+
+ <ul>
+                <li><strong>Pipeline creation</strong>: Create pipelines for complex workflows using <code>from pycaret.datasets import get_data</code> and <code>from pycaret.classification import *</code>.</li>
+                <li><strong>Custom metrics</strong>: Define and use custom metrics for evaluation with <code>add_metric('metric_name', 'Metric Display Name', custom_function)</code>.</li>
+                <li><strong>Automated ML</strong>: Leverage AutoML with PyCaret by using <code>best_model = automl()</code>.</li>
+            </ul>
+                    </div>
+
+    </div>
+</body>
+</html>
+
