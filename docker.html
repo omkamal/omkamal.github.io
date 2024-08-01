@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Cheat Sheet</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+            min-height: calc(100vh - 20mm);
+        }
+        
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        .emoji {
+            font-style: normal;
+        }
+        
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        
+        code {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 8px;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 4px;
+            padding: 3px;
+            margin: 3px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        strong {
+            color: #2980b9;
+        }
+        
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+            .container {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn Profile</a></div>
+    <h1>Docker Cheat Sheet</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Installation and Setup 🛠️</h2>
+            <ul>
+                <li><strong>Install Docker</strong>: Use <code>apt-get install docker-ce</code> on Ubuntu.</li>
+                <li><strong>Start Docker</strong>: Run <code>sudo systemctl start docker</code>.</li>
+                <li><strong>Enable Docker</strong>: Enable at startup with <code>sudo systemctl enable docker</code>.</li>
+                <li><strong>Check Installation</strong>: Verify with <code>docker --version</code>.</li>
+            </ul>
+            <h2>Images 📦</h2>
+            <ul>
+                <li><strong>Pull Image</strong>: Download an image with <code>docker pull &lt;image_name&gt;</code>.</li>
+                <li><strong>List Images</strong>: Show images with <code>docker images</code>.</li>
+                <li><strong>Remove Image</strong>: Delete an image with <code>docker rmi &lt;image_id&gt;</code>.</li>
+                <li><strong>Build Image</strong>: Build from a Dockerfile using <code>docker build -t &lt;image_name&gt; .</code>.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Containers 🚢</h2>
+            <ul>
+                <li><strong>Run Container</strong>: Start a container with <code>docker run &lt;image_name&gt;</code>.</li>
+                <li><strong>List Containers</strong>: Show running containers with <code>docker ps</code>.</li>
+                <li><strong>Stop Container</strong>: Stop a running container using <code>docker stop &lt;container_id&gt;</code>.</li>
+                <li><strong>Remove Container</strong>: Delete a container with <code>docker rm &lt;container_id&gt;</code>.</li>
+                <li><strong>Run in Background</strong>: Use <code>docker run -d &lt;image_name&gt;</code> to run in detached mode.</li>
+                <li><strong>Run with Ports</strong>: Map ports with <code>docker run -p &lt;host_port&gt;:&lt;container_port&gt; &lt;image_name&gt;</code>.</li>
+            </ul>
+            <h2>Volumes 📂</h2>
+            <ul>
+                <li><strong>Create Volume</strong>: Use <code>docker volume create &lt;volume_name&gt;</code>.</li>
+                <li><strong>List Volumes</strong>: Show volumes with <code>docker volume ls</code>.</li>
+                <li><strong>Use Volume</strong>: Mount a volume with <code>docker run -v &lt;volume_name&gt;:&lt;container_path&gt; &lt;image_name&gt;</code>.</li>
+                <li><strong>Remove Volume</strong>: Delete a volume with <code>docker volume rm &lt;volume_name&gt;</code>.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Networking 🌐</h2>
+            <ul>
+                <li><strong>List Networks</strong>: Show networks with <code>docker network ls</code>.</li>
+                <li><strong>Create Network</strong>: Use <code>docker network create &lt;network_name&gt;</code>.</li>
+                <li><strong>Connect to Network</strong>: Connect a container with <code>docker network connect &lt;network_name&gt; &lt;container_id&gt;</code>.</li>
+                <li><strong>Disconnect from Network</strong>: Disconnect using <code>docker network disconnect &lt;network_name&gt; &lt;container_id&gt;</code>.</li>
+                <li><strong>Inspect Network</strong>: Get details with <code>docker network inspect &lt;network_name&gt;</code>.</li>
+            </ul>
+            <h2>Docker Compose 📝</h2>
+            <ul>
+                <li><strong>Install Compose</strong>: Use <code>pip install docker-compose</code>.</li>
+                <li><strong>Start Services</strong>: Run <code>docker-compose up</code> to start.</li>
+                <li><strong>Stop Services</strong>: Use <code>docker-compose down</code> to stop.</li>
+                <li><strong>Build Services</strong>: Build images with <code>docker-compose build</code>.</li>
+                <li><strong>View Logs</strong>: See logs with <code>docker-compose logs</code>.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
