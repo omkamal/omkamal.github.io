@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NumPy Cheat Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Indie+Flower&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=M+PLUS+Rounded+1c&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+
+        .indie-flower-regular {
+          font-family: "Indie Flower", cursive;
+          font-weight: 400;
+          font-style: normal;
+        }
+
+        
+        body {
+            font-family: 'M PLUS Rounded 1c', cursive;
+            font-size: 14px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+            min-height: calc(100vh - 20mm);
+        }
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        h2 {
+            font-size: 16px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        li {
+            margin-bottom: 3px;
+        }
+        .emoji {
+            font-style: normal;
+        }
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        code {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 11px;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 4px;
+            padding: 3px;
+            margin: 3px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        strong {
+            color: #2980b9;
+        }
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+            .container {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/"><i class="fab fa-linkedin"></i> LinkedIn</a></div>
+    <h1>NumPy Cheat Sheet 🐍📊</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Array Creation <i class="fas fa-plus-square"></i></h2>
+            <ul>
+                <li><strong>np.array()</strong>: Create an array from a list. <code>np.array([1, 2, 3])</code></li>
+                <li><strong>np.zeros()</strong>: Create an array filled with zeros. <code>np.zeros((3, 3))</code></li>
+                <li><strong>np.ones()</strong>: Create an array filled with ones. <code>np.ones((2, 4))</code></li>
+                <li><strong>np.arange()</strong>: Create an array with a range of elements. <code>np.arange(0, 10, 2)</code></li>
+                <li><strong>np.linspace()</strong>: Create an array with evenly spaced numbers. <code>np.linspace(0, 1, 5)</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Array Operations <i class="fas fa-calculator"></i></h2>
+            <ul>
+                <li><strong>Arithmetic</strong>: Element-wise operations. <code>a + b, a - b, a * b, a / b</code></li>
+                <li><strong>Dot product</strong>: Matrix multiplication. <code>np.dot(a, b)</code></li>
+                <li><strong>Transpose</strong>: Flip array dimensions. <code>a.T</code></li>
+                <li><strong>Reshape</strong>: Change array shape. <code>a.reshape((3, 4))</code></li>
+                <li><strong>Flatten</strong>: Convert to 1D array. <code>a.flatten()</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Array Indexing <i class="fas fa-map-marker-alt"></i></h2>
+            <ul>
+                <li><strong>Slicing</strong>: Get a portion of an array. <code>a[1:4, 2:5]</code></li>
+                <li><strong>Boolean indexing</strong>: Select elements based on conditions. <code>a[a > 5]</code></li>
+                <li><strong>Fancy indexing</strong>: Select using integer arrays. <code>a[[1, 3, 4]]</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Array Functions <i class="fas fa-function"></i></h2>
+            <ul>
+                <li><strong>np.sum()</strong>: Sum of array elements. <code>np.sum(a)</code></li>
+                <li><strong>np.mean()</strong>: Average of array elements. <code>np.mean(a)</code></li>
+                <li><strong>np.max(), np.min()</strong>: Maximum and minimum values. <code>np.max(a), np.min(a)</code></li>
+                <li><strong>np.argmax(), np.argmin()</strong>: Indices of max and min values. <code>np.argmax(a), np.argmin(a)</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Broadcasting <i class="fas fa-broadcast-tower"></i></h2>
+            <ul>
+                <li><strong>Automatic</strong>: NumPy broadcasts arrays of different shapes. <code>a + np.array([1, 2, 3])</code></li>
+                <li><strong>Rules</strong>: Arrays must have compatible shapes for broadcasting. <code># a: (3, 3), b: (3,) is valid</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Linear Algebra <i class="fas fa-superscript"></i></h2>
+            <ul>
+                <li><strong>np.linalg.inv()</strong>: Inverse of a matrix. <code>np.linalg.inv(a)</code></li>
+                <li><strong>np.linalg.det()</strong>: Determinant of a matrix. <code>np.linalg.det(a)</code></li>
+                <li><strong>np.linalg.eig()</strong>: Eigenvalues and eigenvectors. <code>np.linalg.eig(a)</code></li>
+                <li><strong>np.linalg.solve()</strong>: Solve linear equations. <code>np.linalg.solve(a, b)</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Random Sampling <i class="fas fa-random"></i></h2>
+            <ul>
+                <li><strong>np.random.rand()</strong>: Uniform distribution over [0, 1). <code>np.random.rand(3, 3)</code></li>
+                <li><strong>np.random.randn()</strong>: Standard normal distribution. <code>np.random.randn(3, 3)</code></li>
+                <li><strong>np.random.choice()</strong>: Random sample from given array. <code>np.random.choice([1, 2, 3], size=(2, 2))</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Array Manipulation <i class="fas fa-edit"></i></h2>
+            <ul>
+                <li><strong>np.concatenate()</strong>: Join arrays along an axis. <code>np.concatenate((a, b), axis=0)</code></li>
+                <li><strong>np.split()</strong>: Split array into sub-arrays. <code>np.split(a, 3)</code></li>
+                <li><strong>np.stack()</strong>: Stack arrays along a new axis. <code>np.stack((a, b))</code></li>
+                <li><strong>np.tile()</strong>: Construct array by repeating. <code>np.tile(a, (2, 2))</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>File I/O <i class="fas fa-file-import"></i></h2>
+            <ul>
+                <li><strong>np.save()</strong>: Save array to .npy file. <code>np.save('array.npy', a)</code></li>
+                <li><strong>np.load()</strong>: Load array from .npy file. <code>np.load('array.npy')</code></li>
+                <li><strong>np.savetxt()</strong>: Save array to text file. <code>np.savetxt('array.txt', a)</code></li>
+                <li><strong>np.loadtxt()</strong>: Load array from text file. <code>np.loadtxt('array.txt')</code></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
