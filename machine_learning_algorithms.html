@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning Techniques Cheatsheet</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+            min-height: calc(100vh - 20mm);
+        }
+        
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        .emoji {
+            font-style: normal;
+        }
+        
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        
+        code {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 8px;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 4px;
+            padding: 3px;
+            margin: 3px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        strong {
+            color: #2980b9;
+        }
+        
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+            .container {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn</a></div>
+    <h1>Machine Learning Techniques Cheatsheet</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Linear Regression 📈</h2>
+            <ul>
+                <li><strong>Predicts</strong> a continuous dependent variable.</li>
+                <li><strong>Minimizes</strong> the sum of squared residuals.</li>
+                <li><strong>Assumes</strong> a linear relationship.</li>
+            </ul>
+            <code>
+from sklearn.linear_model import LinearRegression<br>
+model = LinearRegression()<br>
+model.fit(X_train, y_train)<br>
+predictions = model.predict(X_test)
+            </code>
+        </div>
+        <div class="section">
+            <h2>Logistic Regression 🚀</h2>
+            <ul>
+                <li><strong>Classifies</strong> binary outcomes.</li>
+                <li><strong>Uses</strong> the logistic function.</li>
+                <li><strong>Estimates</strong> probabilities.</li>
+            </ul>
+            <code>
+from sklearn.linear_model import LogisticRegression<br>
+model = LogisticRegression()<br>
+model.fit(X_train, y_train)<br>
+predictions = model.predict(X_test)
+            </code>
+        </div>
+        <div class="section">
+            <h2>Decision Trees 🌳</h2>
+            <ul>
+                <li><strong>Splits</strong> data into branches.</li>
+                <li><strong>Handles</strong> both classification and regression.</li>
+                <li><strong>Interpretable</strong> model with clear rules.</li>
+            </ul>
+            <code>
+from sklearn.tree import DecisionTreeClassifier<br>
+model = DecisionTreeClassifier()<br>
+model.fit(X_train, y_train)<br>
+predictions = model.predict(X_test)
+            </code>
+        </div>
+        <div class="section">
+            <h2>Random Forest 🌲🌲</h2>
+            <ul>
+                <li><strong>Ensemble</strong> method using multiple trees.</li>
+                <li><strong>Reduces</strong> overfitting.</li>
+                <li><strong>Combines</strong> multiple decision trees.</li>
+            </ul>
+            <code>
+from sklearn.ensemble import RandomForestClassifier<br>
+model = RandomForestClassifier()<br>
+model.fit(X_train, y_train)<br>
+predictions = model.predict(X_test)
+            </code>
+        </div>
+        <div class="section">
+            <h2>Support Vector Machines (SVM) 🛡️</h2>
+            <ul>
+                <li><strong>Classifies</strong> by finding the optimal hyperplane.</li>
+                <li><strong>Effective</strong> in high-dimensional spaces.</li>
+                <li><strong>Works</strong> well with clear margin of separation.</li>
+            </ul>
+            <code>
+from sklearn.svm import SVC<br>
+model = SVC()<br>
+model.fit(X_train, y_train)<br>
+predictions = model.predict(X_test)
+            </code>
+        </div>
+        <div class="section">
+            <h2>K-Nearest Neighbors (KNN) 👥</h2>
+            <ul>
+                <li><strong>Classifies</strong> based on closest data points.</li>
+                <li><strong>Simple</strong> and intuitive method.</li>
+                <li><strong>Non-parametric</strong> and lazy learning.</li>
+            </ul>
+            <code>
+from sklearn.neighbors import KNeighborsClassifier<br>
+model = KNeighborsClassifier()<br>
+model.fit(X_train, y_train)<br>
+predictions = model.predict(X_test)
+            </code>
+        </div>
+        <div class="section">
+            <h2>K-Means Clustering 🎯</h2>
+            <ul>
+                <li><strong>Clusters</strong> data into K distinct clusters.</li>
+                <li><strong>Iterative</strong> approach to minimize variance.</li>
+                <li><strong>Unsupervised</strong> learning algorithm.</li>
+            </ul>
+            <code>
+from sklearn.cluster import KMeans<br>
+model = KMeans(n_clusters=3)<br>
+model.fit(X)<br>
+clusters = model.predict(X)
+            </code>
+        </div>
+        
+                <div class="section">
+            <h2>DBScan 🚀</h2>
+            <ul>
+                <li><strong>Density-based</strong> clustering algorithm.</li>
+                <li><strong>Identifies</strong> clusters with arbitrary shape.</li>
+                <li><strong>Does not require</strong> a predefined number of clusters.</li>
+            </ul>
+            <code>
+from sklearn.cluster import DBSCAN<br>
+model = DBSCAN(eps=0.5, min_samples=5)<br>
+model.fit(X)<br>
+clusters = model.labels_
+            </code>
+        </div>
+        <div class="section">
+            <h2>Hierarchical Clustering 🏰</h2>
+            <ul>
+                <li><strong>Builds</strong> a hierarchy of clusters.</li>
+                <li><strong>Uses</strong> a tree-like structure (dendrogram).</li>
+                <li><strong>Two types:</strong> agglomerative and divisive.</li>
+            </ul>
+            <code>
+from scipy.cluster.hierarchy import dendrogram, linkage<br>
+linked = linkage(X, 'single')<br>
+dendrogram(linked)<br>
+            </code>
+        </div>
+        
+    </div>
+</body>
+</html>
+
