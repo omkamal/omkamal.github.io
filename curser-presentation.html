@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curser.ai Presentation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .slide {
+            display: none;
+            padding: 50px;
+            text-align: center;
+            transition: transform 0.5s ease-in-out;
+        }
+        .slide.active-slide {
+            display: block;
+            transform: scale(1.05);
+        }
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        .control-button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 15px 25px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .control-button:hover {
+            background-color: #0056b3;
+        }
+        h1, h2 {
+            color: #007BFF;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide active-slide">
+    <h1>Welcome to Curser.ai</h1>
+    <p>Experience the future of AI-driven solutions.</p>
+</div>
+
+<div class="slide">
+    <h2>What is Curser.ai?</h2>
+    <p>Curser.ai is an innovative AI platform designed to enhance productivity and streamline workflows.</p>
+</div>
+
+<div class="slide">
+    <h2>Features</h2>
+    <ul>
+        <li>Intelligent task management</li>
+        <li>Real-time data insights</li>
+        <li>Seamless integration with existing tools</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Benefits</h2>
+    <p>Curser.ai helps you save time, improve accuracy, and boost overall efficiency.</p>
+</div>
+
+<div class="controls">
+    <button class="control-button" onclick="prevSlide()">Prev</button>
+    <button class="control-button" onclick="nextSlide()">Next</button>
+    <button class="control-button" onclick="homeSlide()">Home</button>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(index) {
+        slides.forEach(slide => slide.classList.remove('active-slide'));
+        slides[index].classList.add('active-slide');
+        currentSlide = index;
+    }
+
+    function nextSlide() {
+        if (currentSlide < slides.length - 1) {
+            showSlide(currentSlide + 1);
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 0) {
+            showSlide(currentSlide - 1);
+        }
+    }
+
+    function homeSlide() {
+        showSlide(0);
+    }
+
+    // Initialize the first slide
+    showSlide(currentSlide);
+</script>
+
+</body>
+</html>
