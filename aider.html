@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CatBoost Python Library Cheat Sheet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+
+
+        .container2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+        
+        .container4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+        
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        .emoji {
+            font-style: normal;
+        }
+        
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        
+        .section, .svg-container, .img-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        .section {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        
+        .svg-container, .img-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 150px; /* Set a fixed height to match text sections */
+            position: relative;
+        }
+        
+        strong {
+            color: #2980b9;
+        }
+        
+        .svg-container::before, .img-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #f3f4f6 25%, transparent 25%, transparent 75%, #f3f4f6 75%, #f3f4f6),
+                        linear-gradient(45deg, #f3f4f6 25%, transparent 25%, transparent 75%, #f3f4f6 75%, #f3f4f6);
+            background-size: 10px 10px;
+            background-position: 0 0, 5px 5px;
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
+        .svg-container svg, .img-container img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            z-index: 2;
+        }
+        
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin">
+        <a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/" target="_blank">
+            <i class="fab fa-linkedin"></i> LinkedIn Profile
+        </a>
+    </div>
+    
+    <div class="container2">
+        
+    <h1>Aider Cheat Sheet</h1>
+     
+        <div class="section">
+            <h2><i class="fas fa-question-circle"></i> What is Aider?</h2>
+            <ul>
+                <li><strong>Aider</strong> is an AI-powered coding assistant that helps you <strong>write</strong>, <strong>refactor</strong>, and <strong>debug</strong> code. </li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2><i class="fas fa-download"></i> Installation</h2>
+            <ul>
+                <li><strong>Install Aider</strong> using pip: `pip install aider-chat`.</li>
+                <li>You'll also need an <strong>API key</strong> for your chosen language model (e.g., OpenAI).</li>
+            </ul>
+        </div>
+</div>
+     <br>   
+    <h2>Aider Command Details</h2>
+    
+    <div class="container4">
+        <div class="section">
+            <h2><i class="fas fa-plus-circle"></i> /add ➕</h2>
+            <ul>
+                <li>Use `/add` to <strong>add</strong> specific files to the chat for <strong>editing</strong> or <strong>review</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-question-circle"></i> /ask ❓</h2>
+            <ul>
+                <li>Use `/ask` to get <strong>answers</strong> about your codebase without making any <strong>changes</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-comments"></i> /chat-mode 💬</h2>
+            <ul>
+                <li>Switch between <strong>chat modes</strong> like `code`, `ask`, or `help` using `/chat-mode`.</li>
+            </ul>
+        </div>
+
+
+        <div class="section">
+            <h2><i class="fas fa-broom"></i> /clear 🧹</h2>
+            <ul>
+                <li><strong>Clear</strong> the current chat <strong>history</strong> with `/clear`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-clipboard"></i> /clipboard 📋</h2>
+            <ul>
+                <li><strong>Paste</strong> images or text from your clipboard into the chat using `/clipboard`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-code"></i> /code 💻</h2>
+            <ul>
+                <li>Request <strong>code changes</strong> using `/code` in the chat.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-save"></i> /commit 💾</h2>
+            <ul>
+                <li><strong>Commit</strong> changes made outside the chat using `/commit` with an optional <strong>message</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-exchange-alt"></i> /diff 🔄</h2>
+            <ul>
+                <li>See the <strong>difference</strong> between the current code and the previous version with `/diff`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-minus-circle"></i> /drop ➖</h2>
+            <ul>
+                <li><strong>Remove</strong> files from the chat to <strong>free up</strong> context space using `/drop`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-door-open"></i> /exit 🚪</h2>
+            <ul>
+                <li><strong>Exit</strong> the Aider application with `/exit`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fab fa-git-alt"></i> /git 🌿</h2>
+            <ul>
+                <li>Execute <strong>Git commands</strong> directly within the chat using `/git`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-question"></i> /help ❓</h2>
+            <ul>
+                <li>Get <strong>help</strong> with Aider commands and features by typing `/help`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-check-circle"></i> /lint 🐞</h2>
+            <ul>
+                <li><strong>Lint</strong> and <strong>fix</strong> code in the chat or dirty files using `/lint`.</li>
+            </ul>
+        </div>
+
+
+        <div class="section">
+            <h2><i class="fas fa-list"></i> /ls 📜</h2>
+            <ul>
+                <li><strong>List</strong> all known files and see which ones are included in the chat with `/ls`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-map"></i> /map 🗺️</h2>
+            <ul>
+                <li>View the current <strong>repository map</strong> created by Aider using `/map`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-sync-alt"></i> /map-refresh 🔄</h2>
+            <ul>
+                <li><strong>Refresh</strong> the repository map manually with `/map-refresh`.</li>
+            </ul>
+        </div>
+
+
+        <div class="section">
+            <h2><i class="fas fa-robot"></i> /model 🤖</h2>
+            <ul>
+                <li><strong>Switch</strong> to a different language <strong>model</strong> using `/model`.</li>
+            </ul>
+        </div>
+
+
+        <div class="section">
+            <h2><i class="fas fa-list-alt"></i> /models 📃</h2>
+            <ul>
+                <li><strong>Search</strong> the list of available language <strong>models</strong> with `/models`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-power-off"></i> /quit 🛑</h2>
+            <ul>
+                <li><strong>Quit</strong> the Aider application using `/quit`.</li>
+            </ul>
+        </div>
+
+
+        <div class="section">
+            <h2><i class="fas fa-eye"></i> /read-only 👁️</h2>
+            <ul>
+                <li>Add files to the chat for <strong>reference</strong> only, preventing edits with `/read-only`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-undo"></i> /reset ⏪</h2>
+            <ul>
+                <li><strong>Reset</strong> the chat by <strong>dropping</strong> all files and <strong>clearing</strong> the history with `/reset`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-play-circle"></i> /run ▶️</h2>
+            <ul>
+                <li><strong>Run</strong> a shell command and optionally add its output to the chat using `/run` (alias: `!`).</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-cog"></i> /settings ⚙️</h2>
+            <ul>
+                <li>View the current Aider <strong>settings</strong> with `/settings`.</li>
+            </ul>
+        </div>
+
+
+        <div class="section">
+            <h2><i class="fas fa-vial"></i> /test 🧪</h2>
+            <ul>
+                <li>Run a shell command and add the output to the chat if it fails (non-zero exit code) using `/test`.</li>
+            </ul>
+        </div>
+
+
+        <div class="section">
+            <h2><i class="fas fa-calculator"></i> /tokens 🧮</h2>
+            <ul>
+                <li>Get a <strong>report</strong> on the number of <strong>tokens</strong> used by the current chat context with `/tokens`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-undo-alt"></i> /undo ↶</h2>
+            <ul>
+                <li><strong>Undo</strong> the last Git commit made by Aider using `/undo`.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-microphone"></i> /voice 🎤</h2>
+            <ul>
+                <li><strong>Record</strong> and <strong>transcribe</strong> voice input for coding instructions with `/voice`.</li>
+            </ul>
+        </div>
+
+
+        <div class="section">
+            <h2><i class="fas fa-globe"></i> /web 🌐</h2>
+            <ul>
+                <li><strong>Scrape</strong> a webpage, convert it to markdown, and send it as a message using `/web`.</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>
+
