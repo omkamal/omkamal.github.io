@@ -155,7 +155,7 @@
 
     <div class="container">
         <div class="section">
-            <h2>Quickstart 🚀</h2>
+            <h2>Quickstart 🏁</h2>
             <p>The Hugging Face Hub is the <strong>central place</strong> to discover and share ML models, datasets, and Spaces.</p>
             <ul>
                 <li><strong>Discover:</strong> Find pre-trained models and datasets 🕵️‍♀️.</li>
@@ -278,6 +278,370 @@ print(response.choices[0].message.content) # ¡Hola!
                 <li><strong>ModelCard.load()</strong>, <strong>ModelCard.from_template()</strong>: Create or load Model Cards.</li>
                 <li><strong>ModelCard.push_to_hub()</strong>: Share your Model Card on the Hub.</li>
                 <li><strong>metadata_update()</strong>: Update your card’s metadata.</li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    
+ <div class="container2">
+    <div class="section">
+        <h2>Login/Logout & Authentication 🔐</h2>
+        <ul>
+            <li><strong>Log in</strong> using a user access token: <code>huggingface_hub.login(token, add_to_git_credential=False, new_session=True, write_permission=False)</code>.</li>
+            <li>Log in using the <strong>terminal</strong>: <code>huggingface_hub.interpreter_login(new_session=True, write_permission=False)</code>.</li>
+            <li>Log in using a <strong>notebook widget</strong>: <code>huggingface_hub.notebook_login(new_session=True, write_permission=False)</code>.</li>
+            <li><strong>Log out</strong> and delete the saved token: <code>huggingface_hub.logout()</code>.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Environment Variables 🌳</h2>
+        <ul>
+            <li><strong>Local data directory</strong> for Hugging Face Hub: <code>HF_HOME</code>.</li>
+            <li><strong>Cache directory</strong> for models, datasets, and spaces: <code>HF_HUB_CACHE</code>.</li>
+            <li><strong>Cache directory</strong> for downstream library assets: <code>HF_ASSETS_CACHE</code>.</li>
+            <li>Your Hugging Face <strong>user access token</strong>: <code>HF_TOKEN</code>.</li>
+            <li>Set to 1 to enable <strong>offline mode</strong>: <code>HF_HUB_OFFLINE</code>.</li>
+            <li>Set to 1 to <strong>disable progress bars</strong>: <code>HF_HUB_DISABLE_PROGRESS_BARS</code>.</li>
+            <li>Set to 1 to <strong>disable telemetry</strong>: <code>HF_HUB_DISABLE_TELEMETRY</code>.</li>
+            <!-- Add more relevant environment variables -->
+        </ul>
+    </div>
+
+   
+</div>
+<div class="container1">
+    
+ <div class="section">
+        <h2><code>HfApi</code> Client 🌐</h2>
+        <ul>
+            <li>Create an <strong>HfApi client</strong> to interact with the Hub: <code>huggingface_hub.HfApi(endpoint=None, token=None, ...)</code>.</li>
+            <li><strong>Create</strong> a new repository: <code>api.create_repo(repo_id, token=None, private=False, repo_type=None, exist_ok=False, ...)</code>.</li>
+            <li><strong>Delete</strong> a repository: <code>api.delete_repo(repo_id, token=None, repo_type=None, missing_ok=False)</code>.</li>
+            <li><strong>Upload</strong> a file: <code>api.upload_file(path_or_fileobj, path_in_repo, repo_id, token=None, repo_type=None, revision=None, ...)</code>.</li>
+            <li><strong>Upload</strong> a folder: <code>api.upload_folder(folder_path, path_in_repo=None, repo_id, token=None, repo_type=None, revision=None, ...)</code>.</li>
+            <li><strong>Download</strong> a file: <code>api.hf_hub_download(repo_id, filename, revision=None, cache_dir=None, force_download=False, ...)</code>.</li>
+            <li><strong>List</strong> available models: <code>api.list_models(filter=None, author=None, search=None, sort=None, direction=None, limit=None, ...)</code>.</li>
+            <li><strong>List</strong> available datasets: <code>api.list_datasets(filter=None, author=None, search=None, sort=None, direction=None, limit=None, ...)</code>.</li>
+            <li>Get <strong>model information</strong>: <code>api.model_info(repo_id, revision=None, timeout=None, securityStatus=None, files_metadata=False, ...)</code>.</li>
+            <li>Get <strong>dataset information</strong>: <code>api.dataset_info(repo_id, revision=None, timeout=None, files_metadata=False, ...)</code>.</li>
+            <!-- Add more useful HfApi methods and their parameters -->
+        </ul>
+    </div>
+</div>
+
+<br>
+<h2>Hugging Face Hub - 🧠 Inference</h2>
+<br>
+<div class="container4">
+    <div class="section">
+        <h2>Inference</h2>
+        <ul>
+            <li><strong>Inference</strong> is the process of using a <strong>trained model</strong> to make <strong>predictions</strong> on new data. <span class="emoji">🔮</span></li>
+            <li>Running inference on a dedicated <strong>server</strong> can be more efficient. <span class="emoji">🖥️</span></li>
+            <li>The <strong>huggingface_hub</strong> library simplifies calling inference services for hosted models. <span class="emoji">🧰</span></li>
+        </ul>
+    </div>
+    <div class="section">
+        <h2>Inference Services</h2>
+        <ul>
+            <li><strong>Inference API</strong>: Free, accelerated inference on Hugging Face's infrastructure. <span class="emoji">⚡️</span> Great for <strong>getting started</strong>, <strong>testing models</strong>, and <strong>prototyping</strong>. <span class="emoji">🔨</span></li>
+            <li><strong>Inference Endpoints</strong>: Easily <strong>deploy models</strong> to production with fully managed infrastructure on your <strong>cloud provider</strong>. <span class="emoji">☁️</span></li>
+        </ul>
+    </div>
+    <div class="section">
+        <h2>Inference Client</h2>
+        <p>The <strong>InferenceClient</strong> object connects to inference services. <span class="emoji">🔌</span></p>
+        <ul>
+            <li><code><strong>model</strong></code>: Model ID (e.g., <code>"meta-llama/Meta-Llama-3-8B-Instruct"</code>) or Inference Endpoint URL. <span class="emoji">🆔</span></li>
+            <li><code><strong>token</strong></code>: Hugging Face <strong>authentication token</strong>. <span class="emoji">🔑</span></li>
+            <li><code><strong>timeout</strong></code>: Maximum wait time for server response. <span class="emoji">⏱️</span></li>
+        </ul>
+    </div>
+    <div class="section">
+    <h2>Async Inference Client</h2>
+    <p>An <strong>asynchronous</strong> version using <strong>asyncio</strong> and <strong>aiohttp</strong>. <span class="emoji">💫</span></p>
+    <ul>
+        <li>Install: <code>pip install --upgrade huggingface_hub[inference]</code></li>
+        <li>Similar methods to the synchronous client, but with <code><strong>await</strong></code>. <span class="emoji">⏳</span></li>
+    </ul>
+    </div>
+</div>
+<br>
+
+<div class="container2">
+    <div class="section">
+        <h2>Key Methods - More Details</h2>
+        <ul>
+            <li><code><strong>audio_classification(audio, model)</strong></code>: Classifies audio content into predefined categories. 🎧
+                <ul>
+                    <li><code>audio</code>: The audio content to classify (file path, bytes, URL).</li>
+                    <li><code>model</code>: The audio classification model to use.</li>
+                    <li>Returns: A list of predicted labels with confidence scores.</li>
+                </ul>
+            </li>
+            <li><code><strong>automatic_speech_recognition(audio, model)</strong></code>: Transcribes audio to text (ASR). 🎤
+                <ul>
+                    <li><code>audio</code>: The audio content to transcribe (file path, bytes, URL).</li>
+                    <li><code>model</code>: The ASR model to use.</li>
+                    <li>Returns: The transcribed text, potentially with timestamps.</li>
+                </ul>
+            </li>
+            <li><code><strong>chat_completion(messages, model, ...)</strong></code>: Generates conversational responses in a chat-like format. 💬
+                <ul>
+                    <li><code>messages</code>: A list of chat messages with roles (user, assistant, system).</li>
+                    <li><code>model</code>: The conversational model to use.</li>
+                    <li>Additional parameters: <code>max_tokens</code>, <code>temperature</code>, etc.</li>
+                    <li>Returns: The generated chat response.</li>
+                </ul>
+            </li>
+            <li><code><strong>feature_extraction(text, model)</strong></code>: Generates numerical representations (embeddings) of text. 🔢
+                <ul>
+                    <li><code>text</code>: The text to embed.</li>
+                    <li><code>model</code>: The text embedding model to use.</li>
+                    <li>Returns: A numerical vector representing the text.</li>
+                </ul>
+            </li>
+            <li><code><strong>image_classification(image, model)</strong></code>: Classifies images into predefined categories. 🖼️
+                <ul>
+                    <li><code>image</code>: The image to classify (file path, bytes, URL).</li>
+                    <li><code>model</code>: The image classification model to use.</li>
+                    <li>Returns: A list of predicted labels with confidence scores.</li>
+                </ul>
+            </li>
+            <li><code><strong>text_generation(prompt, model, ...)</strong></code>: Generates text based on a given prompt. ✍️
+                <ul>
+                    <li><code>prompt</code>: The starting text for the generation.</li>
+                    <li><code>model</code>: The text generation model to use.</li>
+                    <li>Additional parameters: <code>max_new_tokens</code>, <code>temperature</code>, etc.</li>
+                    <li>Returns: The generated text.</li>
+                </ul>
+            </li>
+            <li><code><strong>text_to_image(prompt, model, ...)</strong></code>: Generates images from text descriptions. 🎨
+                <ul>
+                    <li><code>prompt</code>: The text description of the image to generate.</li>
+                    <li><code>model</code>: The text-to-image model to use.</li>
+                    <li>Additional parameters: <code>height</code>, <code>width</code>, etc.</li>
+                    <li>Returns: The generated image.</li>
+                </ul>
+            </li>
+            <li><code><strong>translation(text, model, src_lang, tgt_lang)</strong></code>: Translates text from one language to another. 🌐
+                <ul>
+                    <li><code>text</code>: The text to translate.</li>
+                    <li><code>model</code>: The translation model to use.</li>
+                    <li><code>src_lang</code>: The source language (optional).</li>
+                    <li><code>tgt_lang</code>: The target language (optional).</li>
+                    <li>Returns: The translated text.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+    <h2>Complete Example: Text-to-Image 🖼️</h2>
+        <pre><code><strong>from huggingface_hub import InferenceClient</strong>
+<strong>Initialize</strong> the InferenceClient
+client = InferenceClient(token="YOUR_HUGGING_FACE_TOKEN")
+
+<strong>Generate an image</strong>
+image = client.text_to_image(
+    prompt="A cat wearing a top hat riding a unicycle on a tightrope",
+    model="stabilityai/stable-diffusion-2-1",  # Specify the text-to-image model
+    height=512,  # Optional: Set image height
+    width=512,   # Optional: Set image width
+)
+
+<strong>Save the image</strong>
+image.save("cat_unicycle.png")
+</code></pre>
+
+<h2>Complete Example: Text Generation ✍️</h2>
+<pre><code><strong>from huggingface_hub import InferenceClient</strong>
+<strong>Initialize</strong> the InferenceClient
+client = InferenceClient(token="YOUR_HUGGING_FACE_TOKEN")
+
+<strong>Generate text</strong>
+generated_text = client.text_generation(
+    prompt="Once upon a time, in a land far away, ",
+    model="gpt2",  # Specify the text generation model
+    max_new_tokens=50,  # Limit the length of generated text
+    temperature=0.7,  # Control the randomness (higher = more random)
+)
+
+<strong>Print the generated text</strong>
+print(generated_text)
+</code></pre>
+
+
+
+</div>
+</div>        
+    <br>
+    <h2>Tokenizers 🤗</h2>
+    
+    <div class="container">
+        <div class="section">
+            <h2>🌟 Main Features</h2>
+            <ul>
+                <li><strong>Fast Training</strong>: Tokenizes 1GB of text in under 20 seconds.</li>
+                <li><strong>Versatile</strong>: Supports different tokenization models.</li>
+                <li><strong>Full Alignment Tracking</strong>: Maintains correspondence with the original text.</li>
+                <li><strong>Pre-Processing Included</strong>: Handles truncation, padding, and special tokens.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>🚀 Quick Tour</h2>
+            <ul>
+                <li><strong>Build Tokenizer</strong>: Use the library to train a new tokenizer.</li>
+                <li><strong>Train with BPE</strong>: Uses merge rules to build tokens.</li>
+                <li><strong>Encode Text</strong>: Tokenize and retrieve IDs with <code>Tokenizer.encode</code>.</li>
+                <li><strong>Post-Processing</strong>: Automatically adds special tokens.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>🔧 Installation</h2>
+            <ul>
+                <li><strong>Using Pip</strong>: <code>pip install tokenizers</code>.</li>
+                <li><strong>From Source</strong>: Requires Rust. Use <code>git clone</code> and compile.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>🧰 Pre-Tokenizers</h2>
+            <ul>
+                <li><strong>Whitespace</strong>: Splits on spaces.</li>
+                <li><strong>Punctuation</strong>: Isolates punctuation marks.</li>
+                <li><strong>ByteLevel</strong>: Encodes at the byte-level.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>⚙️ Models</h2>
+            <ul>
+                <li><strong>BPE</strong>: Merges frequent pairs of characters.</li>
+                <li><strong>WordPiece</strong>: Splits words into tokens.</li>
+                <li><strong>Unigram</strong>: Finds the most probable subword units.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>🔄 Post-Processors</h2>
+            <ul>
+                <li><strong>TemplateProcessing</strong>: Adds special tokens for models.</li>
+                <li><strong>Decoders</strong>: Converts IDs back to text.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>🛠️ Normalizers</h2>
+            <ul>
+                <li><strong>NFD</strong>: Decomposes Unicode characters.</li>
+                <li><strong>Lowercase</strong>: Converts text to lowercase.</li>
+                <li><strong>StripAccents</strong>: Removes accent marks.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>🧪 Training from Memory</h2>
+            <ul>
+                <li><strong>Basic Method</strong>: Use any Python iterator.</li>
+                <li><strong>Using Datasets</strong>: Integrate with 🤗 Datasets library.</li>
+                <li><strong>From Gzip Files</strong>: Train directly from compressed files.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>📚 Components</h2>
+            <ul>
+                <li><strong>Normalizers</strong>: Prepare text for tokenization.</li>
+                <li><strong>Pre-tokenizers</strong>: Split input text into words.</li>
+                <li><strong>Models</strong>: The core algorithm for tokenization.</li>
+            </ul>
+        </div>
+    </div>
+    
+        <br>
+    <h2>🤗 Transformers Cheatsheet</h2>
+    <div class="container">
+        <div class="section">
+            <h2>Overview</h2>
+            <ul>
+                <li><strong>Transformers</strong> are state-of-the-art models for <strong>NLP, CV, and Audio</strong> tasks.</li>
+                <li>Support for <strong>PyTorch, TensorFlow, and JAX</strong> frameworks.</li>
+                <li><strong>Pretrained models</strong> reduce compute costs and training time.</li>
+                <li>Provides <strong>APIs</strong> to download and train models easily.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Tasks Supported</h2>
+            <ul>
+                <li><strong>NLP:</strong> Text classification, named entity recognition, question answering, text generation, etc.</li>
+                <li><strong>Computer Vision:</strong> Image classification, object detection, segmentation.</li>
+                <li><strong>Audio:</strong> Automatic speech recognition, audio classification.</li>
+                <li><strong>Multimodal:</strong> Table question answering, OCR, video classification, visual question answering.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Framework Interoperability</h2>
+            <ul>
+                <li>Switch between <strong>PyTorch, TensorFlow, and JAX</strong> seamlessly.</li>
+                <li>Export models to formats like <strong>ONNX</strong> or <strong>TorchScript</strong> for production deployment.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Getting Started</h2>
+            <ul>
+                <li>Install: <code>pip install transformers datasets evaluate accelerate</code></li>
+                <li>Load a pretrained model: <code>pipeline(task="task-name")</code></li>
+                <li>Use <strong>AutoModel</strong> and <strong>AutoTokenizer</strong> for flexibility.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Key Pipelines</h2>
+            <ul>
+                <li><strong>Text Classification:</strong> <code>pipeline(task="sentiment-analysis")</code></li>
+                <li><strong>Text Generation:</strong> <code>pipeline(task="text-generation")</code></li>
+                <li><strong>Summarization:</strong> <code>pipeline(task="summarization")</code></li>
+                <li><strong>Image Classification:</strong> <code>pipeline(task="image-classification")</code></li>
+                <li><strong>Image Segmentation:</strong> <code>pipeline(task="image-segmentation")</code></li>
+                <li><strong>Object Detection:</strong> <code>pipeline(task="object-detection")</code></li>
+                <li><strong>Audio Classification:</strong> <code>pipeline(task="audio-classification")</code></li>
+                <li><strong>Speech Recognition:</strong> <code>pipeline(task="automatic-speech-recognition")</code></li>
+                <li><strong>Visual Question Answering:</strong> <code>pipeline(task="vqa")</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Auto Classes</h2>
+            <ul>
+                <li><strong>AutoTokenizer:</strong> Preprocess text into numerical arrays.</li>
+                <li><strong>AutoModel:</strong> Load a model for specific tasks (e.g., classification, generation).</li>
+                <li><strong>AutoConfig:</strong> Customize model architecture (e.g., number of layers, attention heads).</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Model Training</h2>
+            <ul>
+                <li>Use <strong>Trainer</strong> class for PyTorch optimized training loop.</li>
+                <li>Use <strong>prepare_tf_dataset()</strong> for TensorFlow training with Keras API.</li>
+                <li>Supports distributed training, mixed precision, and callbacks for custom functionality.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Installation Tips</h2>
+            <ul>
+                <li><strong>Install from pip:</strong> <code>pip install transformers</code></li>
+                <li><strong>Install with dependencies:</strong> <code>pip install 'transformers[torch]'</code></li>
+                <li><strong>Install from source:</strong> <code>pip install git+https://github.com/huggingface/transformers</code></li>
+                <li><strong>Editable install:</strong> For contributing or using the main version.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Saving and Loading Models</h2>
+            <ul>
+                <li>Save with <strong>save_pretrained()</strong> and reload with <strong>from_pretrained()</strong>.</li>
+                <li>Convert models between frameworks using <strong>from_pt</strong> or <strong>from_tf</strong> parameters.</li>
             </ul>
         </div>
     </div>
