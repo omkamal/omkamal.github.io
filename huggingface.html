@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hugging Face Hub Client Library Cheatsheet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"> 
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+
+        .container2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+        
+        .container4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+        
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        .emoji {
+            font-style: normal;
+        }
+        
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        
+        .section, .svg-container, .img-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        .section {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        
+        .svg-container, .img-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 150px; /* Set a fixed height to match text sections */
+            position: relative;
+        }
+        
+        strong {
+            color: #2980b9;
+        }
+        
+        .svg-container::before, .img-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #f3f4f6 25%, transparent 25%, transparent 75%, #f3f4f6 75%, #f3f4f6),
+                        linear-gradient(45deg, #f3f4f6 25%, transparent 25%, transparent 75%, #f3f4f6 75%, #f3f4f6);
+            background-size: 10px 10px;
+            background-position: 0 0, 5px 5px;
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
+        .svg-container svg, .img-container img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            z-index: 2;
+        }
+        
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/" target="_blank"><i class="fab fa-linkedin"></i> Linkedin Profile</a></div>
+    <h1>🤗 Hugging Face Hub Client Library Cheatsheet</h1>
+
+    <div class="container">
+        <div class="section">
+            <h2>Quickstart 🏁</h2>
+            <p>The Hugging Face Hub is the <strong>central place</strong> to discover and share ML models, datasets, and Spaces.</p>
+            <ul>
+                <li><strong>Discover:</strong> Find pre-trained models and datasets 🕵️‍♀️.</li>
+                <li><strong>Collaborate:</strong> Share and work together on ML projects 🤝.</li>
+                <li><strong>Explore:</strong> Try out ML apps and demos ✨.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Installation 💻</h2>
+            <p>Start by <strong>installing</strong> the huggingface_hub library:</p>
+            <pre><code>pip install --upgrade huggingface_hub</code></pre>
+            <p>For optional features, install extra dependencies like:</p>
+            <pre><code>pip install 'huggingface_hub[tensorflow]'</code></pre>
+        </div>
+        <div class="section">
+            <h2>Download Files 📥</h2>
+            <p>Use <strong>hf_hub_download()</strong> to download a <strong>specific file</strong> from a repo:</p>
+            <pre><code>from huggingface_hub import hf_hub_download
+hf_hub_download(repo_id="google/pegasus-xsum", filename="config.json")
+</code></pre>
+            <p>For an <strong>entire repo</strong>, use <strong>snapshot_download()</strong>:</p>
+            <pre><code>from huggingface_hub import snapshot_download
+snapshot_download(repo_id="lysandre/arxiv-nlp")
+</code></pre>
+        </div>
+    </div>
+<br>
+    <div class="container">
+        <div class="section">
+            <h2>Authentication 🔐</h2>
+            <p>You'll need a <strong>Hugging Face account</strong> and a <strong>User Access Token</strong> for many actions.</p>
+            <ul>
+                <li><strong>Login Command:</strong></li>
+                <pre><code>huggingface-cli login</code></pre>
+                <li><strong>Environment Variable:</strong> Set <code>HF_TOKEN</code>.</li>
+                <li><strong>Method Parameters:</strong> Pass your token as an argument.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Create a Repo ➕</h2>
+            <p>Use <strong>create_repo()</strong> to create a new repository:</p>
+            <pre><code>from huggingface_hub import HfApi
+api = HfApi()
+api.create_repo(repo_id="my-new-model")
+</code></pre>
+            <p>Set <code>private=True</code> for a private repo.</p>
+        </div>
+        <div class="section">
+            <h2>Upload Files 📤</h2>
+            <p>Use <strong>upload_file()</strong> for a <strong>single file</strong>:</p>
+            <pre><code>api.upload_file(
+    path_or_fileobj="/path/to/README.md",
+    path_in_repo="README.md",
+    repo_id="my-username/my-repo"
+)
+</code></pre>
+            <p>For a <strong>folder</strong>, use <strong>upload_folder()</strong>.</p>
+        </div>
+    </div>
+<br>
+    <div class="container">
+        <div class="section">
+            <h2>Inference API 🧠</h2>
+            <p>Run <strong>accelerated inference</strong> on Hugging Face servers with <strong>InferenceClient</strong>:</p>
+            <pre><code>from huggingface_hub import InferenceClient
+client = InferenceClient()
+
+# Text to Image
+image = client.text_to_image("A cat wearing a hat")
+image.save("cat_with_hat.png")
+
+# Chat Completion
+messages = [{"role": "user", "content": "Translate 'Hello' to Spanish."}]
+response = client.chat_completion(messages, model="google/flan-t5-xl")
+print(response.choices[0].message.content) # ¡Hola!
+</code></pre>
+        </div>
+        <div class="section">
+            <h2>Manage Repos 📁</h2>
+            <p>Use the <strong>HfApi</strong> to <strong>manage your repositories</strong>:</p>
+            <ul>
+                <li><strong>delete_repo()</strong>: Delete a repository.</li>
+                <li><strong>update_repo_visibility()</strong>: Change visibility (public/private).</li>
+                <li><strong>move_repo()</strong>: Rename or transfer a repo.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Discussions & Pull Requests 💬</h2>
+            <p>Interact with the <strong>community</strong> using <strong>HfApi</strong>:</p>
+            <ul>
+                <li><strong>get_repo_discussions()</strong>: Retrieve discussions and pull requests.</li>
+                <li><strong>create_discussion()</strong>, <strong>create_pull_request()</strong>: Start new discussions or PRs.</li>
+                <li><strong>comment_discussion()</strong>, <strong>merge_pull_request()</strong>: Participate in discussions.</li>
+            </ul>
+        </div>
+    </div>
+<br>
+    <div class="container">
+        <div class="section">
+            <h2>Collections 📚</h2>
+            <p><strong>Organize</strong> models, datasets, Spaces, and papers with <strong>collections</strong>.</p>
+            <ul>
+                <li><strong>get_collection()</strong>: Fetch a specific collection.</li>
+                <li><strong>list_collections()</strong>: Browse available collections.</li>
+                <li><strong>create_collection()</strong>, <strong>add_collection_item()</strong>: Build your own collections.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Cache Management 🧹</h2>
+            <p>The <strong>huggingface_hub</strong> library <strong>caches downloaded files</strong> to speed up future access.</p>
+            <ul>
+                <li><strong>huggingface-cli scan-cache</strong>: Inspect your cache usage.</li>
+                <li><strong>huggingface-cli delete-cache</strong>: Free up disk space by deleting cached items.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Model Cards 📝</h2>
+            <p>Create informative <strong>Model Cards</strong> to describe your models.</p>
+            <ul>
+                <li><strong>ModelCard.load()</strong>, <strong>ModelCard.from_template()</strong>: Create or load Model Cards.</li>
+                <li><strong>ModelCard.push_to_hub()</strong>: Share your Model Card on the Hub.</li>
+                <li><strong>metadata_update()</strong>: Update your card’s metadata.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
