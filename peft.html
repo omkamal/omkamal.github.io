@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEFT (Parameter-Efficient Fine-Tuning) Cheat Sheet</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+        
+        .container2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+        
+        .container4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+        
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        .emoji {
+            font-style: normal;
+        }
+        
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        
+        
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .section, .svg-container, .img-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        
+        strong {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn</a></div>
+    <h1>PEFT (Parameter-Efficient Fine-Tuning) 🤗 Cheat Sheet</h1>
+    <div class="container1">
+        <div class="section">
+            <h2>1. Introduction to PEFT 🚀</h2>
+            <ul>
+                <li><strong>PEFT</strong> reduces computational and storage costs by fine-tuning fewer parameters.</li>
+                <li><strong>💻 Enables</strong> the training of large models on consumer hardware, making AI more accessible.</li>
+                <li><strong>🤖 Maintains</strong> performance comparable to fully fine-tuned models.</li>
+                <li><strong>🔗 Seamless Integration:</strong> Works with Hugging Face libraries like <strong>Transformers</strong>, <strong>Diffusers</strong>, and <strong>Accelerate</strong>.</li>
+            </ul>
+        </div>
+        
+
+    </div>
+    <div class="svg-container">
+        <img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/peft/lora_animated.gif"></img>
+    </div>
+    <br>    
+    <div class="container">
+        <div class="section">
+            <h2>2. PEFT Methodologies 🎯</h2>
+            <ul>
+                <li><strong>📝 Soft Prompting:</strong> Adds learnable parameters to input embeddings to optimize tasks while keeping model parameters frozen.</li>
+                <li><strong>📉 LoRA (Low-Rank Adaptation):</strong> Uses low-rank matrices to reduce memory usage and computational cost by limiting the number of trainable parameters.</li>
+                <li><strong>🔗 IA3 (Integrated Attention Activation Adapters):</strong> Multiplies model activations by three learnable vectors, minimizing parameter changes.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>3. Adapter Methods 🧩</h2>
+            <ul>
+                <li><strong>🌍 Adapters:</strong> Small neural networks inserted into layers of a pretrained model, allowing task adaptation without altering the base model.</li>
+                <li><strong>🧠 X-LoRA:</strong> Uses multiple LoRA adapters for fine-tuning a model on different tasks simultaneously, enhancing flexibility and efficiency.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>4. Quick Tour of PEFT 🚀</h2>
+            <ul>
+                <li><strong>🖥️ Install PEFT:</strong> Run <code>pip install peft</code> or install from the GitHub repository for the latest features.</li>
+                <li><strong>🛠️ Configuration:</strong> Define specific settings, such as the dimension of LoRA matrices, using <strong>LoraConfig</strong> or <strong>PromptEncoderConfig</strong>.</li>
+                <li><strong>💾 Save Model:</strong> Use <strong>save_pretrained()</strong> to save only additional weights, ensuring efficient storage.</li>
+                <li><strong>🔍 Load Model for Inference:</strong> Use <code>from_pretrained()</code> to load a trained model efficiently.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>5. Advanced Applications 🌟</h2>
+            <ul>
+                <li><strong>🖼️ Integration with Diffusers:</strong> Manage multiple adapters for generative AI tasks, such as creating images and videos from text prompts.</li>
+                <li><strong>🧠 Integration with Transformers:</strong> Efficiently train large-scale language models for various NLP tasks using adapters.</li>
+                <li><strong>✏️ Soft Prompting Methods:</strong> Learn task-specific prompts dynamically by adding learnable parameters to input embeddings.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>6. Advanced Configurations 🛠️</h2>
+            <ul>
+                <li><strong>🧩 Create Custom Configurations:</strong> Tailor PEFT methods to specific needs by creating configurations like <strong>LoraConfig</strong>.</li>
+                <li><strong>📚 API References:</strong> Explore detailed API references for methods and classes to fine-tune models effectively.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>7. Model Merging & Quantization 🛠️</h2>
+            <ul>
+                <li><strong>🧩 TIES & DARE:</strong> Efficiently merge models by eliminating redundant parameters using trimming and rescaling techniques.</li>
+                <li><strong>⚙️ Quantization:</strong> Use fewer bits to represent data, reducing memory usage and accelerating inference for large language models.</li>
+                <li><strong>🔍 QLoRA:</strong> Combines quantization with LoRA to fine-tune large models, making it possible to use them on limited hardware.</li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <h2> Different Adaptors </h2>
+      <div class="container">
+        <div class="section">
+            <h2>Low-Rank Adaptation (LoRA) ✨</h2>
+            <ul>
+                <li><strong>LoRA</strong> represents weight updates using low-rank matrices.</li>
+                <li>Keeps pretrained weights <strong>frozen</strong>, reducing trainable parameters.</li>
+                <li><strong>Combines</strong> original and adapted weights for final results.</li>
+                <li>Efficient and <strong>comparable</strong> to full fine-tuning.</li>
+                <li>Typically applied to <strong>attention blocks</strong> in Transformer models.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Mixture of LoRA Experts (X-LoRA) 🤖</h2>
+            <ul>
+                <li><strong>X-LoRA</strong> uses dense/sparse gating to activate experts dynamically.</li>
+                <li>Only the gating layers are <strong>trained</strong>, keeping the parameter count low.</li>
+                <li>Allows the model to <strong>reconfigure</strong> dynamically during inference.</li>
+                <li>Requires a <strong>dual forward pass</strong> for effective knowledge mixing.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Low-Rank Hadamard Product (LoHa) 🧩</h2>
+            <ul>
+                <li><strong>LoHa</strong> enhances model expressivity using Hadamard product.</li>
+                <li>Utilizes four smaller matrices for higher <strong>rank</strong> without extra parameters.</li>
+                <li>Originally developed for <strong>computer vision</strong>, adapted for diffusion models.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Low-Rank Kronecker Product (LoKr) 🔗</h2>
+            <ul>
+                <li><strong>LoKr</strong> uses Kronecker product for parameter-efficient finetuning.</li>
+                <li>Maintains the original weight matrix's <strong>rank</strong>.</li>
+                <li>Can be vectorized for <strong>faster</strong> processing.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Orthogonal Finetuning (OFT) 🎯</h2>
+            <ul>
+                <li><strong>OFT</strong> preserves pretrained model's generative performance.</li>
+                <li>Maintains cosine similarity between <strong>neurons</strong> for semantic preservation.</li>
+                <li>Utilizes a sparse block-diagonal matrix to be <strong>parameter-efficient</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Orthogonal Butterfly (BOFT) 🦋</h2>
+            <ul>
+                <li><strong>BOFT</strong> focuses on maintaining pretrained model's structure.</li>
+                <li>Uses an orthogonal matrix for <strong>transformations</strong>.</li>
+                <li>Ensures minimal change in model’s <strong>latent space</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Adaptive Low-Rank Adaptation (AdaLoRA) 🛠️</h2>
+            <ul>
+                <li><strong>AdaLoRA</strong> allocates parameters based on task importance.</li>
+                <li>Uses SVD-like techniques to control <strong>rank</strong> dynamically.</li>
+                <li>Prunes less important parameters for <strong>efficiency</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Llama-Adapter 🦙</h2>
+            <ul>
+                <li><strong>Llama-Adapter</strong> adapts models for instruction-following.</li>
+                <li>Uses learnable prompts to guide higher-level <strong>semantics</strong>.</li>
+                <li>Zero-initialized attention prevents overwhelming pretrained knowledge.</li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <h2>Soft Prompts</h2>
+       <div class="container">
+        <div class="section">
+            <h2>📌 Prompt Tuning</h2>
+            <ul>
+                <li>Trains only a small set of <strong>task-specific prompt parameters</strong>.</li>
+                <li>Designed for text classification on <strong>T5 models</strong> as text generation tasks.</li>
+                <li>Prompt tokens have <strong>independent parameters</strong> updated separately.</li>
+                <li>Keeps the pretrained model <strong>frozen</strong> and updates only the prompt embeddings.</li>
+                <li>Performance is comparable to <strong>full model training</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>📌 Prefix Tuning</h2>
+            <ul>
+                <li>Optimizes <strong>prefix parameters</strong> for each task.</li>
+                <li>Works with <strong>natural language generation</strong> tasks on GPT models.</li>
+                <li>Prefix parameters are inserted at <strong>all layers</strong> of the model.</li>
+                <li>Uses a separate <strong>feed-forward network (FFN)</strong> for optimization.</li>
+                <li>Comparable to full finetuning with <strong>1000x fewer parameters</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>📌 P-Tuning</h2>
+            <ul>
+                <li>Suitable for <strong>natural language understanding</strong> tasks.</li>
+                <li>Uses a <strong>prompt encoder</strong> (LSTM) to optimize prompts.</li>
+                <li>Prompt tokens can be inserted <strong>anywhere in the input sequence</strong>.</li>
+                <li>Only adds tokens to the input, not to every layer.</li>
+                <li>Improves performance with <strong>anchor tokens</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>📌 Multitask Prompt Tuning</h2>
+            <ul>
+                <li>Enables <strong>parameter-efficient transfer learning</strong>.</li>
+                <li>Learns a single prompt for <strong>multiple tasks</strong>.</li>
+                <li>Consists of <strong>source training</strong> and <strong>target adaptation</strong> stages.</li>
+                <li>Uses <strong>Hadamard product</strong> for generating task-specific prompts.</li>
+                <li>Trains a shared prompt matrix across <strong>all tasks</strong>.</li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <h2>IA3 and BOFT📝</h2>
+    
+    <div class="container">
+        <div class="section">
+            <h2>IA3 Overview 🚀</h2>
+            <ul>
+                <li><strong>IA3</strong> makes fine-tuning more efficient by using <strong>learned vectors</strong> to rescale inner activations.</li>
+                <li><strong>Only trainable parameters</strong> are the learned vectors; <strong>original weights remain frozen</strong>.</li>
+                <li>IA3 drastically reduces the number of <strong>trainable parameters</strong> to about <strong>0.01%</strong> for T0.</li>
+                <li>Performance is comparable to <strong>fully fine-tuned models</strong> without adding inference latency.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>IA3 in Practice 💡</h2>
+            <ul>
+                <li>Injected in the <strong>attention</strong> and <strong>feedforward</strong> modules of transformers.</li>
+                <li>Targets outputs of <strong>key and value layers</strong> and input of the second feedforward layer.</li>
+                <li>Implemented using <strong>IA3Config</strong> to control how IA3 is applied.</li>
+                <li>Example for <strong>sequence classification</strong> in a Llama model using <strong>peft_config</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>OFT and BOFT Overview ⚙️</h2>
+            <ul>
+                <li><strong>OFT</strong> uses an <strong>orthogonal matrix</strong> to transform pretrained weights.</li>
+                <li><strong>BOFT</strong> generalizes OFT using <strong>Butterfly factorization</strong> for greater efficiency.</li>
+                <li>Uses <strong>multiplicative updates</strong> for weight matrices, preserving pretraining knowledge better.</li>
+                <li><strong>Efficiently reduces</strong> the number of trainable parameters while maintaining model performance.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>BOFT Key Features 🔑</h2>
+            <ul>
+                <li>Uses <strong>Butterfly factorization</strong> to parameterize the orthogonal matrix.</li>
+                <li><strong>Structural constraint</strong> maintains hyperspherical energy to prevent knowledge forgetting.</li>
+                <li>Supports flexible and <strong>parameter-efficient finetuning</strong> for various downstream tasks.</li>
+                <li>Can merge weights with base model using <strong>merge_and_unload()</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>BOFT Parameters 📊</h2>
+            <ul>
+                <li><strong>boft_block_size:</strong> Determines sparsity of update matrices.</li>
+                <li><strong>boft_block_num:</strong> Specifies number of blocks across layers.</li>
+                <li><strong>boft_n_butterfly_factor:</strong> Defines the number of butterfly factors.</li>
+                <li><strong>boft_dropout:</strong> Probability of multiplicative dropout.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Example Usage 🛠️</h2>
+            <ul>
+                <li>Configure for <strong>image classification</strong> using <strong>BOFTConfig</strong>.</li>
+                <li>Set parameters like <strong>boft_block_size</strong> and <strong>target_modules</strong>.</li>
+                <li>Integrate with <strong>transformers</strong> library and <strong>PEFT</strong> for training.</li>
+            </ul>
+        </div>
+    </div>
+    
+</body>
+</html>
+
