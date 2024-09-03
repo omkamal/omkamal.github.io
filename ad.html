@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrams as Code - Book Ad</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .ad-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            display: flex;
+            padding: 20px;
+        }
+        .book-image {
+            flex: 1;
+            margin-right: 20px;
+        }
+        .book-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .book-info {
+            flex: 2;
+        }
+        h1 {
+            margin-top: 0;
+        }
+        .rating {
+            color: #ffa500;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .features {
+            list-style-type: none;
+            padding: 0;
+        }
+        .features li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4a90e2;
+        }
+        .cta-button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #3a7bc8;
+        }
+        #feature-highlight {
+            font-weight: bold;
+            color: #4a90e2;
+        }
+    </style>
+</head>
+<body>
+    <div class="ad-container">
+        <div class="header">
+            <h1>Diagrams as Code</h1>
+            <p>Revolutionize Your Technical Documentation</p>
+        </div>
+        <div class="content">
+            <div class="book-image">
+                <img src="https://c.media-amazon.com/images/I/61g+sogJ2KL._SL1294_.jpg" alt="Diagrams as Code Book Cover">
+            </div>
+            <div class="book-info">
+                <h2>Diagrams as Code: Exploring Mermaid, PlantUML, D2 and Generating Diagrams using AI LLMs</h2>
+                <p>By Omar Kamal Hosney</p>
+                <div class="rating">★★★★★ 4.8 out of 5 stars (6 ratings)</div>
+                <p>Step into the future of technical content creation where documentation isn't just written; it's coded.</p>
+                <ul class="features">
+                    <li>Master ASCIIdoc for effortless document creation</li>
+                    <li>Bring presentations to life with Marpit Slides</li>
+                    <li>Create stunning diagrams with Mermaid, PlantUML, and D2</li>
+                    <li>Harness the power of AI for content generation</li>
+                </ul>
+                <p>Current feature: <span id="feature-highlight">Learn document creation with ASCIIdoc</span></p>
+                <button class="cta-button" onclick="alert('Thank you for your interest in Diagrams as Code!')">Get Your Copy Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const features = [
+            "Learn document creation with ASCIIdoc",
+            "Decode the world of Different Software Charts",
+            "Bring your presentations to life with Marpit Slides",
+            "Dive underwater with Mermaid charts and graphics",
+            "Understand the magic of Declarative Diagram (D2)",
+            "Watch your designs grow with PlantUML Markdown Language",
+            "Step into the future with our Generative AI Pipeline chapter"
+        ];
+        let currentFeatureIndex = 0;
+
+        function changeFeature() {
+            const featureHighlight = document.getElementById('feature-highlight');
+            featureHighlight.textContent = features[currentFeatureIndex];
+            currentFeatureIndex = (currentFeatureIndex + 1) % features.length;
+        }
+
+        setInterval(changeFeature, 3000);
+    </script>
+</body>
+</html>
