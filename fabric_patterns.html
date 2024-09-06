@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric Patterns Cheat Sheet</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+
+        li {
+            margin-bottom: 3px;
+        }
+
+        .emoji {
+            font-style: normal;
+        }
+
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        strong {
+            color: #2980b9;
+        }
+
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn Profile</a></div>
+
+    <h1>Fabric Patterns Cheat Sheet: as per 9/5/2024</h1>
+    
+    <div class="container">
+        <div class="section">
+            <h2>Content Analysis and Extraction</h2>
+            <ul>
+                <li><strong>extract_primary_problem:</strong> Identify and articulate the <strong>main problem</strong> in content.</li>
+                <li><strong>extract_extraordinary_claims:</strong> Find <strong>unusual claims</strong> in text.</li>
+                <li><strong>extract_wisdom_dm:</strong> Extract key <strong>insights and wisdom</strong> from content.</li>
+                <li><strong>extract_ideas:</strong> Identify key <strong>ideas</strong> from given content.</li>
+                <li><strong>extract_jokes:</strong> Identify and extract <strong>jokes</strong> from content.</li>
+                <li><strong>extract_algorithm_update_recommendations:</strong> Extract <strong>algorithm improvement</strong> suggestions.</li>
+                <li><strong>extract_questions:</strong> Identify and extract <strong>questions</strong> from content.</li>
+                <li><strong>extract_wisdom_nometa:</strong> Extract <strong>key insights</strong> without metadata.</li>
+                <li><strong>extract_controversial_ideas:</strong> Identify and extract <strong>controversial statements</strong>.</li>
+                <li><strong>extract_sponsors:</strong> Identify and extract <strong>sponsor information</strong>.</li>
+                <li><strong>extract_article_wisdom:</strong> Extract <strong>key insights</strong> from articles.</li>
+                <li><strong>extract_wisdom:</strong> Extract <strong>key insights</strong> and wisdom from various content.</li>
+                <li><strong>extract_wisdom_agents:</strong> Use AI agents to extract <strong>wisdom</strong> from content.</li>
+                <li><strong>extract_book_recommendations:</strong> Extract and summarize <strong>book recommendations</strong>.</li>
+                <li><strong>extract_videoid:</strong> Extract <strong>video IDs</strong> from URLs.</li>
+                <li><strong>extract_business_ideas:</strong> Extract potential <strong>business ideas</strong>.</li>
+                <li><strong>extract_book_ideas:</strong> Extract key <strong>ideas and concepts</strong> from books.</li>
+                <li><strong>extract_poc:</strong> Extract <strong>proof of concept URLs</strong> from reports.</li>
+                <li><strong>extract_song_meaning:</strong> Analyze and explain the <strong>meaning of song lyrics</strong>.</li>
+                <li><strong>extract_insights:</strong> Extract <strong>key insights</strong> from text content.</li>
+                <li><strong>find_hidden_message:</strong> Identify hidden or subtle <strong>messages</strong> in content.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Summarization and Condensation</h2>
+            <ul>
+                <li><strong>summarize_debate:</strong> Provide a concise <strong>summary of debates</strong>.</li>
+                <li><strong>summarize_paper:</strong> Generate a <strong>comprehensive summary</strong> of academic papers.</li>
+                <li><strong>summarize_git_diff:</strong> Summarize <strong>changes</strong> in Git diffs.</li>
+                <li><strong>summarize_micro:</strong> Create a <strong>very concise summary</strong> of content.</li>
+                <li><strong>create_micro_summary:</strong> Generate an <strong>extremely concise summary</strong>.</li>
+                <li><strong>summarize_lecture:</strong> Provide a <strong>summary of lectures</strong> or presentations.</li>
+                <li><strong>summarize_rpg_session:</strong> Summarize a <strong>role-playing game session</strong>.</li>
+                <li><strong>create_5_sentence_summary:</strong> Generate a <strong>five-sentence summary</strong>.</li>
+                <li><strong>create_cyber_summary:</strong> Summarize <strong>cybersecurity threats</strong>.</li>
+                <li><strong>summarize_legislation:</strong> Provide a <strong>summary of laws</strong> or legislation.</li>
+                <li><strong>create_rpg_summary:</strong> Generate a <strong>detailed RPG session summary</strong>.</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Content Creation and Writing</h2>
+            <ul>
+                <li><strong>tweet:</strong> Generate <strong>engaging tweets</strong> with emojis.</li>
+                <li><strong>create_aphorisms:</strong> Create <strong>memorable sayings</strong> on topics.</li>
+                <li><strong>write_micro_essay:</strong> Write a <strong>short essay</strong> on a topic.</li>
+                <li><strong>create_academic_paper:</strong> Generate a structured <strong>academic paper</strong> in LaTeX.</li>
+                <li><strong>create_security_update:</strong> Generate concise <strong>security updates</strong>.</li>
+                <li><strong>write_pull-request:</strong> Write a <strong>pull request description</strong>.</li>
+                <li><strong>create_keynote:</strong> Generate a structured <strong>keynote presentation</strong>.</li>
+                <li><strong>create_show_intro:</strong> Create compelling <strong>show introductions</strong>.</li>
+                <li><strong>create_formal_email:</strong> Generate <strong>formal email content</strong>.</li>
+                <li><strong>create_art_prompt:</strong> Generate prompts for <strong>AI art</strong> generation.</li>
+                <li><strong>create_git_diff_commit:</strong> Generate <strong>commit messages</strong> based on diffs.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Visualization and Diagramming</h2>
+            <ul>
+                <li><strong>create_investigation_visualization:</strong> Visualize an <strong>investigation</strong> using GraphViz.</li>
+                <li><strong>create_markmap_visualization:</strong> Create a <strong>mind map</strong> visualization.</li>
+                <li><strong>create_mermaid_visualization:</strong> Generate <strong>diagrams</strong> using Mermaid.</li>
+                <li><strong>create_graph_from_input:</strong> Generate a <strong>graph visualization</strong> from data.</li>
+                <li><strong>create_visualization:</strong> Create <strong>ASCII art visualizations</strong>.</li>
+                <li><strong>create_ttrc_graph:</strong> Visualize <strong>time to remediate critical vulnerabilities</strong>.</li>
+                <li><strong>show_fabric_options_markmap:</strong> Visualize <strong>fabric project functionalities</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Security and Threat Analysis</h2>
+            <ul>
+                <li><strong>analyze_malware:</strong> Analyze and explain <strong>malware behavior</strong>.</li>
+                <li><strong>create_sigma_rules:</strong> Generate <strong>Sigma rules</strong> for detection.</li>
+                <li><strong>create_network_threat_landscape:</strong> Analyze and create <strong>network threat reports</strong>.</li>
+                <li><strong>analyze_threat_report:</strong> Analyze <strong>cybersecurity threat reports</strong>.</li>
+                <li><strong>analyze_logs:</strong> Analyze <strong>server logs</strong> for patterns and issues.</li>
+                <li><strong>write_nuclei_template_rule:</strong> Create <strong>Nuclei templates</strong> for scanning.</li>
+                <li><strong>create_stride_threat_model:</strong> Generate a <strong>STRIDE threat model</strong>.</li>
+                <li><strong>write_semgrep_rule:</strong> Create <strong>Semgrep rules</strong> for code analysis.</li>
+                <li><strong>analyze_email_headers:</strong> Analyze <strong>email headers</strong> for security.</li>
+                <li><strong>ask_secure_by_design_questions:</strong> Generate <strong>security questions</strong> for design.</li>
+                <li><strong>create_report_finding:</strong> Create a <strong>security finding report</strong>.</li>
+                <li><strong>create_threat_scenarios:</strong> Generate <strong>threat scenarios</strong>.</li>
+                <li><strong>analyze_incident:</strong> Analyze <strong>cybersecurity incidents</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Content Evaluation and Rating</h2>
+            <ul>
+                <li><strong>label_and_rate:</strong> Classify and <strong>rate content</strong> based on criteria.</li>
+                <li><strong>rate_ai_response:</strong> Evaluate the quality of <strong>AI responses</strong>.</li>
+                <li><strong>get_wow_per_minute:</strong> Evaluate content's <strong>"wow factor"</strong> per minute.</li>
+                <li><strong>analyze_prose:</strong> Evaluate the quality of <strong>writing</strong>.</li>
+                <li><strong>analyze_presentation:</strong> Evaluate and critique <strong>presentations</strong>.</li>
+                <li><strong>analyze_prose_json:</strong> Provide structured <strong>prose analysis</strong> in JSON.</li>
+                <li><strong>analyze_interviewer_techniques:</strong> Evaluate <strong>interview techniques</strong>.</li>
+                <li><strong>analyze_claims:</strong> Evaluate and rate <strong>truth claims</strong>.</li>
+                <li><strong>analyze_answers:</strong> Evaluate the <strong>correctness of answers</strong>.</li>
+                <li><strong>rate_ai_result:</strong> Evaluate and <strong>rate AI outputs</strong>.</li>
+                <li><strong>analyze_cfp_submission:</strong> Evaluate and provide feedback on <strong>conference submissions</strong>.</li>
+                <li><strong>rate_value:</strong> Evaluate the <strong>value</strong> in content.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Educational and Explanatory</h2>
+            <ul>
+                <li><strong>answer_interview_question:</strong> Generate responses to <strong>interview questions</strong>.</li>
+                <li><strong>explain_terms:</strong> Provide <strong>explanations for complex terms</strong>.</li>
+                <li><strong>create_quiz:</strong> Generate <strong>questions</strong> for learning review.</li>
+                <li><strong>create_story_explanation:</strong> Provide <strong>narrative explanations</strong> of concepts.</li>
+                <li><strong>coding_master:</strong> Explain <strong>coding concepts</strong> for beginners.</li>
+                <li><strong>explain_code:</strong> Explain <strong>code snippets</strong> or configurations.</li>
+                <li><strong>to_flashcards:</strong> Convert content into <strong>flashcards</strong>.</li>
+                <li><strong>explain_project:</strong> Provide a <strong>clear explanation of projects</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Idea Generation and Exploration</h2>
+            <ul>
+                <li><strong>suggest_pattern:</strong> Recommend fabric patterns or commands based on <strong>input</strong>.</li>
+                <li><strong>recommend_talkpanel_topics:</strong> Suggest <strong>topics for discussions</strong>.</li>
+                <li><strong>recommend_artists:</strong> Suggest <strong>music artists</strong> based on preferences.</li>
+                <li><strong>create_npc:</strong> Generate detailed <strong>NPCs</strong> for RPGs.</li>
+                <li><strong>create_better_frame:</strong> Reframe <strong>negative perspectives</strong> positively.</li>
+                <li><strong>create_hormozi_offer:</strong> Generate <strong>business offers</strong> using Hormozi's concepts.</li>
+                <li><strong>compare_and_contrast:</strong> Compare and contrast <strong>multiple items</strong>.</li>
+                <li><strong>create_idea_compass:</strong> Develop structured <strong>explorations of ideas</strong>.</li>
+                <li><strong>create_pattern:</strong> Generate new <strong>patterns</strong> for fabric framework.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Specialized Analysis</h2>
+            <ul>
+                <li><strong>check_agreement:</strong> Analyze <strong>contracts or agreements</strong>.</li>
+                <li><strong>capture_thinkers_work:</strong> Summarize <strong>works of notable thinkers</strong>.</li>
+                <li><strong>create_ttrc_narrative:</strong> Create a <strong>narrative</strong> on vulnerability remediation.</li>
+                <li><strong>create_ai_jobs_analysis:</strong> Analyze jobs for <strong>AI automation vulnerability</strong>.</li>
+                <li><strong>analyze_tech_impact:</strong> Analyze the <strong>societal impact</strong> of technology.</li>
+                <li><strong>analyze_personality:</strong> Perform <strong>psychological analysis</strong>.</li>
+                <li><strong>find_logical_fallacies:</strong> Identify <strong>logical fallacies</strong> in arguments.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Utility and Data Manipulation</h2>
+            <ul>
+                <li><strong>official_pattern_template:</strong> Use as a <strong>template for new patterns</strong>.</li>
+                <li><strong>export_data_as_csv:</strong> Convert input data into <strong>CSV format</strong>.</li>
+                <li><strong>create_video_chapters:</strong> Extract topics with timestamps from <strong>videos</strong>.</li>
+                <li><strong>get_youtube_rss:</strong> Generate <strong>RSS URLs</strong> for YouTube channels.</li>
+                <li><strong>create_tags:</strong> Generate relevant <strong>tags</strong> for content.</li>
+                <li><strong>raw_query:</strong> Process and respond to <strong>raw queries</strong>.</li>
+                <li><strong>ai:</strong> Provide <strong>insightful answers</strong> concisely.</li>
+                <li><strong>improve_writing:</strong> Enhance <strong>clarity and style</strong> of content.</li>
+                <li><strong>improve_academic_writing:</strong> Enhance the quality of <strong>academic writing</strong>.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
