@@ -175,6 +175,30 @@
             transform: translateY(-3px);
         }
         
+        .resume-link {
+            display: inline-block;
+            margin-top: 20px;
+            margin-left: 10px;
+            padding: 10px 30px;
+            background-color: #e74c3c;
+            color: #ffffff !important;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .resume-link:hover {
+            background-color: #c0392b;
+            box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .resume-link i {
+            margin-right: 5px;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -192,6 +216,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <a href="https://omkamal.github.io/" target="_blank">Home</a>
@@ -309,6 +334,7 @@
                 </ul>
                 <p>I'm passionate about sharing knowledge and regularly write articles on various topics in data science and AI.</p>
                 <a href="https://medium.com/@omkamal" target="_blank" class="blog-link">Read My Blog on Medium</a>
+                <a href="resume.html" target="_blank" class="resume-link"><i class="fas fa-file-alt"></i> View My Resume</a>
             </div>
             <div class="ad-container">
                 <div class="header">
