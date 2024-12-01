@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQLite Command Cheatsheet</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        li {
+            margin-bottom: 3px;
+        }
+        .emoji {
+            font-style: normal;
+        }
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        strong {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin">
+        <a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/" target="_blank">LinkedIn</a>
+    </div>
+    <h1>SQLite Command Cheatsheet 📘</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Database Operations 🗃️</h2>
+            <ul>
+                <li><strong>sqlite3 [filename]</strong> - Open or create a database.</li>
+                <li><strong>.open [filename]</strong> - Open an existing database.</li>
+                <li><strong>.databases</strong> - List all open databases.</li>
+                <li><strong>.save [filename]</strong> - Save the database to a file.</li>
+                <li><strong>.backup [filename]</strong> - Backup the current database.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Table Operations 🛠️</h2>
+            <ul>
+                <li><strong>CREATE TABLE</strong> - Create a new table.</li>
+                <li><strong>DROP TABLE</strong> - Delete a table.</li>
+                <li><strong>ALTER TABLE</strong> - Modify an existing table.</li>
+                <li><strong>.schema [table]</strong> - Show the table schema.</li>
+                <li><strong>PRAGMA table_info([table])</strong> - Show table structure.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Data Manipulation ✍️</h2>
+            <ul>
+                <li><strong>INSERT INTO</strong> - Add data to a table.</li>
+                <li><strong>UPDATE</strong> - Modify existing data.</li>
+                <li><strong>DELETE</strong> - Remove data.</li>
+                <li><strong>SELECT</strong> - Query data from tables.</li>
+                <li><strong>REPLACE INTO</strong> - Insert or replace data.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Queries & Filtering 🔍</h2>
+            <ul>
+                <li><strong>SELECT * FROM [table]</strong> - Fetch all rows.</li>
+                <li><strong>WHERE</strong> - Filter results by conditions.</li>
+                <li><strong>ORDER BY</strong> - Sort results.</li>
+                <li><strong>GROUP BY</strong> - Group rows by a column.</li>
+                <li><strong>HAVING</strong> - Filter grouped results.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Indexes & Constraints 📊</h2>
+            <ul>
+                <li><strong>CREATE INDEX</strong> - Create an index.</li>
+                <li><strong>DROP INDEX</strong> - Delete an index.</li>
+                <li><strong>UNIQUE</strong> - Ensure unique values.</li>
+                <li><strong>CHECK</strong> - Validate data constraints.</li>
+                <li><strong>FOREIGN KEY</strong> - Enforce relationships.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Advanced Commands 🚀</h2>
+            <ul>
+                <li><strong>ATTACH [file]</strong> - Attach another database.</li>
+                <li><strong>DETACH</strong> - Detach a database.</li>
+                <li><strong>EXPLAIN QUERY PLAN</strong> - Analyze query performance.</li>
+                <li><strong>PRAGMA</strong> - Query database settings.</li>
+                <li><strong>.import/.export</strong> - Import/export CSV data.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Transaction Control ⚡</h2>
+            <ul>
+                <li><strong>BEGIN</strong> - Start a transaction.</li>
+                <li><strong>COMMIT</strong> - Save changes.</li>
+                <li><strong>ROLLBACK</strong> - Undo changes.</li>
+                <li><strong>END</strong> - Commit or rollback a transaction.</li>
+                <li><strong>SAVEPOINT</strong> - Mark a transaction checkpoint.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Aggregates 📈</h2>
+            <ul>
+                <li><strong>COUNT()</strong> - Count rows.</li>
+                <li><strong>SUM()</strong> - Calculate totals.</li>
+                <li><strong>AVG()</strong> - Calculate averages.</li>
+                <li><strong>MAX()</strong> - Find maximum value.</li>
+                <li><strong>MIN()</strong> - Find minimum value.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Utilities ⚙️</h2>
+            <ul>
+                <li><strong>.tables</strong> - List all tables.</li>
+                <li><strong>.exit</strong> - Quit SQLite shell.</li>
+                <li><strong>.help</strong> - Show help menu.</li>
+                <li><strong>.mode</strong> - Set output mode.</li>
+                <li><strong>.headers</strong> - Toggle column headers.</li>
+            </ul>
+        </div>
+        
+            </div>
+    <div class="container">
+        <div class="section">
+            <h2>Import Data from CSV 📥</h2>
+            <ul>
+                <li><strong>Prepare Table</strong> - Ensure the table exists for importing data.</li>
+                <li><strong>.mode csv</strong> - Set input mode to CSV.</li>
+                <li><strong>.import [file.csv] [table]</strong> - Import records into the table.</li>
+                <li><em>Example:</em> <br><code>.import data.csv users</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Export Query to CSV 📤</h2>
+            <ul>
+                <li><strong>.mode csv</strong> - Set output mode to CSV.</li>
+                <li><strong>.headers on</strong> - Include column headers in the output.</li>
+                <li><strong>.output [file.csv]</strong> - Redirect query results to a CSV file.</li>
+                <li><em>Example:</em> <br><code>
+                    .mode csv<br>
+                    .headers on<br>
+                    .output result.csv<br>
+                    SELECT * FROM users WHERE age > 25;
+                    </code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Append Data to Existing Table 🔄</h2>
+            <ul>
+                <li><strong>Prepare Table</strong> - Ensure the table matches the CSV structure.</li>
+                <li><strong>.mode csv</strong> - Set input mode to CSV.</li>
+                <li><strong>.import --append [file.csv] [table]</strong> - Append data to the table.</li>
+                <li><em>Example:</em> <br><code>.import --append new_data.csv users</code></li>
+            </ul>
+        </div>
+    </div>
+    </div>
+</body>
+</html>
+
