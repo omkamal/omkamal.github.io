@@ -2,6 +2,7 @@
 
 ## AI Cheatsheets
 *  [Cheatsheets](index.html)
+* [SQLite Command Cheatsheet](sqlite.html)
 * Yes
 
 ## Cheatsheets Overview
