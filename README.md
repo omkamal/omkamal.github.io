@@ -1,7 +1,7 @@
 # omkamal.github.io
 
 ## AI Cheatsheets
-*  [Cheatsheets](index.html)
+*  [Cheatsheets](https://omkamal.github.io/)
 * [SQLite Command Cheatsheet](sqlite.html)
 * Yes
 
