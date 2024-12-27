@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Copilot in VS Code Cheat Sheet</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+
+        li {
+            margin-bottom: 3px;
+        }
+
+        .emoji {
+            font-style: normal;
+        }
+
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+
+        strong {
+            color: #2980b9;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn Profile</a></div>
+    <h1>GitHub Copilot in VS Code Cheat Sheet</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Chat with Copilot</h2>
+            <ul>
+                <li><strong>⌃⌘I</strong> - Open the Chat view to chat with Copilot using <strong>natural language</strong>.</li>
+                <li><strong>⇧⌘I</strong> - Start a <strong>code editing session</strong> across files.</li>
+                <li><strong>⇧⌥⌘L</strong> - Open Quick Chat for <strong>quick questions</strong>.</li>
+                <li><strong>⌘I</strong> - Start Inline Chat directly from the editor.</li>
+                <li>Type <strong>@</strong> to address participants or get <strong>domain expertise</strong>.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Code Editing Session</h2>
+            <ul>
+                <li><strong>⇧⌘I</strong> - Open Copilot Edits and apply <strong>code changes</strong>.</li>
+                <li><strong>Accept</strong> or <strong>Discard</strong> edits in a multi-file editor.</li>
+                <li>Attach relevant files to the <strong>working set</strong>.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Generate Code</h2>
+            <ul>
+                <li>Ask Copilot to <strong>generate</strong> or <strong>optimize algorithms</strong>.</li>
+                <li>Insert code into the active editor or a <strong>new file</strong>.</li>
+                <li>Attach framework details for better suggestions.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Attach Context</h2>
+            <ul>
+                <li><strong>⌘/</strong> - Add context like files or <strong>symbols</strong>.</li>
+                <li>Use variables like <strong>#editor</strong> or <strong>#selection</strong> to refine prompts.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Code Completions</h2>
+            <ul>
+                <li>Start typing to get <strong>AI-powered suggestions</strong>.</li>
+                <li>Provide meaningful comments to improve <strong>code quality</strong>.</li>
+                <li>Use <strong>F2</strong> for AI-driven renaming.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Debug and Fix</h2>
+            <ul>
+                <li><strong>/fix</strong> - Resolve issues like <strong>compiler errors</strong>.</li>
+                <li><strong>/fixTestFailure</strong> - Troubleshoot failing tests.</li>
+                <li><strong>/startDebugging</strong> - Configure debugging sessions.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Generate Tests</h2>
+            <ul>
+                <li><strong>/tests</strong> - Create tests for <strong>uncovered code</strong>.</li>
+                <li><strong>/setupTests</strong> - Get guidance on test frameworks.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Source Control</h2>
+            <ul>
+                <li>Generate <strong>commit messages</strong> and pull request descriptions.</li>
+                <li>Ask <strong>@github</strong> about issues or PRs.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Scaffold Projects</h2>
+            <ul>
+                <li><strong>/new</strong> - Scaffold a project or file.</li>
+                <li><strong>/newNotebook</strong> - Generate Jupyter notebooks with requirements.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

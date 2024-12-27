@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCEL Cheat Sheet</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+
+        .container2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+
+        li {
+            margin-bottom: 3px;
+        }
+
+        .emoji {
+            font-style: normal;
+        }
+
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        strong {
+            color: #2980b9;
+        }
+
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn</a></div>
+    <h1>LangChain Expression Language (LCEL) Cheat Sheet</h1>
+
+    <div class="container">
+        <div class="section">
+            <h2>Benefits of LCEL</h2>
+            <ul>
+                <li><strong>Optimized parallel execution:</strong> Use <em>RunnableParallel</em> for faster chains.</li>
+                <li><strong>Async support:</strong> Easily handle concurrent requests.</li>
+                <li><strong>Streaming:</strong> Incremental outputs minimize delays.</li>
+                <li><strong>LangSmith tracing:</strong> Automatic logging for observability.</li>
+                <li><strong>Deployable:</strong> Use LangServe for production-ready chains.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Should I Use LCEL?</h2>
+            <ul>
+                <li><strong>Simple Chains:</strong> Use LCEL for prompt + LLM setups.</li>
+                <li><strong>Complex Logic:</strong> Prefer LangGraph for branching or cycles.</li>
+                <li><strong>LLM Call:</strong> Call the chat model directly if single-step.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Composition Primitives</h2>
+            <ul>
+                <li><strong>RunnableSequence:</strong> Chain runnables sequentially.</li>
+                <li><strong>RunnableParallel:</strong> Run tasks concurrently.</li>
+                <li><strong>Type coercion:</strong> Automates dictionary and function conversions.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Useful Patterns</h2>
+            <ul>
+                <li><strong>Pipe Operator:</strong> Combine runnables with <code>|</code>.</li>
+                <li><strong>Function Conversion:</strong> Turn any function into <em>RunnableLambda</em>.</li>
+                <li><strong>Default Arguments:</strong> Use <em>bind</em> for defaults.</li>
+                <li><strong>Retries:</strong> Add <em>with_retry</em> for error handling.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Code Examples</h2>
+            <ul>
+                <li><strong>Invoke:</strong> <code>runnable.invoke(input)</code>.</li>
+                <li><strong>Batch:</strong> <code>runnable.batch([inputs])</code>.</li>
+                <li><strong>Stream:</strong> Use <code>runnable.stream()</code> for incremental output.</li>
+                <li><strong>Fallbacks:</strong> Add <code>with_fallbacks()</code> for backups.</li>
+            </ul>
+        </div>
+
+
+
+        <div class="section">
+            <h2>Legacy Chains</h2>
+            <ul>
+                <li><strong>Migration:</strong> Replace with LCEL for transparency.</li>
+                <li><strong>Customization:</strong> LCEL supports flexible prompts and models.</li>
+                <li><strong>Consistency:</strong> Standard behavior for all chains.</li>
+            </ul>
+        </div>
+    </div>
+    
+    <p></p>
+    
+    <div class="container2">
+            <div class="section">
+            <h2>Sample Code: Sequential Composition</h2>
+            <pre>
+<code>
+from langchain_core.runnables import RunnableLambda, RunnableSequence
+
+# Define individual runnables
+runnable1 = RunnableLambda(lambda x: x * 2)
+runnable2 = RunnableLambda(lambda x: x + 3)
+
+# Create a sequence
+chain = RunnableSequence([runnable1, runnable2])
+
+# Invoke the chain
+result = chain.invoke(5)  # Output: 13
+</code>
+            </pre>
+        </div>
+
+        <div class="section">
+            <h2>Sample Code: Parallel Composition</h2>
+            <pre>
+<code>
+from langchain_core.runnables import RunnableLambda, RunnableParallel
+
+# Define individual runnables
+runnable1 = RunnableLambda(lambda x: x ** 2)
+runnable2 = RunnableLambda(lambda x: x + 10)
+
+# Create a parallel runnable
+chain = RunnableParallel(first=runnable1, second=runnable2)
+
+# Invoke the chain
+result = chain.invoke(4)  # Output: {'first': 16, 'second': 14}
+</code>
+            </pre>
+        </div>
+    </div>
+    
+</body>
+</html>
+
