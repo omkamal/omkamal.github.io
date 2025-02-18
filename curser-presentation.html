@@ -3,119 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curser.ai Presentation</title>
+    <title>Curser AI Presentation</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
+            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             color: #333;
+            margin: 0;
+            padding: 0;
         }
         .slide {
             display: none;
-            padding: 50px;
+            padding: 20px;
             text-align: center;
-            transition: transform 0.5s ease-in-out;
         }
-        .slide.active-slide {
+        .active {
             display: block;
-            transform: scale(1.05);
         }
         .controls {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
+            margin-top: 20px;
         }
-        .control-button {
-            background-color: #007BFF;
-            color: #fff;
+        button {
+            padding: 10px 20px;
+            margin: 5px;
             border: none;
-            padding: 15px 25px;
-            margin: 0 5px;
+            background-color: #007BFF;
+            color: white;
             cursor: pointer;
             border-radius: 5px;
-            font-size: 16px;
-            transition: background-color 0.3s;
         }
-        .control-button:hover {
+        button:hover {
             background-color: #0056b3;
-        }
-        h1, h2 {
-            color: #007BFF;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin: 10px 0;
         }
     </style>
 </head>
 <body>
+    <a href="https://omkamal.github.io/" target="_blank">Home</a>
 
-<div class="slide active-slide">
-    <h1>Welcome to Curser.ai</h1>
-    <p>Experience the future of AI-driven solutions.</p>
-</div>
+    <div class="slide active">
+        <h1>Introduction to Curser AI</h1>
+        <ul>
+            <li>What is Curser AI?</li>
+            <li>Key features of Curser AI</li>
+            <li>Applications in various industries</li>
+            <li>Benefits of using Curser AI</li>
+            <li>Future of AI technology</li>
+        </ul>
+    </div>
 
-<div class="slide">
-    <h2>What is Curser.ai?</h2>
-    <p>Curser.ai is an innovative AI platform designed to enhance productivity and streamline workflows.</p>
-</div>
+    <div class="slide">
+        <h1>Key Features</h1>
+        <ul>
+            <li>Natural Language Processing</li>
+            <li>Machine Learning Capabilities</li>
+            <li>Real-time Data Analysis</li>
+            <li>User-friendly Interface</li>
+            <li>Integration with existing systems</li>
+        </ul>
+    </div>
 
-<div class="slide">
-    <h2>Features</h2>
-    <ul>
-        <li>Intelligent task management</li>
-        <li>Real-time data insights</li>
-        <li>Seamless integration with existing tools</li>
-    </ul>
-</div>
+    <div class="slide">
+        <h1>Applications</h1>
+        <ul>
+            <li>Customer Support Automation</li>
+            <li>Data Insights and Reporting</li>
+            <li>Personalized Marketing Strategies</li>
+            <li>Healthcare Diagnostics</li>
+            <li>Financial Forecasting</li>
+        </ul>
+    </div>
 
-<div class="slide">
-    <h2>Benefits</h2>
-    <p>Curser.ai helps you save time, improve accuracy, and boost overall efficiency.</p>
-</div>
+    <div class="slide">
+        <h1>Benefits</h1>
+        <ul>
+            <li>Increased Efficiency</li>
+            <li>Cost Reduction</li>
+            <li>Improved Decision Making</li>
+            <li>Enhanced Customer Experience</li>
+            <li>Scalability of Solutions</li>
+        </ul>
+    </div>
 
-<div class="controls">
-    <button class="control-button" onclick="prevSlide()">Prev</button>
-    <button class="control-button" onclick="nextSlide()">Next</button>
-    <button class="control-button" onclick="homeSlide()">Home</button>
-</div>
+    <div class="slide">
+        <h1>Challenges</h1>
+        <ul>
+            <li>Data Privacy Concerns</li>
+            <li>Integration Issues</li>
+            <li>High Initial Investment</li>
+            <li>Need for Continuous Learning</li>
+            <li>Dependence on Data Quality</li>
+        </ul>
+    </div>
 
-<script>
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.slide');
+    <div class="slide">
+        <h1>Future Trends</h1>
+        <ul>
+            <li>Advancements in AI Algorithms</li>
+            <li>Increased Automation</li>
+            <li>AI Ethics and Governance</li>
+            <li>Greater Personalization</li>
+            <li>Collaboration between AI and Humans</li>
+        </ul>
+    </div>
 
-    function showSlide(index) {
-        slides.forEach(slide => slide.classList.remove('active-slide'));
-        slides[index].classList.add('active-slide');
-        currentSlide = index;
-    }
+    <div class="slide">
+        <h1>Case Studies</h1>
+        <ul>
+            <li>Company A: Improved Customer Retention</li>
+            <li>Company B: Streamlined Operations</li>
+            <li>Company C: Enhanced Product Recommendations</li>
+            <li>Company D: Reduced Operational Costs</li>
+            <li>Company E: Increased Sales through AI</li>
+        </ul>
+    </div>
 
-    function nextSlide() {
-        if (currentSlide < slides.length - 1) {
-            showSlide(currentSlide + 1);
+    <div class="slide">
+        <h1>Getting Started</h1>
+        <ul>
+            <li>Assessing Business Needs</li>
+            <li>Choosing the Right Tools</li>
+            <li>Training Staff on AI Solutions</li>
+            <li>Implementing Pilot Projects</li>
+            <li>Measuring Success and ROI</li>
+        </ul>
+    </div>
+
+    <div class="slide">
+        <h1>Conclusion</h1>
+        <ul>
+            <li>Curser AI is a game changer</li>
+            <li>Potential for growth and innovation</li>
+            <li>Importance of ethical AI use</li>
+            <li>Collaboration is key</li>
+            <li>Stay updated with trends</li>
+        </ul>
+    </div>
+
+    <div class="controls">
+        <button onclick="prevSlide()">Previous</button>
+        <button onclick="nextSlide()">Next</button>
+        <button onclick="goHome()">Home</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
         }
-    }
 
-    function prevSlide() {
-        if (currentSlide > 0) {
-            showSlide(currentSlide - 1);
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
         }
-    }
 
-    function homeSlide() {
-        showSlide(0);
-    }
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
 
-    // Initialize the first slide
-    showSlide(currentSlide);
-</script>
+        function goHome() {
+            currentSlide = 0;
+            showSlide(currentSlide);
+        }
+    </script>
 
 </body>
 </html>

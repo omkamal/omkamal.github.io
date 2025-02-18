@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Fine-Tuning Cheat Sheet</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+
+        .container2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+        
+        .container4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+        
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        .emoji {
+            font-style: normal;
+        }
+        
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+        
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+        
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+        
+        .section, .svg-container, .img-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        .section {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        
+        .svg-container, .img-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 150px; /* Set a fixed height to match text sections */
+            position: relative;
+        }
+        
+        strong {
+            color: #2980b9;
+        }
+        
+        .svg-container::before, .img-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #f3f4f6 25%, transparent 25%, transparent 75%, #f3f4f6 75%, #f3f4f6),
+                        linear-gradient(45deg, #f3f4f6 25%, transparent 25%, transparent 75%, #f3f4f6 75%, #f3f4f6);
+            background-size: 10px 10px;
+            background-position: 0 0, 5px 5px;
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
+        .svg-container svg, .img-container img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            z-index: 2;
+        }
+                code {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 8px;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 4px;
+            padding: 3px;
+            margin: 3px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn Profile</a></div>
+
+    <div class="container">
+        <h1>LLM Fine-Tuning Cheat Sheet 🚀</h1>
+
+        <div class="section">
+            <h2>Quantization 🔢</h2>
+            <ul>
+                <li><strong>Concept</strong>: Convert higher precision to lower precision, reducing model size. 📉</li>
+                <li><strong>Types</strong>: Post-training (PTQ) and Quantization-aware training (QAT). 🔄</li>
+                <li><strong>Benefits</strong>: Faster inference, lower memory usage, and energy efficiency. ⚡</li>
+                <li><strong>Trade-off</strong>: Slight accuracy loss vs. significant performance gain. ⚖️</li>
+                <li><strong>Common formats</strong>: INT8, FP16, and recently, even 1-bit quantization. 🧮</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>LoRA (Low-Rank Adaptation) 🔬</h2>
+            <ul>
+                <li><strong>Purpose</strong>: Efficient fine-tuning by updating a small number of parameters. 🎯</li>
+                <li><strong>Technique</strong>: Decomposes weight updates into low-rank matrices. 🧩</li>
+                <li><strong>Advantage</strong>: Significantly reduces memory and computational requirements. 💾</li>
+                <li><strong>Rank</strong>: A hyperparameter controlling the trade-off between efficiency and capacity. 🔢</li>
+                <li><strong>Application</strong>: Useful for adapting large models to specific tasks or domains. 🔧</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>QLoRA 🔬🔢</h2>
+            <ul>
+                <li><strong>Concept</strong>: Combines quantization with LoRA for even more efficient fine-tuning. 🔗</li>
+                <li><strong>Process</strong>: Quantizes the base model, applies LoRA on top of quantized weights. 🔄</li>
+                <li><strong>Benefit</strong>: Enables fine-tuning of very large models on consumer hardware. 💻</li>
+                <li><strong>Performance</strong>: Often achieves results comparable to full fine-tuning. 📊</li>
+                <li><strong>Use case</strong>: Ideal for resource-constrained environments or large-scale deployments. 🌐</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Fine-Tuning Process 🔧</h2>
+            <ul>
+                <li><strong>Data preparation</strong>: Clean, format, and augment your dataset. 🧹</li>
+                <li><strong>Model selection</strong>: Choose a pre-trained model as your starting point. 🎭</li>
+                <li><strong>Hyperparameter tuning</strong>: Adjust learning rate, batch size, and epochs. 🎛️</li>
+                <li><strong>Training</strong>: Use techniques like gradient accumulation and mixed precision. 🏋️‍♂️</li>
+                <li><strong>Evaluation</strong>: Assess performance on validation set and iterate as needed. 📏</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Prompt Engineering 💬</h2>
+            <ul>
+                <li><strong>Importance</strong>: Crucial for guiding model behavior and improving outputs. 🎯</li>
+                <li><strong>Techniques</strong>: Few-shot learning, chain-of-thought, and zero-shot prompting. 🧠</li>
+                <li><strong>Best practices</strong>: Be specific, provide context, and use consistent formatting. 📝</li>
+                <li><strong>Iteration</strong>: Continuously refine prompts based on model responses. 🔄</li>
+                <li><strong>Tools</strong>: Experiment with prompt optimization frameworks and libraries. 🛠️</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Evaluation Metrics 📊</h2>
+            <ul>
+                <li><strong>Perplexity</strong>: Measures how well the model predicts a sample. Lower is better. 📉</li>
+                <li><strong>BLEU score</strong>: Evaluates generated text against reference translations. 🔤</li>
+                <li><strong>ROUGE</strong>: Assesses the quality of generated summaries. 📚</li>
+                <li><strong>Human evaluation</strong>: Essential for assessing subjective quality and safety. 👥</li>
+                <li><strong>Task-specific metrics</strong>: Use metrics relevant to your specific use case. 🎯</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Ethical Considerations 🤔</h2>
+            <ul>
+                <li><strong>Bias mitigation</strong>: Address and reduce biases in training data and model outputs. ⚖️</li>
+                <li><strong>Privacy</strong>: Ensure compliance with data protection regulations like GDPR. 🔒</li>
+                <li><strong>Transparency</strong>: Document model capabilities, limitations, and potential risks. 📜</li>
+                <li><strong>Safety</strong>: Implement content filtering and output moderation. 🛡️</li>
+                <li><strong>Accountability</strong>: Establish clear guidelines for model use and deployment. 📋</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Tools and Frameworks 🛠️</h2>
+            <ul>
+                <li><strong>Hugging Face</strong>: Comprehensive library for NLP tasks and model fine-tuning. 🤗</li>
+                <li><strong>PyTorch</strong>: Popular deep learning framework with extensive LLM support. 🔥</li>
+                <li><strong>TensorFlow</strong>: Google's ML framework with TF-Hub for pre-trained models. 🧠</li>
+                <li><strong>ONNX</strong>: Open format to represent machine learning models. 🌐</li>
+                <li><strong>MLflow</strong>: Platform for the machine learning lifecycle, including experiment tracking. 📊</li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <h2>LLM Fine-Tuning using Gradient Package 🚀</h2>
+
+       <div class="container">
+        
+        
+        <div class="section">
+            <h2>Gradient Package: Setup 🛠️</h2>
+            <ul>
+                <li><strong>Installation</strong>: Use pip to install the Gradient package. 📦</li>
+                <li><strong>Authentication</strong>: Set up workspace ID and access token. 🔑</li>
+                <li><strong>Model Selection</strong>: Choose a base model for fine-tuning. 🎭</li>
+            </ul>
+            <code>
+# Install Gradient
+pip install gradient
+
+# Set up environment variables
+import os
+os.environ["GRADIENT_WORKSPACE_ID"] = "your_workspace_id"
+os.environ["GRADIENT_ACCESS_TOKEN"] = "your_access_token"
+
+# Initialize Gradient
+from gradient import Gradient
+gradient = Gradient()
+
+# Get base model
+base_model = gradient.get_base_model("base_model_slug")
+            </code>
+        </div>
+
+        <div class="section">
+            <h2>Gradient Package: Data Preparation 📊</h2>
+            <ul>
+                <li><strong>Format</strong>: Prepare data in the required format for fine-tuning. 📝</li>
+                <li><strong>Sample Data</strong>: Create a list of dictionaries with instructions and responses. 📚</li>
+                <li><strong>Customization</strong>: Tailor the data to your specific use case. 🎨</li>
+            </ul>
+            <code>
+# Prepare sample data
+samples = [
+    {
+        "instruction": "Who is Krish?",
+        "response": "Krish is a popular mentor and YouTuber who uploads videos on data science and AI."
+    },
+    {
+        "instruction": "What do you know about Krish?",
+        "response": "Krish is a content creator specializing in data science. His YouTube channel provides educational content on AI and machine learning."
+    }
+]
+            </code>
+        </div>
+
+        <div class="section">
+            <h2>Gradient Package: Fine-Tuning 🔧</h2>
+            <ul>
+                <li><strong>Model Adapter</strong>: Create a new model adapter for fine-tuning. 🔄</li>
+                <li><strong>Fine-Tuning Process</strong>: Use the fine_tune method with prepared samples. 🏋️‍♂️</li>
+                <li><strong>Iteration</strong>: Fine-tune for multiple epochs as needed. 🔁</li>
+                <li><strong>Evaluation</strong>: Test the fine-tuned model with new queries. 📊</li>
+            </ul>
+            <code>
+# Create model adapter
+new_model = base_model.create_model_adapter("my_fine_tuned_model")
+
+# Fine-tune the model
+num_epochs = 3
+for epoch in range(num_epochs):
+    new_model.fine_tune(samples=samples)
+
+# Test the fine-tuned model
+query = "Tell me about Krish"
+response = new_model.complete(query).generated_output
+print(response)
+            </code>
+        </div>
+
+
+
+    </div>
+    
+</body>
+</html>
+
