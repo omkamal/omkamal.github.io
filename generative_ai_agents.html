@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative AI Agents: A Comprehensive Tutorial</title>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Georgia&family=Merriweather&family=Playfair+Display&display=swap" rel="stylesheet">
+    
+    <!-- Prism.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    
+    <!-- KaTeX for Math Equations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/contrib/auto-render.min.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            background-color: #f8f8f8;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        /* Style for alternating paragraphs */
+        .classic-style {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: #333;
+            max-width: 800px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px auto;
+        }
+
+        .elegant-slate {
+            font-family: 'Playfair Display', serif;
+            line-height: 1.75;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            max-width: 800px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            padding: 25px;
+            border-left: 4px solid #3498db;
+            border-radius: 12px;
+            margin: 20px auto;
+        }
+
+        .elegant-read {
+            font-family: 'Merriweather', serif;
+            line-height: 1.75;
+            background-color: #fafafa;
+            color: #2c3e50;
+            max-width: 800px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            padding: 25px;
+            border-left: 4px solid #27ae60;
+            border-radius: 12px;
+            margin: 20px auto;
+        }
+        
+        /* Headers */
+        h1 {
+            text-align: center;
+            color: #27ae60;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            background-color: #27ae60;
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+        
+        h3 {
+            background-color: #ab89f0;
+            color: #ffffff;
+            padding-top: 10px;
+            padding-left: 10px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        
+        h4 {
+            color: #2980b9;
+            padding-top: 10px;
+        }
+        
+        /* Lists */
+        ul, ol {
+            padding-left: 20px;
+        }
+        
+        /* Concepts styling */
+        .concept {
+            font-family: Sans-Serif;
+        }
+        
+        .concept.primary {
+            font-weight: bold;
+            background-color: #c0950a;
+            padding: 0 5px;
+            border-radius: 3px;
+            color: white;
+        }
+        
+        .concept.secondary {
+            color: #9b59b6;
+            text-decoration: dotted overline underline;
+        }
+        
+        .concept.tertiary {
+            color: #3598cc;
+        }
+        
+        /* Notes */
+        .note-box {
+            font-family: Rockwell, "Courier Bold", Courier, Georgia, Times, "Times New Roman", serif;
+            border: 2px solid #8e44ad;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            font-style: italic;
+            color: #8e44ad;
+            margin: 20px 0;
+        }
+        
+        .note-box i {
+            color: #8e44ad;
+            margin-right: 10px;
+        }
+        
+        .note-box .note-title {
+            font-family: Rockwell, "Courier Bold", Courier, Georgia, Times, "Times New Roman", serif;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        /* Example boxes */
+        .example {
+            background-color: #ecf0f1;
+            border-left: 5px solid #2980b9;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        
+        /* Code blocks */
+        pre {
+            background-color: #282c34;
+            border-radius: 5px;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        code {
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        /* Important indicators */
+        .important {
+            color: #c0392b;
+            font-family: Sans-Serif;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-robot"></i> Generative AI Agents: A Comprehensive Tutorial for Beginners and Intermediates</h1>
+        <p style="text-align: center;">by Omar Kamal</p>
+        
+        <h2><i class="fas fa-book-open"></i> Chapter 1: Introduction to Generative AI Agents</h2>
+        
+        <h3><i class="fas fa-lightbulb"></i> Conceptual Overview</h3>
+        
+        <p class="classic-style">
+            <span class="concept primary">Generative Artificial Intelligence</span> (<strong><em>Generative AI</em></strong>) refers to AI systems that can create new content, such as text, images, or music, by learning patterns from existing data. Unlike traditional AI that might categorize or predict based on input data, generative models produce <strong>original outputs</strong> like human-like text or novel images. This capability has captured global attention, as seen with applications like ChatGPT and DALL-E, because almost anyone can use them to communicate and create content. The significance of generative AI in business is immense – it's estimated to potentially add <strong>trillions of dollars</strong> of value to the global economy through productivity gains and new products. Companies are investing heavily in this technology (for example, Microsoft's $10B stake in OpenAI and Google's $300M stake in Anthropic) as they recognize its transformative potential in areas from content creation to decision support.
+        </p>
+        
+        <p class="elegant-slate">
+            A <span class="concept primary">Generative AI Agent</span> is more than just a generative model; it's an autonomous entity that perceives its environment, makes decisions, and acts towards achieving goals using generative AI capabilities. These agents leverage <strong><em>Large Language Models (LLMs)</em></strong> as their "brain" for understanding and generating language, and can integrate with external tools or data sources to extend their functionality. Modern AI agents typically combine an LLM for reasoning, a set of tools (like web search, calculators, or databases) for taking actions, and carefully designed prompts that guide the agent's behavior. This allows them to handle complex tasks in a flexible, <span class="concept secondary">context-aware</span> manner, moving beyond static question-answering. For example, an AI agent in a customer support role might analyze a customer's query, retrieve relevant account information via an API, and then generate a helpful response – all autonomously.
+        </p>
+        
+        <p class="elegant-read">
+            It's important to understand that generative AI agents differ from traditional software bots or simple chatbots. Traditional bots often follow predefined scripts or rules, while generative agents use powerful AI models to <strong>dynamically generate</strong> responses and strategies. They can hold extended conversations with memory of context, make decisions on-the-fly, and even <span class="concept secondary">collaborate</span> with other AI agents. This agentic behavior – the ability to plan, reason, and use tools – is a key concept in the latest AI systems. For instance, rather than being limited to answering questions, an agent could proactively ask clarifying questions, decompose a complex problem into sub-tasks, call external APIs for information, and synthesize a solution. Such autonomy and adaptability make generative AI agents very attractive for business applications where complex, unstructured tasks are common, like drafting marketing content, analyzing financial reports, or providing personalized customer service.
+        </p>
+        
+        <h3><i class="fas fa-cogs"></i> Implementation Details</h3>
+        
+        <p class="classic-style">
+            At a high level, implementing a generative AI agent involves a few crucial steps. First, one must select an <strong>AI model</strong> (or models) that will power the agent's reasoning and generation. This could be an API-based model like OpenAI's GPT-4 or Anthropic's Claude, or a local model running on your hardware. The model choice affects the agent's language proficiency, context length, and specialized abilities (for example, some models are better at coding, others at summarization). Next, the agent may be equipped with <span class="concept primary">tools or skills</span>. Tools are external functions the agent can use, such as web search, databases, calculators, or custom APIs. Many frameworks (discussed in the next chapter) provide a library of such tools and a mechanism for the agent to decide when to use them. For instance, an agent could be designed to use a calculator tool when it detects a math question, rather than trying to do arithmetic via the language model.
+        </p>
+        
+        <p class="elegant-slate">
+            Another key implementation aspect is defining the agent's <strong><em>prompting strategy and memory</em></strong>. The prompt provides the initial instructions or persona for the agent, describing its role and task. As conversations or tasks progress, agents need memory to remember prior interactions. This is often handled by feeding the model a history of the dialogue or using specialized memory components (like vector databases to store and retrieve past facts or conversations). Effective memory management prevents the agent from forgetting important context during longer interactions. Modern LLMs can handle very large context windows (Anthropic's Claude can process up to 100,000 tokens, roughly 75,000 words, at once), but for extremely long dialogues or documents, frameworks help split, summarize, or retrieve relevant pieces of context as needed.
+        </p>
+        
+        <p class="elegant-read">
+            In practice, developers rarely build these agents from scratch. Instead, they use <span class="concept primary">agent frameworks</span> – libraries and platforms that provide abstractions to create and manage generative AI agents. With a framework, one can define agents with certain roles, equip them with tools, manage multi-step reasoning loops, and handle input/output formatting. For example, frameworks like LangChain and <strong>crewAI</strong> come with built-in support for things like tool usage, decision-making loops, and integrations with various AI models. To implement an agent, you would typically write a Python script (or use a no-code interface, depending on the framework) that initializes the agent, configures its tools and memory, and then enters a loop to receive user inputs and produce outputs. Later chapters will dive deeper into these frameworks and provide step-by-step examples.
+        </p>
+        
+        <p class="classic-style">
+            It's also worth noting that some agents consist of multiple sub-agents working together. In a multi-agent system, you might have a <strong>planner agent</strong> that breaks a task into subtasks, and several <strong>worker agents</strong> that solve those subtasks, communicating and coordinating with each other. This design can tackle more complex workflows – for example, a marketing content agent team where one agent specializes in research, another in writing copy, and another in proofreading, collaborating as a crew. Such multi-agent implementations require careful orchestration (deciding how agents hand off tasks or ask each other for help), which certain frameworks facilitate. The implementation details can get intricate, but starting with a single-agent loop is the best way to learn the basics before scaling up to agent teams.
+        </p>
+        
+        <h3><i class="fas fa-exclamation-circle"></i> Practical Considerations</h3>
+        
+        <p class="elegant-slate">
+            When embarking on building generative AI agents, there are several practical points to consider. <span class="concept primary">Resource requirements</span> are a primary concern – large language models can be computationally intensive. If using a cloud API (like OpenAI or Anthropic), each API call has monetary costs and rate limits; if using local models, you need significant CPU/GPU resources and memory to run them efficiently. It's important to plan for these needs, perhaps starting with smaller models for prototyping. <strong><em>Data privacy</em></strong> and compliance is another consideration: sending sensitive business data to a third-party API may violate privacy policies or regulations. In such cases, companies might opt for on-premises solutions or models that can run locally to keep data in-house.
+        </p>
+        
+        <p class="elegant-read">
+            Another concern is <span class="concept primary">reliability and accuracy</span>. While generative agents are powerful, they can sometimes produce incorrect or nonsensical answers (a phenomenon often called <em>hallucination</em>). They require careful testing and possibly additional guardrails for critical applications. For instance, if an agent is used to provide financial advice or medical information, it should be thoroughly evaluated and possibly restricted from venturing outside its knowledge domain. Using retrieval techniques (where the agent pulls information from a trusted knowledge base) can improve factual accuracy in such scenarios.
+        </p>
+        
+        <p class="classic-style">
+            <span class="concept primary">Ethical considerations</span> also come into play (which we will discuss in detail in a later chapter). One must ensure the agent does not produce biased or inappropriate content, and that it respects user privacy. Ensuring an audit trail of the agent's decisions or providing the ability for human override can be important in sensitive applications like finance and customer service. Finally, think about <strong>maintenance and updates</strong>: the AI landscape is evolving rapidly with new models and techniques. A solution built today might need updates in a few months to use a more efficient model or to patch a vulnerability. Designing your agent with modularity (using frameworks that allow swapping out models or tools easily) will future-proof your implementation and allow you to take advantage of the latest improvements in generative AI.
+        </p>
+        
+        <h3><i class="fas fa-vial"></i> Example Test Cases (Business Applications)</h3>
+        
+        <p class="elegant-slate">
+            Here are a few example scenarios (test cases) showcasing how generative AI agents can be applied in Marketing, Finance, and Customer Service:
+        </p>
+        
+        <ol>
+            <li class="classic-style">
+                <strong>Marketing – Social Media Campaign</strong>: <em>Test Case:</em> A marketing team uses a generative AI agent to create a social media campaign. The agent is given a product description and tasked to generate five Instagram post captions and accompanying image ideas. <strong>Expected Result:</strong> The agent produces creative, catchy captions tailored to the product and suggests relevant imagery (leveraging its training on marketing content). A marketer reviews and approves these for posting.
+            </li>
+            <li class="elegant-slate">
+                <strong>Marketing – Ad Copy Variation</strong>: <em>Test Case:</em> An advertising agent is asked to generate variations of a Google ad headline and description for A/B testing. <strong>Expected Result:</strong> The agent returns multiple headline options highlighting different product benefits, all within the character limit, and several description texts. The marketing team then picks the best-performing variants for deployment.
+            </li>
+            <li class="elegant-read">
+                <strong>Finance – Report Summarization</strong>: <em>Test Case:</em> A financial analyst employs an AI agent to summarize a lengthy quarterly earnings report for a quick internal briefing. <strong>Expected Result:</strong> The agent reads the 50-page financial report and produces a concise summary with key highlights (revenues, expenses, notable events) in a few paragraphs. It also provides bullet points of important insights (ensuring accuracy by possibly extracting exact figures from the text).
+            </li>
+            <li class="classic-style">
+                <strong>Finance – Portfolio Q&A</strong>: <em>Test Case:</em> A bank deploys a customer-facing agent to answer questions about personal investment portfolios. A user asks, "How did my retirement fund perform compared to last year?" <strong>Expected Result:</strong> The agent securely retrieves the user's portfolio data, calculates year-over-year performance, and responds with a clear summary (e.g., "Your retirement fund grew 8% this year, which is 2% higher than last year's growth."). The agent explains factors if asked follow-ups.
+            </li>
+            <li class="elegant-slate">
+                <strong>Customer Service – Troubleshooting Bot</strong>: <em>Test Case:</em> An electronics company's support agent handles a user query: "My smart thermostat keeps disconnecting from Wi-Fi – how can I fix it?" <strong>Expected Result:</strong> The agent asks a clarifying question if needed (e.g., "Is it failing to connect to Wi-Fi during setup or dropping connection after some time?"). Then it provides a step-by-step troubleshooting guide drawn from the product manual (reset device, check router, etc.). It may also offer to schedule a technician if the problem persists.
+            </li>
+            <li class="elegant-read">
+                <strong>Customer Service – Multi-turn Chat</strong>: <em>Test Case:</em> A customer is chatting with an AI agent about returning an item and then asks an unrelated question about product compatibility. <strong>Expected Result:</strong> The agent maintains context of the return process until that part is concluded, then smoothly shifts context to answer the compatibility question, all in the same conversation. It remembers the customer's name and order details provided earlier without asking again, demonstrating effective conversational memory.
+            </li>
+        </ol>
+        
+        <p class="classic-style">
+            Each of these scenarios would be validated by testers to ensure the agent's responses are coherent, accurate, and aligned with business and brand guidelines. They illustrate the breadth of applications generative AI agents can tackle in real-world business settings.
+        </p>
+        
+        <h2><i class="fas fa-cubes"></i> Chapter 2: Key Frameworks for Generative AI Agents</h2>
+        
+        <h3><i class="fas fa-lightbulb"></i> Conceptual Overview</h3>
+        
+        <p class="elegant-slate">
+            As generative AI agents rose in prominence, a number of frameworks have emerged to simplify their creation and management. <span class="concept primary">AI agent frameworks</span> are software libraries or platforms that provide pre-built components for building agents – things like integration with language models, tool usage, memory management, and orchestration of multi-step reasoning. By using a framework, developers can focus on the <em>what</em> (defining agent roles, goals, and logic) rather than the low-level <em>how</em> (managing API calls, parsing model outputs, etc.). These frameworks are to AI agents what web frameworks are to web development: they offer abstractions and scaffolding to speed up development.
+        </p>
+        
+        <p class="elegant-read">
+            Each framework has its own design philosophies and strengths. Some are geared towards <strong>autonomous multi-agent systems</strong>, where multiple AI agents collaborate. Others focus on ease of embedding AI into existing apps. When choosing a framework, factors to consider include: language support (most are Python-centric, some support other languages like JavaScript or C#), community and documentation, supported AI models (some have tight integration with certain model providers or open-source models), and the complexity of tasks it can handle out-of-the-box. We'll now explore several of the <strong><em>latest and most popular frameworks</em></strong> for generative AI agents, including <span class="concept secondary">LangChain</span>, <span class="concept secondary">LangGraph</span>, <span class="concept secondary">crewAI</span>, <span class="concept secondary">Microsoft Semantic Kernel</span>, <span class="concept secondary">Microsoft AutoGen</span>, <span class="concept secondary">SmolAgents</span>, and <span class="concept secondary">AutoGPT</span>. For each, we'll discuss what it is, how to install it, and what it's particularly good at.
+        </p>
+        
+        <h3><i class="fas fa-cogs"></i> Implementation Details</h3>
+        
+        <h4><i class="fas fa-link"></i> <strong>LangChain</strong></h4>
+        
+        <p class="classic-style">
+            LangChain is a robust and adaptable open-source framework that makes it easier to develop applications powered by large language models. A core idea of LangChain is to "chain" together various components like LLMs, prompts, and tools to create complex agent behaviors. It addresses challenges such as retaining context over long conversations, integrating external data sources, and orchestrating multi-step reasoning. Thanks to an <strong>extensive set of tools and abstractions</strong>, developers can design powerful AI agents that interact with APIs, perform searches, query databases, and more. LangChain's modular architecture allows you to swap in different LLMs (OpenAI, Hugging Face models, etc.) and memory systems, making it very flexible.
+        </p>
+        
+        <p class="elegant-slate">
+            <em>Installation:</em> LangChain can be installed via pip. For example:
+        </p>
+        
+        <pre><code class="language-python">pip install langchain openai</code></pre>
+        
+        <p class="elegant-slate">
+            This installs the core LangChain library. We also install <code>openai</code> to use OpenAI's model in this example. After installation, you can verify by importing it in Python.
+        </p>
+        
+        <p class="elegant-read">
+            <em>Key Features:</em> LangChain provides high-level classes for building <span class="concept primary">Chains</span> (a sequence of operations or prompts) and <span class="concept primary">Agents</span> (which use an LLM to decide actions and can use tools). It has built-in <strong>memory</strong> implementations to store conversation history, and supports <strong>vector stores</strong> for semantic search if you want your agent to have knowledge of a document set. It also includes many <strong>tools</strong> out-of-the-box – web search, Python code execution, math calculators, etc. – which can be combined in an agent. For instance, using LangChain, you can create an agent that given a question, decides whether to just use the LLM or call a tool (like a calculator or a wiki search), based on the question.
+        </p>
+        
+        <p class="classic-style">
+            <em>Example Usage:</em> Below is a short Python example using LangChain to create an agent that can do a calculation by choosing the appropriate tool (a math tool in this case). We use OpenAI's text model as the LLM for the agent's reasoning. The agent will receive a query and decide to use the calculator tool for math.
+        </p>
+        
+        <pre><code class="language-python">from langchain.agents import load_tools, initialize_agent, AgentType
+from langchain.llms import OpenAI
+
+# Initialize the language model (LLM)
+llm = OpenAI(model_name="text-davinci-003", openai_api_key="YOUR_OPENAI_API_KEY")
+
+# Load a set of tools; here we load the 'llm-math' tool which enables math calculations
+tools = load_tools(["llm-math"], llm=llm)
+
+# Create an agent that uses the tools and LLM with a standard decision-making chain (ReAct framework)
+agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+
+# Query the agent with a question that requires a calculation
+result = agent.run("What is the square root of 256 plus 10?")
+
+print(result)</code></pre>
+        
+        <p class="elegant-slate">
+            In this script, the agent will internally decide that to answer the question, it should calculate √256 (which is 16) and then add 10. With the <code>llm-math</code> tool, it will perform the calculation and return the result "26". The <code>verbose=True</code> flag causes the agent to print its reasoning steps, which is useful for understanding how it works (you would see the agent's chain-of-thought prompting, such as deciding to use the calculator). LangChain makes this process straightforward – without it, we would have to manually prompt the LLM to do the reasoning and call a calculator function ourselves. LangChain remains very popular due to its flexibility and the active community contributing extensions, making it a <strong><em>future-proof</em></strong> choice for many AI agent projects.
+        </p>
+        
+        <h4><i class="fas fa-project-diagram"></i> <strong>LangGraph</strong></h4>
+        
+        <p class="elegant-read">
+            LangGraph is an extension of LangChain aimed at enabling the creation of <strong>stateful, multi-actor applications</strong> using LLMs. In essence, while LangChain provides the pieces to build a single agent or chain, LangGraph helps orchestrate multiple agents (or multiple LLM-driven components) that might need to interact. It's particularly useful for complex, interactive AI systems that involve planning, reflection, and coordination among agents. For example, if you wanted to simulate a debate between two AI agents or have a manager agent delegate tasks to worker agents, LangGraph would provide patterns for that.
+        </p>
+        
+        <p class="classic-style">
+            LangGraph builds on LangChain's concepts, so it inherits the ability to integrate with various models and tools. It introduces constructs for maintaining a <span class="concept primary">graph of interactions</span> or dialogue between agents. The "graph" can be thought of as a network of agents and data stores that pass messages. Each agent can have its own role and memory, and LangGraph ensures that messages follow the defined structure (for instance, which agent should respond at a given time).
+        </p>
+        
+        <p class="elegant-slate">
+            <em>Installation:</em> Since LangGraph is closely related to LangChain, it may be installed via pip as well (if available via pip, e.g., <code>pip install langgraph</code>). In some cases, it might be a separate extension library under the LangChain project (it's a relatively new concept coming out of the LangChain ecosystem). Always check the official documentation for the latest installation instructions.
+        </p>
+        
+        <p class="elegant-read">
+            <em>Use Cases:</em> LangGraph shines in scenarios like multi-agent role play (e.g., interviewer and interviewee agents), collaborative problem solving (agents splitting tasks), or simulating workflows (like different AI personas handling different stages of a process). While an intermediate user might not immediately dive into LangGraph, it's good to be aware that such frameworks exist for scaling up agent complexity. LangGraph's approach of structuring interactions can help manage state in long-running agent dialogues or processes, something that becomes challenging as more agents or steps are involved.
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Initialize KaTeX
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false,
+                output: 'html'
+            });
+
+            // Initialize Prism.js for syntax highlighting
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+</html>
