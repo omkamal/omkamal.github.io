@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fabric Patterns Cheat Sheet</title>
+    <title>Fabric Installation Cheat Sheet</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
@@ -28,6 +28,59 @@
             /* Removed fixed height to allow content to expand */
             display: flex;
             flex-direction: column;
+        }
+        .sections-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 0 auto 20px auto;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .sections-container-single {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin: 0 auto 20px auto;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .sections-container-double {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 0 auto 20px auto;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .section {
+            background-color: #fff;
+            border-radius: 6px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+            min-width: 0;
+        }
+
+        /* Responsive: stack columns on smaller screens */
+        @media (max-width: 1100px) {
+            .sections-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 768px) {
+            .sections-container {
+                grid-template-columns: 1fr;
+            }
+            body {
+                padding: 5mm;
+            }
         }
 
         .header-info {
@@ -72,17 +125,6 @@
             grid-template-columns: repeat(3, 1fr);
             grid-gap: 15px;
             margin-bottom: 20px;
-        }
-                .section {
-            background-color: #fff;
-            border-radius: 6px; /* Slightly smaller radius */
-            padding: 8px; /* Increased padding slightly */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Lighter shadow */
-            /* Removed overflow: hidden to display all content */
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 15px; /* Add space between sections */
         }
 
         .section h2 {
@@ -184,273 +226,101 @@
             <div class="author">Omar Hosney</div>
             <div class="linkedin"><a href="https://www.linkedin.com/in/okhosney/" target="_blank">LinkedIn Profile</a></div>
         </div>
-        <h1>Fabric Patterns Cheat Sheet</h1>
+        <h1>Fabric Installation Cheat Sheet</h1>
 
-        <div class="grid-container">
-
+        <div class="sections-container-single">
             <div class="section">
-                <h2><span class="emoji">🧐</span> Analysis & Evaluation (1/2)</h2>
+                <h2><span class="emoji">⚡</span> How to Install Fabric</h2>
                 <ul>
-                    <li><strong>analyze_answers:</strong> Evaluate <strong>quiz answers</strong> for correctness based on learning objectives.</li>
-                    <li><strong>analyze_bill:</strong> Discern true nature/goals of <strong>legislation</strong> (overt/covert).</li>
-                    <li><strong>analyze_bill_short:</strong> Concise analysis of <strong>legislation</strong> (overt/covert).</li>
-                    <li><strong>analyze_candidates:</strong> Compare/contrast <strong>political candidates</strong> on issues/policies.</li>
-                    <li><strong>analyze_cfp_submission:</strong> Evaluate conference <strong>talk submissions</strong> (clarity, relevance).</li>
-                    <li><strong>analyze_claims:</strong> Analyze/rate <strong>truth claims</strong> with evidence, fallacies.</li>
-                    <li><strong>analyze_comments:</strong> Evaluate internet <strong>comments</strong> (content, sentiment).</li>
-                    <li><strong>analyze_debate:</strong> Rate debate <strong>insight/emotion</strong>, analyze arguments.</li>
-                    <li><strong>analyze_email_headers:</strong> Cybersecurity analysis of <strong>email headers</strong> (SPF, DKIM).</li>
-                    <li><strong>analyze_incident:</strong> Extract details from <strong>cybersecurity breach</strong> articles.</li>
-                    <li><strong>analyze_interviewer_techniques:</strong> Analyze <strong>interviewer</strong> unique qualities/techniques.</li>
-                    <li><strong>analyze_logs:</strong> Analyze server <strong>log files</strong> for patterns, anomalies, issues.</li>
-                    <li><strong>analyze_malware:</strong> Analyze <strong>malware</strong> details, extract IOCs, techniques.</li>
-                    <li><strong>analyze_military_strategy:</strong> Analyze historical <strong>battle strategy</strong>/tactics.</li>
-                    <li><strong>analyze_mistakes:</strong> Analyze past <strong>thinking errors</strong> & apply to current beliefs.</li>
-                    <li><strong>analyze_paper:</strong> Analyze <strong>research papers</strong> (findings, rigor, quality).</li>
-                    <li><strong>analyze_patent:</strong> Analyze <strong>patent</strong> details (field, problem, solution, novelty).</li>
-                    <li><strong>analyze_personality:</strong> Perform deep <strong>psychological analysis</strong> based on input.</li>
-                    <li><strong>analyze_presentation:</strong> Review/critique <strong>presentations</strong> (content, goals, style).</li>
-                    <li><strong>analyze_product_feedback:</strong> Analyze/organize <strong>user feedback</strong> (themes, priority).</li>
-                    <li><strong>analyze_proposition:</strong> Analyze <strong>ballot proposition</strong> (purpose, impact, args).</li>
-                    <li><strong>analyze_prose:</strong> Evaluate writing (<strong>novelty, clarity, prose</strong>), give recommendations.</li>
-                    <li><strong>analyze_prose_json:</strong> Evaluate writing (novelty, clarity, prose) in <strong>JSON output</strong>.</li>
-                    <li><strong>analyze_prose_pinker:</strong> Evaluate prose based on <strong>Steven Pinker's</strong> style guide.</li>
-                    <li><strong>analyze_risk:</strong> Conduct <strong>vendor risk assessment</strong>, suggest controls.</li>
-                    <li><strong>analyze_sales_call:</strong> Rate <strong>sales call performance</strong> based on transcript.</li>
-                    <li><strong>analyze_spiritual_text:</strong> Compare <strong>spiritual texts</strong> with King James Bible.</li>
-                    <li><strong>analyze_tech_impact:</strong> Analyze societal/ethical <strong>impact of tech</strong> projects.</li>
-                    <li><strong>analyze_threat_report:</strong> Extract insights from <strong>cyber threat reports</strong>.</li>
-                    <li><strong>analyze_threat_report_cmds:</strong> Extract actionable <strong>commands</strong> from threat reports.</li>
-                    <li><strong>analyze_threat_report_trends:</strong> Extract <strong>trends</strong> from cyber threat reports.</li>
-                    <li><strong>check_agreement:</strong> Analyze <strong>contracts</strong> for stipulations/gotchas.</li>
-                    <li><strong>find_logical_fallacies:</strong> Identify <strong>logical fallacies</strong> in arguments.</li>
-                    <li><strong>get_wow_per_minute:</strong> Rate content '<strong>wow-factor</strong>' (surprise, insight, value).</li>
-                    <li><strong>judge_output:</strong> Evaluate <strong>Honeycomb query</strong> effectiveness & critique.</li>
-                    <li><strong>label_and_rate:</strong> Label content with <strong>tags</strong> and rate quality/relevance.</li>
-                    <li><strong>rate_ai_response:</strong> Rate <strong>AI response quality</strong> against human expert benchmark.</li>
-                    <li><strong>rate_ai_result:</strong> Assess quality of <strong>AI/ML/LLM work</strong> based on multiple dimensions.</li>
-                    <li><strong>rate_content:</strong> Label/rate content based on <strong>themes/ideas</strong> (human meaning, AI).</li>
-                    <li><strong>rate_value:</strong> Rate content value using <strong>Value Per Minute</strong> (VPM) metric.</li>
-                    <li><strong>review_design:</strong> Review/analyze <strong>architecture design</strong> (clarity, security, scale).</li>
-                    <li><strong>t_analyze_challenge_handling:</strong> Evaluate how <strong>challenges</strong> are addressed (from TELOS).</li>
-                    <li><strong>t_check_metrics:</strong> Assess recent improvements based on <strong>metrics/KPIs</strong> (from TELOS).</li>
-                    <li><strong>t_find_blindspots:</strong> Identify potential thinking <strong>blindspots</strong>/flaws (from TELOS).</li>
-                    <li><strong>t_find_negative_thinking:</strong> Identify <strong>negative thinking</strong> in journals (from TELOS).</li>
-                    <li><strong>t_find_neglected_goals:</strong> Identify recently <strong>neglected goals</strong>/projects (from TELOS).</li>
+                    <li><strong>Download Latest Binaries</strong> (recommended, no dependencies):
+                        <ul>
+                            <li><strong>Windows:</strong> <a href="https://github.com/danielmiessler/fabric/releases/latest/download/fabric-windows-amd64.exe" target="_blank">Download EXE</a></li>
+                            <li><strong>macOS (arm64):</strong> <code>curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-arm64 &gt; fabric &amp;&amp; chmod +x fabric &amp;&amp; ./fabric --version</code></li>
+                            <li><strong>macOS (amd64):</strong> <code>curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-amd64 &gt; fabric &amp;&amp; chmod +x fabric &amp;&amp; ./fabric --version</code></li>
+                            <li><strong>Linux (amd64):</strong> <code>curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-amd64 &gt; fabric &amp;&amp; chmod +x fabric &amp;&amp; ./fabric --version</code></li>
+                            <li><strong>Linux (arm64):</strong> <code>curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-arm64 &gt; fabric &amp;&amp; chmod +x fabric &amp;&amp; ./fabric --version</code></li>
+                        </ul>
+                    </li>
+                    <li><strong>Using Package Managers</strong>:
+                        <ul>
+                            <li><strong>macOS (Homebrew):</strong> <code>brew install fabric-ai</code></li>
+                            <li><strong>Arch Linux (AUR):</strong> <code>yay -S fabric-ai</code></li>
+                            <li><em>NOTE:</em> The binary may be called <code>fabric-ai</code>. Add <code>alias fabric='fabric-ai'</code> to your shell config.</li>
+                        </ul>
+                    </li>
+                    <li><strong>From Source (requires Go):</strong>
+                        <ul>
+                            <li><code>go install github.com/danielmiessler/fabric@latest</code></li>
+                        </ul>
+                    </li>
+                    <li><strong>Environment Variables</strong> (add to <code>~/.bashrc</code> or <code>~/.zshrc</code>):
+                        <ul>
+                            <li><strong>Intel/macOS/Linux:</strong>
+<pre>export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH</pre>
+                            </li>
+                            <li><strong>Apple Silicon macOS:</strong>
+<pre>export GOROOT=$(brew --prefix go)/libexec
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH</pre>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><strong>Setup</strong>:
+                        <ul>
+                            <li>Run <code>fabric --setup</code> to set up directories and keys.</li>
+                        </ul>
+                    </li>
                 </ul>
+                <div style="margin-top:10px;font-size:10px;color:#888;">
+                    For more details and troubleshooting, visit the <a href="https://github.com/danielmiessler/fabric" target="_blank">official Fabric GitHub page</a>.
+                </div>
             </div>
 
             <div class="section">
-                <h2><span class="emoji">✍️</span> Content Creation & Writing</h2>
-                <ul>
-                    <li><strong>agility_story:</strong> Generate Agile <strong>user stories</strong> & criteria (JSON).</li>
-                    <li><strong>answer_interview_question:</strong> Generate tailored <strong>interview responses</strong> (concise, expert).</li>
-                    <li><strong>capture_thinkers_work:</strong> Summarize <strong>philosopher/thinker</strong> teachings/ideas.</li>
-                    <li><strong>create_academic_paper:</strong> Generate academic paper in <strong>LaTeX</strong> format.</li>
-                    <li><strong>create_ai_jobs_analysis:</strong> Analyze job <strong>automation susceptibility</strong> & resilience strategies.</li>
-                    <li><strong>create_aphorisms:</strong> Generate list of brief, witty <strong>aphorisms</strong> on a topic.</li>
-                    <li><strong>create_art_prompt:</strong> Generate detailed <strong>AI art prompt</strong> (description, style).</li>
-                    <li><strong>create_design_document:</strong> Create <strong>C4 model design document</strong> (business/security posture).</li>
-                    <li><strong>create_diy:</strong> Create structured <strong>DIY tutorial</strong> patterns.</li>
-                    <li><strong>create_flash_cards:</strong> Create simple <strong>flashcards</strong> (Q&A) from text.</li>
-                    <li><strong>create_formal_email:</strong> Craft professional, clear, respectful <strong>emails</strong>.</li>
-                    <li><strong>create_hormozi_offer:</strong> Create business offers based on <strong>Alex Hormozi's</strong> principles.</li>
-                    <li><strong>create_keynote:</strong> Create TED-style <strong>keynote presentations</strong> (narrative, slides).</li>
-                    <li><strong>create_loe_document:</strong> Create detailed <strong>Level of Effort</strong> (LOE) documents.</li>
-                    <li><strong>create_logo:</strong> Create minimalist <strong>logo prompts</strong> for AI (vector, no text).</li>
-                    <li><strong>create_newsletter_entry:</strong> Condense article to <strong>newsletter summary</strong> (Frontend Weekly style).</li>
-                    <li><strong>create_npc:</strong> Generate detailed <strong>D&D 5E NPC</strong> (Markdown).</li>
-                    <li><strong>create_prd:</strong> Create <strong>Product Requirements Document</strong> (PRD) in Markdown.</li>
-                    <li><strong>create_prediction_block:</strong> Format predictions into <strong>Markdown block</strong> for blog.</li>
-                    <li><strong>create_quiz:</strong> Generate <strong>review questions</strong> based on learning objectives.</li>
-                    <li><strong>create_reading_plan:</strong> Create three-phase <strong>reading plan</strong> (core, extended, supplementary).</li>
-                    <li><strong>create_report_finding:</strong> Create structured <strong>security finding report</strong> (desc, risk, recs).</li>
-                    <li><strong>create_security_update:</strong> Create concise <strong>security updates</strong> for newsletters.</li>
-                    <li><strong>create_show_intro:</strong> Create compelling <strong>podcast show intros</strong> summarizing topics.</li>
-                    <li><strong>create_story_explanation:</strong> Summarize complex content in easy <strong>story format</strong>.</li>
-                    <li><strong>create_tags:</strong> Identify <strong>tags</strong> from text for mind mapping tools.</li>
-                    <li><strong>create_user_story:</strong> Write concise technical <strong>user stories</strong> for software features.</li>
-                    <li><strong>create_video_chapters:</strong> Extract topics/timestamps for <strong>video chapters</strong>.</li>
-                    <li><strong>dialog_with_socrates:</strong> Engage in deep <strong>Socratic dialogue</strong> to challenge beliefs.</li>
-                    <li><strong>enrich_blog_post:</strong> Enhance <strong>Markdown blog posts</strong> (structure, visuals).</li>
-                    <li><strong>recommend_artists:</strong> Recommend festival <strong>artist schedule</strong> based on preferences.</li>
-                    <li><strong>recommend_talkpanel_topics:</strong> Propose <strong>talk/panel topics</strong> for a person's expertise.</li>
-                    <li><strong>to_flashcards:</strong> Create <strong>Anki flashcards</strong> (CSV) from text (minimal info).</li>
-                    <li><strong>tweet:</strong> Craft engaging <strong>tweets with emojis</strong>, guide on Twitter basics.</li>
-                    <li><strong>write_essay:</strong> Write concise essays in <strong>Paul Graham's style</strong>.</li>
-                    <li><strong>write_latex:</strong> Generate syntactically correct <strong>LaTeX code</strong>.</li>
-                    <li><strong>write_micro_essay:</strong> Write concise micro-essays in <strong>Paul Graham's style</strong> (250 words).</li>
-                    <li><strong>t_create_h3_career:</strong> Summarize context for <strong>H3 career</strong> (human-to-human value) planning.</li>
-                    <li><strong>t_create_opening_sentences:</strong> Describe identity/goals/actions concisely & humbly (from TELOS).</li>
-                    <li><strong>t_describe_life_outlook:</strong> Describe <strong>life outlook</strong> concisely (from TELOS).</li>
-                    <li><strong>t_extract_intro_sentences:</strong> Summarize identity/work/projects concisely (from TELOS).</li>
-                    <li><strong>t_extract_panel_topics:</strong> Create <strong>panel ideas</strong> (title, desc) based on TELOS file.</li>
-                    <li><strong>t_give_encouragement:</strong> Evaluate progress & offer <strong>encouragement/recommendations</strong> (from TELOS).</li>
-                    <li><strong>t_year_in_review:</strong> Create insights/summary/visualizations for <strong>year in review</strong> (from TELOS).</li>
-                </ul>
+                <h2><span class="emoji">⬆️</span> Upgrading</h2>
+                <p>The great thing about Go is that it's super easy to upgrade Fabric. Just run the same command you used to install it and you'll always get the latest version:</p>
+                <pre style="background:#f8f8f8;padding:6px 10px;border-radius:5px;">go install github.com/danielmiessler/fabric@latest</pre>
             </div>
 
-             <div class="section">
-                <h2><span class="emoji">✂️</span> Data Extraction & Summarization</h2>
-                <ul>
-                    <li><strong>create_5_sentence_summary:</strong> Create summaries at <strong>5 levels of depth</strong> (5->1 word).</li>
-                    <li><strong>create_cyber_summary:</strong> Summarize <strong>cybersecurity items</strong> (threats, vulns).</li>
-                    <li><strong>create_micro_summary:</strong> Summarize content (<strong>20 words</strong>, 3 points, 3 takeaways).</li>
-                    <li><strong>create_rpg_summary:</strong> Summarize in-person <strong>RPG session</strong> details.</li>
-                    <li><strong>create_summary:</strong> Summarize content (<strong>20 words</strong>, 10 points, 5 takeaways).</li>
-                    <li><strong>export_data_as_csv:</strong> Extract data structures from input to <strong>CSV</strong>.</li>
-                    <li><strong>extract_algorithm_update_recommendations:</strong> Extract concise <strong>algorithm update</strong> advice.</li>
-                    <li><strong>extract_article_wisdom:</strong> Extract info (<strong>summary, ideas, quotes</strong>, facts, refs, recs).</li>
-                    <li><strong>extract_book_ideas:</strong> Extract 50-100 surprising/insightful <strong>ideas</strong> from book.</li>
-                    <li><strong>extract_book_recommendations:</strong> Extract 50-100 practical <strong>recommendations</strong> from book.</li>
-                    <li><strong>extract_business_ideas:</strong> Extract top <strong>business ideas</strong>, elaborate on best 10.</li>
-                    <li><strong>extract_controversial_ideas:</strong> Extract <strong>controversial statements</strong>/supporting quotes.</li>
-                    <li><strong>extract_core_message:</strong> Extract clear, concise <strong>core message</strong> sentence.</li>
-                    <li><strong>extract_ctf_writeup:</strong> Extract short <strong>CTF writeup</strong> from warstory text.</li>
-                    <li><strong>extract_domains:</strong> Extract source <strong>domains</strong> from articles/newsletters.</li>
-                    <li><strong>extract_extraordinary_claims:</strong> Extract <strong>scientifically disputed</strong>/false claims.</li>
-                    <li><strong>extract_ideas:</strong> Extract all key <strong>ideas</strong> (15-word bullets).</li>
-                    <li><strong>extract_insights:</strong> Extract powerful/insightful <strong>ideas/insights</strong> (16-word bullets).</li>
-                    <li><strong>extract_insights_dm:</strong> Extract all valuable <strong>insights & summary</strong> (DM focus).</li>
-                    <li><strong>extract_instructions:</strong> Extract step-by-step <strong>instructions</strong> from transcripts.</li>
-                    <li><strong>extract_jokes:</strong> Extract <strong>jokes</strong> & punchlines from text.</li>
-                    <li><strong>extract_latest_video:</strong> Extract latest <strong>video URL</strong> from YouTube RSS feed.</li>
-                    <li><strong>extract_main_activities:</strong> Extract key <strong>events/activities</strong> from transcript/log.</li>
-                    <li><strong>extract_main_idea:</strong> Extract <strong>main idea & recommendation</strong> (15-word sentences).</li>
-                    <li><strong>extract_most_redeeming_thing:</strong> Extract most <strong>redeeming aspect</strong> (15-word sentence).</li>
-                    <li><strong>extract_patterns:</strong> Extract recurring/surprising <strong>patterns</strong> from input.</li>
-                    <li><strong>extract_poc:</strong> Extract <strong>Proof-of-Concept URLs</strong>/methods from security reports.</li>
-                    <li><strong>extract_predictions:</strong> Extract <strong>predictions</strong> (date, confidence, verification).</li>
-                    <li><strong>extract_primary_problem:</strong> Extract primary <strong>problem presented</strong> in text/work.</li>
-                    <li><strong>extract_primary_solution:</strong> Extract primary <strong>solution presented</strong> in text/work.</li>
-                    <li><strong>extract_product_features:</strong> Extract list of <strong>product features</strong>.</li>
-                    <li><strong>extract_questions:</strong> Extract <strong>interviewer questions</strong> from conversation.</li>
-                    <li><strong>extract_recipe:</strong> Extract <strong>recipe</strong> (description, ingredients, steps).</li>
-                    <li><strong>extract_recommendations:</strong> Extract concise, practical <strong>recommendations</strong>.</li>
-                    <li><strong>extract_references:</strong> Extract <strong>references</strong> to art, books, literature, sources.</li>
-                    <li><strong>extract_skills:</strong> Extract/classify <strong>skills</strong> (hard/soft) from job description.</li>
-                    <li><strong>extract_song_meaning:</strong> Analyze <strong>song meaning</strong> from lyrics/context.</li>
-                    <li><strong>extract_sponsors:</strong> Extract official/potential <strong>sponsors</strong> from transcript.</li>
-                    <li><strong>extract_videoid:</strong> Extract <strong>video ID</strong> from any URL.</li>
-                    <li><strong>extract_wisdom:</strong> Extract info (<strong>human flourishing, AI</strong>, learning, tech).</li>
-                    <li><strong>extract_wisdom_agents:</strong> Extract wisdom using <strong>AI agents</strong> with diverse perspectives.</li>
-                    <li><strong>extract_wisdom_dm:</strong> Extract all valuable info (<strong>DM focus</strong> on human flourishing, AI).</li>
-                    <li><strong>extract_wisdom_nometa:</strong> Extract wisdom (insights, ideas, quotes...) <strong>without meta</strong> sections.</li>
-                    <li><strong>summarize:</strong> Summarize content (<strong>20 words</strong>, main points, takeaways).</li>
-                    <li><strong>summarize_debate:</strong> Summarize debates (<strong>disagreement, arguments</strong>, evidence, outcome).</li>
-                    <li><strong>summarize_git_changes:</strong> Summarize recent <strong>Git project updates</strong> (last 7 days).</li>
-                    <li><strong>summarize_git_diff:</strong> Summarize/organize <strong>Git diff changes</strong> with commit messages.</li>
-                    <li><strong>summarize_lecture:</strong> Extract topics/definitions/tools from <strong>lecture transcript</strong>.</li>
-                    <li><strong>summarize_legislation:</strong> Summarize complex <strong>political proposals/laws</strong>.</li>
-                    <li><strong>summarize_meeting:</strong> Extract structured <strong>summary from meeting</strong> transcript.</li>
-                    <li><strong>summarize_micro:</strong> Summarize content (<strong>20 words</strong>, 3 points, 3 takeaways).</li>
-                    <li><strong>summarize_newsletter:</strong> Extract meaningful content from <strong>newsletter</strong>.</li>
-                    <li><strong>summarize_paper:</strong> Summarize <strong>academic paper</strong> (structured format).</li>
-                    <li><strong>summarize_pull-requests:</strong> Summarize coding project <strong>pull requests</strong>.</li>
-                    <li><strong>summarize_rpg_session:</strong> Summarize <strong>RPG session</strong> (events, stats, quotes).</li>
-                    <li><strong>transcribe_minutes:</strong> Extract <strong>meeting minutes</strong> (actionables, ideas, decisions).</li>
-                    <li><strong>youtube_summary:</strong> Create timestamped <strong>YouTube video summaries</strong> highlighting key points.</li>
+            <div class="section">
+                <h2><span class="emoji">🚀</span> Usage</h2>
+                <p>Once you have Fabric set up, you can view all options with:</p>
+                <pre style="background:#f8f8f8;padding:6px 10px;border-radius:5px;">fabric -h</pre>
+                <p>Common usage:</p>
+                <pre style="background:#f8f8f8;padding:6px 10px;border-radius:5px;">fabric [OPTIONS]</pre>
+                <p style="font-size:10px;color:#888;">(Below is a partial help output. For the full list, run <code>fabric -h</code> on your system.)</p>
+                <ul style="columns:2;font-size:10px;">
+                    <li><strong>-p, --pattern=</strong> Choose a pattern</li>
+                    <li><strong>-v, --variable=</strong> Set pattern variables</li>
+                    <li><strong>-C, --context=</strong> Choose a context</li>
+                    <li><strong>--session=</strong> Choose a session</li>
+                    <li><strong>-a, --attachment=</strong> Attachment path or URL</li>
+                    <li><strong>-S, --setup</strong> Run setup</li>
+                    <li><strong>-t, --temperature=</strong> Set temperature (default: 0.7)</li>
+                    <li><strong>-s, --stream</strong> Stream output</li>
+                    <li><strong>-l, --listpatterns</strong> List all patterns</li>
+                    <li><strong>-L, --listmodels</strong> List all models</li>
+                    <li><strong>-x, --listcontexts</strong> List all contexts</li>
+                    <li><strong>-X, --listsessions</strong> List all sessions</li>
+                    <li><strong>-U, --updatepatterns</strong> Update patterns</li>
+                    <li><strong>-m, --model=</strong> Choose model</li>
+                    <li><strong>-o, --output=</strong> Output to file</li>
+                    <li><strong>--version</strong> Print version</li>
+                    <li><strong>-h, --help</strong> Show help</li>
+                    <!-- Add more as needed -->
                 </ul>
-            </div>
-
-             <div class="section">
-                <h2><span class="emoji">💻</span> Code, Dev & Security</h2>
-                 <ul>
-                    <li><strong>ask_secure_by_design_questions:</strong> Generate <strong>security questions</strong> for project design phase.</li>
-                    <li><strong>ask_uncle_duke:</strong> Coordinate AI agents for <strong>SW dev/code review</strong> (Java/Spring focus).</li>
-                    <li><strong>coding_master:</strong> Explain <strong>coding concepts</strong> to beginners with examples.</li>
-                    <li><strong>create_coding_feature:</strong> Generate code <strong>changes for existing</strong> project via AI.</li>
-                    <li><strong>create_coding_project:</strong> Generate <strong>wireframes/starter code</strong> for coding ideas.</li>
-                    <li><strong>create_command:</strong> Determine correct params/switches for <strong>pentest tools</strong>.</li>
-                    <li><strong>create_git_diff_commit:</strong> Generate <strong>Git commands/commit messages</strong> for diffs.</li>
-                    <li><strong>create_network_threat_landscape:</strong> Generate security <strong>threat report from network scan</strong> results.</li>
-                    <li><strong>create_sigma_rules:</strong> Convert security news TTPs into <strong>Sigma detection rules</strong> (YAML).</li>
-                    <li><strong>create_stride_threat_model:</strong> Create <strong>STRIDE threat model</strong> for a system design.</li>
-                    <li><strong>create_threat_scenarios:</strong> Identify likely <strong>attack methods</strong> for any system (narrative).</li>
-                    <li><strong>explain_code:</strong> Explain <strong>code</strong>, security tool output, configuration text.</li>
-                    <li><strong>recommend_pipeline_upgrades:</strong> Optimize <strong>vulnerability-checking pipelines</strong>.</li>
-                    <li><strong>review_design:</strong> Review and analyze <strong>architecture design</strong> (clarity, security, etc.).</li>
-                    <li><strong>summarize_git_changes:</strong> Summarize recent <strong>Git project updates</strong> (last 7 days).</li>
-                    <li><strong>summarize_git_diff:</strong> Summarize/organize <strong>Git diff changes</strong> with commit messages.</li>
-                    <li><strong>summarize_pull-requests:</strong> Summarize coding project <strong>pull requests</strong>.</li>
-                    <li><strong>write_hackerone_report:</strong> Generate concise <strong>bug bounty reports</strong> (HackerOne format).</li>
-                    <li><strong>write_nuclei_template_rule:</strong> Generate <strong>Nuclei YAML</strong> vulnerability templates.</li>
-                    <li><strong>write_pull-request:</strong> Draft detailed <strong>PR descriptions</strong> from git diff output.</li>
-                    <li><strong>write_semgrep_rule:</strong> Create accurate <strong>Semgrep rules</strong> from input/context.</li>
-                    <li><strong>t_red_team_thinking:</strong> Red-team <strong>thinking/models/frames</strong> & recommend improvements (from TELOS).</li>
-                    <li><strong>t_threat_model_plans:</strong> Create <strong>threat models for life plans</strong> & recommend improvements (from TELOS).</li>
-                 </ul>
-            </div>
-
-             <div class="section">
-                <h2><span class="emoji">✨</span> Improvement & Refinement</h2>
+                <p><strong>Examples:</strong></p>
                 <ul>
-                    <li><strong>create_better_frame:</strong> Identify/analyze positive <strong>mental frames</strong> for interpreting reality.</li>
-                    <li><strong>create_upgrade_pack:</strong> Extract <strong>world model/task algorithm</strong> updates from content.</li>
-                    <li><strong>humanize:</strong> Rewrite <strong>AI-generated text</strong> to sound natural/conversational.</li>
-                    <li><strong>improve_academic_writing:</strong> Refine text into clear, concise <strong>academic language</strong>.</li>
-                    <li><strong>improve_prompt:</strong> Improve <strong>LLM/AI prompt</strong> quality using expert strategies.</li>
-                    <li><strong>improve_report_finding:</strong> Improve pentest <strong>security finding</strong> report details.</li>
-                    <li><strong>improve_writing:</strong> Refine text (<strong>grammar, style, clarity</strong>) while maintaining meaning.</li>
-                    <li><strong>refine_design_document:</strong> Refine <strong>design document</strong> based on design review feedback.</li>
-                 </ul>
-                 <h2><span class="emoji">📖</span> Explanation & Documentation</h2>
-                 <ul>
-                    <li><strong>explain_docs:</strong> Improve/restructure <strong>tool documentation</strong> (overview, usage, cases).</li>
-                    <li><strong>explain_math:</strong> Explain <strong>mathematical concepts</strong> clearly and engagingly.</li>
-                    <li><strong>explain_project:</strong> Summarize <strong>project documentation</strong> (problem, solution, install, usage).</li>
-                    <li><strong>explain_terms:</strong> Produce <strong>glossary of advanced terms</strong> from content (def, analogy).</li>
-                    <li><strong>pattern_explanations:</strong> AI-generated one-line summary of <strong>what each pattern does</strong>.</li>
-                 </ul>
-                             </div>
-
-             <div class="section">
-                 <h2><span class="emoji">🎨</span> Visualization & Formatting</h2>
-                 <ul>
-                    <li><strong>clean_text:</strong> Fix broken/malformatted text (<strong>line breaks, punctuation</strong>).</li>
-                    <li><strong>convert_to_markdown:</strong> Convert content to clean, complete <strong>Markdown</strong> format.</li>
-                    <li><strong>create_excalidraw_visualization:</strong> Create <strong>Excalidraw diagrams</strong> from concepts (schema JSON).</li>
-                     <li><strong>create_graph_from_input:</strong> Generate <strong>CSV for progress-over-time</strong> graph (security program).</li>
-                    <li><strong>create_investigation_visualization:</strong> Create detailed <strong>Graphviz visualizations</strong> for complex investigations.</li>
-                    <li><strong>create_markmap_visualization:</strong> Transform ideas into <strong>MarkMap</strong> visualizations (mind map).</li>
-                    <li><strong>create_mermaid_visualization:</strong> Create detailed <strong>Mermaid diagrams</strong> (Markdown syntax).</li>
-                    <li><strong>create_mermaid_visualization_for_github:</strong> Create <strong>Mermaid diagrams</strong> for GitHub READMEs.</li>
-                    <li><strong>create_ttrc_graph:</strong> Create <strong>CSV for Time-to-Remediate</strong> Critical Vulns graph.</li>
-                    <li><strong>create_ttrc_narrative:</strong> Create persuasive <strong>narrative for TTRC</strong> metric progress.</li>
-                    <li><strong>create_visualization:</strong> Transform complex ideas into intricate <strong>ASCII art</strong> diagrams.</li>
-                     <li><strong>md_callout:</strong> Classify content & generate Markdown <strong>callout block</strong> (!NOTE, !TIP, etc.).</li>
-                    <li><strong>sanitize_broken_html_to_markdown:</strong> Convert messy <strong>HTML to clean Markdown</strong> (Vite compatible).</li>
-                    <li><strong>show_fabric_options_markmap:</strong> Visualize Fabric framework components/commands via <strong>Markmap</strong>.</li>
-                    <li><strong>translate:</strong> Translate sentences/docs into specified language, <strong>preserving format</strong>.</li>
-                    <li><strong>t_visualize_mission_goals_projects:</strong> Create <strong>ASCII diagram</strong> of mission/goals/projects (from TELOS).</li>
+                    <li><code>pbpaste | fabric --pattern summarize</code> <span style="color:#888;"># Summarize clipboard content (macOS)</span></li>
+                    <li><code>pbpaste | fabric --stream --pattern analyze_claims</code> <span style="color:#888;"># Analyze claims with streaming output</span></li>
+                    <li><code>fabric -y "https://youtube.com/watch?v=uXs-zPc63kM" --stream --pattern extract_wisdom</code> <span style="color:#888;"># Extract wisdom from a YouTube video</span></li>
+                    <li><code>fabric -u https://github.com/danielmiessler/fabric/ -p analyze_claims</code> <span style="color:#888;"># Analyze claims on a website</span></li>
                 </ul>
-                            </div>
-
-             <div class="section">
-                 <h2><span class="emoji">🧭</span> Strategy & Planning</h2>
-                <ul>
-                    <li><strong>create_idea_compass:</strong> Organize/structure ideas using the <strong>Idea Compass</strong> template.</li>
-                    <li><strong>create_recursive_outline:</strong> Break down complex tasks/projects <strong>hierarchically</strong>.</li>
-                    <li><strong>identify_dsrp_distinctions:</strong> Explore <strong>distinctions/boundaries</strong> in systems thinking (DSRP).</li>
-                    <li><strong>identify_dsrp_perspectives:</strong> Explore <strong>perspectives/viewpoints</strong> in systems thinking (DSRP).</li>
-                    <li><strong>identify_dsrp_relationships:</strong> Explore <strong>connections/relationships</strong> in systems thinking (DSRP).</li>
-                    <li><strong>identify_dsrp_systems:</strong> Organize ideas into <strong>part-whole systems</strong> (DSRP).</li>
-                    <li><strong>identify_job_stories:</strong> Identify key <strong>job stories</strong>/requirements for roles.</li>
-                    <li><strong>prepare_7s_strategy:</strong> Prepare briefing doc from <strong>7S strategy framework</strong> (org profile).</li>
-                    <li><strong>provide_guidance:</strong> Provide <strong>psychological/life coaching</strong> advice & recommendations.</li>
-                    <li><strong>solve_with_cot:</strong> Provide step-by-step responses with <strong>Chain-of-Thought</strong> reasoning.</li>
-                 </ul>
-                             </div>
-
-             <div class="section">
-                 <h2><span class="emoji">⚙️</span> Utility & Meta</h2>
-                 <ul>
-                    <li><strong>ai:</strong> Interpret questions deeply, provide <strong>concise, insightful answers</strong> (bullets).</li>
-                    <li><strong>find_female_life_partner:</strong> Turn partner criteria into a concise <strong>ideal partner sentence</strong> (3 versions).</li>
-                    <li><strong>get_youtube_rss:</strong> Return YouTube channel <strong>RSS feed URL</strong>.</li>
-                    <li><strong>official_pattern_template:</strong> Template for <strong>creating new Fabric patterns</strong>.</li>
-                    <li><strong>raw_query:</strong> Produce best result based on <strong>sender's likely intent</strong>.</li>
-                    <li><strong>raycast/*:</strong> Integration scripts for <strong>Raycast AI</strong>.</li>
-                    <li><strong>suggest_pattern:</strong> Suggest appropriate <strong>Fabric patterns/commands</strong> based on user input.</li>
-                    <li><strong>summarize_prompt:</strong> Summarize <strong>AI chat prompts</strong> concisely (function, approach, output).</li>
-                 </ul>
+                <p>For more, see the <a href="https://github.com/danielmiessler/fabric#usage" target="_blank">official usage docs</a>, <a href="https://github.com/danielmiessler/fabric/tree/main/patterns" target="_blank">GitHub patterns directory</a>, and <a href="https://omkamal.github.io/fabric_patterns.html" style="color:#2980b9;font-weight:bold;">local Fabric Patterns Cheat Sheet</a>.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
