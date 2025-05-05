@@ -373,6 +373,42 @@ HAVING avg_salary > 60000;
                 <strong>Note:</strong> In PostgreSQL, <code>WHERE</code> cannot use <code>avg_salary</code> because aliases are not available until after the SELECT clause is processed. <code>HAVING</code> can use <code>avg_salary</code> because it is evaluated after aggregation and SELECT.
             </div>
         </div>
+        <div class="section">
+            <h2>🔑 Essential SQL Keywords I</h2>
+            <ul>
+                <li><strong>DISTINCT</strong> – remove duplicates<br><code>SELECT DISTINCT dept FROM employees;</code></li>
+                <li><strong>LIMIT & OFFSET</strong> – restrict results<br><code>SELECT * FROM employees LIMIT 5 OFFSET 10;</code></li>
+                <li><strong>UNION / UNION ALL</strong> – combine results<br><code>SELECT name FROM a UNION SELECT name FROM b;</code></li>
+                <li><strong>EXISTS</strong> – check for subquery existence<br><code>SELECT name FROM employees WHERE EXISTS (SELECT 1 FROM dept WHERE dept.id = employees.dept_id);</code></li>
+                <li><strong>IN</strong> – match any in list<br><code>SELECT * FROM employees WHERE dept IN ('HR', 'IT');</code></li>
+                <li><strong>BETWEEN</strong> – range filter<br><code>SELECT * FROM employees WHERE age BETWEEN 20 AND 30;</code></li>
+                <li><strong>LIKE / ILIKE</strong> – pattern matching (ILIKE is case-insensitive)<br><code>SELECT * FROM employees WHERE name LIKE 'A%';</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🧩 Essential SQL Keywords II</h2>
+            <ul>
+                <li><strong>CASE</strong> – conditional logic<br><code>SELECT name, CASE WHEN age > 30 THEN 'Senior' ELSE 'Junior' END FROM employees;</code></li>
+                <li><strong>CAST</strong> – convert data types<br><code>SELECT '123'::INTEGER;</code></li>
+                <li><strong>IS NULL / IS NOT NULL</strong> – null checks<br><code>SELECT * FROM employees WHERE email IS NULL;</code></li>
+                <li><strong>DEFAULT</strong> – set default value<br><code>CREATE TABLE t (id SERIAL, active BOOLEAN DEFAULT true);</code></li>
+                <li><strong>SERIAL</strong> – auto-increment integer<br><code>CREATE TABLE t (id SERIAL PRIMARY KEY);</code></li>
+                <li><strong>PRIMARY KEY</strong> – unique row identifier<br><code>CREATE TABLE t (id SERIAL PRIMARY KEY);</code></li>
+                <li><strong>FOREIGN KEY</strong> – reference other table<br><code>CREATE TABLE orders (user_id INT REFERENCES users(id));</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>⚡ Essential SQL Keywords III</h2>
+            <ul>
+                <li><strong>UNIQUE</strong> – enforce unique values<br><code>CREATE TABLE t (email TEXT UNIQUE);</code></li>
+                <li><strong>CHECK</strong> – enforce condition<br><code>CREATE TABLE t (age INT CHECK (age >= 18));</code></li>
+                <li><strong>INDEX</strong> – speed up lookups<br><code>CREATE INDEX idx_name ON employees(name);</code></li>
+                <li><strong>EXPLAIN</strong> – show query plan<br><code>EXPLAIN SELECT * FROM employees;</code></li>
+                <li><strong>ANALYZE</strong> – collect stats<br><code>ANALYZE employees;</code></li>
+                <li><strong>WITH (CTE)</strong> – common table expressions<br><code>WITH recent AS (SELECT * FROM employees WHERE hired > '2024-01-01') SELECT * FROM recent;</code></li>
+                <li><strong>RETURNING</strong> – return rows from DML<br><code>INSERT INTO employees(name) VALUES('Anna') RETURNING id;</code></li>
+            </ul>
+        </div>
     </div>
 </body>
 </html>
