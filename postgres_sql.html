@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric Patterns Cheat Sheet</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            line-height: 1.2;
+            margin: 0;
+            padding: 10mm;
+            background-color: #f0f8ff;
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+        }
+
+        .container-1col {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 10px;
+            width: 100%;
+        }
+
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 14px;
+            margin: 0 0 5px 0;
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 3px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+
+        li {
+            margin-bottom: 3px;
+        }
+
+        .emoji {
+            font-style: normal;
+        }
+
+        .author {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #7f8c8d;
+        }
+
+        .linkedin {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+        }
+
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .section-span-2 {
+            grid-column: span 2;
+        }
+
+        .section-span-3 {
+            grid-column: span 3;
+        }
+
+        strong {
+            color: #2980b9;
+        }
+
+        code, pre {
+            background: #f5f5f5 !important;
+            color: #222;
+            border-radius: 5px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-family: "Fira Mono", "Consolas", "Monaco", monospace;
+        }
+
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn</a></div>
+    <h1><i class="fas fa-database"></i> PostgreSQL SQL Syntax Cheatsheet 📄</h1>
+    <div class="container">
+        <div class="section">
+            <h2>🔍 Schema & Meta</h2>
+            <ul>
+                <li>📂 <strong>List databases</strong>: <code>\l</code> or <code>SELECT datname FROM pg_database;</code></li>
+                <li>📋 <strong>Show tables</strong>: <code>\dt</code></li>
+                <li>🔬 <strong>Show columns</strong>: <code>\d employees</code></li>
+                <li>🧠 <strong>All schemas</strong>: <code>SELECT schema_name FROM information_schema.schemata;</code></li>
+                <li>🧾 <strong>Table DDL</strong>: <code>pg_dump -s -t employees mydb</code></li>
+            </ul>
+        </div>
+        <div class="section section-span-2">
+            <h2>📝 Basic Data Operations</h2>
+            <ul>
+                <li><strong>SELECT</strong> – fetch data <br><code>SELECT name FROM employees;</code></li>
+                <li><strong>INSERT</strong> – add data <br><code>INSERT INTO employees(name, age) VALUES('John', 30);</code></li>
+                <li><strong>UPDATE</strong> – change data <br><code>UPDATE employees SET age = 31 WHERE name = 'John';</code></li>
+                <li><strong>DELETE</strong> – remove data <br><code>DELETE FROM employees WHERE name = 'John';</code></li>
+            </ul>
+        </div>
+        <div class="section section-span-2">
+            <h2>🤝 Standard Joins</h2>
+            <ul>
+                <li><strong>INNER JOIN</strong> – match both sides <br><code>SELECT * FROM emp INNER JOIN dept ON emp.dept_id = dept.id;</code></li>
+                <li><strong>LEFT JOIN</strong> – all left + match <br><code>SELECT * FROM emp LEFT JOIN dept ON emp.dept_id = dept.id;</code></li>
+                <li><strong>RIGHT JOIN</strong> – all right + match <br><code>SELECT * FROM emp RIGHT JOIN dept ON emp.dept_id = dept.id;</code></li>
+                <li><strong>FULL JOIN</strong> – everything <br><code>SELECT * FROM emp FULL JOIN dept ON emp.dept_id = dept.id;</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🔄 Special Join</h2>
+            <ul>
+                <li><strong>CROSS JOIN</strong> – cartesian <br><code>SELECT * FROM emp CROSS JOIN dept;</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🏗️ Table Management</h2>
+            <ul>
+                <li><strong>CREATE</strong> – new table <br><code>CREATE TABLE employees(id SERIAL, name TEXT);</code></li>
+                <li><strong>DROP</strong> – delete table <br><code>DROP TABLE employees;</code></li>
+                <li><strong>ALTER</strong> – change table <br><code>ALTER TABLE employees ADD email TEXT;</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🔎 Query Clauses</h2>
+            <ul>
+                <li><strong>WHERE</strong> – filter rows <br><code>SELECT * FROM employees WHERE age > 25;</code></li>
+                <li><strong>ORDER BY</strong> – sort rows <br><code>SELECT * FROM employees ORDER BY age DESC;</code></li>
+                <li><strong>GROUP BY</strong> – aggregate <br><code>SELECT dept, COUNT(*) FROM employees GROUP BY dept;</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🔢 Aggregate & Math Functions</h2>
+            <ul>
+                <li><strong>COUNT(*)</strong> – total rows <br><code>SELECT COUNT(*) FROM employees;</code></li>
+                <li><strong>AVG(age)</strong> – average <br><code>SELECT AVG(age) FROM employees;</code></li>
+                <li><strong>SUM(salary)</strong> – total salary <br><code>SELECT SUM(salary) FROM employees;</code></li>
+                <li><strong>MAX(age)</strong> – oldest <br><code>SELECT MAX(age) FROM employees;</code></li>
+                <li><strong>COALESCE(a,b)</strong> – default <br><code>SELECT COALESCE(phone, 'N/A') FROM employees;</code></li>
+            </ul>
+        </div>
+        <div class="section section-span-2">
+            <h2>⏰ Date & Time Functions</h2>
+            <ul>
+                <li><strong>NOW()</strong> – current timestamp <br><code>SELECT NOW();</code></li>
+                <li><strong>CURRENT_DATE</strong> – current date <br><code>SELECT CURRENT_DATE;</code></li>
+                <li><strong>CURRENT_TIME</strong> – current time <br><code>SELECT CURRENT_TIME;</code></li>
+                <li><strong>AGE()</strong> – interval between dates <br><code>SELECT AGE(NOW(), '2000-01-01');</code></li>
+                <li><strong>DATE_TRUNC()</strong> – truncate to unit <br><code>SELECT DATE_TRUNC('month', NOW());</code></li>
+                <li><strong>EXTRACT()</strong> – get part of date/time <br><code>SELECT EXTRACT(YEAR FROM NOW());</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🔐 Permissions</h2>
+            <ul>
+                <li><strong>GRANT</strong> – give access <br><code>GRANT SELECT ON employees TO analyst;</code></li>
+                <li><strong>REVOKE</strong> – remove access <br><code>REVOKE SELECT ON employees FROM analyst;</code></li>
+            </ul>
+        </div>
+        <div class="section section-span-2">
+            <h2>🖼️ Joins Visualized</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-around;">
+                <!-- INNER JOIN -->
+                <div style="text-align: center;">
+                    <svg width="80" height="60">
+                        <circle cx="30" cy="30" r="20" fill="#bbb" fill-opacity="0.5" />
+                        <circle cx="50" cy="30" r="20" fill="#bbb" fill-opacity="0.5" />
+                        <ellipse cx="40" cy="30" rx="10" ry="20" fill="#3498db" fill-opacity="0.7" />
+                    </svg>
+                    <div style="font-size:12px;">INNER JOIN</div>
+                </div>
+                <!-- LEFT JOIN -->
+                <div style="text-align: center;">
+                    <svg width="80" height="60">
+                        <circle cx="30" cy="30" r="20" fill="#3498db" fill-opacity="0.7" />
+                        <circle cx="50" cy="30" r="20" fill="#bbb" fill-opacity="0.5" />
+                    </svg>
+                    <div style="font-size:12px;">LEFT JOIN</div>
+                </div>
+                <!-- RIGHT JOIN -->
+                <div style="text-align: center;">
+                    <svg width="80" height="60">
+                        <circle cx="30" cy="30" r="20" fill="#bbb" fill-opacity="0.5" />
+                        <circle cx="50" cy="30" r="20" fill="#3498db" fill-opacity="0.7" />
+                    </svg>
+                    <div style="font-size:12px;">RIGHT JOIN</div>
+                </div>
+                <!-- FULL JOIN -->
+                <div style="text-align: center;">
+                    <svg width="80" height="60">
+                        <circle cx="30" cy="30" r="20" fill="#3498db" fill-opacity="0.7" />
+                        <circle cx="50" cy="30" r="20" fill="#3498db" fill-opacity="0.7" />
+                    </svg>
+                    <div style="font-size:12px;">FULL JOIN</div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>🧪 Data Types</h2>
+            <ul>
+                <li><strong>INTEGER</strong>, <strong>BIGINT</strong> – whole numbers</li>
+                <li><strong>VARCHAR(n)</strong>, <strong>TEXT</strong> – text values</li>
+                <li><strong>BOOLEAN</strong> – true/false</li>
+                <li><strong>DATE</strong>, <strong>TIMESTAMP</strong> – date/time</li>
+                <li><strong>JSON/JSONB</strong> – flexible data <br><code>SELECT data->>'name' FROM users;</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>📤 Exporting Data from PostgreSQL</h2>
+            <ul>
+                <li><strong>Export entire database (SQL dump):</strong><br>
+                    <code>pg_dump -U username dbname > dbname.sql</code></li>
+                <li><strong>Export a table to CSV (psql):</strong><br>
+                    <code>\copy tablename TO 'output.csv' CSV HEADER</code></li>
+                <li><strong>Export a table to CSV (SQL):</strong><br>
+                    <code>COPY tablename TO '/path/output.csv' DELIMITER ',' CSV HEADER;</code></li>
+                <li><strong>Export schema only:</strong><br>
+                    <code>pg_dump -s -U username dbname > schema.sql</code></li>
+            </ul>
+        </div>
+        <div class="section section-span-2">
+            <h2>📥 Importing Data into PostgreSQL</h2>
+            <ul>
+                <li><strong>Import SQL dump:</strong><br>
+                    <code>psql -U username dbname &lt; dbname.sql</code></li>
+                <li><strong>Import CSV (psql):</strong><br>
+                    <code>\copy tablename FROM 'input.csv' CSV HEADER</code></li>
+                <li><strong>Import CSV (SQL):</strong><br>
+                    <code>COPY tablename FROM '/path/input.csv' DELIMITER ',' CSV HEADER;</code></li>
+                <li><strong>Import Parquet (with extension):</strong><br>
+                    <code>CREATE EXTENSION parquet_fdw;</code><br>
+                    <code>CREATE SERVER parquet_srv FOREIGN DATA WRAPPER parquet_fdw;</code><br>
+                    <code>CREATE FOREIGN TABLE parquet_table (...) SERVER parquet_srv OPTIONS (filename '/path/file.parquet');</code>
+                </li>
+                <li><strong>Import from other DBs (brief):</strong><br>
+                    Use <code>pgloader</code>, <code>postgres_fdw</code>, or <code>DB-specific tools</code> for migrations.</li>
+            </ul>
+        </div>
+        <div class="section section-span-2">
+            <h2>🗂️ Working with JSON Fields</h2>
+            <ul>
+                <li><strong>Select a JSON property:</strong><br>
+                    <code>SELECT data->>'name' FROM users;</code></li>
+                <li><strong>Filter by JSON property:</strong><br>
+                    <code>SELECT * FROM users WHERE data->>'status' = 'active';</code></li>
+                <li><strong>Update a JSON property:</strong><br>
+                    <code>UPDATE users SET data = jsonb_set(data, '{name}', '"Omar"') WHERE id = 1;</code></li>
+                <li><strong>Index a JSONB field:</strong><br>
+                    <code>CREATE INDEX idx_users_data ON users USING GIN (data jsonb_path_ops);</code></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🔭 Creating & Using Views</h2>
+            <ul>
+                <li><strong>Create a view:</strong><br>
+                    <code>CREATE VIEW active_employees AS SELECT * FROM employees WHERE active = true;</code></li>
+                <li><strong>Query a view:</strong><br>
+                    <code>SELECT * FROM active_employees;</code></li>
+                <li><strong>Drop a view:</strong><br>
+                    <code>DROP VIEW active_employees;</code></li>
+            </ul>
+        </div>
+        <div class="section section-span-3">
+            <h2>🧩 Building Nested SQL Queries</h2>
+            <ul>
+                <li><strong>Subquery in SELECT:</strong><br>
+<pre><code>SELECT name,
+       (SELECT MAX(salary)
+          FROM employees) AS max_salary
+  FROM employees;
+</code></pre></li>
+                <li><strong>Subquery in FROM:</strong><br>
+<pre><code>SELECT dept, avg_age
+  FROM (
+        SELECT dept, AVG(age) AS avg_age
+          FROM employees
+         GROUP BY dept
+       ) AS dept_ages;
+</code></pre></li>
+                <li><strong>Subquery in WHERE:</strong><br>
+<pre><code>SELECT *
+  FROM employees
+ WHERE salary > (SELECT AVG(salary)
+                   FROM employees);
+</code></pre></li>
+                <li><strong>Correlated subquery:</strong><br>
+<pre><code>SELECT name
+  FROM employees e
+ WHERE salary > (SELECT AVG(salary)
+                   FROM employees
+                  WHERE dept = e.dept);
+</code></pre></li>
+            </ul>
+        </div>
+        <div class="section section-span-3">
+            <h2>🔎 WHERE vs HAVING</h2>
+            <ul>
+                <li><strong>WHERE</strong> filters rows <i>before</i> aggregation (GROUP BY), and cannot use column aliases created in SELECT.<br>
+                <strong>HAVING</strong> filters groups <i>after</i> aggregation, and can use aliases from SELECT.</li>
+                <li><strong>WHERE Example:</strong><br>
+<pre><code>SELECT dept, AVG(salary) AS avg_salary
+  FROM employees
+ WHERE salary > 50000
+ GROUP BY dept;
+</code></pre></li>
+                <li><strong>HAVING Example (with alias):</strong><br>
+<pre><code>SELECT dept, AVG(salary) AS avg_salary
+  FROM employees
+ GROUP BY dept
+HAVING avg_salary > 60000;
+</code></pre></li>
+            </ul>
+            <div style="font-size:11px; color:#555; margin-top:6px;">
+                <strong>Note:</strong> In PostgreSQL, <code>WHERE</code> cannot use <code>avg_salary</code> because aliases are not available until after the SELECT clause is processed. <code>HAVING</code> can use <code>avg_salary</code> because it is evaluated after aggregation and SELECT.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
