@@ -157,6 +157,55 @@
                 <li><strong>CROSS JOIN</strong> – cartesian <br><code>SELECT * FROM emp CROSS JOIN dept;</code></li>
             </ul>
         </div>
+        <div class="section section-span-2">
+            <h2>🖼️ Joins Visualized</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-around;">
+                <!-- INNER JOIN -->
+                <div style="text-align: center;">
+                    <svg width="80" height="60">
+                        <circle cx="30" cy="30" r="20" fill="#bbb" fill-opacity="0.5" />
+                        <circle cx="50" cy="30" r="20" fill="#bbb" fill-opacity="0.5" />
+                        <ellipse cx="40" cy="30" rx="10" ry="20" fill="#3498db" fill-opacity="0.7" />
+                    </svg>
+                    <div style="font-size:12px;">INNER JOIN</div>
+                </div>
+                <!-- LEFT JOIN -->
+                <div style="text-align: center;">
+                    <svg width="80" height="60">
+                        <circle cx="30" cy="30" r="20" fill="#3498db" fill-opacity="0.7" />
+                        <circle cx="50" cy="30" r="20" fill="#bbb" fill-opacity="0.5" />
+                    </svg>
+                    <div style="font-size:12px;">LEFT JOIN</div>
+                </div>
+                <!-- RIGHT JOIN -->
+                <div style="text-align: center;">
+                    <svg width="80" height="60">
+                        <circle cx="30" cy="30" r="20" fill="#bbb" fill-opacity="0.5" />
+                        <circle cx="50" cy="30" r="20" fill="#3498db" fill-opacity="0.7" />
+                    </svg>
+                    <div style="font-size:12px;">RIGHT JOIN</div>
+                </div>
+                <!-- FULL JOIN -->
+                <div style="text-align: center;">
+                    <svg width="80" height="60">
+                        <circle cx="30" cy="30" r="20" fill="#3498db" fill-opacity="0.7" />
+                        <circle cx="50" cy="30" r="20" fill="#3498db" fill-opacity="0.7" />
+                    </svg>
+                    <div style="font-size:12px;">FULL JOIN</div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>🧪 Data Types</h2>
+            <ul>
+                <li><strong>INTEGER</strong>, <strong>BIGINT</strong> – whole numbers</li>
+                <li><strong>VARCHAR(n)</strong>, <strong>TEXT</strong> – text values</li>
+                <li><strong>BOOLEAN</strong> – true/false</li>
+                <li><strong>DATE</strong>, <strong>TIMESTAMP</strong> – date/time</li>
+                <li><strong>JSON/JSONB</strong> – flexible data <br><code>SELECT data->>'name' FROM users;</code></li>
+            </ul>
+        </div>
+
         <div class="section">
             <h2>🏗️ Table Management</h2>
             <ul>
@@ -216,54 +265,6 @@
                 <li><strong>REVOKE</strong> – remove access <br><code>REVOKE SELECT ON employees FROM analyst;</code></li>
             </ul>
         </div>
-        <div class="section section-span-2">
-            <h2>🖼️ Joins Visualized</h2>
-            <div style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-around;">
-                <!-- INNER JOIN -->
-                <div style="text-align: center;">
-                    <svg width="80" height="60">
-                        <circle cx="30" cy="30" r="20" fill="#bbb" fill-opacity="0.5" />
-                        <circle cx="50" cy="30" r="20" fill="#bbb" fill-opacity="0.5" />
-                        <ellipse cx="40" cy="30" rx="10" ry="20" fill="#3498db" fill-opacity="0.7" />
-                    </svg>
-                    <div style="font-size:12px;">INNER JOIN</div>
-                </div>
-                <!-- LEFT JOIN -->
-                <div style="text-align: center;">
-                    <svg width="80" height="60">
-                        <circle cx="30" cy="30" r="20" fill="#3498db" fill-opacity="0.7" />
-                        <circle cx="50" cy="30" r="20" fill="#bbb" fill-opacity="0.5" />
-                    </svg>
-                    <div style="font-size:12px;">LEFT JOIN</div>
-                </div>
-                <!-- RIGHT JOIN -->
-                <div style="text-align: center;">
-                    <svg width="80" height="60">
-                        <circle cx="30" cy="30" r="20" fill="#bbb" fill-opacity="0.5" />
-                        <circle cx="50" cy="30" r="20" fill="#3498db" fill-opacity="0.7" />
-                    </svg>
-                    <div style="font-size:12px;">RIGHT JOIN</div>
-                </div>
-                <!-- FULL JOIN -->
-                <div style="text-align: center;">
-                    <svg width="80" height="60">
-                        <circle cx="30" cy="30" r="20" fill="#3498db" fill-opacity="0.7" />
-                        <circle cx="50" cy="30" r="20" fill="#3498db" fill-opacity="0.7" />
-                    </svg>
-                    <div style="font-size:12px;">FULL JOIN</div>
-                </div>
-            </div>
-        </div>
-        <div class="section">
-            <h2>🧪 Data Types</h2>
-            <ul>
-                <li><strong>INTEGER</strong>, <strong>BIGINT</strong> – whole numbers</li>
-                <li><strong>VARCHAR(n)</strong>, <strong>TEXT</strong> – text values</li>
-                <li><strong>BOOLEAN</strong> – true/false</li>
-                <li><strong>DATE</strong>, <strong>TIMESTAMP</strong> – date/time</li>
-                <li><strong>JSON/JSONB</strong> – flexible data <br><code>SELECT data->>'name' FROM users;</code></li>
-            </ul>
-        </div>
         <div class="section">
             <h2>📤 Exporting Data from PostgreSQL</h2>
             <ul>
@@ -319,7 +320,7 @@
                     <code>DROP VIEW active_employees;</code></li>
             </ul>
         </div>
-        <div class="section section-span-3">
+        <div class="section section-span-2">
             <h2>🧩 Building Nested SQL Queries</h2>
             <ul>
                 <li><strong>Subquery in SELECT:</strong><br>
@@ -351,7 +352,26 @@
 </code></pre></li>
             </ul>
         </div>
-        <div class="section section-span-3">
+        <div class="section">
+            <h2>🔑 Essential SQL Keywords I</h2>
+            <ul>
+                <li><strong>DISTINCT</strong> – remove duplicates<br><code>SELECT DISTINCT dept FROM employees;</code></li>
+                <li><strong>LIMIT & OFFSET</strong> – restrict results<br><code>SELECT * FROM employees LIMIT 5 OFFSET 10;</code></li>
+                <li><strong>UNION / UNION ALL</strong> – combine results<br><code>SELECT name FROM a UNION SELECT name FROM b;</code></li>
+                <li><strong>EXISTS</strong> – check for subquery existence<br><code>SELECT name FROM employees WHERE EXISTS (SELECT 1 FROM dept WHERE dept.id = employees.dept_id);</code></li>
+                <li><strong>IN</strong> – match any in list<br><code>SELECT * FROM employees WHERE dept IN ('HR', 'IT');</code></li>
+                <li><strong>BETWEEN</strong> – range filter<br><code>SELECT * FROM employees WHERE age BETWEEN 20 AND 30;</code></li>
+                <li><strong>LIKE / ILIKE</strong> – pattern matching (ILIKE is case-insensitive)<br><code>SELECT * FROM employees WHERE name LIKE 'A%';</code></li>
+                <li><strong>CASE</strong> – conditional logic<br><code>SELECT name, CASE WHEN age > 30 THEN 'Senior' ELSE 'Junior' END FROM employees;</code></li>
+                <li><strong>CAST</strong> – convert data types<br><code>SELECT '123'::INTEGER;</code></li>
+                <li><strong>IS NULL / IS NOT NULL</strong> – null checks<br><code>SELECT * FROM employees WHERE email IS NULL;</code></li>
+                <li><strong>DEFAULT</strong> – set default value<br><code>CREATE TABLE t (id SERIAL, active BOOLEAN DEFAULT true);</code></li>
+                <li><strong>PRIMARY KEY</strong> – unique row identifier<br><code>CREATE TABLE t (id SERIAL PRIMARY KEY);</code></li>
+                <li><strong>FOREIGN KEY</strong> – reference other table<br><code>CREATE TABLE orders (user_id INT REFERENCES users(id));</code></li>
+
+            </ul>
+        </div>
+        <div class="section section-span-2">
             <h2>🔎 WHERE vs HAVING</h2>
             <ul>
                 <li><strong>WHERE</strong> filters rows <i>before</i> aggregation (GROUP BY), and cannot use column aliases created in SELECT.<br>
@@ -373,33 +393,11 @@ HAVING avg_salary > 60000;
                 <strong>Note:</strong> In PostgreSQL, <code>WHERE</code> cannot use <code>avg_salary</code> because aliases are not available until after the SELECT clause is processed. <code>HAVING</code> can use <code>avg_salary</code> because it is evaluated after aggregation and SELECT.
             </div>
         </div>
-        <div class="section">
-            <h2>🔑 Essential SQL Keywords I</h2>
-            <ul>
-                <li><strong>DISTINCT</strong> – remove duplicates<br><code>SELECT DISTINCT dept FROM employees;</code></li>
-                <li><strong>LIMIT & OFFSET</strong> – restrict results<br><code>SELECT * FROM employees LIMIT 5 OFFSET 10;</code></li>
-                <li><strong>UNION / UNION ALL</strong> – combine results<br><code>SELECT name FROM a UNION SELECT name FROM b;</code></li>
-                <li><strong>EXISTS</strong> – check for subquery existence<br><code>SELECT name FROM employees WHERE EXISTS (SELECT 1 FROM dept WHERE dept.id = employees.dept_id);</code></li>
-                <li><strong>IN</strong> – match any in list<br><code>SELECT * FROM employees WHERE dept IN ('HR', 'IT');</code></li>
-                <li><strong>BETWEEN</strong> – range filter<br><code>SELECT * FROM employees WHERE age BETWEEN 20 AND 30;</code></li>
-                <li><strong>LIKE / ILIKE</strong> – pattern matching (ILIKE is case-insensitive)<br><code>SELECT * FROM employees WHERE name LIKE 'A%';</code></li>
-            </ul>
-        </div>
+
         <div class="section">
             <h2>🧩 Essential SQL Keywords II</h2>
             <ul>
-                <li><strong>CASE</strong> – conditional logic<br><code>SELECT name, CASE WHEN age > 30 THEN 'Senior' ELSE 'Junior' END FROM employees;</code></li>
-                <li><strong>CAST</strong> – convert data types<br><code>SELECT '123'::INTEGER;</code></li>
-                <li><strong>IS NULL / IS NOT NULL</strong> – null checks<br><code>SELECT * FROM employees WHERE email IS NULL;</code></li>
-                <li><strong>DEFAULT</strong> – set default value<br><code>CREATE TABLE t (id SERIAL, active BOOLEAN DEFAULT true);</code></li>
                 <li><strong>SERIAL</strong> – auto-increment integer<br><code>CREATE TABLE t (id SERIAL PRIMARY KEY);</code></li>
-                <li><strong>PRIMARY KEY</strong> – unique row identifier<br><code>CREATE TABLE t (id SERIAL PRIMARY KEY);</code></li>
-                <li><strong>FOREIGN KEY</strong> – reference other table<br><code>CREATE TABLE orders (user_id INT REFERENCES users(id));</code></li>
-            </ul>
-        </div>
-        <div class="section">
-            <h2>⚡ Essential SQL Keywords III</h2>
-            <ul>
                 <li><strong>UNIQUE</strong> – enforce unique values<br><code>CREATE TABLE t (email TEXT UNIQUE);</code></li>
                 <li><strong>CHECK</strong> – enforce condition<br><code>CREATE TABLE t (age INT CHECK (age >= 18));</code></li>
                 <li><strong>INDEX</strong> – speed up lookups<br><code>CREATE INDEX idx_name ON employees(name);</code></li>
@@ -407,8 +405,9 @@ HAVING avg_salary > 60000;
                 <li><strong>ANALYZE</strong> – collect stats<br><code>ANALYZE employees;</code></li>
                 <li><strong>WITH (CTE)</strong> – common table expressions<br><code>WITH recent AS (SELECT * FROM employees WHERE hired > '2024-01-01') SELECT * FROM recent;</code></li>
                 <li><strong>RETURNING</strong> – return rows from DML<br><code>INSERT INTO employees(name) VALUES('Anna') RETURNING id;</code></li>
-            </ul>
+             </ul>
         </div>
+
     </div>
 </body>
 </html>
