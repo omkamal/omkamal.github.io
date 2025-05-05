@@ -3,165 +3,324 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fabric: Amazing Command Line AI Ecosystem</title>
+    <title>Fabric Installation Cheat Sheet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        /* CSS Styles */
         body {
-            font-family: 'Roboto', sans-serif;
-            font-size: 10px;
-            line-height: 1.2;
+            font-family: 'Kalam', cursive, sans-serif; /* Cursive style */
+            font-size: 9px; /* Smaller font size */
+            line-height: 1.3; /* Adjust line height for readability */
             margin: 0;
             padding: 10mm;
-            background-color: #f0f8ff;
+            background-color: #f0f8ff; /* Light blue background */
             color: #333;
             box-sizing: border-box;
+            width: 100%;
+            min-height: 100vh;
+            /* Removed overflow: hidden to allow content to display */
         }
-        .container {
+
+        .page-container {
+            width: 100%;
+            /* Removed fixed height to allow content to expand */
+            display: flex;
+            flex-direction: column;
+        }
+        .sections-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            grid-gap: 10px;
+            gap: 20px;
+            margin: 0 auto 20px auto;
+            max-width: 1200px;
             width: 100%;
-            min-height: calc(100vh - 20mm);
         }
-        h1 {
-            grid-column: 1 / -1;
-            text-align: center;
-            font-size: 24px;
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+
+        .sections-container-single {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin: 0 auto 20px auto;
+            max-width: 1200px;
+            width: 100%;
         }
-        h2 {
-            font-size: 14px;
-            margin: 0 0 5px 0;
-            color: #e74c3c;
-            border-bottom: 2px solid #e74c3c;
-            padding-bottom: 3px;
+
+        .sections-container-double {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 0 auto 20px auto;
+            max-width: 1200px;
+            width: 100%;
         }
-        ul {
-            margin: 0;
-            padding-left: 15px;
+
+        .section {
+            background-color: #fff;
+            border-radius: 6px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+            min-width: 0;
         }
-        li {
-            margin-bottom: 3px;
+
+        /* Responsive: stack columns on smaller screens */
+        @media (max-width: 1100px) {
+            .sections-container {
+                grid-template-columns: 1fr 1fr;
+            }
         }
-        .emoji {
-            font-style: normal;
+        @media (max-width: 768px) {
+            .sections-container {
+                grid-template-columns: 1fr;
+            }
+            body {
+                padding: 5mm;
+            }
         }
+
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            position: relative; /* Needed for absolute positioning of author/linkedin */
+            height: 20px; /* Fixed height for header area */
+        }
+
         .author {
-            position: absolute;
-            top: 5px;
-            left: 5px;
+            position: absolute; /* Absolute positioning */
+            top: 0;
+            left: 0;
             font-size: 8px;
             color: #7f8c8d;
         }
+
         .linkedin {
-            position: absolute;
-            top: 5px;
-            right: 5px;
+            position: absolute; /* Absolute positioning */
+            top: 0;
+            right: 0;
             font-size: 8px;
         }
+
         .linkedin a {
             color: #0077b5;
             text-decoration: none;
         }
-        code {
-            font-family: 'Source Code Pro', monospace;
-            font-size: 8px;
-            background-color: #f1f8e9;
-            border: 1px solid #c5e1a5;
-            border-radius: 4px;
-            padding: 3px;
-            margin: 3px 0;
-            display: block;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            color: #333;
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+
+        h1 {
+            text-align: center;
+            font-size: 18px; /* Slightly smaller H1 */
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            width: 100%;
         }
-        .section {
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            overflow: hidden;
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 15px;
+            margin-bottom: 20px;
         }
-        strong {
-            color: #2980b9;
+
+        .section h2 {
+            font-size: 12px; /* Increased font size for better readability */
+            margin: 0 0 6px 0;
+            color: #e74c3c; /* Red color for headings */
+            border-bottom: 1px solid #e74c3c; /* Thinner border */
+            padding-bottom: 3px;
+            font-weight: bold; /* Keep headings bold */
         }
+
+        .section ul {
+            margin: 0;
+            padding-left: 15px; /* Increased padding for list items */
+            list-style-type: disc; /* Standard bullets */
+            /* Removed scrolling-related properties */
+        }
+
+        .section li {
+            margin-bottom: 3px; /* Increased spacing between list items */
+        }
+
+        .section strong {
+            color: #2980b9; /* Blue color for bold words */
+            font-weight: bold;
+        }
+
+        .emoji {
+            font-style: normal;
+            margin-right: 3px; /* Space after emoji */
+        }
+
+        /* Print specific styles */
         @media print {
             body {
-                width: 297mm;
+                width: 100%;
+                height: auto;
                 padding: 10mm;
+                box-shadow: none;
+                background-color: #fff;
+                font-size: 7pt; /* Adjust print font size if needed */
             }
-            .container {
-                min-height: auto;
+            
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr); /* Maintain 2 columns for print */
+                grid-gap: 4mm;
+            }
+            
+            .section {
+                box-shadow: none;
+                border: 1px solid #ccc; /* Add border for print */
+                page-break-inside: avoid;
+            }
+            
+            .section ul {
+                padding-left: 8px;
+            }
+            
+            .section li { 
+                margin-bottom: 1px; 
+            }
+            
+            .author, .linkedin {
+                position: static; /* Reset positioning for print */
+                display: block;
+                text-align: left;
+                margin-bottom: 5px;
+            }
+            
+            .linkedin { 
+                text-align: right; 
+                margin-top: -15px; 
+            } /* Adjust positioning */
+            
+            h1 { 
+                font-size: 14pt; 
+            }
+            
+            h2 { 
+                font-size: 9pt; 
+            }
+        }
+        
+        /* Added media query for responsiveness */
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr; /* Single column on smaller screens */
+            }
+            
+            body {
+                padding: 5mm;
             }
         }
     </style>
 </head>
 <body>
-    <a href="https://omkamal.github.io/" target="_blank" style="position: absolute; top: 5px; left: 50%; transform: translateX(-50%);">Home</a>
-    <div class="author">Omar Hosney</div>
-    <div class="linkedin"><a href="https://www.linkedin.com/in/omarebnelkhattab-hosney-9a931b3/">LinkedIn Profile</a></div>
-    <h1>Fabric: Amazing Command Line AI Ecosystem</h1>
-    <div class="container">
-        <div class="section">
-            <h2>What is Fabric?</h2>
-            <ul>
-                <li><strong>Philosophy:</strong> Fabric amplifies human creativity, making AI accessible to everyone.</li>
-                <li><strong>Problem Solving:</strong> Breaks down complex challenges into manageable components with AI Patterns.</li>
-                <li><strong>Library of Patterns:</strong> Provides pre-built Patterns for tasks like summarizing articles and creating social media posts.</li>
-                <li><strong>Command-line Native:</strong> Integrates seamlessly with the command line for quick execution.</li>
-                <li><strong>Customizable:</strong> Create and integrate custom Patterns into your workflow.</li>
-            </ul>
+    <div class="page-container">
+        <div class="header-info">
+            <div class="author">Omar Hosney</div>
+            <div class="linkedin"><a href="https://www.linkedin.com/in/okhosney/" target="_blank">LinkedIn Profile</a></div>
         </div>
-        <div class="section">
-            <h2>Why use Fabric?</h2>
-            <ul>
-                <li><strong>Simplicity:</strong> Streamlines interaction with LLMs without complex prompts.</li>
-                <li><strong>Efficiency:</strong> Saves time with pre-built Patterns for common AI tasks.</li>
-                <li><strong>Flexibility:</strong> Compatible with various AI applications like ChatGPT and OpenAI’s API.</li>
-                <li><strong>Extensibility:</strong> Open-source nature allows tailoring to specific needs.</li>
-            </ul>
-        </div>
-        <div class="section">
-            <h2>Installing Fabric</h2>
-            <ul>
-                <li><strong>Step 1:</strong> Install Python 3.10 or higher from the official site.</li>
-                <li><strong>Step 2:</strong> Clone the Fabric repository using <code>git clone https://github.com/danielmiessler/fabric.git</code>.</li>
-                <li><strong>Step 3:</strong> Install pipx using commands for your OS (e.g., <code>brew install pipx</code> for macOS).</li>
-                <li><strong>Step 4:</strong> Install Fabric with <code>pipx install .</code>.</li>
-                <li><strong>Step 5:</strong> Run the setup command <code>fabric --setup</code> to configure.</li>
-                <li><strong>Step 6:</strong> Restart your terminal to make Fabric commands available.</li>
-            </ul>
-        </div>
-        <div class="section">
-            <h2>Sample Fabric Pattern Usage</h2>
-            <ul>
-                <li><strong>Summarize Pattern:</strong> <code>echo "Text" | fabric --pattern summarize</code></li>
-                <li><strong>Extract Wisdom Pattern:</strong> <code>cat transcript.txt | fabric --pattern extract_wisdom</code></li>
-                <li><strong>Analyze Claims Pattern:</strong> <code>echo "Claims" | fabric --pattern analyze_claims</code></li>
-            </ul>
-        </div>
-        <div class="section">
-            <h2>Fabric’s LLM Support</h2>
-            <ul>
-                <li><strong>Default Model:</strong> Set with <code>fabric --changeDefaultModel gpt-4-turbo-preview</code>.</li>
-                <li><strong>Local Models:</strong> Ensure local model is running and set environment variables appropriately.</li>
-                <li><strong>Use Commands:</strong> Fabric will utilize the set model for inference.</li>
-            </ul>
-        </div>
-        <div class="section">
-            <h2>Fabric Patterns Overview</h2>
-            <ul>
-                <li><strong>Writing:</strong> Patterns like <code>analyze_paper</code>, <code>write_code</code>, and <code>write_essay</code>.</li>
-                <li><strong>Analysis:</strong> Patterns like <code>analyze_claims</code>, <code>extract_wisdom</code>, and <code>summarize</code>.</li>
-                <li><strong>Business:</strong> Patterns like <code>create_ai_jobs_analysis</code> and <code>answer_interview_question</code>.</li>
-                <li><strong>Research:</strong> Patterns like <code>extract_article_wisdom</code> and <code>extract_book_ideas</code>.</li>
-                <li><strong>Other:</strong> Patterns like <code>get_youtube_rss</code> and <code>create_quiz</code>.</li>
-            </ul>
+        <h1>Fabric Installation Cheat Sheet</h1>
+
+        <div class="sections-container-single">
+            <div class="section">
+                <h2><span class="emoji">⚡</span> How to Install Fabric</h2>
+                <ul>
+                    <li><strong>Download Latest Binaries</strong> (recommended, no dependencies):
+                        <ul>
+                            <li><strong>Windows:</strong> <a href="https://github.com/danielmiessler/fabric/releases/latest/download/fabric-windows-amd64.exe" target="_blank">Download EXE</a></li>
+                            <li><strong>macOS (arm64):</strong> <code>curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-arm64 &gt; fabric &amp;&amp; chmod +x fabric &amp;&amp; ./fabric --version</code></li>
+                            <li><strong>macOS (amd64):</strong> <code>curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-amd64 &gt; fabric &amp;&amp; chmod +x fabric &amp;&amp; ./fabric --version</code></li>
+                            <li><strong>Linux (amd64):</strong> <code>curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-amd64 &gt; fabric &amp;&amp; chmod +x fabric &amp;&amp; ./fabric --version</code></li>
+                            <li><strong>Linux (arm64):</strong> <code>curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-arm64 &gt; fabric &amp;&amp; chmod +x fabric &amp;&amp; ./fabric --version</code></li>
+                        </ul>
+                    </li>
+                    <li><strong>Using Package Managers</strong>:
+                        <ul>
+                            <li><strong>macOS (Homebrew):</strong> <code>brew install fabric-ai</code></li>
+                            <li><strong>Arch Linux (AUR):</strong> <code>yay -S fabric-ai</code></li>
+                            <li><em>NOTE:</em> The binary may be called <code>fabric-ai</code>. Add <code>alias fabric='fabric-ai'</code> to your shell config.</li>
+                        </ul>
+                    </li>
+                    <li><strong>From Source (requires Go):</strong>
+                        <ul>
+                            <li><code>go install github.com/danielmiessler/fabric@latest</code></li>
+                        </ul>
+                    </li>
+                    <li><strong>Environment Variables</strong> (add to <code>~/.bashrc</code> or <code>~/.zshrc</code>):
+                        <ul>
+                            <li><strong>Intel/macOS/Linux:</strong>
+<pre>export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH</pre>
+                            </li>
+                            <li><strong>Apple Silicon macOS:</strong>
+<pre>export GOROOT=$(brew --prefix go)/libexec
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH</pre>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><strong>Setup</strong>:
+                        <ul>
+                            <li>Run <code>fabric --setup</code> to set up directories and keys.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div style="margin-top:10px;font-size:10px;color:#888;">
+                    For more details and troubleshooting, visit the <a href="https://github.com/danielmiessler/fabric" target="_blank">official Fabric GitHub page</a>.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><span class="emoji">⬆️</span> Upgrading</h2>
+                <p>The great thing about Go is that it's super easy to upgrade Fabric. Just run the same command you used to install it and you'll always get the latest version:</p>
+                <pre style="background:#f8f8f8;padding:6px 10px;border-radius:5px;">go install github.com/danielmiessler/fabric@latest</pre>
+            </div>
+
+            <div class="section">
+                <h2><span class="emoji">🚀</span> Usage</h2>
+                <p>Once you have Fabric set up, you can view all options with:</p>
+                <pre style="background:#f8f8f8;padding:6px 10px;border-radius:5px;">fabric -h</pre>
+                <p>Common usage:</p>
+                <pre style="background:#f8f8f8;padding:6px 10px;border-radius:5px;">fabric [OPTIONS]</pre>
+                <p style="font-size:10px;color:#888;">(Below is a partial help output. For the full list, run <code>fabric -h</code> on your system.)</p>
+                <ul style="columns:2;font-size:10px;">
+                    <li><strong>-p, --pattern=</strong> Choose a pattern</li>
+                    <li><strong>-v, --variable=</strong> Set pattern variables</li>
+                    <li><strong>-C, --context=</strong> Choose a context</li>
+                    <li><strong>--session=</strong> Choose a session</li>
+                    <li><strong>-a, --attachment=</strong> Attachment path or URL</li>
+                    <li><strong>-S, --setup</strong> Run setup</li>
+                    <li><strong>-t, --temperature=</strong> Set temperature (default: 0.7)</li>
+                    <li><strong>-s, --stream</strong> Stream output</li>
+                    <li><strong>-l, --listpatterns</strong> List all patterns</li>
+                    <li><strong>-L, --listmodels</strong> List all models</li>
+                    <li><strong>-x, --listcontexts</strong> List all contexts</li>
+                    <li><strong>-X, --listsessions</strong> List all sessions</li>
+                    <li><strong>-U, --updatepatterns</strong> Update patterns</li>
+                    <li><strong>-m, --model=</strong> Choose model</li>
+                    <li><strong>-o, --output=</strong> Output to file</li>
+                    <li><strong>--version</strong> Print version</li>
+                    <li><strong>-h, --help</strong> Show help</li>
+                    <!-- Add more as needed -->
+                </ul>
+                <p><strong>Examples:</strong></p>
+                <ul>
+                    <li><code>pbpaste | fabric --pattern summarize</code> <span style="color:#888;"># Summarize clipboard content (macOS)</span></li>
+                    <li><code>pbpaste | fabric --stream --pattern analyze_claims</code> <span style="color:#888;"># Analyze claims with streaming output</span></li>
+                    <li><code>fabric -y "https://youtube.com/watch?v=uXs-zPc63kM" --stream --pattern extract_wisdom</code> <span style="color:#888;"># Extract wisdom from a YouTube video</span></li>
+                    <li><code>fabric -u https://github.com/danielmiessler/fabric/ -p analyze_claims</code> <span style="color:#888;"># Analyze claims on a website</span></li>
+                </ul>
+                <p>For more, see the <a href="https://github.com/danielmiessler/fabric#usage" target="_blank">official usage docs</a>, <a href="https://github.com/danielmiessler/fabric/tree/main/patterns" target="_blank">GitHub patterns directory</a>, and <a href="https://omkamal.github.io/fabric_patterns.html" style="color:#2980b9;font-weight:bold;">local Fabric Patterns Cheat Sheet</a>.</p>
+            </div>
         </div>
     </div>
 </body>
 </html>
-```
