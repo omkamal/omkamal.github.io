@@ -407,6 +407,58 @@ HAVING avg_salary > 60000;
                 <li><strong>RETURNING</strong> – return rows from DML<br><code>INSERT INTO employees(name) VALUES('Anna') RETURNING id;</code></li>
              </ul>
         </div>
+        <div class="section">
+            <h2>📊 SQL Order of Execution</h2>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <svg width="220" height="320" style="margin-bottom: 8px;">
+                    <g font-size="11" font-family="Roboto, sans-serif">
+                        <rect x="40" y="10" width="140" height="28" rx="8" fill="#e3f2fd" stroke="#2196f3" />
+                        <text x="110" y="29" text-anchor="middle">FROM / JOIN</text>
+
+                        <rect x="40" y="48" width="140" height="28" rx="8" fill="#fce4ec" stroke="#e91e63" />
+                        <text x="110" y="67" text-anchor="middle">WHERE</text>
+
+                        <rect x="40" y="86" width="140" height="28" rx="8" fill="#fffde7" stroke="#fbc02d" />
+                        <text x="110" y="105" text-anchor="middle">GROUP BY</text>
+
+                        <rect x="40" y="124" width="140" height="28" rx="8" fill="#ede7f6" stroke="#7e57c2" />
+                        <text x="110" y="143" text-anchor="middle">HAVING</text>
+
+                        <rect x="40" y="162" width="140" height="28" rx="8" fill="#e8f5e9" stroke="#43a047" />
+                        <text x="110" y="181" text-anchor="middle">SELECT</text>
+
+                        <rect x="40" y="200" width="140" height="28" rx="8" fill="#f3e5f5" stroke="#ab47bc" />
+                        <text x="110" y="219" text-anchor="middle">DISTINCT</text>
+
+                        <rect x="40" y="238" width="140" height="28" rx="8" fill="#e0f2f1" stroke="#00897b" />
+                        <text x="110" y="257" text-anchor="middle">ORDER BY</text>
+
+                        <rect x="40" y="276" width="140" height="28" rx="8" fill="#fbe9e7" stroke="#ff7043" />
+                        <text x="110" y="295" text-anchor="middle">LIMIT / OFFSET</text>
+
+                        <!-- Arrows -->
+                        <g stroke="#888" stroke-width="2">
+                            <line x1="110" y1="38" x2="110" y2="48" marker-end="url(#arrow)" />
+                            <line x1="110" y1="76" x2="110" y2="86" marker-end="url(#arrow)" />
+                            <line x1="110" y1="114" x2="110" y2="124" marker-end="url(#arrow)" />
+                            <line x1="110" y1="152" x2="110" y2="162" marker-end="url(#arrow)" />
+                            <line x1="110" y1="190" x2="110" y2="200" marker-end="url(#arrow)" />
+                            <line x1="110" y1="228" x2="110" y2="238" marker-end="url(#arrow)" />
+                            <line x1="110" y1="266" x2="110" y2="276" marker-end="url(#arrow)" />
+                        </g>
+                        <defs>
+                            <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto" markerUnits="strokeWidth">
+                                <path d="M0,0 L8,4 L0,8 L2,4 Z" fill="#888" />
+                            </marker>
+                        </defs>
+                    </g>
+                </svg>
+                <div style="font-size:10px; color:#555; text-align:center; max-width:230px;">
+                    <strong>Order of execution in SQL:</strong> <br>
+                    FROM/JOIN → WHERE → GROUP BY → HAVING → SELECT → DISTINCT → ORDER BY → LIMIT/OFFSET
+                </div>
+            </div>
+        </div>
 
     </div>
 </body>
