@@ -116,14 +116,11 @@
 
         h2 {
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             margin: 0 0 8px 0;
-            color: var(--primary-dark);
+            color: #0d1117;
             padding-bottom: 6px;
-            border-bottom: 2px solid transparent;
-            background: linear-gradient(90deg, var(--primary), var(--accent)) border-box;
-            border-image: linear-gradient(90deg, var(--primary), var(--accent)) 1;
-            border-image-slice: 0 0 1 0;
+            border-bottom: 2px solid var(--primary);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -261,6 +258,25 @@
 
         .tip strong {
             color: #0969da;
+        }
+
+        .footer-image {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--github-dark) 0%, var(--github-gray) 100%);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            margin-top: 8px;
+        }
+
+        .footer-image img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: var(--radius);
+            box-shadow: 0 0 30px rgba(35, 134, 54, 0.3);
         }
 
         @media print {
@@ -489,6 +505,10 @@
                 <li><strong>Labels</strong>: Add labels<code>gh issue create --label "bug,urgent"</code></li>
                 <li><strong>Reviewers</strong>: Request review<code>gh pr create --reviewer user1,user2</code></li>
             </ul>
+        </div>
+
+        <div class="footer-image">
+            <img src="github-gh.jpeg" alt="GitHub CLI" />
         </div>
     </div>
 </body>

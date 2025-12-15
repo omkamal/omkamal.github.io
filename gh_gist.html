@@ -116,14 +116,11 @@
 
         h2 {
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             margin: 0 0 8px 0;
-            color: var(--primary-dark);
+            color: #1e1b4b;
             padding-bottom: 6px;
-            border-bottom: 2px solid transparent;
-            background: linear-gradient(90deg, var(--primary), var(--secondary)) border-box;
-            border-image: linear-gradient(90deg, var(--primary), var(--secondary)) 1;
-            border-image-slice: 0 0 1 0;
+            border-bottom: 2px solid var(--primary);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -305,6 +302,25 @@
 
         tr:hover {
             background: rgba(137, 87, 229, 0.05);
+        }
+
+        .footer-image {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--github-dark) 0%, #1a1626 100%);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            margin-top: 8px;
+        }
+
+        .footer-image img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: var(--radius);
+            box-shadow: 0 0 30px rgba(137, 87, 229, 0.4);
         }
 
         @media print {
@@ -575,6 +591,10 @@ gh gist view abc123</code></li>
             <div class="warning">
                 <strong>⚠️ Security:</strong> Never store sensitive data like passwords or API keys in gists!
             </div>
+        </div>
+
+        <div class="footer-image">
+            <img src="github-gist.jpeg" alt="GitHub Gist" />
         </div>
     </div>
 </body>
