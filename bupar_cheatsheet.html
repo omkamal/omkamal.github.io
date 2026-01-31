@@ -208,10 +208,46 @@
         
         @media print {
             body { background: white; }
+            .author, .linkedin, .home-link { display: none; }
+        }
+
+        .author {
+            position: fixed;
+            top: 5px;
+            left: 5px;
+            font-size: 8px;
+            color: #64748b;
+            z-index: 100;
+        }
+
+        .linkedin {
+            position: fixed;
+            top: 5px;
+            right: 5px;
+            font-size: 8px;
+            z-index: 100;
+        }
+
+        .linkedin a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+
+        .home-link {
+            position: fixed;
+            top: 20px;
+            left: 5px;
+            font-size: 8px;
+            color: #0284c7;
+            z-index: 100;
         }
     </style>
 </head>
 <body>
+    <a href="https://omkamal.github.io/" target="_blank" class="home-link">Home</a>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/okhosney/">LinkedIn</a></div>
+
     <div class="header">
         <h1>📊 bupaR Cheat Sheet</h1>
         <p>Business Process Analytics in R • bupaverse ecosystem</p>
