@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub CLI (gh) Cheat Sheet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #238636;
+            --primary-dark: #1a7f37;
+            --primary-light: #2ea043;
+            --secondary: #8b5cf6;
+            --accent: #58a6ff;
+            --github-dark: #0d1117;
+            --github-gray: #161b22;
+            --success: #238636;
+            --warning: #d29922;
+            --danger: #da3633;
+            --bg-gradient: linear-gradient(135deg, #f6f8fa 0%, #e8f4f8 50%, #f0f6fc 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(35, 134, 54, 0.15);
+            --text-primary: #24292f;
+            --text-secondary: #57606a;
+            --text-muted: #8b949e;
+            --code-bg: #0d1117;
+            --code-text: #c9d1d9;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 10px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 15mm 10mm;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white !important;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 9px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .home-link:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--github-dark) 0%, var(--github-gray) 100%);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 20px rgba(35, 134, 54, 0.3);
+        }
+
+        .header-text h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-text p {
+            margin: 5px 0 0;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 12px;
+            width: 100%;
+        }
+
+        h2 {
+            font-size: 12px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            color: #0d1117;
+            padding-bottom: 6px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 6px;
+            padding-left: 14px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 5px;
+            height: 5px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+        }
+
+        .author {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: var(--card-bg);
+            padding: 4px 10px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .linkedin {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 9px;
+            z-index: 100;
+        }
+
+        .linkedin a {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #0077b5 0%, #005582 100%);
+            color: white !important;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .linkedin a:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 9px;
+            background: var(--code-bg);
+            color: var(--code-text);
+            border-radius: var(--radius-sm);
+            padding: 6px 8px;
+            margin: 4px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+            border-left: 3px solid var(--primary);
+            line-height: 1.5;
+        }
+
+        .section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 12px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--card-border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            border-color: var(--primary-light);
+        }
+
+        .section:hover::before {
+            opacity: 1;
+        }
+
+        strong {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .tip {
+            background: linear-gradient(135deg, #ddf4ff 0%, #cae8ff 100%);
+            border-left: 3px solid var(--accent);
+            padding: 8px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin: 8px 0;
+            font-size: 9px;
+        }
+
+        .tip strong {
+            color: #0969da;
+        }
+
+        .footer-image {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--github-dark) 0%, var(--github-gray) 100%);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            margin-top: 8px;
+        }
+
+        .footer-image img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: var(--radius);
+            box-shadow: 0 0 30px rgba(35, 134, 54, 0.3);
+        }
+
+        @media print {
+            body {
+                width: 297mm;
+                padding: 10mm;
+                background: white;
+            }
+            .container {
+                min-height: auto;
+            }
+            .section {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+            }
+            .section:hover {
+                transform: none;
+            }
+            .author, .linkedin, .home-link {
+                display: none;
+            }
+            .header {
+                background: var(--github-dark);
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            body {
+                padding: 60px 15px 20px;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="https://omkamal.github.io/" target="_blank" class="home-link">← Home</a>
+    <div class="author">Omar Hosney</div>
+    <div class="linkedin"><a href="https://www.linkedin.com/in/okhosney/">LinkedIn</a></div>
+
+    <div class="header">
+        <img src="github-gh.jpeg" alt="GitHub CLI" class="header-img">
+        <div class="header-text">
+            <h1>GitHub CLI (gh) Cheat Sheet 🚀</h1>
+            <p>The official command-line tool for GitHub</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>🛠️ Installation & Setup</h2>
+            <ul>
+                <li><strong>macOS</strong>: Install with Homebrew<code>brew install gh</code></li>
+                <li><strong>Windows</strong>: Install with winget<code>winget install GitHub.cli</code></li>
+                <li><strong>Linux (Debian/Ubuntu)</strong>:<code>sudo apt install gh</code></li>
+                <li><strong>Authenticate</strong>: Login to GitHub<code>gh auth login</code></li>
+                <li><strong>Check status</strong>: Verify authentication<code>gh auth status</code></li>
+                <li><strong>Logout</strong>: End session<code>gh auth logout</code></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>📁 Repository Commands</h2>
+            <ul>
+                <li><strong>Clone repo</strong>: Clone a repository<code>gh repo clone owner/repo</code></li>
+                <li><strong>Create repo</strong>: Create new repository<code>gh repo create my-repo --public</code></li>
+                <li><strong>Fork repo</strong>: Fork a repository<code>gh repo fork owner/repo</code></li>
+                <li><strong>View repo</strong>: Open in browser<code>gh repo view --web</code></li>
+                <li><strong>List repos</strong>: Show your repositories<code>gh repo list</code></li>
+                <li><strong>Sync fork</strong>: Update fork with upstream<code>gh repo sync owner/repo</code></li>
+                <li><strong>Archive repo</strong>: Archive a repository<code>gh repo archive owner/repo</code></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🔀 Pull Request Commands</h2>
+            <ul>
+                <li><strong>Create PR</strong>: Create pull request<code>gh pr create --title "Title" --body "Description"</code></li>
+                <li><strong>List PRs</strong>: Show pull requests<code>gh pr list</code></li>
+                <li><strong>View PR</strong>: Show PR details<code>gh pr view 123</code></li>
+                <li><strong>Checkout PR</strong>: Switch to PR branch<code>gh pr checkout 123</code></li>
+                <li><strong>Merge PR</strong>: Merge pull request<code>gh pr merge 123 --squash</code></li>
+                <li><strong>Close PR</strong>: Close without merging<code>gh pr close 123</code></li>
+                <li><strong>Review PR</strong>: Add a review<code>gh pr review 123 --approve</code></li>
+                <li><strong>PR diff</strong>: View PR changes<code>gh pr diff 123</code></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🐛 Issue Commands</h2>
+            <ul>
+                <li><strong>Create issue</strong>: Open new issue<code>gh issue create --title "Bug" --body "Details"</code></li>
+                <li><strong>List issues</strong>: Show issues<code>gh issue list</code></li>
+                <li><strong>View issue</strong>: Show issue details<code>gh issue view 42</code></li>
+                <li><strong>Close issue</strong>: Close an issue<code>gh issue close 42</code></li>
+                <li><strong>Reopen issue</strong>: Reopen closed issue<code>gh issue reopen 42</code></li>
+                <li><strong>Edit issue</strong>: Modify issue<code>gh issue edit 42 --add-label "bug"</code></li>
+                <li><strong>Comment</strong>: Add comment<code>gh issue comment 42 --body "Comment"</code></li>
+                <li><strong>Transfer</strong>: Move to another repo<code>gh issue transfer 42 owner/repo</code></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>⚡ GitHub Actions</h2>
+            <ul>
+                <li><strong>List workflows</strong>: Show all workflows<code>gh workflow list</code></li>
+                <li><strong>View workflow</strong>: Workflow details<code>gh workflow view deploy.yml</code></li>
+                <li><strong>Run workflow</strong>: Trigger manually<code>gh workflow run deploy.yml</code></li>
+                <li><strong>List runs</strong>: Show workflow runs<code>gh run list</code></li>
+                <li><strong>View run</strong>: Run details<code>gh run view 12345</code></li>
+                <li><strong>Watch run</strong>: Follow live<code>gh run watch 12345</code></li>
+                <li><strong>Download artifacts</strong>: Get build outputs<code>gh run download 12345</code></li>
+                <li><strong>Rerun workflow</strong>: Restart failed run<code>gh run rerun 12345</code></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🏷️ Release Commands</h2>
+            <ul>
+                <li><strong>Create release</strong>: New release<code>gh release create v1.0.0 --title "v1.0.0"</code></li>
+                <li><strong>List releases</strong>: Show releases<code>gh release list</code></li>
+                <li><strong>View release</strong>: Release details<code>gh release view v1.0.0</code></li>
+                <li><strong>Download assets</strong>: Get release files<code>gh release download v1.0.0</code></li>
+                <li><strong>Delete release</strong>: Remove release<code>gh release delete v1.0.0</code></li>
+                <li><strong>Upload assets</strong>: Add files<code>gh release upload v1.0.0 ./dist/*</code></li>
+                <li><strong>Draft release</strong>: Create as draft<code>gh release create v1.0.0 --draft</code></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🔍 Search Commands</h2>
+            <ul>
+                <li><strong>Search repos</strong>: Find repositories<code>gh search repos "machine learning" --language=python</code></li>
+                <li><strong>Search issues</strong>: Find issues<code>gh search issues "bug" --state=open</code></li>
+                <li><strong>Search PRs</strong>: Find pull requests<code>gh search prs "feature" --state=merged</code></li>
+                <li><strong>Search code</strong>: Find code snippets<code>gh search code "def main" --language=python</code></li>
+                <li><strong>Search commits</strong>: Find commits<code>gh search commits "fix bug"</code></li>
+            </ul>
+            <div class="tip">
+                <strong>💡 Tip:</strong> Use <code>--json</code> flag to get machine-readable output for scripting!
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔑 SSH Key Management</h2>
+            <ul>
+                <li><strong>List SSH keys</strong>: Show keys<code>gh ssh-key list</code></li>
+                <li><strong>Add SSH key</strong>: Register new key<code>gh ssh-key add ~/.ssh/id_ed25519.pub</code></li>
+                <li><strong>Delete SSH key</strong>: Remove key<code>gh ssh-key delete 12345</code></li>
+            </ul>
+            <h2>🔐 GPG Key Management</h2>
+            <ul>
+                <li><strong>List GPG keys</strong>: Show GPG keys<code>gh gpg-key list</code></li>
+                <li><strong>Add GPG key</strong>: Register key<code>gh gpg-key add key.pub</code></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>📊 API & Extensions</h2>
+            <ul>
+                <li><strong>API call</strong>: Make API request<code>gh api repos/owner/repo</code></li>
+                <li><strong>GraphQL query</strong>: GraphQL request<code>gh api graphql -f query='{ viewer { login } }'</code></li>
+                <li><strong>List extensions</strong>: Show installed<code>gh extension list</code></li>
+                <li><strong>Install extension</strong>: Add extension<code>gh extension install owner/gh-ext</code></li>
+                <li><strong>Upgrade extensions</strong>: Update all<code>gh extension upgrade --all</code></li>
+                <li><strong>Create extension</strong>: New extension<code>gh extension create my-ext</code></li>
+            </ul>
+            <div class="tip">
+                <strong>💡 Popular extensions:</strong> gh-dash, gh-copilot, gh-markdown-preview
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Codespaces</h2>
+            <ul>
+                <li><strong>Create codespace</strong>: New environment<code>gh codespace create -r owner/repo</code></li>
+                <li><strong>List codespaces</strong>: Show all<code>gh codespace list</code></li>
+                <li><strong>SSH to codespace</strong>: Connect via SSH<code>gh codespace ssh -c codespace-name</code></li>
+                <li><strong>Open in VS Code</strong>: Launch editor<code>gh codespace code -c codespace-name</code></li>
+                <li><strong>Stop codespace</strong>: Pause<code>gh codespace stop -c codespace-name</code></li>
+                <li><strong>Delete codespace</strong>: Remove<code>gh codespace delete -c codespace-name</code></li>
+                <li><strong>Port forward</strong>: Expose ports<code>gh codespace ports forward 8080:8080</code></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Configuration</h2>
+            <ul>
+                <li><strong>Set editor</strong>: Default editor<code>gh config set editor "code --wait"</code></li>
+                <li><strong>Set browser</strong>: Default browser<code>gh config set browser firefox</code></li>
+                <li><strong>Git protocol</strong>: Use SSH<code>gh config set git_protocol ssh</code></li>
+                <li><strong>View config</strong>: Show settings<code>gh config list</code></li>
+                <li><strong>Set prompt</strong>: Disable prompts<code>gh config set prompt disabled</code></li>
+            </ul>
+            <h2>🎨 Aliases</h2>
+            <ul>
+                <li><strong>Create alias</strong>: Custom shortcut<code>gh alias set pv 'pr view'</code></li>
+                <li><strong>List aliases</strong>: Show all<code>gh alias list</code></li>
+                <li><strong>Delete alias</strong>: Remove shortcut<code>gh alias delete pv</code></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🌟 Pro Tips</h2>
+            <ul>
+                <li><strong>Interactive mode</strong>: Guided creation<code>gh pr create  # prompts for details</code></li>
+                <li><strong>JSON output</strong>: For scripting<code>gh pr list --json number,title</code></li>
+                <li><strong>JQ filtering</strong>: Process JSON<code>gh pr list --json title --jq '.[].title'</code></li>
+                <li><strong>Template</strong>: Use PR template<code>gh pr create --template</code></li>
+                <li><strong>Web flag</strong>: Open in browser<code>gh issue view 42 --web</code></li>
+                <li><strong>Assignees</strong>: Assign yourself<code>gh pr create --assignee @me</code></li>
+                <li><strong>Labels</strong>: Add labels<code>gh issue create --label "bug,urgent"</code></li>
+                <li><strong>Reviewers</strong>: Request review<code>gh pr create --reviewer user1,user2</code></li>
+            </ul>
+        </div>
+
+        <div class="footer-image">
+            <img src="github-gh.jpeg" alt="GitHub CLI" />
+        </div>
+    </div>
+</body>
+</html>

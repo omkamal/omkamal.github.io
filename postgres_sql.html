@@ -3,90 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fabric Patterns Cheat Sheet</title>
+    <title>PostgreSQL SQL Cheat Sheet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            font-size: 10px;
-            line-height: 1.2;
-            margin: 0;
-            padding: 10mm;
-            background-color: #f0f8ff;
-            color: #333;
+        :root {
+            --primary: #336791;
+            --primary-dark: #2a5578;
+            --primary-light: #4a89b9;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #f0f4f8 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(51, 103, 145, 0.15);
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
             box-sizing: border-box;
         }
-        
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 10px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 15mm 10mm;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white !important;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 9px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .home-link:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
         .container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            grid-gap: 10px;
+            grid-gap: 12px;
             width: 100%;
         }
 
         .container-1col {
             display: grid;
             grid-template-columns: 1fr;
-            grid-gap: 10px;
+            grid-gap: 12px;
             width: 100%;
         }
 
         h1 {
             grid-column: 1 / -1;
             text-align: center;
-            font-size: 24px;
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            padding: 15px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            margin: 10px auto 0;
+            border-radius: 2px;
         }
 
         h2 {
-            font-size: 14px;
-            margin: 0 0 5px 0;
-            color: #e74c3c;
-            border-bottom: 2px solid #e74c3c;
-            padding-bottom: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+            color: var(--primary-dark);
+            padding-bottom: 6px;
+            border-bottom: 2px solid transparent;
+            background: linear-gradient(90deg, var(--primary), var(--accent)) border-box;
+            border-image: linear-gradient(90deg, var(--primary), var(--accent)) 1;
+            border-image-slice: 0 0 1 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         ul {
             margin: 0;
-            padding-left: 15px;
+            padding-left: 0;
+            list-style: none;
         }
 
         li {
-            margin-bottom: 3px;
+            margin-bottom: 6px;
+            padding-left: 14px;
+            position: relative;
+            line-height: 1.6;
         }
 
-        .emoji {
-            font-style: normal;
+        li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 5px;
+            height: 5px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
         }
 
         .author {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            font-size: 8px;
-            color: #7f8c8d;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: var(--card-bg);
+            padding: 4px 10px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(10px);
+            z-index: 100;
         }
 
         .linkedin {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 8px;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 9px;
+            z-index: 100;
         }
 
         .linkedin a {
-            color: #0077b5;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #0077b5 0%, #005582 100%);
+            color: white !important;
             text-decoration: none;
+            border-radius: 20px;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .linkedin a:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
 
         .section {
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 12px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--card-border);
+            transition: var(--transition);
+            position: relative;
             overflow: hidden;
-            box-sizing: border-box;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            border-color: var(--primary-light);
+        }
+
+        .section:hover::before {
+            opacity: 1;
         }
 
         .section-span-2 {
@@ -98,30 +230,76 @@
         }
 
         strong {
-            color: #2980b9;
+            color: var(--primary-dark);
+            font-weight: 600;
         }
 
         code, pre {
-            background: #f5f5f5 !important;
-            color: #222;
-            border-radius: 5px;
-            padding: 2px 6px;
-            font-size: 10px;
-            font-family: "Fira Mono", "Consolas", "Monaco", monospace;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 9px;
+            background: var(--code-bg) !important;
+            color: var(--code-text) !important;
+            border-radius: var(--radius-sm);
+            padding: 6px 8px;
+            margin: 4px 0;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+            border-left: 3px solid var(--primary);
+            line-height: 1.5;
+        }
+
+        pre {
+            padding: 10px;
         }
 
         @media print {
             body {
                 width: 297mm;
                 padding: 10mm;
+                background: white;
+            }
+            .section {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+            }
+            .section:hover {
+                transform: none;
+            }
+            .author, .linkedin, .home-link {
+                display: none;
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .section-span-2, .section-span-3 {
+                grid-column: span 2;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .section-span-2, .section-span-3 {
+                grid-column: span 1;
+            }
+            body {
+                padding: 60px 15px 20px;
             }
         }
     </style>
 </head>
 <body>
+    <a href="https://omkamal.github.io/" target="_blank" class="home-link">Home</a>
     <div class="author">Omar Hosney</div>
     <div class="linkedin"><a href="https://www.linkedin.com/in/okhosney">LinkedIn</a></div>
-    <h1><i class="fas fa-database"></i> PostgreSQL SQL Syntax Cheatsheet 📄</h1>
+    <h1>PostgreSQL SQL Cheatsheet 🐘</h1>
     <div class="container">
         <div class="section">
             <h2>🔍 Schema & Meta</h2>
