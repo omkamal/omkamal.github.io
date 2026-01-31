@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bupaR Cheat Sheet</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #ffffff;
+            --card: #f8fafc;
+            --accent: #0284c7;
+            --accent2: #7c3aed;
+            --accent3: #059669;
+            --accent4: #ea580c;
+            --accent5: #db2777;
+            --text: #1e293b;
+            --muted: #64748b;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 11px;
+            line-height: 1.3;
+            padding: 12px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .header p { font-size: 10px; opacity: 0.9; margin-top: 2px; }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        
+        .card {
+            background: var(--card);
+            border-radius: 8px;
+            padding: 8px;
+            border-left: 3px solid var(--accent);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+        }
+        
+        .card.c2 { border-left-color: var(--accent2); }
+        .card.c3 { border-left-color: var(--accent3); }
+        .card.c4 { border-left-color: var(--accent4); }
+        .card.c5 { border-left-color: var(--accent5); }
+        
+        .card h2 {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .card.c1 h2 { color: var(--accent); }
+        .card.c2 h2 { color: var(--accent2); }
+        .card.c3 h2 { color: var(--accent3); }
+        .card.c4 h2 { color: var(--accent4); }
+        .card.c5 h2 { color: var(--accent5); }
+        
+        .cmd {
+            background: var(--code-bg);
+            border-radius: 4px;
+            padding: 3px 5px;
+            margin-bottom: 3px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 9.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .cmd code {
+            color: var(--accent3);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .cmd span {
+            color: var(--muted);
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 8px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        
+        .sub { 
+            font-size: 9px; 
+            color: var(--muted); 
+            margin: 4px 0 2px; 
+            font-weight: 600;
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 2px;
+        }
+        
+        .wide { grid-column: span 2; }
+        .tall { grid-row: span 2; }
+        
+        .icon { font-size: 12px; }
+        
+        .syntax {
+            background: white;
+            border-radius: 4px;
+            padding: 5px;
+            font-family: monospace;
+            font-size: 8.5px;
+            color: var(--accent);
+            margin-top: 4px;
+            border: 1px dashed var(--border);
+        }
+        
+        .syntax .kw { color: var(--accent5); }
+        .syntax .str { color: var(--accent3); }
+        .syntax .par { color: var(--accent4); }
+        
+        .footer {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 9px;
+            color: var(--muted);
+        }
+        
+        .def {
+            background: white;
+            border-radius: 4px;
+            padding: 4px 6px;
+            margin-bottom: 4px;
+            border-left: 2px solid var(--accent3);
+        }
+        
+        .def strong {
+            color: var(--accent);
+            font-size: 9px;
+        }
+        
+        .def p {
+            font-size: 8.5px;
+            color: var(--muted);
+            margin-top: 1px;
+        }
+        
+        .col-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 0;
+            border-bottom: 1px dotted var(--border);
+        }
+        
+        .col-item:last-child { border-bottom: none; }
+        
+        .col-badge {
+            background: var(--accent);
+            color: white;
+            font-size: 7px;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+            min-width: 55px;
+            text-align: center;
+        }
+        
+        .col-badge.req { background: var(--accent5); }
+        
+        .col-desc {
+            font-size: 8.5px;
+            color: var(--text);
+        }
+        
+        /* SVG Illustration Styles */
+        .illustration {
+            width: 100%;
+            margin-top: 6px;
+        }
+        
+        .illustration svg {
+            width: 100%;
+            height: auto;
+        }
+        
+        @media print {
+            body { background: white; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 bupaR Cheat Sheet</h1>
+        <p>Business Process Analytics in R • bupaverse ecosystem</p>
+    </div>
+    
+    <div class="grid">
+        <!-- EVENT LOG COMPONENTS -->
+        <div class="card c5 tall">
+            <h2><span class="icon">📋</span> Event Log Components</h2>
+            <div class="col-item">
+                <span class="col-badge req">REQUIRED</span>
+                <span class="col-desc"><strong>case_id</strong> – Unique process instance</span>
+            </div>
+            <div class="col-item">
+                <span class="col-badge req">REQUIRED</span>
+                <span class="col-desc"><strong>activity_id</strong> – Activity name/label</span>
+            </div>
+            <div class="col-item">
+                <span class="col-badge req">REQUIRED</span>
+                <span class="col-desc"><strong>activity_instance_id</strong> – Unique event ID</span>
+            </div>
+            <div class="col-item">
+                <span class="col-badge req">REQUIRED</span>
+                <span class="col-desc"><strong>timestamp</strong> – When event occurred</span>
+            </div>
+            <div class="col-item">
+                <span class="col-badge">OPTIONAL</span>
+                <span class="col-desc"><strong>lifecycle_id</strong> – start/complete status</span>
+            </div>
+            <div class="col-item">
+                <span class="col-badge">OPTIONAL</span>
+                <span class="col-desc"><strong>resource_id</strong> – Who performed it</span>
+            </div>
+        </div>
+        
+        <!-- PERFORMANCE METRICS DEFINITIONS -->
+        <div class="card c3 wide tall">
+            <h2><span class="icon">📖</span> Performance Metrics Defined</h2>
+            <div class="def">
+                <strong>⏱️ Throughput Time</strong>
+                <p>Total time from case start to end. Includes all waiting + working time. Measures end-to-end duration.</p>
+            </div>
+            <div class="def">
+                <strong>⚙️ Processing Time</strong>
+                <p>Actual working time spent on activities. Excludes waiting/idle periods. Sum of all activity durations.</p>
+            </div>
+            <div class="def">
+                <strong>💤 Idle Time</strong>
+                <p>Time between activities where no work happens. Waiting time = Throughput − Processing time.</p>
+            </div>
+            <div class="illustration">
+                <svg viewBox="0 0 320 60" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="procGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#059669"/>
+                            <stop offset="100%" style="stop-color:#34d399"/>
+                        </linearGradient>
+                        <linearGradient id="idleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#94a3b8"/>
+                            <stop offset="100%" style="stop-color:#cbd5e1"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Timeline -->
+                    <rect x="10" y="25" width="300" height="20" rx="4" fill="#f1f5f9" stroke="#e2e8f0"/>
+                    <!-- Processing blocks -->
+                    <rect x="12" y="27" width="40" height="16" rx="2" fill="url(#procGrad)"/>
+                    <rect x="82" y="27" width="55" height="16" rx="2" fill="url(#procGrad)"/>
+                    <rect x="177" y="27" width="35" height="16" rx="2" fill="url(#procGrad)"/>
+                    <rect x="252" y="27" width="55" height="16" rx="2" fill="url(#procGrad)"/>
+                    <!-- Idle blocks -->
+                    <rect x="54" y="27" width="26" height="16" rx="2" fill="url(#idleGrad)"/>
+                    <rect x="139" y="27" width="36" height="16" rx="2" fill="url(#idleGrad)"/>
+                    <rect x="214" y="27" width="36" height="16" rx="2" fill="url(#idleGrad)"/>
+                    <!-- Labels -->
+                    <text x="32" y="38" font-size="7" fill="white" text-anchor="middle" font-weight="600">Act 1</text>
+                    <text x="109" y="38" font-size="7" fill="white" text-anchor="middle" font-weight="600">Act 2</text>
+                    <text x="194" y="38" font-size="7" fill="white" text-anchor="middle" font-weight="600">Act 3</text>
+                    <text x="279" y="38" font-size="7" fill="white" text-anchor="middle" font-weight="600">Act 4</text>
+                    <!-- Arrows & Labels -->
+                    <text x="10" y="12" font-size="7" fill="#059669" font-weight="600">■ Processing</text>
+                    <text x="80" y="12" font-size="7" fill="#94a3b8" font-weight="600">■ Idle</text>
+                    <line x1="10" y1="52" x2="310" y2="52" stroke="#0284c7" stroke-width="2"/>
+                    <polygon points="310,52 304,48 304,56" fill="#0284c7"/>
+                    <text x="160" y="58" font-size="7" fill="#0284c7" text-anchor="middle" font-weight="600">← Throughput Time →</text>
+                </svg>
+            </div>
+        </div>
+        
+        <!-- SETUP & BASICS -->
+        <div class="card c1">
+            <h2><span class="icon">📦</span> Setup</h2>
+            <div class="cmd"><code>library(bupaR)</code><span>core</span></div>
+            <div class="cmd"><code>library(bupaverse)</code><span>all pkgs</span></div>
+            <div class="cmd"><code>library(processmapR)</code><span>viz</span></div>
+        </div>
+        
+        <!-- LOG INFO -->
+        <div class="card c4">
+            <h2><span class="icon">ℹ️</span> Log Info</h2>
+            <div class="cmd"><code>summary(log)</code><span>overview</span></div>
+            <div class="cmd"><code>mapping(log)</code><span>field map</span></div>
+            <div class="cmd"><code>case_id(log)</code><span>case col</span></div>
+            <div class="cmd"><code>activity_id(log)</code><span>act col</span></div>
+        </div>
+        
+        <!-- EVENT LOG CREATION FROM DATAFRAMES -->
+        <div class="card c2 wide tall">
+            <h2><span class="icon">🔧</span> Creating Event Log from DataFrames</h2>
+            <div class="illustration">
+                <svg viewBox="0 0 320 85" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Source Tables -->
+                    <rect x="5" y="5" width="70" height="40" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+                    <text x="40" y="17" font-size="7" fill="#7c3aed" text-anchor="middle" font-weight="600">orders.csv</text>
+                    <line x1="10" y1="22" x2="70" y2="22" stroke="#7c3aed" stroke-width="0.5"/>
+                    <text x="12" y="30" font-size="5.5" fill="#64748b">order_id, date</text>
+                    <text x="12" y="38" font-size="5.5" fill="#64748b">customer, status</text>
+                    
+                    <rect x="5" y="50" width="70" height="32" rx="4" fill="#fef3c7" stroke="#ea580c" stroke-width="1.5"/>
+                    <text x="40" y="62" font-size="7" fill="#ea580c" text-anchor="middle" font-weight="600">actions.csv</text>
+                    <line x1="10" y1="67" x2="70" y2="67" stroke="#ea580c" stroke-width="0.5"/>
+                    <text x="12" y="76" font-size="5.5" fill="#64748b">action, timestamp</text>
+                    
+                    <!-- Arrows to merge -->
+                    <path d="M80 25 Q95 25 100 42" stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#arrowGray)"/>
+                    <path d="M80 66 Q95 66 100 48" stroke="#64748b" stroke-width="1.5" fill="none"/>
+                    
+                    <!-- Merge box -->
+                    <rect x="105" y="30" width="55" height="30" rx="4" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+                    <text x="132" y="43" font-size="7" fill="#64748b" text-anchor="middle" font-weight="600">mutate()</text>
+                    <text x="132" y="52" font-size="6" fill="#64748b" text-anchor="middle">+ merge</text>
+                    
+                    <!-- Arrow to eventlog -->
+                    <line x1="165" y1="45" x2="185" y2="45" stroke="#0284c7" stroke-width="2"/>
+                    <polygon points="185,45 179,41 179,49" fill="#0284c7"/>
+                    
+                    <!-- eventlog() function -->
+                    <rect x="190" y="20" width="125" height="52" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+                    <text x="252" y="34" font-size="8" fill="#059669" text-anchor="middle" font-weight="700">eventlog()</text>
+                    <line x1="195" y1="40" x2="310" y2="40" stroke="#059669" stroke-width="0.5"/>
+                    <text x="200" y="50" font-size="5.5" fill="#1e293b" font-family="monospace">case_id = "order_id"</text>
+                    <text x="200" y="58" font-size="5.5" fill="#1e293b" font-family="monospace">activity_id = "action"</text>
+                    <text x="200" y="66" font-size="5.5" fill="#1e293b" font-family="monospace">timestamp = "date" ...</text>
+                    
+                    <defs>
+                        <marker id="arrowGray" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                            <polygon points="0,0 6,3 0,6" fill="#64748b"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+            <div class="syntax" style="margin-top:4px; font-size:8px;">
+                df <span class="kw">%>%</span> <span class="kw">mutate</span>(<span class="par">case_id</span> = <span class="kw">paste</span>(id1, id2, <span class="par">sep</span>=<span class="str">"-"</span>)) <span class="kw">%>%</span><br>
+                &nbsp;&nbsp;<span class="kw">eventlog</span>(<span class="par">case_id</span>=<span class="str">"case_id"</span>, <span class="par">activity_id</span>=<span class="str">"act"</span>, <span class="par">timestamp</span>=<span class="str">"ts"</span>, ...)
+            </div>
+        </div>
+        
+        <!-- COUNTS -->
+        <div class="card c1">
+            <h2><span class="icon">🔢</span> Counts</h2>
+            <div class="cmd"><code>n_cases(log)</code><span># cases</span></div>
+            <div class="cmd"><code>n_activities(log)</code><span># acts</span></div>
+            <div class="cmd"><code>n_traces(log)</code><span># traces</span></div>
+            <div class="cmd"><code>n_resources(log)</code><span># res</span></div>
+        </div>
+        
+        <!-- LABELS -->
+        <div class="card c2">
+            <h2><span class="icon">🏷️</span> Labels</h2>
+            <div class="cmd"><code>activity_labels(log)</code><span>acts</span></div>
+            <div class="cmd"><code>resource_labels(log)</code><span>res</span></div>
+            <div class="cmd"><code>activities(log)</code><span>df</span></div>
+            <div class="cmd"><code>resources(log)</code><span>df</span></div>
+        </div>
+        
+        <!-- TRACES -->
+        <div class="card c3">
+            <h2><span class="icon">🔀</span> Traces</h2>
+            <div class="cmd"><code>traces(log)</code><span>all traces</span></div>
+            <div class="cmd"><code>trace_length(log)</code><span>lengths</span></div>
+            <div class="cmd"><code>trace_coverage(log)</code><span>coverage</span></div>
+            <div class="cmd"><code>trace_explorer(log,coverage=.8)</code><span>viz</span></div>
+        </div>
+        
+        <!-- PROCESS MAP -->
+        <div class="card c4">
+            <h2><span class="icon">🗺️</span> Process Maps</h2>
+            <div class="cmd"><code>process_map(log)</code><span>basic</span></div>
+            <div class="cmd"><code>process_map(type=frequency())</code><span>freq</span></div>
+            <div class="cmd"><code>process_map(type=performance())</code><span>perf</span></div>
+            <div class="cmd"><code>resource_map(log)</code><span>resources</span></div>
+        </div>
+        
+        <!-- PERFORMANCE -->
+        <div class="card c5">
+            <h2><span class="icon">⏱️</span> Performance</h2>
+            <div class="cmd"><code>throughput_time(log)</code><span>total time</span></div>
+            <div class="cmd"><code>processing_time(log)</code><span>work time</span></div>
+            <div class="cmd"><code>idle_time(log)</code><span>wait time</span></div>
+            <div class="sub">units = "days"/"hours"/"mins"</div>
+        </div>
+        
+        <!-- RESOURCE ANALYSIS -->
+        <div class="card c1">
+            <h2><span class="icon">👥</span> Resources</h2>
+            <div class="cmd"><code>resource_frequency(log)</code><span>freq</span></div>
+            <div class="cmd"><code>resource_involvement(log)</code><span>cases</span></div>
+            <div class="sub">level="resource"/"activity"/"resource-activity"</div>
+        </div>
+        
+        <!-- STRUCTUREDNESS -->
+        <div class="card c2">
+            <h2><span class="icon">📐</span> Structure</h2>
+            <div class="cmd"><code>start_activities(log)</code><span>starts</span></div>
+            <div class="cmd"><code>end_activities(log)</code><span>ends</span></div>
+            <div class="cmd"><code>activity_presence(log)</code><span>presence</span></div>
+            <div class="cmd"><code>number_of_repetitions(log)</code><span>rework</span></div>
+        </div>
+        
+        <!-- PRECEDENCE -->
+        <div class="card c3">
+            <h2><span class="icon">↔️</span> Precedence</h2>
+            <div class="cmd"><code>precedence_matrix(log)</code><span>matrix</span></div>
+            <div class="sub">type="absolute"/"relative"</div>
+            <div class="cmd"><code>process_matrix(type=frequency())</code><span>proc</span></div>
+        </div>
+        
+        <!-- FILTER BY TIME -->
+        <div class="card c4 wide">
+            <h2><span class="icon">⏰</span> Filter: Throughput Time</h2>
+            <div class="cmd"><code>filter_throughput_time(log, interval=c(5,10), units="days")</code><span>range</span></div>
+            <div class="cmd"><code>filter_throughput_time(log, percentage=0.5)</code><span>fastest 50%</span></div>
+            <div class="cmd"><code>filter_throughput_time(log, percentage=0.5, reverse=TRUE)</code><span>slowest 50%</span></div>
+            <div class="cmd"><code>filter_throughput_time(log, interval=c(5,NA), units="days")</code><span>&gt;5 days</span></div>
+        </div>
+        
+        <!-- FILTER BY ACTIVITY -->
+        <div class="card c5">
+            <h2><span class="icon">🎯</span> Filter: Activity</h2>
+            <div class="cmd"><code>filter_activity(log, activities=c("A","B"))</code><span>labels</span></div>
+            <div class="cmd"><code>filter_activity_frequency(log, percentage=0.6)</code><span>freq</span></div>
+            <div class="cmd"><code>filter_activity_presence(log, c("A"), method="none")</code><span>absent</span></div>
+        </div>
+        
+        <!-- FILTER PRECEDENCE -->
+        <div class="card c1">
+            <h2><span class="icon">🔗</span> Filter: Precedence</h2>
+            <div class="cmd"><code>filter_precedence(log, antecedents="A", consequents="B")</code><span>flow</span></div>
+            <div class="sub">precedence_type="eventually_follows"/"directly_follows"</div>
+            <div class="sub">filter_method="all"/"none"</div>
+        </div>
+        
+        <!-- FILTER TRACE -->
+        <div class="card c2">
+            <h2><span class="icon">🔍</span> Filter: Trace</h2>
+            <div class="cmd"><code>filter_trace_frequency(log, percentage=0.2)</code><span>top 20%</span></div>
+            <div class="cmd"><code>filter_resource_frequency(log, interval=c(2,5))</code><span>res range</span></div>
+            <div class="cmd"><code>filter_time_period(log, interval, filter_method="trim")</code><span>time</span></div>
+        </div>
+        
+        <!-- AGGREGATE -->
+        <div class="card c3">
+            <h2><span class="icon">📦</span> Aggregate</h2>
+            <div class="cmd"><code>act_unite(log,"New"=c("A","B"))</code><span>rename</span></div>
+            <div class="cmd"><code>act_collapse(log,"New"=c("A","B"))</code><span>merge</span></div>
+        </div>
+        
+        <!-- ENRICH -->
+        <div class="card c4">
+            <h2><span class="icon">✨</span> Enrich</h2>
+            <div class="cmd"><code>group_by_case(log)</code><span>by case</span></div>
+            <div class="cmd"><code>mutate(x = sum(cost))</code><span>add var</span></div>
+            <div class="cmd"><code>throughput_time(level="case", append=TRUE)</code><span>add metric</span></div>
+        </div>
+        
+        <!-- VISUALIZATION -->
+        <div class="card c5">
+            <h2><span class="icon">📊</span> Visualize</h2>
+            <div class="cmd"><code>plot()</code><span>pipe any metric</span></div>
+            <div class="cmd"><code>dotted_chart(log, x="relative")</code><span>timeline</span></div>
+            <div class="sub">x="absolute"/"relative"/"relative_day"</div>
+        </div>
+        
+        <!-- LEVELS -->
+        <div class="card c1">
+            <h2><span class="icon">📏</span> Granularity Levels</h2>
+            <div class="syntax">
+                level = <span class="str">"log"</span> | <span class="str">"trace"</span> | <span class="str">"case"</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="str">"activity"</span> | <span class="str">"resource"</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="str">"resource-activity"</span>
+            </div>
+        </div>
+        
+        <!-- SLICE -->
+        <div class="card c2">
+            <h2><span class="icon">✂️</span> Slice & Dice</h2>
+            <div class="cmd"><code>slice(log, n)</code><span>nth case</span></div>
+            <div class="cmd"><code>filter(col == "val")</code><span>dplyr</span></div>
+            <div class="cmd"><code>group_by(col)</code><span>segment</span></div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        bupaR by Gert Janssenswillen • bupar.net • Pipe with %>% • Add %>% plot() for visualization
+    </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+@page {
+  size: A4;
+  margin: 1cm;
+}
+
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img, table {
+  max-width: 100%;
+  height: auto;
+}
+
