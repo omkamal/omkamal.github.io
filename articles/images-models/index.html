@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HiDream-O1-Image &mdash; generation modes, diagrams, and what the open 8B can actually do</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  font-family: 'Source Serif 4', Charter, Georgia, 'Times New Roman', serif;
+  font-size: 17px; line-height: 1.72;
+  color: #1f1f1f; background: #fcfbf7;
+  margin: 0; padding: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container { max-width: 980px; margin: 0 auto; padding: 4.5rem 2rem 6rem; }
+
+/* Article header */
+.article-header { padding-bottom: 2.4rem; margin-bottom: 2.5rem; border-bottom: 1px solid #e8e3d7; }
+.byline {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #8a8470; margin-bottom: 1.25rem;
+}
+.byline span + span::before { content: " · "; opacity: 0.5; margin: 0 0.2rem; }
+h1 {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 2.6rem; line-height: 1.13; font-weight: 700;
+  letter-spacing: -0.025em; color: #0e0e0e; margin: 0 0 1rem;
+}
+.subtitle {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1.18rem; line-height: 1.55; color: #4a4a4a;
+  font-style: italic; margin: 0;
+}
+.subtitle code { font-family: 'JetBrains Mono', ui-monospace, monospace;
+                 font-size: 0.85em; font-style: normal;
+                 background: #f1ecde; padding: 1px 6px; border-radius: 3px; }
+
+/* Table of contents nav */
+.toc {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.83rem; color: #6a6450;
+  padding: 0.85rem 1.1rem; margin: 0 0 4rem;
+  background: #f7f3e8; border: 1px solid #ebe6d8; border-radius: 5px;
+  line-height: 1.9;
+}
+.toc strong { color: #1a1a1a; margin-right: 0.5rem; letter-spacing: 0.06em;
+              text-transform: uppercase; font-size: 0.7rem; }
+.toc a { color: #1a1a1a; text-decoration: none; border-bottom: 1px dotted #b8ad8b; }
+.toc a:hover { border-bottom-color: #1a1a1a; }
+
+/* Article sections */
+.article-section { margin-bottom: 4.5rem; }
+.section-title {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1.95rem; font-weight: 700; color: #0e0e0e;
+  margin: 0 0 1.25rem; letter-spacing: -0.022em;
+  padding-bottom: 0.55rem; border-bottom: 2px solid #1f1f1f;
+}
+
+/* Prose */
+.prose { max-width: 760px; margin-bottom: 2rem; }
+.prose p { margin: 0 0 1.1rem; color: #2a2a2a; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: #0e0e0e; font-weight: 600; }
+.prose em { color: #3a3a3a; }
+.prose code { font-family: 'JetBrains Mono', ui-monospace, monospace;
+              font-size: 0.86em; background: #f1ecde; padding: 1px 6px;
+              border-radius: 3px; color: #4a4a4a; }
+.prose a { color: #6a4a14; text-decoration: underline; text-underline-offset: 2px;
+           text-decoration-thickness: 1px; }
+.prose a:hover { color: #1a1a1a; }
+.prose h3 { font-family: 'Inter', system-ui, sans-serif;
+            font-size: 1.1rem; font-weight: 600; color: #1a1a1a;
+            margin: 1.8rem 0 0.6rem; letter-spacing: -0.01em; }
+
+/* Code blocks */
+.prose pre {
+  background: #2a2520; color: #ecead8;
+  padding: 0.95rem 1.1rem; border-radius: 5px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.82rem; line-height: 1.55; overflow-x: auto;
+  margin: 0 0 1.2rem;
+}
+.prose pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+
+/* Callout */
+.callout {
+  background: #fcf3e8;
+  border: 1px solid #ecd7b0;
+  border-left: 4px solid #c79a4a;
+  padding: 0.85rem 1.1rem;
+  border-radius: 4px;
+  margin: 1.2rem 0;
+  font-size: 0.95rem;
+}
+.callout code { background: #f1e4c8; }
+
+/* Variant comparison table */
+.variant-table {
+  width: 100%; border-collapse: collapse; margin: 1.2rem 0;
+  font-family: 'Inter', system-ui, sans-serif; font-size: 0.88rem;
+}
+.variant-table th, .variant-table td {
+  text-align: left; padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid #ebe6d8;
+}
+.variant-table th { background: #f1ecde; font-weight: 600; color: #1a1a1a; letter-spacing: 0.01em; }
+.variant-table tbody tr:last-child td { border-bottom: 0; }
+
+/* Example panel — each rendered image + commentary */
+.example {
+  background: #ffffff;
+  border: 1px solid #ebe6d8;
+  border-radius: 6px;
+  padding: 1.65rem 1.9rem;
+  margin: 1.5rem 0 2rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.025);
+}
+.example-head { padding-bottom: 0.7rem; margin-bottom: 1.2rem;
+                border-bottom: 1px solid #f0ebdf; }
+.example-head h3 { font-family: 'Inter', system-ui, sans-serif;
+                   font-size: 1.18rem; font-weight: 600; color: #1a1a1a;
+                   margin: 0; letter-spacing: -0.01em; }
+
+/* Grids */
+.cols { display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1.4fr);
+        gap: 1.45rem; align-items: start; }
+.diagram-body { display: grid;
+                grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+                gap: 1.55rem; align-items: start; }
+
+/* Column labels */
+.col-label { font-family: 'Inter', system-ui, sans-serif;
+             font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+             text-transform: uppercase; color: #8a8470; margin-bottom: 0.55rem; }
+
+/* Images */
+.thumb { margin: 0 0 0.55rem; }
+.thumb img { width: 100%; height: auto; border-radius: 4px; display: block;
+             border: 1px solid #ebe6d8; }
+.thumb figcaption { font-family: 'JetBrains Mono', ui-monospace, monospace;
+                    font-size: 0.7rem; color: #8a8470; margin-top: 0.4rem; }
+.thumb-empty { padding: 1.3rem; background: #faf6ea; color: #a39c87;
+               border: 1px dashed #d9d0b8; border-radius: 4px;
+               text-align: center; font-size: 0.88rem; font-style: italic; }
+
+/* Prompt rendered as pull-quote */
+.prompt { font-family: 'Source Serif 4', Georgia, serif;
+          font-size: 0.95rem; line-height: 1.62; margin: 0 0 0.7rem;
+          color: #2c2c2c; background: #faf6ea;
+          border-left: 3px solid #c5b78c;
+          padding: 0.7rem 0.95rem; border-radius: 0 4px 4px 0;
+          font-style: italic; }
+
+/* Settings line */
+.settings { font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 0.74rem; color: #6a6a6a; margin: 0.45rem 0 0;
+            line-height: 1.75; }
+.settings code { background: #f1ecde; padding: 1.5px 6px; border-radius: 3px;
+                 margin-right: 0.3rem; color: #4a4a4a; }
+
+/* Commentary aside */
+.commentary {
+  margin-top: 1.4rem; padding-top: 1.2rem;
+  border-top: 1px solid #f0ebdf;
+}
+.commentary h4 {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: #8a8470;
+  margin: 0 0 0.55rem;
+}
+.commentary p {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1rem; line-height: 1.68; color: #2a2a2a; margin: 0;
+}
+.commentary code { font-family: 'JetBrains Mono', ui-monospace, monospace;
+                   font-size: 0.84em; background: #f1ecde;
+                   padding: 1px 5px; border-radius: 3px; color: #4a4a4a; }
+.commentary strong { color: #0e0e0e; }
+.commentary em { color: #3a3a3a; }
+
+/* Links list */
+.links { padding-left: 1.2rem; }
+.links li { margin-bottom: 0.6rem; }
+.footer-note { margin-top: 1.5rem; padding-top: 1.2rem;
+               border-top: 1px solid #ebe6d8;
+               color: #6a6a6a; font-size: 0.92rem; font-style: italic; }
+
+.prose-note { font-style: italic; color: #6a6a6a; padding: 1rem 1.2rem;
+              background: #f7f3e8; border-radius: 4px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .container { padding: 2.5rem 1.25rem 3.5rem; }
+  h1 { font-size: 2rem; }
+  .section-title { font-size: 1.55rem; }
+  .cols, .diagram-body { grid-template-columns: 1fr; }
+  .example { padding: 1.25rem 1.4rem; }
+  .toc { font-size: 0.78rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="article-header">
+    <p class="byline"><span>HiDream-O1-Image</span><span>Field Notes</span><span>May 2026</span></p>
+    <h1>Five generation modes &amp; nine diagram styles, end-to-end on a single GPU</h1>
+    <p class="subtitle">A capability tour of HiDream-O1-Image &mdash; what the open 8B model
+    does well, where it falls over, and the empirically-tuned recipes that actually
+    produce usable output. Every image below was generated locally on an RTX&nbsp;4090.</p>
+  </header>
+
+  <nav class="toc">
+    <strong>On this page:</strong>
+    <a href="#about">About the model</a> &middot;
+    <a href="#install">Install on RTX&nbsp;4090</a> &middot;
+    <a href="#mode-text-to-image">T2I</a> &middot;
+    <a href="#mode-editing">Editing</a> &middot;
+    <a href="#mode-subject-driven">Subject-driven (IP)</a> &middot;
+    <a href="#mode-layout">Layout</a> &middot;
+    <a href="#mode-skeleton">Skeleton</a> &middot;
+    <a href="#diagrams">Diagrams &amp; infographics</a> &middot;
+    <a href="#credits">Credits</a>
+  </nav>
+
+<section class="article-section" id="about">
+  <h2 class="section-title">About HiDream-O1-Image</h2>
+  <div class="prose">
+    <p><strong>HiDream-O1-Image</strong> is an 8B-parameter image-generation model
+    released in May 2026 by HiDream-ai. Architecturally it is a <em>Pixel-level
+    Unified Transformer (UiT)</em>: instead of stacking a separate text encoder,
+    VAE, and denoiser the way diffusion models like FLUX or SD3 do, it encodes
+    raw pixels, text, and task-specific conditions in a single shared token
+    space. One end-to-end model handles five generation modes natively
+    &mdash; text-to-image, instruction editing, subject-driven personalization,
+    bbox-layout conditioning, and skeleton/openpose conditioning &mdash; at
+    resolutions up to 2048&times;2048.</p>
+
+    <p>The open weights ship in two variants:</p>
+
+    <table class="variant-table">
+      <thead>
+        <tr><th>Variant</th><th>Steps</th><th>CFG</th><th>Shift</th><th>Scheduler</th><th>VRAM</th><th>Use for</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Full</strong></td>
+          <td>50</td><td>5.0</td><td>3.0</td><td>FlowUniPC</td>
+          <td>~17&ndash;20&nbsp;GB</td>
+          <td>Editing, IP/personalization, layout, skeleton, highest-quality T2I</td>
+        </tr>
+        <tr>
+          <td><strong>Dev</strong> (distilled)</td>
+          <td>28</td><td>0.0</td><td>1.0</td><td>FlashFlowMatchEuler</td>
+          <td>~17&ndash;20&nbsp;GB</td>
+          <td>General T2I &mdash; about 2&times; faster than Full</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The Artificial Analysis text-to-image leaderboard ranks
+    a HiDream-O1 entry (&ldquo;Peanut&rdquo;) at #8 &mdash; but that entry is the
+    unreleased 200B+ <em>Pro</em> variant. The open 8B is what we work with
+    here. It does not match the Pro&rsquo;s photorealism or its identity
+    preservation in IP mode, but for free local generation on a single
+    consumer GPU it&rsquo;s remarkable.</p>
+
+    <p><strong>What it&rsquo;s good at:</strong> photographic compositions, long-text rendering,
+    multi-region layout, infographic and architecture-diagram aesthetics, editorial
+    portraits, instruction-based editing with identity preservation.</p>
+
+    <p><strong>Where it struggles:</strong> dense short technical labels (&gt;6
+    elements at high resolution), sequence-diagram arrows, period-faithful
+    photo restoration, identity preservation when the prompt and reference
+    image disagree on physical traits.</p>
+  </div>
+</section>
+
+<section class="article-section" id="install">
+  <h2 class="section-title">Install on RTX 4090</h2>
+  <div class="prose">
+    <p>Target hardware: NVIDIA RTX 4090 (24&nbsp;GB VRAM), Linux (Ubuntu/Pop!_OS),
+    CUDA 12.8 or newer driver. Python 3.12 in a dedicated venv. Disk:
+    ~7&nbsp;GB for the venv + ~35&nbsp;GB for both BF16 model weights.</p>
+
+    <h3>1. Clone the upstream repo</h3>
+    <pre><code>git clone https://github.com/HiDream-ai/HiDream-O1-Image.git
+cd HiDream-O1-Image</code></pre>
+
+    <h3>2. Create a dedicated Python 3.12 venv</h3>
+    <pre><code>python3.12 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip</code></pre>
+
+    <h3>3. Install torch (pin to &lt;2.9)</h3>
+    <p>PyTorch 2.9.x has a Qwen3-VL regression
+    (<a href="https://github.com/QwenLM/Qwen3-VL/issues/1811">QwenLM/Qwen3-VL#1811</a>)
+    that the upstream README explicitly warns about. Pin below 2.9:</p>
+    <pre><code>pip install "torch&lt;2.9" --index-url https://download.pytorch.org/whl/cu128</code></pre>
+
+    <h3>4. Install the upstream requirements</h3>
+    <pre><code>pip install -r requirements.txt
+pip install "huggingface-hub&gt;=0.24" safetensors accelerate</code></pre>
+
+    <h3>5. (Optional) flash-attn</h3>
+    <p>Flash attention is preferred but optional. On CUDA 13 hosts it often fails
+    to build; the pipeline falls back to standard attention with a small (~15%)
+    speed penalty.</p>
+    <pre><code>pip install flash-attn --no-build-isolation \
+  || sed -i 's/"use_flash_attn": True/"use_flash_attn": False/' models/pipeline.py</code></pre>
+
+    <h3>6. Download BF16 weights</h3>
+    <p>Use drbaph&rsquo;s republished BF16 weights &mdash; about 17.6&nbsp;GB per variant.
+    Pick a cache root with plenty of free space (the model is too big for a
+    home directory on most laptops):</p>
+    <pre><code>export HF_HOME=/big/disk/hugging_face_cache
+huggingface-cli download drbaph/HiDream-O1-Image-Dev-BF16
+huggingface-cli download drbaph/HiDream-O1-Image-BF16</code></pre>
+
+    <div class="callout">
+      <strong>Do not use the FP8 variants</strong> (<code>drbaph/HiDream-O1-Image-FP8</code> /
+      <code>-Dev-FP8</code>). They&rsquo;re packaged for the Saganaki22 ComfyUI custom node,
+      which dequantizes <code>Float8_e4m3fn</code> to <code>BFloat16</code> at runtime.
+      The upstream pipeline does no such dequant and crashes inside <code>torch.where</code>
+      with &ldquo;<code>Promotion for Float8 Types is not supported, attempted to promote
+      BFloat16 and Float8_e4m3fn</code>&rdquo;.
+    </div>
+
+    <h3>7. Verify CUDA</h3>
+    <pre><code>python -c "import torch; assert torch.cuda.is_available(); print(torch.cuda.get_device_name(0))"</code></pre>
+
+    <h3>8. Run inference</h3>
+    <p>The upstream <code>inference.py</code> is an argparse wrapper around
+    <code>models.pipeline.generate_image()</code>. You can use it directly:</p>
+    <pre><code>python inference.py \
+  --model_path /big/disk/hugging_face_cache/hub/models--drbaph--HiDream-O1-Image-Dev-BF16/snapshots/&lt;rev&gt;/ \
+  --model_type dev \
+  --prompt "a photo of a cat on a wooden floor" \
+  --output_image cat.png</code></pre>
+
+    <p>For editing or IP generation, swap <code>--model_type full</code> and pass
+    <code>--ref_images path1 path2 ...</code>. The upstream README lists complete
+    examples for all five modes.</p>
+  </div>
+</section>
+
+<section class="article-section" id="mode-text-to-image">
+  <h2 class="section-title">Text-to-image (T2I)</h2>
+  <div class="prose"><p>Text-to-image is the default mode. A prompt goes in, a 2048&times;2048 (or aspect-bucket-snapped) image comes out. HiDream-O1 is unusually good at photographic scenes and long-text rendering compared to other 8B-class models. Use the <strong>Dev</strong> variant for general T2I &mdash; it&rsquo;s about 2&times; faster than Full and produces high-quality results at 28 inference steps.</p></div>
+  <article class="example" id="example-01_t2i">
+  <header class="example-head">
+    <h3>Editorial sunrise desk photograph</h3>
+    <p class="settings"><code>dev</code> <code>aspect=&quot;3:2&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=7777</code></p>
+  </header>
+  <div class="cols">
+    <div class="col col-in">
+      <div class="col-label">Input(s)</div>
+      <div class="thumb-empty">No input &mdash; pure text-to-image</div>
+    </div>
+    <div class="col col-prompt">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">An editorial photograph of a wooden writing desk at sunrise, soft steam curling up from a hand-thrown ceramic mug of coffee, an open leather-bound notebook with handwritten cursive lines, a brass fountain pen resting on the page, warm window light from camera-left, shallow depth of field. Shot on a Sony A7R IV with a 50mm f/1.4 GM lens at f/2.8, ISO 100.</p>
+    </div>
+    <div class="col col-out">
+      <div class="col-label">Output</div>
+      <figure class="thumb"><img src="demo_assets/01_t2i.png" alt="01_t2i.png" loading="lazy"><figcaption>01_t2i.png</figcaption></figure>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>The Dev variant rendered this in about 17 seconds at 2496&times;1664 on an RTX&nbsp;4090. Photographic plausibility is where this model excels: directional window light from camera-left, real steam curling above the mug, brass details on the lamp, leather binding on the notebook, ink-on-paper handwriting that mostly stays as cursive instead of garbled glyphs. Background books are slightly mushy &mdash; an 8B-model limitation at this resolution &mdash; but for hero photography the result is publication-quality after a light pass in any photo editor.</p>
+  </aside>
+</article>
+</section>
+
+<section class="article-section" id="mode-editing">
+  <h2 class="section-title">Instruction-based editing</h2>
+  <div class="prose"><p>Edit mode takes a source image plus a text instruction and produces a modified version. Identity, composition, lighting, and unaffected regions are preserved; only the instruction-specified change is applied. The upstream README recommends the <strong>Full</strong> variant for editing, and that&rsquo;s our default. Pair edit mode with <code>--keep-original-aspect</code> so the model uses the input&rsquo;s exact dimensions instead of snapping to a fixed bucket.</p></div>
+  <article class="example" id="example-02_edit">
+  <header class="example-head">
+    <h3>Add a wizard hat to a portrait</h3>
+    <p class="settings"><code>full</code> <code>keep_original_aspect=true</code> <code>seed=7777</code></p>
+  </header>
+  <div class="cols">
+    <div class="col col-in">
+      <div class="col-label">Input(s)</div>
+      <figure class="thumb"><img src="demo_assets/omar.png" alt="omar.png" loading="lazy"><figcaption>omar.png</figcaption></figure>
+    </div>
+    <div class="col col-prompt">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">Make him wear a pointed dark-purple wizard hat covered in small golden stars and a tiny moon crescent on the front. The rest of the photograph remains exactly the same: same face, same expression, same clothing, same background lighting.</p>
+    </div>
+    <div class="col col-out">
+      <div class="col-label">Output</div>
+      <figure class="thumb"><img src="demo_assets/02_edit.png" alt="02_edit.png" loading="lazy"><figcaption>02_edit.png</figcaption></figure>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>Edit mode preserves the source image almost perfectly. The face, expression, shirt fabric, and grey backdrop are pixel-comparable to the input; only the wizard hat is new. Note the gold stars and crescent rendered cleanly &mdash; the prompt explicitly described them. <code>--keep-original-aspect</code> kept the 1536&times;1792 input shape intact rather than snapping to a wider bucket. For targeted edits like &ldquo;remove the earphones&rdquo; or &ldquo;change the shirt to navy&rdquo; this is the workhorse mode.</p>
+  </aside>
+</article>
+<article class="example" id="example-09_edit">
+  <header class="example-head">
+    <h3>Restore a black-and-white studio portrait (Saad)</h3>
+    <p class="settings"><code>full</code> <code>keep_original_aspect=true</code> <code>seed=7777</code></p>
+  </header>
+  <div class="cols">
+    <div class="col col-in">
+      <div class="col-label">Input(s)</div>
+      <figure class="thumb"><img src="demo_assets/saad.jpeg" alt="saad.jpeg" loading="lazy"><figcaption>saad.jpeg</figcaption></figure>
+    </div>
+    <div class="col col-prompt">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">restore the photo, remove scratches, make it look like a modern from 2025 photo. Keep the face characteristic the same</p>
+    </div>
+    <div class="col col-out">
+      <div class="col-label">Output</div>
+      <figure class="thumb"><img src="demo_assets/09_edit.png" alt="09_edit.png" loading="lazy"><figcaption>09_edit.png</figcaption></figure>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p><strong>A counter-intuitive lesson in restoration prompting.</strong> An earlier version of this same panel used an elaborate restoration prompt &mdash; specifying the suit color, the hat material, the lighting direction, all to &ldquo;help&rdquo; the model preserve identity. The result drifted to a much younger man in a fedora with a thin moustache. The fix was to <em>strip the prompt back</em> to a single sentence: &ldquo;restore the photo, remove scratches, make it look like a modern from 2025 photo. Keep the face characteristic the same.&rdquo; The minimal prompt outperformed the elaborate one decisively &mdash; you can see the tarboush, the full white mustache, the elderly features, the chair brocade, and the seated posture all preserved. The mechanism: a long prompt invites the model to <em>re-render</em>; a short prompt anchors it to <em>restore</em>.</p>
+  </aside>
+</article>
+<article class="example" id="example-10_edit">
+  <header class="example-head">
+    <h3>Restore a 19th-century engraving (Fahmy)</h3>
+    <p class="settings"><code>full</code> <code>keep_original_aspect=true</code> <code>seed=7777</code></p>
+  </header>
+  <div class="cols">
+    <div class="col col-in">
+      <div class="col-label">Input(s)</div>
+      <figure class="thumb"><img src="demo_assets/fahmy.jpg" alt="fahmy.jpg" loading="lazy"><figcaption>fahmy.jpg</figcaption></figure>
+    </div>
+    <div class="col col-prompt">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">restore the photo, remove scratches, make it look like a modern from 2025 photo. Keep the face characteristic the same</p>
+    </div>
+    <div class="col col-out">
+      <div class="col-label">Output</div>
+      <figure class="thumb"><img src="demo_assets/10_edit.png" alt="10_edit.png" loading="lazy"><figcaption>10_edit.png</figcaption></figure>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>Same single-sentence prompt applied to a 19th-century engraving. The engraved line-art is converted to photoreal skin, fabric, and lighting, and crucially the <strong>tarboush is preserved as a tarboush</strong> (an earlier elaborate prompt produced a keffiyeh instead &mdash; the wrong region). Beard shape and head covering match the source. The composition tightens slightly compared to the engraving&rsquo;s wider crop, which is a known consequence of <code>--keep-original-aspect</code> on small-resolution inputs (the source is 453&times;600). Identity preservation here is much stronger than on the previous prompt iteration.</p>
+  </aside>
+</article>
+</section>
+
+<section class="article-section" id="mode-subject-driven">
+  <h2 class="section-title">Subject-driven personalization (IP reference)</h2>
+  <div class="prose"><p>Subject-driven personalization &mdash; also called IP reference &mdash; places a known subject into a new scene. The model takes one or more reference images plus a prompt describing the new context. Two design rules apply: <em>(1)</em> the model was trained on multi-reference inputs (the README&rsquo;s example uses ten), so passing two genuinely different views (e.g. face crop + full body) outperforms a single image or duplicated copies; <em>(2)</em> when the prompt and reference disagree on physical traits (hair, beard color, age), the model follows the prompt. Drop conflicting descriptors and the reference dominates.</p></div>
+  <article class="example" id="example-03_ip">
+  <header class="example-head">
+    <h3>Place the subject on a tropical beach</h3>
+    <p class="settings"><code>full</code> <code>aspect=&quot;16:9&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=7777</code> <code>shift=1.0</code> <code>cfg=3.5</code></p>
+  </header>
+  <div class="cols">
+    <div class="col col-in">
+      <div class="col-label">Input(s)</div>
+      <figure class="thumb"><img src="demo_assets/omar.png" alt="omar.png" loading="lazy"><figcaption>omar.png</figcaption></figure><figure class="thumb"><img src="demo_assets/omar_face.png" alt="omar_face.png" loading="lazy"><figcaption>omar_face.png</figcaption></figure>
+    </div>
+    <div class="col col-prompt">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">The man stands on a tropical beach. He wears a relaxed light-grey linen shirt and tan shorts. Tall palm trees rise behind him, turquoise water laps a white-sand shore, soft warm late-afternoon sunlight illuminates the scene. He smiles softly toward the camera. Natural light, natural skin tone.</p>
+    </div>
+    <div class="col col-out">
+      <div class="col-label">Output</div>
+      <figure class="thumb"><img src="demo_assets/03_ip.png" alt="03_ip.png" loading="lazy"><figcaption>03_ip.png</figcaption></figure>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>After the IP-mode tuning &mdash; <code>shift=1.0</code> instead of 3.0, <code>CFG=3.5</code> instead of 5.0, and a face crop in addition to the full-body reference &mdash; identity is recognizably preserved and the skin texture looks photographic rather than &ldquo;AI-smooth&rdquo;. Fabric texture on the linen shirt is real, the sunset rim-light hits believably, and tiny details like the wristwatch appear naturally. There&rsquo;s still a slight residual &ldquo;AI look&rdquo; that the open 8B model can&rsquo;t fully escape &mdash; the unreleased 200B Pro variant is what the Artificial Analysis leaderboard ranks at #8.</p>
+  </aside>
+</article>
+<article class="example" id="example-06_ip">
+  <header class="example-head">
+    <h3>Rugged outdoor portrait with wooden gate</h3>
+    <p class="settings"><code>full</code> <code>aspect=&quot;3:2&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=7777</code> <code>shift=1.0</code> <code>cfg=3.5</code></p>
+  </header>
+  <div class="cols">
+    <div class="col col-in">
+      <div class="col-label">Input(s)</div>
+      <figure class="thumb"><img src="demo_assets/omar.png" alt="omar.png" loading="lazy"><figcaption>omar.png</figcaption></figure><figure class="thumb"><img src="demo_assets/omar_face.png" alt="omar_face.png" loading="lazy"><figcaption>omar_face.png</figcaption></figure>
+    </div>
+    <div class="col col-prompt">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">A rugged, cinematic portrait of the man standing in tall, wind-swept dry grass, under a moody overcast sky. He has a strong jawline, his mature salt-and-pepper goatee neatly groomed, intense eyes, and his bald head bare to the wind. He wears an olive-green jacket, looking back over his shoulder with a serious, contemplative expression. Behind him stands an old, weathered wooden gate framed by two rustic posts. Shallow depth of field, warm earthy tones in the foreground, cool grey clouds in the background.</p>
+    </div>
+    <div class="col col-out">
+      <div class="col-label">Output</div>
+      <figure class="thumb"><img src="demo_assets/06_ip.png" alt="06_ip.png" loading="lazy"><figcaption>06_ip.png</figcaption></figure>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p><strong>This example exists because the first version of it was wrong.</strong> The original prompt said &ldquo;short dark hair, neatly groomed dark beard&rdquo; while the reference shows a bald man with a salt-and-pepper goatee. HiDream resolved the conflict by following the explicit prompt over the visual reference &mdash; the rendered subject had dark hair and a black beard, sharing only loose bone structure with the reference. The fix kept the same seed, same config, and the same scene description; only the facial-feature descriptors were aligned to the reference (&ldquo;mature salt-and-pepper goatee&rdquo;, &ldquo;bald head bare to the wind&rdquo;). Identity locked instantly. <strong>The rule: in IP mode, never describe features your reference doesn&rsquo;t have.</strong></p>
+  </aside>
+</article>
+<article class="example" id="example-07_ip">
+  <header class="example-head">
+    <h3>Fashion editorial with motion-blur surrealism</h3>
+    <p class="settings"><code>full</code> <code>aspect=&quot;3:4&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=7777</code> <code>shift=1.0</code> <code>cfg=3.5</code></p>
+  </header>
+  <div class="cols">
+    <div class="col col-in">
+      <div class="col-label">Input(s)</div>
+      <figure class="thumb"><img src="demo_assets/omar.png" alt="omar.png" loading="lazy"><figcaption>omar.png</figcaption></figure><figure class="thumb"><img src="demo_assets/omar_face.png" alt="omar_face.png" loading="lazy"><figcaption>omar_face.png</figcaption></figure>
+    </div>
+    <div class="col col-prompt">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">A cinematic fashion portrait of the bald man standing centered against a muted teal studio background. He wears an elegant off-white tailored suit with a fitted turtleneck and a thin gold chain, hands casually in his pockets. His face shows refined maturity — subtle wrinkles, strong bone structure, and a composed, confident presence. His expression is intense yet calm, sharply in focus, while multiple blurred versions of himself move around him on both sides, creating a surreal motion-blur effect that suggests memory, introspection, or fragmented identity shaped by time. Soft, diffused lighting with subtle shadows enhances facial contours and scalp highlights. Shallow depth of field, fine film grain, editorial luxury fashion aesthetic, modern surrealism, high contrast, ultra-detailed, photorealistic, 85mm lens look, f/1.8, cinematic color grading, minimalist composition.</p>
+    </div>
+    <div class="col col-out">
+      <div class="col-label">Output</div>
+      <figure class="thumb"><img src="demo_assets/07_ip.png" alt="07_ip.png" loading="lazy"><figcaption>07_ip.png</figcaption></figure>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>The motion-blur surrealism is the strongest IP demo in this set. Multiple blurred copies of the subject on both sides, central figure in sharp focus, teal studio background, off-white suit with turtleneck and gold chain all rendered exactly as prompted. Identity locked because the prompt explicitly opens with &ldquo;the bald man&rdquo; &mdash; matching the reference up front. This is HiDream at its strongest for editorial portrait work.</p>
+  </aside>
+</article>
+<article class="example" id="example-08_ip">
+  <header class="example-head">
+    <h3>Full-body fashion portrait with a pitbull</h3>
+    <p class="settings"><code>full</code> <code>aspect=&quot;3:4&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=7777</code> <code>shift=1.0</code> <code>cfg=3.5</code></p>
+  </header>
+  <div class="cols">
+    <div class="col col-in">
+      <div class="col-label">Input(s)</div>
+      <figure class="thumb"><img src="demo_assets/omar.png" alt="omar.png" loading="lazy"><figcaption>omar.png</figcaption></figure><figure class="thumb"><img src="demo_assets/omar_face.png" alt="omar_face.png" loading="lazy"><figcaption>omar_face.png</figcaption></figure>
+    </div>
+    <div class="col col-prompt">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">A full-body cinematic portrait of the bald man with a well-groomed mature beard standing confidently beside a muscular pitbull dog, both facing sideways. The man has a strong, weathered presence with a defined jawline and subtle signs of age that enhance his authority and composure. He wears a modern quilted olive-green jacket with asymmetrical padding, layered over a minimalist green outfit and loose tactical cargo pants, paired with rugged high-top sneakers. His hands rest casually in his pockets, expression calm, focused, and self-assured. The dog sits alert at his side, grey coat, cropped ears, wearing a black leather collar with metal studs, projecting strength, loyalty, and discipline. Clean studio background in monochromatic sage green, soft diffused lighting, fashion editorial style, ultra-detailed fabric textures, realistic mature skin tones, shallow depth of field, high-end cinematic color grading, 85mm lens look, ultra-realistic, 8K quality, sharp focus, modern military fashion aesthetic.</p>
+    </div>
+    <div class="col col-out">
+      <div class="col-label">Output</div>
+      <figure class="thumb"><img src="demo_assets/08_ip.png" alt="08_ip.png" loading="lazy"><figcaption>08_ip.png</figcaption></figure>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>Best identity preservation in the IP set. Fully bald with mature salt-and-pepper beard exactly matching the reference, plus the quilted olive jacket, cargo pants, and high-top sneakers described in the prompt. The pitbull is rendered with cropped ears and the studded leather collar &mdash; two pieces of fine detail the prompt called out specifically. Multi-subject composition is normally where diffusion models struggle; this open 8B handled it cleanly.</p>
+  </aside>
+</article>
+</section>
+
+<section class="article-section" id="mode-layout">
+  <h2 class="section-title">Bbox-layout-conditioned</h2>
+  <div class="prose"><p>Bbox-layout conditioning constrains where named regions appear in the frame. The layout JSON uses <code>[x1, x2, y1, y2]</code> normalized coordinates (<code>xxyy</code>, not <code>xyxy</code>) and accepts either a raw JSON string or a JSON file path. The Full variant runs at 50 steps with CFG 5.0; we drop shift to 1.0 per the upstream README&rsquo;s Mode 5 example.</p></div>
+  <article class="example" id="example-04_layout">
+  <header class="example-head">
+    <h3>Anchor the subject to the left third</h3>
+    <p class="settings"><code>full</code> <code>layout=[[0.05, 0.4, 0.1, 0.9]]</code> <code>aspect=&quot;16:9&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=7777</code></p>
+  </header>
+  <div class="cols">
+    <div class="col col-in">
+      <div class="col-label">Input(s)</div>
+      <figure class="thumb"><img src="demo_assets/omar.png" alt="omar.png" loading="lazy"><figcaption>omar.png</figcaption></figure>
+    </div>
+    <div class="col col-prompt">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">A cinematic portrait of the person on the left third of the frame, with a dramatic sunset sky and ocean filling the right two thirds. The composition uses the layout bbox to anchor the subject on the left.</p>
+    </div>
+    <div class="col col-out">
+      <div class="col-label">Output</div>
+      <figure class="thumb"><img src="demo_assets/04_layout.png" alt="04_layout.png" loading="lazy"><figcaption>04_layout.png</figcaption></figure>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>Layout mode strictly respects the bbox &mdash; we asked for the subject inside <code>[0.05, 0.40, 0.10, 0.90]</code> (xxyy) on a 16:9 canvas, and the portrait lands in the left third. In this seed the model rendered the bbox as a literal rectangular frame around the subject. For a more integrated composition, omit the layout bbox and instead say &ldquo;subject on the left third&rdquo; in the prompt; layout-mode is best when you genuinely need pixel-precise region control.</p>
+  </aside>
+</article>
+</section>
+
+<section class="article-section" id="mode-skeleton">
+  <h2 class="section-title">Skeleton / openpose-conditioned</h2>
+  <div class="prose"><p>Skeleton / openpose-conditioned mode uses a pose-skeleton image (named with a <code>.openpose.*</code> suffix) to drive the body posture of the generated subject. Optional appearance references can be added alongside the pose image. An <code>*.openpose.jpg</code> file is typically pre-extracted by a separate preprocessor (e.g. <code>controlnet-aux</code>&rsquo;s OpenposeDetector). We don&rsquo;t showcase skeleton mode here &mdash; it&rsquo;s functional but needs pose extraction outside the scope of this article.</p></div>
+  <p class="prose-note">No skeleton-mode example is rendered in this article. Provide a pre-extracted <code>*.openpose.jpg</code> file plus an optional appearance reference and the same CLI works.</p>
+</section>
+
+<section class="article-section" id="diagrams">
+  <h2 class="section-title">Diagrams &amp; Infographics</h2>
+  <div class="prose">
+    <p>HiDream&rsquo;s combination of long-text rendering plus multi-region layout
+    makes it surprisingly useful for cloud architecture, software architecture,
+    flowchart, and editorial-infographic generation &mdash; provided you respect
+    its density ceiling.</p>
+    <p><strong>The empirically-tuned recipe:</strong> use the <code>Full</code> variant
+    (the <code>Dev</code> variant&rsquo;s low-step / no-CFG recipe consistently hallucinates
+    short technical labels). Cap diagram complexity at five to seven labeled main
+    elements per render &mdash; beyond that, per-element typography degrades.
+    Use <code>--size M</code>, not the largest size; smaller canvases make labels
+    proportionally larger relative to the model&rsquo;s working resolution. Always
+    quote your exact label strings in the prompt: <code>tile labeled &lsquo;API Gateway&rsquo;</code>
+    is reliable; <code>the gateway service</code> gets paraphrased.</p>
+    <p>Each example below shows the rendered diagram, the prompt that produced it,
+    and a candid note on what worked and what didn&rsquo;t.</p>
+  </div>
+  <article class="example diagram-example" id="diagram-aws_serverless_api">
+  <header class="example-head">
+    <h3>AWS &mdash; Serverless API</h3>
+    <p class="settings"><code>style=&quot;cloud-aws-arch&quot;</code> <code>model=&quot;full&quot;</code> <code>aspect=&quot;16:9&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=42</code></p>
+  </header>
+  <div class="diagram-body">
+    <figure class="thumb diagram-thumb"><img src="demo_assets/diagrams/aws_serverless_api.png" alt="aws_serverless_api" loading="lazy"><figcaption>aws_serverless_api.png</figcaption></figure>
+    <div class="prompt-block">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">a serverless API on AWS — five large service tiles arranged left-to-right with thin arrows between them. Each tile is 480 pixels tall with a large bold sans-serif label on top occupying at least 40% of the tile height. The five tile labels in order are: &#x27;API Gateway&#x27;, &#x27;Lambda&#x27;, &#x27;S3&#x27;, &#x27;DynamoDB&#x27;, &#x27;CloudWatch&#x27;. Below each label is the canonical AWS service icon and a one-line caption in smaller text. The diagram title at the top center reads &#x27;Serverless API on AWS&#x27; in a large 72-point bold sans-serif font. No legend. Plenty of whitespace between tiles. Make every label crisply legible.</p>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>All five main tile labels (API Gateway, Lambda, S3, DynamoDB, CloudWatch) rendered cleanly, with a VPC region box on the right showing Public Subnet and Private Subnet groupings. The legend at the bottom-right is partially scrambled but recognisable. Minor typos in the tile labels &mdash; &ldquo;Lambla&rdquo; instead of &ldquo;Lambda&rdquo;, &ldquo;Orrange&rdquo; instead of &ldquo;Orange&rdquo; &mdash; show HiDream&rsquo;s known weakness at dense short labels: the shape of the word is right but spelling drifts. Useful for draft architecture slides, not for production deliverables.</p>
+  </aside>
+</article>
+<article class="example diagram-example" id="diagram-gcp_realtime_analytics">
+  <header class="example-head">
+    <h3>GCP &mdash; Real-time Analytics Pipeline</h3>
+    <p class="settings"><code>style=&quot;cloud-gcp-arch&quot;</code> <code>model=&quot;full&quot;</code> <code>aspect=&quot;16:9&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=42</code></p>
+  </header>
+  <div class="diagram-body">
+    <figure class="thumb diagram-thumb"><img src="demo_assets/diagrams/gcp_realtime_analytics.png" alt="gcp_realtime_analytics" loading="lazy"><figcaption>gcp_realtime_analytics.png</figcaption></figure>
+    <div class="prompt-block">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">a real-time analytics pipeline on Google Cloud. Render five large service tiles arranged left-to-right with thin labeled arrows between them. The five tile labels in order are: &#x27;Cloud Run&#x27;, &#x27;Pub/Sub&#x27;, &#x27;Dataflow&#x27;, &#x27;BigQuery&#x27;, &#x27;Looker Studio&#x27;. Below each label is the canonical GCP service icon and a small one-line caption. The diagram title at the top center reads &#x27;Real-time Analytics on GCP&#x27; in a large bold sans-serif font. Plenty of whitespace between tiles. Every label crisply legible.</p>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>Hexagonal tiles match GCP&rsquo;s brand colors (blue Cloud Run, green Pub/Sub, yellow Dataflow, red BigQuery, neutral Looker Studio) and all five tile labels are readable. The &ldquo;Project: my-project&rdquo; and &ldquo;Region: us-central1&rdquo; boundary boxes at top and bottom appear correctly. Sub-captions under each hexagon drift to lorem-ipsum-style placeholders &mdash; expected at this label density.</p>
+  </aside>
+</article>
+<article class="example diagram-example" id="diagram-azure_microservices">
+  <header class="example-head">
+    <h3>Azure &mdash; Microservices Architecture</h3>
+    <p class="settings"><code>style=&quot;cloud-azure-arch&quot;</code> <code>model=&quot;full&quot;</code> <code>aspect=&quot;16:9&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=42</code></p>
+  </header>
+  <div class="diagram-body">
+    <figure class="thumb diagram-thumb"><img src="demo_assets/diagrams/azure_microservices.png" alt="azure_microservices" loading="lazy"><figcaption>azure_microservices.png</figcaption></figure>
+    <div class="prompt-block">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">a microservices architecture on Microsoft Azure. Render five large service tiles arranged left-to-right with thin labeled arrows between them. The five tile labels in order are: &#x27;Front Door&#x27;, &#x27;App Service&#x27;, &#x27;Service Bus&#x27;, &#x27;Functions&#x27;, &#x27;Cosmos DB&#x27;. Below each label is the canonical Azure service icon and a small one-line caption. The diagram title at the top center reads &#x27;Microservices on Azure&#x27; in a large bold sans-serif font. Plenty of whitespace between tiles. Every label crisply legible.</p>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>Six tiles rendered instead of the five requested, but all label correctly (Front Door, App Service, Service Bus, Functions, Cosmos DB, plus an unprompted extra). The model picked up &ldquo;Resource Groups&rdquo; as the outer dashed boundary, exactly the right Azure idiom. The legend in the bottom-right is mostly scrambled. &ldquo;Segoe UI&rdquo; renders as a caption because the style template mentions it &mdash; a typeface-name leak we&rsquo;ll fix in the next iteration.</p>
+  </aside>
+</article>
+<article class="example diagram-example" id="diagram-generic_event_driven">
+  <header class="example-head">
+    <h3>Vendor-agnostic event-driven system</h3>
+    <p class="settings"><code>style=&quot;cloud-generic-arch&quot;</code> <code>model=&quot;full&quot;</code> <code>aspect=&quot;16:9&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=42</code></p>
+  </header>
+  <div class="diagram-body">
+    <figure class="thumb diagram-thumb"><img src="demo_assets/diagrams/generic_event_driven.png" alt="generic_event_driven" loading="lazy"><figcaption>generic_event_driven.png</figcaption></figure>
+    <div class="prompt-block">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">a vendor-agnostic event-driven system. Render six large component tiles arranged in two rows with thin labeled arrows between them. The six tile labels are: &#x27;API Gateway&#x27;, &#x27;Auth Service&#x27;, &#x27;Event Bus&#x27;, &#x27;Order Service&#x27;, &#x27;Notification Service&#x27;, &#x27;Analytics Sink&#x27;. Below each label is a small one-line tech-stack caption. The diagram title at the top center reads &#x27;Event-Driven System&#x27; in a large bold sans-serif font. Plenty of whitespace between tiles. Every label crisply legible.</p>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>Cleanest cloud-vendor-agnostic diagram in the set. All six component labels &mdash; API Gateway, Auth Service, Event Bus, Order Service, Notification Service, Analytics Sink &mdash; appear in a tidy 2&times;2&times;extras grid with thin arrows between them. The neutral palette and consistent tile shapes make this style the most predictable of the cloud styles.</p>
+  </aside>
+</article>
+<article class="example diagram-example" id="diagram-software_ecommerce">
+  <header class="example-head">
+    <h3>Layered software architecture &mdash; e-commerce platform</h3>
+    <p class="settings"><code>style=&quot;software-arch&quot;</code> <code>model=&quot;full&quot;</code> <code>aspect=&quot;16:9&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=42</code></p>
+  </header>
+  <div class="diagram-body">
+    <figure class="thumb diagram-thumb"><img src="demo_assets/diagrams/software_ecommerce.png" alt="software_ecommerce" loading="lazy"><figcaption>software_ecommerce.png</figcaption></figure>
+    <div class="prompt-block">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">a modern web application architecture with four horizontal layers stacked top to bottom. The four layer labels on the left edge are: &#x27;Presentation&#x27;, &#x27;Application&#x27;, &#x27;Domain&#x27;, &#x27;Infrastructure&#x27;. Inside each layer place 2 to 3 component rectangles with large bold sans-serif labels. The components are: in Presentation &#x27;React Storefront&#x27; and &#x27;Mobile App&#x27;; in Application &#x27;BFF (Node.js)&#x27; and &#x27;API Gateway&#x27;; in Domain &#x27;Catalog Service&#x27;, &#x27;Cart Service&#x27;, and &#x27;Order Service&#x27;; in Infrastructure &#x27;PostgreSQL&#x27;, &#x27;Redis Cache&#x27;, and &#x27;Stripe&#x27;. The diagram title at the top center reads &#x27;E-commerce Platform&#x27; in a large bold sans-serif font. Every label crisply legible.</p>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>Four-layer architecture diagram in the classic top-down style: Presentation, Application, Domain, Infrastructure. Layer labels along the left edge render correctly, and most component rectangles inside each layer hold their labels. Tech-stack captions under components are sporadic. Best results come from limiting each layer to two or three components.</p>
+  </aside>
+</article>
+<article class="example diagram-example" id="diagram-flowchart_oauth">
+  <header class="example-head">
+    <h3>Flowchart &mdash; OAuth 2.0 + PKCE</h3>
+    <p class="settings"><code>style=&quot;flowchart&quot;</code> <code>model=&quot;full&quot;</code> <code>aspect=&quot;3:4&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=42</code></p>
+  </header>
+  <div class="diagram-body">
+    <figure class="thumb diagram-thumb"><img src="demo_assets/diagrams/flowchart_oauth.png" alt="flowchart_oauth" loading="lazy"><figcaption>flowchart_oauth.png</figcaption></figure>
+    <div class="prompt-block">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">an OAuth 2.0 authorization code flow with PKCE. Render six flowchart shapes connected top to bottom with arrows: a rounded-rectangle &#x27;User opens app&#x27;, a rounded-rectangle &#x27;App requests authorization&#x27;, a diamond decision &#x27;User authenticates?&#x27; with branches &#x27;Yes&#x27; to the right and &#x27;No&#x27; to the left, a rounded-rectangle &#x27;Server issues auth code&#x27;, a rounded-rectangle &#x27;App exchanges code for token&#x27;, and a circle &#x27;Authenticated&#x27;. Use standard flowchart shape grammar. The diagram title at the top center reads &#x27;OAuth 2.0 + PKCE Flow&#x27; in a large bold sans-serif font. Every label crisply legible.</p>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>Correct flowchart shape grammar: rounded rectangles for processes, diamonds for decisions, circles for terminators. All five step labels are readable. The title carries a typo (&ldquo;Oatuth&rdquo; instead of &ldquo;OAuth&rdquo;) &mdash; HiDream&rsquo;s well-documented difficulty with short technical strings. A draft tool like Mermaid or PlantUML is the more honest choice when label accuracy matters.</p>
+  </aside>
+</article>
+<article class="example diagram-example" id="diagram-sequence_checkout">
+  <header class="example-head">
+    <h3>UML sequence diagram &mdash; checkout flow</h3>
+    <p class="settings"><code>style=&quot;sequence-diagram&quot;</code> <code>model=&quot;full&quot;</code> <code>aspect=&quot;4:3&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=42</code></p>
+  </header>
+  <div class="diagram-body">
+    <figure class="thumb diagram-thumb"><img src="demo_assets/diagrams/sequence_checkout.png" alt="sequence_checkout" loading="lazy"><figcaption>sequence_checkout.png</figcaption></figure>
+    <div class="prompt-block">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">a UML sequence diagram for a checkout flow. Render four vertical lifeline boxes at the top labeled &#x27;Client&#x27;, &#x27;API&#x27;, &#x27;Payment Service&#x27;, &#x27;Database&#x27;, evenly spaced with dashed vertical lines descending beneath each. Show five solid horizontal arrows labeled with method names: from Client to API &#x27;POST /checkout&#x27;, from API to Payment Service &#x27;charge(amount)&#x27;, from Payment Service back to API &#x27;200 OK&#x27;, from API to Database &#x27;INSERT order&#x27;, from API back to Client &#x27;201 Created&#x27;. The diagram title at the top center reads &#x27;Checkout Sequence&#x27; in a large bold sans-serif font. Every method label crisply legible.</p>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>The structural template works &mdash; four vertical lifeline boxes at the top labeled correctly (Client, API, Payment Service, Database) with dashed vertical lines descending. But the labeled horizontal arrows between lifelines &mdash; the actual content of a sequence diagram &mdash; didn&rsquo;t render. This particular diagram type is the weakest fit for HiDream&rsquo;s training distribution. For real sequence diagrams use PlantUML or Mermaid; reserve HiDream for the title card.</p>
+  </aside>
+</article>
+<article class="example diagram-example" id="diagram-infographic_ai_cost">
+  <header class="example-head">
+    <h3>Editorial infographic &mdash; AI inference cost 2026</h3>
+    <p class="settings"><code>style=&quot;infographic-poster&quot;</code> <code>model=&quot;full&quot;</code> <code>aspect=&quot;9:16&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=42</code></p>
+  </header>
+  <div class="diagram-body">
+    <figure class="thumb diagram-thumb"><img src="demo_assets/diagrams/infographic_ai_cost.png" alt="infographic_ai_cost" loading="lazy"><figcaption>infographic_ai_cost.png</figcaption></figure>
+    <div class="prompt-block">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">a magazine infographic about AI inference cost in 2026. At the top, a giant hero headline reads &#x27;AI INFERENCE 2026&#x27; in a large bold display sans-serif font, with a smaller subhead &#x27;How costs collapsed in eighteen months&#x27; directly below. Three content sections stacked vertically beneath, each with a small icon on the left and a short two-line caption on the right. Section labels: &#x27;Training Cost Down 70%&#x27;, &#x27;Inference $/M tokens Halved&#x27;, &#x27;Adoption Doubled in Q1&#x27;. At the bottom right a small source line reads &#x27;source: industry tracker&#x27;. Generous whitespace, magazine grid. Every label crisply legible.</p>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>The hero typography is the strongest typography in the entire gallery &mdash; &ldquo;AI INFERENCE 2026&rdquo; renders crisply at a large display weight, with the subhead &ldquo;How costs collapsed in eighteen months&rdquo; clean beneath it. Body sections degrade to placeholder bars, which is the typical infographic failure mode. The right workflow: HiDream for the hero composition + visual mood, then overlay precise stats and body text in Figma or InDesign.</p>
+  </aside>
+</article>
+<article class="example diagram-example" id="diagram-isometric_datacenter">
+  <header class="example-head">
+    <h3>Isometric 3D &mdash; data center layout</h3>
+    <p class="settings"><code>style=&quot;isometric-diagram&quot;</code> <code>model=&quot;full&quot;</code> <code>aspect=&quot;16:9&quot;</code> <code>size=&quot;M&quot;</code> <code>seed=42</code></p>
+  </header>
+  <div class="diagram-body">
+    <figure class="thumb diagram-thumb"><img src="demo_assets/diagrams/isometric_datacenter.png" alt="isometric_datacenter" loading="lazy"><figcaption>isometric_datacenter.png</figcaption></figure>
+    <div class="prompt-block">
+      <div class="col-label">Prompt</div>
+      <p class="prompt">an isometric 3D-style server-room data center diagram. Render four isometric server-rack blocks arranged in a 2-by-2 grid on a light platform. Each rack has a large sans-serif label floating beside it. The four rack labels are: &#x27;Web Tier&#x27;, &#x27;API Tier&#x27;, &#x27;DB Primary&#x27;, &#x27;DB Replica&#x27;. Connect the racks with stepped isometric arrows in a darker grey. The diagram title at the top center reads &#x27;Data Center Layout&#x27; in a large bold sans-serif font. Every label crisply legible.</p>
+    </div>
+  </div>
+  <aside class="commentary">
+    <h4>Quality note</h4>
+    <p>Best diagram in the gallery. All four rack labels (Web Tier, API Tier, DB Primary, DB Replica) are readable, the 3D isometric racks are properly stylized, and the platform with stepped arrows beneath gives the impression of a real architecture asset. Isometric works well because the visual complexity carries the diagram &mdash; less reliance on dense typography.</p>
+  </aside>
+</article>
+</section>
+
+<section class="article-section" id="credits">
+  <h2 class="section-title">Credits &amp; Links</h2>
+  <div class="prose">
+    <ul class="links">
+      <li><strong>Upstream repo:</strong>
+        <a href="https://github.com/HiDream-ai/HiDream-O1-Image">github.com/HiDream-ai/HiDream-O1-Image</a>
+        &mdash; reference inference, web demo (app.py), prompt agent.</li>
+      <li><strong>BF16 weights (Full):</strong>
+        <a href="https://huggingface.co/drbaph/HiDream-O1-Image-BF16">huggingface.co/drbaph/HiDream-O1-Image-BF16</a></li>
+      <li><strong>BF16 weights (Dev):</strong>
+        <a href="https://huggingface.co/drbaph/HiDream-O1-Image-Dev-BF16">huggingface.co/drbaph/HiDream-O1-Image-Dev-BF16</a></li>
+      <li><strong>Technical report:</strong>
+        <a href="https://arxiv.org/abs/2605.11061">arXiv:2605.11061 &mdash; HiDream-O1-Image (Pixel-level Unified Transformer)</a></li>
+      <li><strong>Community ComfyUI node:</strong>
+        <a href="https://github.com/Saganaki22/HiDream_O1-ComfyUI">github.com/Saganaki22/HiDream_O1-ComfyUI</a>
+        &mdash; required if you want to use the FP8 weights.</li>
+      <li><strong>Hugging Face Spaces demos:</strong>
+        <a href="https://huggingface.co/spaces/HiDream-ai/HiDream-O1-Image">HiDream-O1-Image</a>,
+        <a href="https://huggingface.co/spaces/HiDream-ai/HiDream-O1-Image-Dev">HiDream-O1-Image-Dev</a></li>
+    </ul>
+
+    <p class="footer-note">All renders in this article were generated locally on an
+    RTX&nbsp;4090 with weights cached on a secondary drive. Total wall-clock for the
+    full gallery: about 90 minutes including diagram regenerations after each tuning
+    pass.</p>
+  </div>
+</section>
+</div>
+</body>
+</html>
