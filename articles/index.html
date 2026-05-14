@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog &amp; Articles &mdash; Omar Kamal Hosney</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --primary-color: #3498db;
+      --primary-dark: #2980b9;
+      --primary-light: #5dade2;
+      --secondary-color: #2ecc71;
+      --secondary-dark: #27ae60;
+      --accent-color: #9b59b6;
+      --background-color: #f8fafc;
+      --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e8f4f8 50%, #f0f9ff 100%);
+      --text-color: #2c3e50;
+      --text-muted: #64748b;
+      --card-background: #ffffff;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      --shadow-colored: 0 10px 40px -10px rgba(52, 152, 219, 0.3);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --transition-fast: 0.15s ease;
+      --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.8;
+      color: var(--text-color);
+      background: var(--background-gradient);
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    body > a.home-link {
+      display: inline-block;
+      margin: 20px;
+      padding: 8px 20px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white !important;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 500;
+      font-size: 0.9em;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-normal);
+    }
+
+    body > a.home-link:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg), 0 4px 20px rgba(52, 152, 219, 0.4);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 20px auto 40px;
+      padding: 48px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl), 0 0 0 1px rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    h1, h2, h3 {
+      color: var(--text-color);
+      margin-top: 0;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 30px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h1::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      margin: 20px auto 0;
+      border-radius: 2px;
+    }
+
+    .lead {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 1.05em;
+      margin: 0 auto 40px;
+      max-width: 680px;
+    }
+
+    .article-list {
+      list-style-type: none;
+      padding: 0;
+      display: grid;
+      gap: 20px;
+    }
+
+    .article-list li {
+      padding: 24px 28px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      transition: var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .article-list li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--primary-color), var(--primary-light));
+      opacity: 0;
+      transition: var(--transition-normal);
+    }
+
+    .article-list li:hover {
+      transform: translateX(8px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-light);
+    }
+
+    .article-list li:hover::before { opacity: 1; }
+
+    .article-list a.title {
+      color: var(--primary-dark);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.2em;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .article-list a.title:hover { color: var(--primary-color); }
+
+    .meta {
+      font-size: 0.78em;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .meta span + span::before { content: " · "; opacity: 0.5; margin: 0 0.3em; }
+
+    .article-list p {
+      margin: 8px 0 0;
+      color: var(--text-muted);
+      font-size: 0.95em;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 24px; margin: 16px; border-radius: var(--radius-lg); }
+      h1 { font-size: 1.9em; }
+    }
+
+    html { scroll-behavior: smooth; }
+    ::selection { background: var(--primary-light); color: white; }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+</head>
+<body>
+  <a href="../index.html" class="home-link">&larr; Home</a>
+  <div class="container">
+    <h1>Blog &amp; Articles</h1>
+    <p class="lead">
+      In-depth articles, field notes, and capability tours covering AI models, tools,
+      and emerging technologies in machine learning and data science.
+    </p>
+
+    <ul class="article-list">
+      <li>
+        <p class="meta"><span>AI Models</span><span>Field Notes</span><span>May 2026</span></p>
+        <a class="title" href="images-models/hidream-o1-image.html">
+          🎨 HiDream-O1-Image &mdash; Five Generation Modes &amp; Nine Diagram Styles on a Single GPU
+        </a>
+        <p>
+          A capability tour of HiDream-O1-Image &mdash; what the open 8B model can actually do.
+          Covers text-to-image, instruction-based editing, subject-driven personalization (IP reference),
+          bbox-layout-conditioned, and skeleton/openpose-conditioned generation, plus nine diagram and
+          infographic styles, end-to-end on an RTX 4090.
+        </p>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>
