@@ -3,860 +3,913 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Science Cheatsheets</title>
+  <title>Omar Kamal Hosney — Data Science, AI &amp; Machine Learning Cheatsheets &amp; Blog</title>
+  <meta name="description" content="Personal site of Omar Kamal Hosney — data scientist and ML engineer with 26+ years of experience. Browse 30+ free cheatsheets on Python, PyTorch, Scikit-learn, Docker, PostgreSQL, LangChain, LLMs and AI agents, plus in-depth field-note articles on emerging AI models." />
+  <meta name="keywords" content="Omar Kamal Hosney, omkamal, data science cheatsheets, machine learning cheatsheets, AI cheatsheets, LLM cheatsheets, Python cheatsheets, PyTorch, Scikit-learn, NumPy, Docker, PostgreSQL, LangChain, OpenAI Agents SDK, Hugging Face, XGBoost, CatBoost, PCA, fine-tuning, PEFT, LoRA, Fabric AI, Aider, GitHub CLI, bupaR, HiDream, AI blog, data science blog" />
+  <meta name="author" content="Omar Kamal Hosney" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow" />
+  <link rel="canonical" href="https://omkamal.github.io/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Omar Kamal Hosney" />
+  <meta property="og:url" content="https://omkamal.github.io/" />
+  <meta property="og:title" content="Omar Kamal Hosney — Data Science, AI &amp; ML Cheatsheets &amp; Blog" />
+  <meta property="og:description" content="30+ free cheatsheets and in-depth articles on machine learning, LLMs, AI agents and the tools used daily by a data scientist with 26+ years of experience." />
+  <meta property="og:image" content="https://omkamal.github.io/omar.jpeg" />
+  <meta property="og:image:alt" content="Omar Kamal Hosney" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Omar Kamal Hosney — Data Science, AI &amp; ML Cheatsheets &amp; Blog" />
+  <meta name="twitter:description" content="30+ free cheatsheets and in-depth articles on machine learning, LLMs, AI agents and tooling." />
+  <meta name="twitter:image" content="https://omkamal.github.io/omar.jpeg" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="omar.jpeg" />
+  <link rel="apple-touch-icon" href="omar.jpeg" />
+
+  <!-- JSON-LD Structured Data: Person + Website -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://omkamal.github.io/#person",
+        "name": "Omar Kamal Hosney",
+        "alternateName": "omkamal",
+        "url": "https://omkamal.github.io/",
+        "image": "https://omkamal.github.io/omar.jpeg",
+        "jobTitle": "Data Scientist & Machine Learning Engineer",
+        "description": "Data scientist and ML engineer with 26+ years of experience across AI-driven underwriting, algorithm development, data analytics and software testing leadership.",
+        "sameAs": [
+          "https://www.linkedin.com/in/okhosney/",
+          "https://medium.com/@omkamal",
+          "https://github.com/omkamal"
+        ],
+        "knowsAbout": [
+          "Artificial Intelligence",
+          "Machine Learning",
+          "Large Language Models",
+          "Data Science",
+          "Python",
+          "PyTorch",
+          "Generative AI Agents"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://omkamal.github.io/#website",
+        "url": "https://omkamal.github.io/",
+        "name": "Omar Kamal Hosney",
+        "description": "Data Science, AI & Machine Learning cheatsheets and blog articles.",
+        "publisher": { "@id": "https://omkamal.github.io/#person" },
+        "inLanguage": "en-US"
+      },
+      {
+        "@type": "CollectionPage",
+        "@id": "https://omkamal.github.io/cheatsheets/",
+        "url": "https://omkamal.github.io/cheatsheets/",
+        "name": "Data Science & ML Cheatsheets",
+        "description": "30+ concise reference guides for data science, machine learning, LLMs, DevOps and databases.",
+        "isPartOf": { "@id": "https://omkamal.github.io/#website" }
+      },
+      {
+        "@type": "Blog",
+        "@id": "https://omkamal.github.io/articles/",
+        "url": "https://omkamal.github.io/articles/",
+        "name": "Blog & Articles",
+        "description": "In-depth articles, field notes and capability tours on AI models, ML tools, and emerging technologies.",
+        "author": { "@id": "https://omkamal.github.io/#person" },
+        "publisher": { "@id": "https://omkamal.github.io/#person" }
+      }
+    ]
+  }
+  </script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
     :root {
-      --primary-color: #3498db;
-      --primary-dark: #2980b9;
-      --primary-light: #5dade2;
-      --secondary-color: #2ecc71;
-      --secondary-dark: #27ae60;
-      --accent-color: #9b59b6;
-      --accent-light: #a569bd;
-      --warning-color: #f39c12;
-      --danger-color: #e74c3c;
-      --background-color: #f8fafc;
-      --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e8f4f8 50%, #f0f9ff 100%);
-      --text-color: #2c3e50;
-      --text-muted: #64748b;
-      --card-background: #ffffff;
-      --border-color: #e2e8f0;
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-      --shadow-colored: 0 10px 40px -10px rgba(52, 152, 219, 0.3);
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
-      --transition-fast: 0.15s ease;
-      --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      --c-bg-1: #0f172a;
+      --c-bg-2: #1e293b;
+      --c-bg-3: #312e81;
+      --c-primary: #3b82f6;
+      --c-primary-dark: #2563eb;
+      --c-accent: #a855f7;
+      --c-accent-dark: #7c3aed;
+      --c-pink: #ec4899;
+      --c-green: #10b981;
+      --c-text: #e2e8f0;
+      --c-text-muted: #94a3b8;
+      --c-text-dim: #64748b;
+      --c-card: rgba(30, 41, 59, 0.5);
+      --c-card-hover: rgba(30, 41, 59, 0.8);
+      --c-border: rgba(148, 163, 184, 0.15);
+      --c-border-hover: rgba(148, 163, 184, 0.3);
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --radius-xl: 32px;
+      --shadow-glow-blue: 0 20px 60px -20px rgba(59, 130, 246, 0.45);
+      --shadow-glow-purple: 0 20px 60px -20px rgba(168, 85, 247, 0.45);
+      --shadow-deep: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .ad-container {
-      flex: 1;
-      margin-left: 20px;
-      padding: 24px;
-      background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #80deea 100%);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      backdrop-filter: blur(10px);
-    }
-
-    .payhip-container {
-      flex: 1;
-      margin-left: 20px;
-      padding: 24px;
-      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.8;
-      color: var(--text-color);
-      background: var(--background-gradient);
-      background-attachment: fixed;
-      margin: 0;
-      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--c-text);
+      background: var(--c-bg-1);
       min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
     }
 
-    body > a:first-of-type {
-      display: inline-block;
-      margin: 20px;
-      padding: 8px 20px;
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-      color: white !important;
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: 500;
-      font-size: 0.9em;
-      box-shadow: var(--shadow-md);
-      transition: var(--transition-normal);
+    /* Animated gradient background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(59, 130, 246, 0.25), transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 100%, rgba(168, 85, 247, 0.22), transparent 60%),
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(236, 72, 153, 0.10), transparent 60%),
+        linear-gradient(180deg, var(--c-bg-1) 0%, var(--c-bg-2) 50%, var(--c-bg-1) 100%);
+      z-index: -2;
     }
 
-    body > a:first-of-type:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg), 0 4px 20px rgba(52, 152, 219, 0.4);
+    /* Subtle noise/grid overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      z-index: -1;
+      pointer-events: none;
     }
 
     .container {
-      max-width: 960px;
-      margin: 20px auto 40px;
-      padding: 48px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl), 0 0 0 1px rgba(255, 255, 255, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      transition: var(--transition-normal);
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
     }
 
-    .container:hover {
-      box-shadow: var(--shadow-xl), var(--shadow-colored);
+    /* === NAV === */
+    nav {
+      padding: 28px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    h1, h2, h3 {
-      color: var(--text-color);
-      margin-top: 0;
-      letter-spacing: -0.02em;
-    }
-
-    h1 {
-      font-size: 2.5em;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
       font-weight: 700;
-      text-align: center;
-      margin-bottom: 30px;
-      position: relative;
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+      font-size: 1.05em;
+      letter-spacing: -0.01em;
+      color: var(--c-text);
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 38px; height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-accent) 100%);
+      display: grid; place-items: center;
+      font-weight: 800; font-size: 1em; color: white;
+      box-shadow: 0 6px 20px -5px rgba(59, 130, 246, 0.55);
+    }
+
+    .nav-links {
+      display: flex; gap: 8px; align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--c-text-muted);
+      text-decoration: none;
+      font-size: 0.9em;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 10px;
+      transition: all 0.2s var(--ease);
+    }
+
+    .nav-links a:hover {
+      color: var(--c-text);
+      background: rgba(148, 163, 184, 0.08);
+    }
+
+    .nav-links a.cta {
+      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
+      color: white;
+      box-shadow: 0 4px 14px -2px rgba(59, 130, 246, 0.5);
+    }
+
+    .nav-links a.cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px -4px rgba(59, 130, 246, 0.6);
+    }
+
+    /* === HERO === */
+    .hero {
+      padding: 80px 0 100px;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .hero-content { max-width: 640px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 50px;
+      font-size: 0.8em;
+      font-weight: 500;
+      color: #93c5fd;
+      letter-spacing: 0.04em;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--c-green);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero h1 {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      margin-bottom: 20px;
+      color: var(--c-text);
+    }
+
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    h1::after {
-      content: '';
-      display: block;
-      width: 60px;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-      margin: 20px auto 0;
-      border-radius: 2px;
+    .hero .tagline {
+      font-size: 1.18em;
+      color: var(--c-text-muted);
+      margin-bottom: 36px;
+      max-width: 540px;
+      line-height: 1.65;
     }
 
-    h2 {
-      font-size: 1.5em;
+    .hero-actions {
+      display: flex; gap: 14px; flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 26px;
+      border-radius: 12px;
       font-weight: 600;
-      color: var(--text-color);
-      margin-bottom: 16px;
-      position: relative;
-      display: inline-block;
-    }
-
-    h2::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 40px;
-      height: 3px;
-      background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-      border-radius: 2px;
-    }
-
-    h3 {
-      font-size: 1.25em;
-      font-weight: 600;
-      margin-top: 32px;
-      margin-bottom: 20px;
-      color: var(--primary-dark);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    h3::before {
-      content: '';
-      width: 4px;
-      height: 24px;
-      background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
-      border-radius: 2px;
-    }
-
-    p {
-      margin-bottom: 20px;
-      color: var(--text-muted);
-      line-height: 1.9;
-    }
-
-    .cheatsheet-list {
-      list-style-type: none;
-      padding: 0;
-      display: grid;
-      gap: 16px;
-    }
-
-    .cheatsheet-list li {
-      padding: 20px 24px;
-      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-color);
-      transition: var(--transition-normal);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cheatsheet-list li::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: linear-gradient(180deg, var(--primary-color), var(--primary-light));
-      opacity: 0;
-      transition: var(--transition-normal);
-    }
-
-    .cheatsheet-list li:hover {
-      transform: translateX(8px);
-      box-shadow: var(--shadow-lg);
-      border-color: var(--primary-light);
-    }
-
-    .cheatsheet-list li:hover::before {
-      opacity: 1;
-    }
-
-    .cheatsheet-list a {
-      color: var(--primary-dark);
+      font-size: 0.97em;
       text-decoration: none;
+      transition: all 0.3s var(--ease);
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-accent-dark) 100%);
+      color: white;
+      box-shadow: 0 8px 24px -6px rgba(59, 130, 246, 0.55);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 36px -8px rgba(59, 130, 246, 0.7);
+    }
+
+    .btn-ghost {
+      background: rgba(148, 163, 184, 0.08);
+      color: var(--c-text);
+      border-color: var(--c-border);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(148, 163, 184, 0.14);
+      border-color: var(--c-border-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn .arrow { transition: transform 0.3s var(--ease); }
+    .btn:hover .arrow { transform: translateX(4px); }
+
+    /* Hero avatar/visual */
+    .hero-visual {
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      padding: 6px;
+      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-accent) 50%, var(--c-pink) 100%);
+      box-shadow: var(--shadow-glow-purple), var(--shadow-deep);
+    }
+
+    .avatar-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.4), transparent 30%);
+      animation: rotate 8s linear infinite;
+      z-index: -1;
+      filter: blur(20px);
+    }
+
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    .avatar-wrap img {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--c-bg-1);
+    }
+
+    .floating-tag {
+      position: absolute;
+      padding: 10px 16px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--c-border-hover);
+      border-radius: 12px;
+      font-size: 0.83em;
       font-weight: 600;
-      font-size: 1.1em;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
-      transition: var(--transition-fast);
+      color: var(--c-text);
+      display: flex; align-items: center; gap: 8px;
+      box-shadow: var(--shadow-deep);
     }
 
-    .cheatsheet-list a:hover {
-      color: var(--primary-color);
+    .floating-tag.t1 { top: 12%; left: -10%; animation: float1 6s ease-in-out infinite; }
+    .floating-tag.t2 { bottom: 18%; right: -8%; animation: float2 7s ease-in-out infinite; }
+    .floating-tag.t3 { bottom: 5%; left: -2%; animation: float1 8s ease-in-out infinite reverse; }
+
+    @keyframes float1 {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    @keyframes float2 {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
     }
 
-    .cheatsheet-list a::after {
-      content: '\2192';
-      font-size: 1em;
-      opacity: 0;
-      transform: translateX(-8px);
-      transition: var(--transition-normal);
+    /* === SECTIONS === */
+    .section-head {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 56px;
     }
 
-    .cheatsheet-list li:hover a::after {
-      opacity: 1;
-      transform: translateX(0);
+    .section-label {
+      display: inline-block;
+      font-size: 0.78em;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--c-primary);
+      margin-bottom: 14px;
     }
 
-    .cheatsheet-list p {
-      margin: 0;
-      color: var(--text-muted);
-      font-size: 0.9em;
-      line-height: 1.6;
+    .section-head h2 {
+      font-size: clamp(1.9rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      color: var(--c-text);
+      margin-bottom: 14px;
     }
 
-    .about {
-      margin-top: 50px;
-      padding-top: 30px;
-      border-top: 2px solid var(--border-color);
-      display: flex;
-      align-items: flex-start;
+    .section-head p {
+      color: var(--c-text-muted);
+      font-size: 1.05em;
     }
 
-    .about-content {
+    /* === EXPLORE CARDS (Cheatsheets vs Blog) === */
+    .explore {
+      padding: 40px 0 100px;
+    }
+
+    .explore-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .explore-card {
+      position: relative;
+      padding: 44px 40px 40px;
+      background: var(--c-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius-xl);
+      text-decoration: none;
+      color: var(--c-text);
+      transition: all 0.4s var(--ease);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    .explore-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-xl);
+      padding: 1px;
+      background: linear-gradient(135deg, transparent, transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      transition: background 0.4s var(--ease);
+      pointer-events: none;
+    }
+
+    .explore-card.cheat::before {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(59, 130, 246, 0));
+    }
+    .explore-card.blog::before {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(236, 72, 153, 0));
+    }
+
+    .explore-card:hover {
+      transform: translateY(-6px);
+      background: var(--c-card-hover);
+      border-color: transparent;
+    }
+
+    .explore-card.cheat:hover { box-shadow: var(--shadow-glow-blue), var(--shadow-deep); }
+    .explore-card.blog:hover { box-shadow: var(--shadow-glow-purple), var(--shadow-deep); }
+
+    .card-icon {
+      width: 58px; height: 58px;
+      border-radius: 16px;
+      display: grid; place-items: center;
+      font-size: 1.6em;
+      margin-bottom: 26px;
+    }
+
+    .explore-card.cheat .card-icon {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
+      border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+    .explore-card.blog .card-icon {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.05));
+      border: 1px solid rgba(168, 85, 247, 0.25);
+    }
+
+    .card-meta {
+      display: flex; gap: 14px; align-items: center;
+      font-size: 0.8em;
+      color: var(--c-text-dim);
+      margin-bottom: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .card-count {
+      padding: 3px 10px;
+      background: rgba(148, 163, 184, 0.1);
+      border-radius: 50px;
+      color: var(--c-text-muted);
+    }
+
+    .explore-card h3 {
+      font-size: 1.7em;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      color: var(--c-text);
+    }
+
+    .explore-card .desc {
+      color: var(--c-text-muted);
+      line-height: 1.7;
+      margin-bottom: 28px;
       flex: 1;
     }
 
-    .about-image {
-      width: 280px;
-      height: 280px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin-left: 20px;
-      box-shadow: var(--shadow-xl);
-      border: 4px solid white;
+    .card-tags {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 30px;
     }
 
-    .about-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: var(--transition-slow);
-    }
-
-    .about-image:hover img {
-      transform: scale(1.05);
-    }
-
-    .about h2 {
-      color: var(--secondary-dark);
-    }
-
-    .about h2::after {
-      background: linear-gradient(90deg, var(--secondary-color), var(--secondary-dark));
-    }
-
-    .about ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    .about ul li {
-      margin-bottom: 12px;
-      padding-left: 28px;
-      position: relative;
-      color: var(--text-muted);
-      transition: var(--transition-fast);
-    }
-
-    .about ul li:hover {
-      color: var(--text-color);
-      transform: translateX(4px);
-    }
-
-    .about ul li::before {
-      content: '';
-      width: 8px;
-      height: 8px;
-      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-      border-radius: 50%;
-      position: absolute;
-      left: 0;
-      top: 8px;
-    }
-
-    .blog-link, .resume-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 20px;
-      padding: 12px 28px;
-      font-weight: 600;
-      font-size: 0.95em;
-      text-decoration: none;
+    .card-tags span {
+      padding: 5px 12px;
+      font-size: 0.78em;
+      font-weight: 500;
+      background: rgba(148, 163, 184, 0.08);
+      border: 1px solid var(--c-border);
       border-radius: 50px;
-      transition: var(--transition-normal);
-      border: none;
-      cursor: pointer;
+      color: var(--c-text-muted);
     }
 
-    .blog-link {
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-      color: #ffffff !important;
-      box-shadow: var(--shadow-md), 0 4px 15px rgba(52, 152, 219, 0.3);
+    .card-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-weight: 600;
+      font-size: 0.97em;
+      padding: 11px 22px;
+      border-radius: 11px;
+      align-self: flex-start;
+      transition: all 0.3s var(--ease);
     }
 
-    .blog-link:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-lg), 0 8px 25px rgba(52, 152, 219, 0.4);
+    .explore-card.cheat .card-cta {
+      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
+      color: white;
+      box-shadow: 0 6px 18px -4px rgba(59, 130, 246, 0.5);
+    }
+    .explore-card.blog .card-cta {
+      background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-pink) 100%);
+      color: white;
+      box-shadow: 0 6px 18px -4px rgba(168, 85, 247, 0.5);
     }
 
-    .resume-link {
-      margin-left: 12px;
-      background: linear-gradient(135deg, var(--danger-color) 0%, #c0392b 100%);
-      color: #ffffff !important;
-      box-shadow: var(--shadow-md), 0 4px 15px rgba(231, 76, 60, 0.3);
+    .explore-card:hover .card-cta .arrow { transform: translateX(5px); }
+    .card-cta .arrow { transition: transform 0.3s var(--ease); }
+
+    /* === FEATURED / LATEST === */
+    .latest {
+      padding: 40px 0 100px;
     }
 
-    .resume-link:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-lg), 0 8px 25px rgba(231, 76, 60, 0.4);
-    }
-
-    .resume-link i {
-      margin-right: 4px;
-    }
-
-    /* Header Styles */
-    .header-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .latest-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 24px;
-      flex-wrap: wrap;
-      margin-bottom: 40px;
-      padding: 20px;
     }
 
-    .header-img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: var(--shadow-lg);
-      border: 3px solid white;
-      transition: var(--transition-normal);
-    }
-
-    .header-img:hover {
-      transform: scale(1.05);
-      box-shadow: var(--shadow-xl), 0 0 0 4px rgba(52, 152, 219, 0.2);
-    }
-
-    .header-text {
-      text-align: center;
-    }
-
-    .header-text .main-heading {
-      font-size: 2.2em;
-      font-weight: 700;
-      margin: 0;
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .header-text .main-heading::after {
-      display: none;
-    }
-
-    .header-text .libutton {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 12px;
-      padding: 8px 20px;
-      background: linear-gradient(135deg, #0077b5 0%, #005582 100%);
-      color: white !important;
+    .latest-item {
+      padding: 28px 28px 26px;
+      background: var(--c-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius-lg);
       text-decoration: none;
+      transition: all 0.3s var(--ease);
+      display: flex; flex-direction: column;
+    }
+
+    .latest-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--c-border-hover);
+      background: var(--c-card-hover);
+      box-shadow: var(--shadow-deep);
+    }
+
+    .latest-tag {
+      display: inline-block;
+      font-size: 0.72em;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 50px;
+      margin-bottom: 14px;
+      align-self: flex-start;
+    }
+
+    .latest-tag.cheat { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
+    .latest-tag.article { background: rgba(168, 85, 247, 0.15); color: #c4b5fd; }
+
+    .latest-item h4 {
+      font-size: 1.15em;
+      font-weight: 600;
+      color: var(--c-text);
+      letter-spacing: -0.015em;
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+
+    .latest-item p {
+      color: var(--c-text-muted);
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+
+    /* === ABOUT === */
+    .about {
+      padding: 60px 0 100px;
+    }
+
+    .about-card {
+      padding: 56px;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.7));
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius-xl);
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 56px;
+      align-items: center;
+      box-shadow: var(--shadow-deep);
+    }
+
+    .about-text h2 {
+      font-size: 2.1em;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin-bottom: 18px;
+      color: var(--c-text);
+    }
+
+    .about-text > p {
+      color: var(--c-text-muted);
+      line-height: 1.75;
+      margin-bottom: 16px;
+      font-size: 1.02em;
+    }
+
+    .interest-tags {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin: 22px 0 28px;
+    }
+
+    .interest-tags span {
+      padding: 6px 14px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      color: #93c5fd;
       border-radius: 50px;
       font-size: 0.85em;
       font-weight: 500;
-      transition: var(--transition-normal);
-      box-shadow: var(--shadow-sm);
     }
 
-    .header-text .libutton:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md), 0 4px 15px rgba(0, 119, 181, 0.3);
+    .about-actions {
+      display: flex; gap: 12px; flex-wrap: wrap;
     }
 
-    .books-container {
-      display: flex;
-      margin-bottom: 30px;
+    .about-img {
       width: 100%;
-      gap: 20px;
+      aspect-ratio: 1;
+      border-radius: 24px;
+      object-fit: cover;
+      box-shadow: var(--shadow-glow-blue), var(--shadow-deep);
     }
 
-    .about-section {
-      margin-top: 40px;
-      border-top: 2px solid var(--border-color);
-      padding-top: 32px;
-      background: linear-gradient(180deg, transparent 0%, rgba(248, 250, 252, 0.5) 100%);
-      margin-left: -48px;
-      margin-right: -48px;
-      padding-left: 48px;
-      padding-right: 48px;
-      padding-bottom: 20px;
-      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    /* === FOOTER === */
+    footer {
+      padding: 50px 0 70px;
+      border-top: 1px solid var(--c-border);
+      text-align: center;
     }
 
-    @media (max-width: 768px) {
-      .container {
-        padding: 24px;
-        margin: 16px;
-        border-radius: var(--radius-lg);
-      }
-
-      .about {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .about-image {
-        margin-left: 0;
-        margin-top: 24px;
-        width: 200px;
-        height: 200px;
-      }
-
-      .books-container {
-        flex-direction: column;
-      }
-
-      .ad-container, .payhip-container {
-        margin-left: 0;
-      }
-
-      .about-section {
-        margin-left: -24px;
-        margin-right: -24px;
-        padding-left: 24px;
-        padding-right: 24px;
-      }
-
-      .blog-link, .resume-link {
-        display: flex;
-        justify-content: center;
-        margin-left: 0;
-        width: 100%;
-      }
-
-      h3::before {
-        display: none;
-      }
+    footer p {
+      color: var(--c-text-dim);
+      font-size: 0.9em;
+      margin-bottom: 16px;
     }
 
-    /* Smooth scroll */
-    html {
-      scroll-behavior: smooth;
+    .social {
+      display: flex; justify-content: center; gap: 14px;
     }
 
-    /* Selection styling */
-    ::selection {
-      background: var(--primary-light);
-      color: white;
+    .social a {
+      width: 42px; height: 42px;
+      display: grid; place-items: center;
+      border-radius: 11px;
+      background: rgba(148, 163, 184, 0.06);
+      border: 1px solid var(--c-border);
+      color: var(--c-text-muted);
+      text-decoration: none;
+      transition: all 0.3s var(--ease);
     }
+
+    .social a:hover {
+      color: var(--c-text);
+      border-color: var(--c-primary);
+      background: rgba(59, 130, 246, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 920px) {
+      .hero { grid-template-columns: 1fr; gap: 56px; padding: 50px 0 80px; }
+      .hero-visual { order: -1; }
+      .avatar-wrap { width: 220px; height: 220px; }
+      .explore-grid, .latest-grid { grid-template-columns: 1fr; }
+      .about-card { grid-template-columns: 1fr; padding: 36px; gap: 36px; text-align: center; }
+      .about-img { max-width: 280px; margin: 0 auto; }
+      .interest-tags, .about-actions { justify-content: center; }
+      nav { padding: 20px 0; }
+      .nav-links a:not(.cta) { display: none; }
+    }
+
+    @media (max-width: 520px) {
+      .container { padding: 0 20px; }
+      .explore-card, .latest-item { padding: 30px 24px; }
+      .floating-tag { font-size: 0.75em; padding: 8px 12px; }
+    }
+
+    ::selection { background: var(--c-primary); color: white; }
   </style>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
-  <a href="https://omkamal.github.io/" target="_blank">Home</a>
+
   <div class="container">
-    <!-- Revised Header -->
-    <header class="header-container">
-      <img src="omar.jpeg" alt="Omar Kamal Hosney" class="header-img" />
-      <div class="header-text">
-        <h1 class="main-heading">Data Science Cheatsheets</h1>
-        <a
-          class="libutton"
-          href="https://www.linkedin.com/in/okhosney/"
-          target="_blank"
-          >Follow on LinkedIn</a
-        >
+    <nav>
+      <a href="#" class="brand">
+        <span class="brand-mark">OK</span>
+        <span>Omar Kamal Hosney</span>
+      </a>
+      <div class="nav-links">
+        <a href="cheatsheets/index.html">Cheatsheets</a>
+        <a href="articles/index.html">Blog</a>
+        <a href="resume.html" target="_blank">Resume</a>
+        <a href="https://www.linkedin.com/in/okhosney/" target="_blank" class="cta">
+          <i class="fab fa-linkedin-in"></i> Connect
+        </a>
       </div>
-    </header>
-    <!-- End Revised Header -->
+    </nav>
 
-    <h2>What are Cheatsheets?</h2>
-    <p>
-      Cheatsheets are concise reference guides that provide quick access to essential
-      information, commands, or concepts. They are especially useful in data science
-      and programming, where remembering numerous functions, parameters, and best
-      practices can be challenging.
-    </p>
-
-    <h2>📝 Blog &amp; Articles</h2>
-    <p>
-      In-depth articles, field notes, and capability tours covering AI models, tools,
-      and emerging technologies in machine learning and data science.
-    </p>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="articles/index.html">Browse All Articles &rarr;</a>
-        <p>
-          Latest: <a href="articles/images-models/hidream-o1-image.html" style="color: var(--primary-dark); font-weight: 600;">HiDream-O1-Image &mdash; Five Generation Modes &amp; Nine Diagram Styles on a Single GPU</a>
-          &mdash; a capability tour of the open 8B model running end-to-end on an RTX 4090.
+    <section class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">Open for collaboration · Cairo, Egypt</div>
+        <h1>
+          Data, models &amp; <span class="gradient">applied AI</span>, distilled into useful references.
+        </h1>
+        <p class="tagline">
+          I'm Omar — a data scientist and ML engineer with 26+ years across credit, telecom and EDA.
+          This site is where I keep my cheatsheets and field notes on machine learning, LLMs, agents and the tools I actually use.
         </p>
-      </li>
-    </ul>
-
-    <h3>Machine Learning Cheatsheets</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="scikitlearn.html">Scikit-learn Cheatsheet</a>
-        <p>
-          Quick reference for Scikit-learn, a Python library that provides simple and
-          efficient tools for data analysis and machine learning, including classification,
-          regression, clustering, and dimensionality reduction.
-        </p>
-      </li>
-
-      <li>
-        <a href="numpy_cheatsheet.html">NumPy Cheatsheet</a>
-        <p>
-          Quick reference for Numpy, a powerful library for numerical computing in Python,
-          providing support for large, multi-dimensional arrays and matrices, along with a
-          vast collection of mathematical functions.
-        </p>
-      </li>
-
-      <li>
-        <a href="statistical_tests_python.html">
-          Statistical tests in Python cheatsheet
-        </a>
-        <p>
-          Quick reference for Python statistical analysis guide covering t-tests, ANOVA,
-          chi-square, correlation, regression, and non-parametric tests with code examples.
-        </p>
-      </li>
-      <li>
-        <a href="machine_learning_algorithms.html">
-          Machine Learning Algorithms Cheatsheet</a
-        >
-        <p>
-          Quick reference for Linear Regression, Logistic Regression, Decision Trees,
-          Random Forest, SVM, KNN, K-Means Clustering, DBScan, and Hierarchical Clustering.
-        </p>
-      </li>
-
-      <li>
-        <a href="pycaret.html">PyCaret Cheatsheet</a>
-        <p>
-          A comprehensive guide to PyCaret, covering setup, data preprocessing, model training,
-          evaluation, deployment, and advanced features for streamlined machine learning workflows.
-        </p>
-      </li>
-      <li>
-        <a href="xgboost.html">XGBoost Cheatsheet</a>
-        <p>Quick reference for XGBoost, a popular gradient boosting library</p>
-      </li>
-      <li>
-        <a href="catboost.html">CatBoost Cheatsheet</a>
-        <p>
-          Essential information about CatBoost, a gradient boosting library with built-in
-          categorical feature support
-        </p>
-      </li>
-      <li>
-        <a href="dimensionalityreduction.html">
-          Dimensionality Reduction Cheatsheet
-        </a>
-        <p>
-          Dimensionality reduction using UMAP (Uniform Manifold Approximation and Projection)
-          and t-SNE (t-Distributed Stochastic Neighbor Embedding) transforms high-dimensional
-          data into lower dimensions, facilitating visualization and revealing underlying
-          patterns by preserving local and global data structures, respectively
-        </p>
-      </li>
-      <li>
-        <a href="pca.html">Principal Component Analysis Cheatsheet</a>
-        <p>
-          PCA is a dimensionality reduction technique that finds the directions of maximum
-          variance in high-dimensional data and projects it onto a lower-dimensional subspace.
-        </p>
-      </li>
-      <li>
-        <a href="pytorch.html">Pytorch Cheatsheet</a>
-        <p>
-          Quick reference for Pytorch, one of the top deep learning libraries written in Python
-        </p>
-      </li>
-      <li>
-        <a href="bupar_cheatsheet.html">📊 bupaR Cheatsheet</a>
-        <p>
-          Quick reference for bupaR, an R package for Business Process Analytics covering event logs,
-          process maps, performance metrics, filtering, and the bupaverse ecosystem.
-        </p>
-      </li>
-    </ul>
-
-    <h3>Large Language Models</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="huggingface.html">
-          🤗 Hugging Face Hub Client Library Cheatsheet
-        </a>
-        <p>
-          Quick reference for the Hugging Face Hub Client Library, a central place to discover
-          and share ML models, datasets, and Spaces.
-        </p>
-      </li>
-      <li>
-        <a href="finetuning_gradiant.html">
-          Fine-Tuning LLMs using Gradient Package
-        </a>
-        <p>
-          Comprehensive guide on fine-tuning large language models using the Gradient package,
-          covering setup, data preparation, and fine-tuning process.
-        </p>
-      </li>
-      <li>
-        <a href="peft.html">PEFT (Parameter-Efficient Fine-Tuning) Cheatsheet</a>
-        <p>
-          Quick reference for PEFT methodologies, including LoRA, IA3, and adapter methods for
-          efficient model fine-tuning.
-        </p>
-      </li>
-      <li>
-        <a href="fabric.html">Fabric Cheatsheet</a>
-        <p>
-          Fabric is an excellent open-source framework designed to seamlessly integrate AI into
-          your everyday life and work. It empowers you to leverage the power of large language
-          models (LLMs) by providing a user-friendly interface and a vast library of reusable AI
-          prompts called Patterns.
-        </p>
-      </li>
-      <li>
-        <a href="fabric_patterns.html">Fabric Patterns Cheatsheet</a>
-        <p>
-          Quick reference for Fabric Patterns, providing a comprehensive guide to various patterns
-          used in the Fabric framework for efficient AI integration.
-        </p>
-      </li>
-      <li>
-        <a href="LangChainExpressionLanguage.html">
-          LangChain Expression Language (LCEL) Cheatsheet
-        </a>
-        <p>
-          A comprehensive guide to LCEL, covering composition primitives, patterns, and best practices
-          for building efficient LangChain applications.
-        </p>
-      </li>
-    </ul>
-
-    <h3>Generative AI Agents</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="openai_agents_sdk.html">OpenAI Agents SDK Cheatsheet</a>
-        <p>
-          A comprehensive guide to the OpenAI Agents SDK, covering core concepts, agent creation, tools, 
-          guardrails, handoffs, and tracing for building powerful AI agent applications.
-        </p>
-      </li>
-    </ul>
-
-    <h3>DevOps</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="docker.html">Docker Cheatsheet</a>
-        <p>
-          A comprehensive guide to Docker essentials, covering image management, container lifecycle,
-          information retrieval, networking, data persistence, and Docker Compose for efficient
-          containerization workflows.
-        </p>
-      </li>
-    </ul>
-
-    <h3>GitHub Tools</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="gh_cli.html">GitHub CLI (gh) Cheatsheet</a>
-        <p>
-          A comprehensive guide to GitHub CLI covering repositories, pull requests, issues,
-          GitHub Actions, releases, codespaces, and powerful automation features for streamlined
-          GitHub workflows from the command line.
-        </p>
-      </li>
-      <li>
-        <a href="gh_gist.html">GitHub Gist (gh gist) Cheatsheet</a>
-        <p>
-          Quick reference for GitHub Gist commands including creating, viewing, editing, and
-          managing code snippets, configuration files, and notes with full version control support.
-        </p>
-      </li>
-    </ul>
-
-    <h3>Databases</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="sqlite.html">SQLite Cheatsheet</a>
-        <p>
-          Quick reference for SQLite database operations, including table management, data manipulation,
-          queries, indexes, transactions, and importing/exporting data.
-        </p>
-      </li>
-      <li>
-        <a href="postgres_sql.html">PostgreSQL SQL Cheatsheet</a>
-        <p>
-          A detailed PostgreSQL reference covering schema/meta commands, data operations, joins (with SVG illustrations),
-          functions, permissions, data types, importing/exporting, JSON, views, nested queries, and more.
-        </p>
-      </li>
-    </ul>
-
-    <h3>Aider Cheatsheet</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="aider.html">Aider Cheatsheet</a>
-        <p>
-          Quick reference for Aider, an AI-powered coding assistant that helps you write, refactor, and
-          debug code.
-        </p>
-      </li>
-    </ul>
-    
-    <div class="books-container">
-      <div class="ad-container">
-        <div class="header">
-          <h1>Diagrams as Code</h1>
-          <p>Revolutionize Your Technical Documentation</p>
+        <div class="hero-actions">
+          <a href="cheatsheets/index.html" class="btn btn-primary">
+            Browse Cheatsheets <span class="arrow">→</span>
+          </a>
+          <a href="articles/index.html" class="btn btn-ghost">
+            Read the Blog <span class="arrow">→</span>
+          </a>
         </div>
-        <div class="content">
-          <div class="book-info">
-            <h2>
-              Diagrams as Code: Exploring Mermaid, PlantUML, D2 and Generating Diagrams using AI LLMs
-            </h2>
-            <p>By Omar Kamal Hosney</p>
-            <div class="rating">
-              ★★★★★ 4.8 out of 5 stars (7 ratings)
-            </div>
-            <p>
-              In today's age of rapid technological advancement, the boundaries between the written word and code are becoming increasingly blurred. Dive into a revolutionary approach to content generation, where traditional documentation meets the principles of 'code'.            </p>
-            <p>
-              Unravel the transformative strategies of "document as a code" and "diagram as a code". Discover how lightweight markup languages have ushered in a new era where documents evolve from mere static pages to dynamic, version-controlled entities.
-            </p>
-            <h3 style="font-size: 14px; margin-top: 15px; color: #27ae60;">Survey Our Introductory Guide!</h3>
-            <ul class="features">
-              <li>Master ASCIIdoc for effortless document creation</li>
-              <li>Decode the world of Different Software Charts</li>
-              <li>Bring presentations to life with Marpit Slides</li>
-              <li>Dive underwater with Mermaid charts and graphics</li>
-              <li>Understand the magic of Declarative Diagram (D2)</li>
-              <li>Watch your designs grow with PlantUML Markdown Language</li>
-              <li>Step into the future with our Generative AI Pipeline chapter</li>
-            </ul>
-            <p>
-              Current feature:
-              <span id="feature-highlight">Learn document creation with ASCIIdoc</span>
-            </p>
-            <a href="https://a.co/d/6IewmwC" target="_blank" class="cta-button">
-              Get Your Copy Now</a
-            >
+      </div>
+      <div class="hero-visual">
+        <div class="avatar-wrap">
+          <img src="omar.jpeg" alt="Omar Kamal Hosney" />
+        </div>
+        <div class="floating-tag t1">🧠 Machine Learning</div>
+        <div class="floating-tag t2">🤖 LLMs &amp; Agents</div>
+        <div class="floating-tag t3">📊 Data Science</div>
+      </div>
+    </section>
+
+    <section class="explore" id="explore">
+      <div class="section-head">
+        <span class="section-label">What you'll find here</span>
+        <h2>Two libraries, one mission</h2>
+        <p>Quick references for fast lookup, long-form articles for deeper understanding.</p>
+      </div>
+
+      <div class="explore-grid">
+        <a href="cheatsheets/index.html" class="explore-card cheat">
+          <div class="card-icon">📚</div>
+          <div class="card-meta">
+            <span>Reference</span>
+            <span class="card-count">30+ cheatsheets</span>
           </div>
-          <div class="book-image">
-            <a href="https://a.co/d/6IewmwC" target="_blank">
-              <img
-                src="https://c.media-amazon.com/images/I/61g+sogJ2KL._SL1294_.jpg"
-                alt="Diagrams as Code Book Cover"
-                style="width: 187.2px; height: auto;"
-              />
+          <h3>Cheatsheets</h3>
+          <p class="desc">
+            Concise reference guides for the tools and libraries that show up in real data-science and ML work.
+            Skim them, bookmark them, print them.
+          </p>
+          <div class="card-tags">
+            <span>Scikit-learn</span><span>PyTorch</span><span>XGBoost</span>
+            <span>Docker</span><span>PostgreSQL</span><span>LangChain</span>
+          </div>
+          <span class="card-cta">Browse cheatsheets <span class="arrow">→</span></span>
+        </a>
+
+        <a href="articles/index.html" class="explore-card blog">
+          <div class="card-icon">✍️</div>
+          <div class="card-meta">
+            <span>Long-form</span>
+            <span class="card-count">Field notes</span>
+          </div>
+          <h3>Blog &amp; Articles</h3>
+          <p class="desc">
+            In-depth articles, capability tours and field notes on emerging AI models and tooling —
+            things I learned from actually running them, not just reading about them.
+          </p>
+          <div class="card-tags">
+            <span>AI Models</span><span>Open Weights</span><span>GPU</span>
+            <span>Image Gen</span><span>Tools</span>
+          </div>
+          <span class="card-cta">Read the blog <span class="arrow">→</span></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="latest">
+      <div class="section-head">
+        <span class="section-label">Recently added</span>
+        <h2>Latest from the site</h2>
+        <p>A few of the newest entries from both libraries.</p>
+      </div>
+
+      <div class="latest-grid">
+        <a href="articles/images-models/hidream-o1-image.html" class="latest-item">
+          <span class="latest-tag article">Article · May 2026</span>
+          <h4>🎨 HiDream-O1-Image — Five generation modes &amp; nine diagram styles on a single GPU</h4>
+          <p>A capability tour of the open 8B model: T2I, instruction editing, IP reference, bbox layout, and openpose — end-to-end on an RTX 4090.</p>
+        </a>
+        <a href="cheatsheets/bupar_cheatsheet.html" class="latest-item">
+          <span class="latest-tag cheat">Cheatsheet · New</span>
+          <h4>📊 bupaR — Business Process Analytics in R</h4>
+          <p>Event logs, process maps, performance metrics, filtering, and the bupaverse ecosystem in one quick reference.</p>
+        </a>
+        <a href="cheatsheets/openai_agents_sdk.html" class="latest-item">
+          <span class="latest-tag cheat">Cheatsheet</span>
+          <h4>🤖 OpenAI Agents SDK</h4>
+          <p>Core concepts, agent creation, tools, guardrails, handoffs, and tracing for building AI agent applications.</p>
+        </a>
+        <a href="cheatsheets/postgres_sql.html" class="latest-item">
+          <span class="latest-tag cheat">Cheatsheet</span>
+          <h4>🐘 PostgreSQL SQL</h4>
+          <p>Schema commands, joins (illustrated), JSON, views, nested queries, permissions and data types in one place.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="about-card">
+        <div class="about-text">
+          <h2>About me</h2>
+          <p>
+            I'm a seasoned data scientist and ML engineer with 26+ years of experience.
+            I've contributed to Tribal Credit, Reveel, TA Telecom, Mentor Graphics and IBM —
+            across AI-driven underwriting, algorithm development, analytics and software-testing leadership.
+          </p>
+          <p>I write and build around:</p>
+          <div class="interest-tags">
+            <span>Artificial Intelligence</span>
+            <span>Data Science</span>
+            <span>Large Language Models</span>
+            <span>Agentic Systems</span>
+          </div>
+          <div class="about-actions">
+            <a href="https://medium.com/@omkamal" target="_blank" class="btn btn-primary">
+              <i class="fab fa-medium"></i> Medium
+            </a>
+            <a href="resume.html" target="_blank" class="btn btn-ghost">
+              <i class="fas fa-file-alt"></i> Resume
             </a>
           </div>
         </div>
+        <img src="omar.jpeg" alt="Omar Kamal Hosney" class="about-img" />
       </div>
-      <div class="payhip-container">
-        <div class="payhip-embed-page" data-key="ve3Ib"></div>
-        <script type="text/javascript" src="https://payhip.com/embed-page.js?v=24u68984"></script>
+    </section>
+
+    <footer>
+      <p>© 2026 Omar Kamal Hosney · Built with care on GitHub Pages</p>
+      <div class="social">
+        <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium"><i class="fab fa-medium-m"></i></a>
+        <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
       </div>
-    </div>
-    
-    <div class="about-section">
-      <h2>About Me</h2>
-      <h3>Omar Kamal Hosney</h3>
-      <p>
-        I am a seasoned data scientist and machine learning software engineer with over 26 years of
-        experience. I have contributed my expertise to several renowned companies, including Tribal
-        Credit, Reveel, TA Telecom, Mentor Graphics, and IBM. My career has encompassed various roles
-        in AI-driven underwriting, algorithm development, data analytics integration, and software testing
-        leadership.
-      </p>
-      <p>My interests include:</p>
-      <ul>
-        <li>Artificial Intelligence</li>
-        <li>Data Science</li>
-        <li>Large Language Models</li>
-      </ul>
-      <p>
-        I'm passionate about sharing knowledge and regularly write articles on various topics in data
-        science and AI.
-      </p>
-      <a href="https://medium.com/@omkamal" target="_blank" class="blog-link">
-        Read My Blog on Medium</a
-      >
-      <a href="resume.html" target="_blank" class="resume-link">
-        <i class="fas fa-file-alt"></i> View My Resume</a
-      >
-    </div>
-    
+    </footer>
   </div>
+
 </body>
 </html>

@@ -3,7 +3,64 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HiDream-O1-Image &mdash; generation modes, diagrams, and what the open 8B can actually do</title>
+<title>HiDream-O1-Image — Five Generation Modes &amp; Nine Diagram Styles on a Single GPU</title>
+<meta name="description" content="A field-notes capability tour of HiDream-O1-Image, the open 8B Pixel-DiT model. Covers text-to-image, instruction-based editing, subject-driven personalization (IP reference), bbox-layout-conditioned and skeleton/openpose-conditioned generation, plus nine diagram and infographic styles — running end-to-end on a single RTX 4090." />
+<meta name="keywords" content="HiDream-O1-Image, HiDream, open weights image model, 8B image model, text-to-image, instruction-based editing, IP reference, subject-driven generation, bbox layout, openpose image, RTX 4090 image generation, BF16 image model, diagrams as code, AI diagrams" />
+<meta name="author" content="Omar Kamal Hosney" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://omkamal.github.io/articles/images-models/hidream-o1-image.html" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Omar Kamal Hosney" />
+<meta property="og:url" content="https://omkamal.github.io/articles/images-models/hidream-o1-image.html" />
+<meta property="og:title" content="HiDream-O1-Image — Five Generation Modes &amp; Nine Diagram Styles on a Single GPU" />
+<meta property="og:description" content="A capability tour of the open 8B HiDream-O1-Image model: five generation modes and nine diagram styles, end-to-end on an RTX 4090." />
+<meta property="og:image" content="https://omkamal.github.io/articles/images-models/demo_assets/01_t2i.png" />
+<meta property="article:author" content="Omar Kamal Hosney" />
+<meta property="article:published_time" content="2026-05-01" />
+<meta property="article:section" content="AI Models" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="HiDream-O1-Image — Five Generation Modes &amp; Nine Diagram Styles on a Single GPU" />
+<meta name="twitter:description" content="A capability tour of the open 8B HiDream-O1-Image model — end-to-end on an RTX 4090." />
+<meta name="twitter:image" content="https://omkamal.github.io/articles/images-models/demo_assets/01_t2i.png" />
+
+<link rel="icon" type="image/jpeg" href="../../omar.jpeg" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "HiDream-O1-Image — Five Generation Modes & Nine Diagram Styles on a Single GPU",
+  "description": "A capability tour of HiDream-O1-Image, the open 8B Pixel-DiT model: text-to-image, instruction editing, IP reference, bbox layout, and skeleton/openpose — end-to-end on an RTX 4090.",
+  "image": "https://omkamal.github.io/articles/images-models/demo_assets/01_t2i.png",
+  "datePublished": "2026-05-01",
+  "dateModified": "2026-05-14",
+  "author": {
+    "@type": "Person",
+    "name": "Omar Kamal Hosney",
+    "url": "https://omkamal.github.io/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Omar Kamal Hosney"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://omkamal.github.io/articles/images-models/hidream-o1-image.html"
+  },
+  "articleSection": "AI Models",
+  "keywords": "HiDream-O1-Image, open weights image model, text-to-image, instruction editing, IP reference, bbox layout, openpose, RTX 4090",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omkamal.github.io/articles/" },
+      { "@type": "ListItem", "position": 3, "name": "HiDream-O1-Image", "item": "https://omkamal.github.io/articles/images-models/hidream-o1-image.html" }
+    ]
+  }
+}
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap');
 

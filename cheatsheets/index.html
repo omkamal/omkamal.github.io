@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Science &amp; Machine Learning Cheatsheets — Omar Kamal Hosney</title>
+  <meta name="description" content="Free, concise reference cheatsheets covering Scikit-learn, NumPy, PyTorch, XGBoost, CatBoost, PCA, dimensionality reduction, Hugging Face, LangChain (LCEL), PEFT/LoRA, Fabric, OpenAI Agents SDK, Docker, GitHub CLI, SQLite, PostgreSQL, bupaR and more." />
+  <meta name="keywords" content="data science cheatsheets, machine learning cheatsheets, scikit-learn cheatsheet, numpy cheatsheet, pytorch cheatsheet, xgboost cheatsheet, catboost cheatsheet, pca cheatsheet, dimensionality reduction, huggingface cheatsheet, langchain cheatsheet, lcel cheatsheet, peft cheatsheet, fabric cheatsheet, openai agents sdk, docker cheatsheet, github cli cheatsheet, sqlite cheatsheet, postgresql cheatsheet, bupaR cheatsheet, AI cheatsheets" />
+  <meta name="author" content="Omar Kamal Hosney" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://omkamal.github.io/cheatsheets/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Omar Kamal Hosney" />
+  <meta property="og:url" content="https://omkamal.github.io/cheatsheets/" />
+  <meta property="og:title" content="Data Science &amp; ML Cheatsheets — Omar Kamal Hosney" />
+  <meta property="og:description" content="30+ free reference cheatsheets for data science, machine learning, LLMs, agents, DevOps and databases." />
+  <meta property="og:image" content="https://omkamal.github.io/omar.jpeg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Data Science &amp; ML Cheatsheets — Omar Kamal Hosney" />
+  <meta name="twitter:description" content="30+ free reference cheatsheets for data science, ML, LLMs, agents, DevOps and databases." />
+  <meta name="twitter:image" content="https://omkamal.github.io/omar.jpeg" />
+
+  <link rel="icon" type="image/jpeg" href="../omar.jpeg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Data Science & Machine Learning Cheatsheets",
+    "url": "https://omkamal.github.io/cheatsheets/",
+    "description": "30+ concise reference guides for data science, ML, LLMs, agents, DevOps and databases.",
+    "author": {
+      "@type": "Person",
+      "name": "Omar Kamal Hosney",
+      "url": "https://omkamal.github.io/"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
+        { "@type": "ListItem", "position": 2, "name": "Cheatsheets", "item": "https://omkamal.github.io/cheatsheets/" }
+      ]
+    }
+  }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --primary-color: #3498db;
+      --primary-dark: #2980b9;
+      --primary-light: #5dade2;
+      --secondary-color: #2ecc71;
+      --secondary-dark: #27ae60;
+      --accent-color: #9b59b6;
+      --accent-light: #a569bd;
+      --warning-color: #f39c12;
+      --danger-color: #e74c3c;
+      --background-color: #f8fafc;
+      --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e8f4f8 50%, #f0f9ff 100%);
+      --text-color: #2c3e50;
+      --text-muted: #64748b;
+      --card-background: #ffffff;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      --shadow-colored: 0 10px 40px -10px rgba(52, 152, 219, 0.3);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --transition-fast: 0.15s ease;
+      --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .ad-container {
+      flex: 1;
+      margin-left: 20px;
+      padding: 24px;
+      background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #80deea 100%);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .payhip-container {
+      flex: 1;
+      margin-left: 20px;
+      padding: 24px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.8;
+      color: var(--text-color);
+      background: var(--background-gradient);
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    body > a:first-of-type {
+      display: inline-block;
+      margin: 20px;
+      padding: 8px 20px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white !important;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 500;
+      font-size: 0.9em;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-normal);
+    }
+
+    body > a:first-of-type:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg), 0 4px 20px rgba(52, 152, 219, 0.4);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 20px auto 40px;
+      padding: 48px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl), 0 0 0 1px rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      transition: var(--transition-normal);
+    }
+
+    .container:hover {
+      box-shadow: var(--shadow-xl), var(--shadow-colored);
+    }
+
+    h1, h2, h3 {
+      color: var(--text-color);
+      margin-top: 0;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h1::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      margin: 20px auto 0;
+      border-radius: 2px;
+    }
+
+    h2 {
+      font-size: 1.5em;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 16px;
+      position: relative;
+      display: inline-block;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+      border-radius: 2px;
+    }
+
+    h3 {
+      font-size: 1.25em;
+      font-weight: 600;
+      margin-top: 32px;
+      margin-bottom: 20px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h3::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+      border-radius: 2px;
+    }
+
+    p {
+      margin-bottom: 20px;
+      color: var(--text-muted);
+      line-height: 1.9;
+    }
+
+    .cheatsheet-list {
+      list-style-type: none;
+      padding: 0;
+      display: grid;
+      gap: 16px;
+    }
+
+    .cheatsheet-list li {
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      transition: var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cheatsheet-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--primary-color), var(--primary-light));
+      opacity: 0;
+      transition: var(--transition-normal);
+    }
+
+    .cheatsheet-list li:hover {
+      transform: translateX(8px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-light);
+    }
+
+    .cheatsheet-list li:hover::before {
+      opacity: 1;
+    }
+
+    .cheatsheet-list a {
+      color: var(--primary-dark);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1em;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      transition: var(--transition-fast);
+    }
+
+    .cheatsheet-list a:hover {
+      color: var(--primary-color);
+    }
+
+    .cheatsheet-list a::after {
+      content: '\2192';
+      font-size: 1em;
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: var(--transition-normal);
+    }
+
+    .cheatsheet-list li:hover a::after {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .cheatsheet-list p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.9em;
+      line-height: 1.6;
+    }
+
+    .about {
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 2px solid var(--border-color);
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .about-content {
+      flex: 1;
+    }
+
+    .about-image {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-left: 20px;
+      box-shadow: var(--shadow-xl);
+      border: 4px solid white;
+    }
+
+    .about-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition-slow);
+    }
+
+    .about-image:hover img {
+      transform: scale(1.05);
+    }
+
+    .about h2 {
+      color: var(--secondary-dark);
+    }
+
+    .about h2::after {
+      background: linear-gradient(90deg, var(--secondary-color), var(--secondary-dark));
+    }
+
+    .about ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .about ul li {
+      margin-bottom: 12px;
+      padding-left: 28px;
+      position: relative;
+      color: var(--text-muted);
+      transition: var(--transition-fast);
+    }
+
+    .about ul li:hover {
+      color: var(--text-color);
+      transform: translateX(4px);
+    }
+
+    .about ul li::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+      border-radius: 50%;
+      position: absolute;
+      left: 0;
+      top: 8px;
+    }
+
+    .blog-link, .resume-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 12px 28px;
+      font-weight: 600;
+      font-size: 0.95em;
+      text-decoration: none;
+      border-radius: 50px;
+      transition: var(--transition-normal);
+      border: none;
+      cursor: pointer;
+    }
+
+    .blog-link {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: #ffffff !important;
+      box-shadow: var(--shadow-md), 0 4px 15px rgba(52, 152, 219, 0.3);
+    }
+
+    .blog-link:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg), 0 8px 25px rgba(52, 152, 219, 0.4);
+    }
+
+    .resume-link {
+      margin-left: 12px;
+      background: linear-gradient(135deg, var(--danger-color) 0%, #c0392b 100%);
+      color: #ffffff !important;
+      box-shadow: var(--shadow-md), 0 4px 15px rgba(231, 76, 60, 0.3);
+    }
+
+    .resume-link:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg), 0 8px 25px rgba(231, 76, 60, 0.4);
+    }
+
+    .resume-link i {
+      margin-right: 4px;
+    }
+
+    /* Header Styles */
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+      padding: 20px;
+    }
+
+    .header-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: var(--shadow-lg);
+      border: 3px solid white;
+      transition: var(--transition-normal);
+    }
+
+    .header-img:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-xl), 0 0 0 4px rgba(52, 152, 219, 0.2);
+    }
+
+    .header-text {
+      text-align: center;
+    }
+
+    .header-text .main-heading {
+      font-size: 2.2em;
+      font-weight: 700;
+      margin: 0;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-text .main-heading::after {
+      display: none;
+    }
+
+    .header-text .libutton {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 8px 20px;
+      background: linear-gradient(135deg, #0077b5 0%, #005582 100%);
+      color: white !important;
+      text-decoration: none;
+      border-radius: 50px;
+      font-size: 0.85em;
+      font-weight: 500;
+      transition: var(--transition-normal);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-text .libutton:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md), 0 4px 15px rgba(0, 119, 181, 0.3);
+    }
+
+    .books-container {
+      display: flex;
+      margin-bottom: 30px;
+      width: 100%;
+      gap: 20px;
+    }
+
+    .about-section {
+      margin-top: 40px;
+      border-top: 2px solid var(--border-color);
+      padding-top: 32px;
+      background: linear-gradient(180deg, transparent 0%, rgba(248, 250, 252, 0.5) 100%);
+      margin-left: -48px;
+      margin-right: -48px;
+      padding-left: 48px;
+      padding-right: 48px;
+      padding-bottom: 20px;
+      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 24px;
+        margin: 16px;
+        border-radius: var(--radius-lg);
+      }
+
+      .about {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .about-image {
+        margin-left: 0;
+        margin-top: 24px;
+        width: 200px;
+        height: 200px;
+      }
+
+      .books-container {
+        flex-direction: column;
+      }
+
+      .ad-container, .payhip-container {
+        margin-left: 0;
+      }
+
+      .about-section {
+        margin-left: -24px;
+        margin-right: -24px;
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .blog-link, .resume-link {
+        display: flex;
+        justify-content: center;
+        margin-left: 0;
+        width: 100%;
+      }
+
+      h3::before {
+        display: none;
+      }
+    }
+
+    /* Smooth scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Selection styling */
+    ::selection {
+      background: var(--primary-light);
+      color: white;
+    }
+  </style>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+</head>
+<body>
+  <a href="../index.html">← Home</a>
+  <div class="container">
+    <!-- Revised Header -->
+    <header class="header-container">
+      <img src="../omar.jpeg" alt="Omar Kamal Hosney" class="header-img" />
+      <div class="header-text">
+        <h1 class="main-heading">Data Science Cheatsheets</h1>
+        <a
+          class="libutton"
+          href="https://www.linkedin.com/in/okhosney/"
+          target="_blank"
+          >Follow on LinkedIn</a
+        >
+      </div>
+    </header>
+    <!-- End Revised Header -->
+
+    <h2>What are Cheatsheets?</h2>
+    <p>
+      Cheatsheets are concise reference guides that provide quick access to essential
+      information, commands, or concepts. They are especially useful in data science
+      and programming, where remembering numerous functions, parameters, and best
+      practices can be challenging.
+    </p>
+
+    <h3>Machine Learning Cheatsheets</h3>
+    <ul class="cheatsheet-list">
+      <li>
+        <a href="scikitlearn.html">Scikit-learn Cheatsheet</a>
+        <p>
+          Quick reference for Scikit-learn, a Python library that provides simple and
+          efficient tools for data analysis and machine learning, including classification,
+          regression, clustering, and dimensionality reduction.
+        </p>
+      </li>
+
+      <li>
+        <a href="numpy_cheatsheet.html">NumPy Cheatsheet</a>
+        <p>
+          Quick reference for Numpy, a powerful library for numerical computing in Python,
+          providing support for large, multi-dimensional arrays and matrices, along with a
+          vast collection of mathematical functions.
+        </p>
+      </li>
+
+      <li>
+        <a href="statistical_tests_python.html">
+          Statistical tests in Python cheatsheet
+        </a>
+        <p>
+          Quick reference for Python statistical analysis guide covering t-tests, ANOVA,
+          chi-square, correlation, regression, and non-parametric tests with code examples.
+        </p>
+      </li>
+      <li>
+        <a href="machine_learning_algorithms.html">
+          Machine Learning Algorithms Cheatsheet</a
+        >
+        <p>
+          Quick reference for Linear Regression, Logistic Regression, Decision Trees,
+          Random Forest, SVM, KNN, K-Means Clustering, DBScan, and Hierarchical Clustering.
+        </p>
+      </li>
+
+      <li>
+        <a href="pycaret.html">PyCaret Cheatsheet</a>
+        <p>
+          A comprehensive guide to PyCaret, covering setup, data preprocessing, model training,
+          evaluation, deployment, and advanced features for streamlined machine learning workflows.
+        </p>
+      </li>
+      <li>
+        <a href="xgboost.html">XGBoost Cheatsheet</a>
+        <p>Quick reference for XGBoost, a popular gradient boosting library</p>
+      </li>
+      <li>
+        <a href="catboost.html">CatBoost Cheatsheet</a>
+        <p>
+          Essential information about CatBoost, a gradient boosting library with built-in
+          categorical feature support
+        </p>
+      </li>
+      <li>
+        <a href="dimensionalityreduction.html">
+          Dimensionality Reduction Cheatsheet
+        </a>
+        <p>
+          Dimensionality reduction using UMAP (Uniform Manifold Approximation and Projection)
+          and t-SNE (t-Distributed Stochastic Neighbor Embedding) transforms high-dimensional
+          data into lower dimensions, facilitating visualization and revealing underlying
+          patterns by preserving local and global data structures, respectively
+        </p>
+      </li>
+      <li>
+        <a href="pca.html">Principal Component Analysis Cheatsheet</a>
+        <p>
+          PCA is a dimensionality reduction technique that finds the directions of maximum
+          variance in high-dimensional data and projects it onto a lower-dimensional subspace.
+        </p>
+      </li>
+      <li>
+        <a href="pytorch.html">Pytorch Cheatsheet</a>
+        <p>
+          Quick reference for Pytorch, one of the top deep learning libraries written in Python
+        </p>
+      </li>
+      <li>
+        <a href="bupar_cheatsheet.html">📊 bupaR Cheatsheet</a>
+        <p>
+          Quick reference for bupaR, an R package for Business Process Analytics covering event logs,
+          process maps, performance metrics, filtering, and the bupaverse ecosystem.
+        </p>
+      </li>
+    </ul>
+
+    <h3>Large Language Models</h3>
+    <ul class="cheatsheet-list">
+      <li>
+        <a href="huggingface.html">
+          🤗 Hugging Face Hub Client Library Cheatsheet
+        </a>
+        <p>
+          Quick reference for the Hugging Face Hub Client Library, a central place to discover
+          and share ML models, datasets, and Spaces.
+        </p>
+      </li>
+      <li>
+        <a href="finetuning_gradiant.html">
+          Fine-Tuning LLMs using Gradient Package
+        </a>
+        <p>
+          Comprehensive guide on fine-tuning large language models using the Gradient package,
+          covering setup, data preparation, and fine-tuning process.
+        </p>
+      </li>
+      <li>
+        <a href="peft.html">PEFT (Parameter-Efficient Fine-Tuning) Cheatsheet</a>
+        <p>
+          Quick reference for PEFT methodologies, including LoRA, IA3, and adapter methods for
+          efficient model fine-tuning.
+        </p>
+      </li>
+      <li>
+        <a href="fabric.html">Fabric Cheatsheet</a>
+        <p>
+          Fabric is an excellent open-source framework designed to seamlessly integrate AI into
+          your everyday life and work. It empowers you to leverage the power of large language
+          models (LLMs) by providing a user-friendly interface and a vast library of reusable AI
+          prompts called Patterns.
+        </p>
+      </li>
+      <li>
+        <a href="fabric_patterns.html">Fabric Patterns Cheatsheet</a>
+        <p>
+          Quick reference for Fabric Patterns, providing a comprehensive guide to various patterns
+          used in the Fabric framework for efficient AI integration.
+        </p>
+      </li>
+      <li>
+        <a href="LangChainExpressionLanguage.html">
+          LangChain Expression Language (LCEL) Cheatsheet
+        </a>
+        <p>
+          A comprehensive guide to LCEL, covering composition primitives, patterns, and best practices
+          for building efficient LangChain applications.
+        </p>
+      </li>
+    </ul>
+
+    <h3>Generative AI Agents</h3>
+    <ul class="cheatsheet-list">
+      <li>
+        <a href="openai_agents_sdk.html">OpenAI Agents SDK Cheatsheet</a>
+        <p>
+          A comprehensive guide to the OpenAI Agents SDK, covering core concepts, agent creation, tools, 
+          guardrails, handoffs, and tracing for building powerful AI agent applications.
+        </p>
+      </li>
+    </ul>
+
+    <h3>DevOps</h3>
+    <ul class="cheatsheet-list">
+      <li>
+        <a href="docker.html">Docker Cheatsheet</a>
+        <p>
+          A comprehensive guide to Docker essentials, covering image management, container lifecycle,
+          information retrieval, networking, data persistence, and Docker Compose for efficient
+          containerization workflows.
+        </p>
+      </li>
+    </ul>
+
+    <h3>GitHub Tools</h3>
+    <ul class="cheatsheet-list">
+      <li>
+        <a href="gh_cli.html">GitHub CLI (gh) Cheatsheet</a>
+        <p>
+          A comprehensive guide to GitHub CLI covering repositories, pull requests, issues,
+          GitHub Actions, releases, codespaces, and powerful automation features for streamlined
+          GitHub workflows from the command line.
+        </p>
+      </li>
+      <li>
+        <a href="gh_gist.html">GitHub Gist (gh gist) Cheatsheet</a>
+        <p>
+          Quick reference for GitHub Gist commands including creating, viewing, editing, and
+          managing code snippets, configuration files, and notes with full version control support.
+        </p>
+      </li>
+    </ul>
+
+    <h3>Databases</h3>
+    <ul class="cheatsheet-list">
+      <li>
+        <a href="sqlite.html">SQLite Cheatsheet</a>
+        <p>
+          Quick reference for SQLite database operations, including table management, data manipulation,
+          queries, indexes, transactions, and importing/exporting data.
+        </p>
+      </li>
+      <li>
+        <a href="postgres_sql.html">PostgreSQL SQL Cheatsheet</a>
+        <p>
+          A detailed PostgreSQL reference covering schema/meta commands, data operations, joins (with SVG illustrations),
+          functions, permissions, data types, importing/exporting, JSON, views, nested queries, and more.
+        </p>
+      </li>
+    </ul>
+
+    <h3>Aider Cheatsheet</h3>
+    <ul class="cheatsheet-list">
+      <li>
+        <a href="aider.html">Aider Cheatsheet</a>
+        <p>
+          Quick reference for Aider, an AI-powered coding assistant that helps you write, refactor, and
+          debug code.
+        </p>
+      </li>
+    </ul>
+    
+    <div class="books-container">
+      <div class="ad-container">
+        <div class="header">
+          <h1>Diagrams as Code</h1>
+          <p>Revolutionize Your Technical Documentation</p>
+        </div>
+        <div class="content">
+          <div class="book-info">
+            <h2>
+              Diagrams as Code: Exploring Mermaid, PlantUML, D2 and Generating Diagrams using AI LLMs
+            </h2>
+            <p>By Omar Kamal Hosney</p>
+            <div class="rating">
+              ★★★★★ 4.8 out of 5 stars (7 ratings)
+            </div>
+            <p>
+              In today's age of rapid technological advancement, the boundaries between the written word and code are becoming increasingly blurred. Dive into a revolutionary approach to content generation, where traditional documentation meets the principles of 'code'.            </p>
+            <p>
+              Unravel the transformative strategies of "document as a code" and "diagram as a code". Discover how lightweight markup languages have ushered in a new era where documents evolve from mere static pages to dynamic, version-controlled entities.
+            </p>
+            <h3 style="font-size: 14px; margin-top: 15px; color: #27ae60;">Survey Our Introductory Guide!</h3>
+            <ul class="features">
+              <li>Master ASCIIdoc for effortless document creation</li>
+              <li>Decode the world of Different Software Charts</li>
+              <li>Bring presentations to life with Marpit Slides</li>
+              <li>Dive underwater with Mermaid charts and graphics</li>
+              <li>Understand the magic of Declarative Diagram (D2)</li>
+              <li>Watch your designs grow with PlantUML Markdown Language</li>
+              <li>Step into the future with our Generative AI Pipeline chapter</li>
+            </ul>
+            <p>
+              Current feature:
+              <span id="feature-highlight">Learn document creation with ASCIIdoc</span>
+            </p>
+            <a href="https://a.co/d/6IewmwC" target="_blank" class="cta-button">
+              Get Your Copy Now</a
+            >
+          </div>
+          <div class="book-image">
+            <a href="https://a.co/d/6IewmwC" target="_blank">
+              <img
+                src="https://c.media-amazon.com/images/I/61g+sogJ2KL._SL1294_.jpg"
+                alt="Diagrams as Code Book Cover"
+                style="width: 187.2px; height: auto;"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="payhip-container">
+        <div class="payhip-embed-page" data-key="ve3Ib"></div>
+        <script type="text/javascript" src="https://payhip.com/embed-page.js?v=24u68984"></script>
+      </div>
+    </div>
+    
+    <div class="about-section">
+      <h2>About Me</h2>
+      <h3>Omar Kamal Hosney</h3>
+      <p>
+        I am a seasoned data scientist and machine learning software engineer with over 26 years of
+        experience. I have contributed my expertise to several renowned companies, including Tribal
+        Credit, Reveel, TA Telecom, Mentor Graphics, and IBM. My career has encompassed various roles
+        in AI-driven underwriting, algorithm development, data analytics integration, and software testing
+        leadership.
+      </p>
+      <p>My interests include:</p>
+      <ul>
+        <li>Artificial Intelligence</li>
+        <li>Data Science</li>
+        <li>Large Language Models</li>
+      </ul>
+      <p>
+        I'm passionate about sharing knowledge and regularly write articles on various topics in data
+        science and AI.
+      </p>
+      <a href="https://medium.com/@omkamal" target="_blank" class="blog-link">
+        Read My Blog on Medium</a
+      >
+      <a href="../resume.html" target="_blank" class="resume-link">
+        <i class="fas fa-file-alt"></i> View My Resume</a
+      >
+    </div>
+    
+  </div>
+</body>
+</html>

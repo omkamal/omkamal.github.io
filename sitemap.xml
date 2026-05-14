@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://omkamal.github.io/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://omkamal.github.io/cheatsheets/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://omkamal.github.io/articles/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://omkamal.github.io/resume.html</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Articles -->
+  <url>
+    <loc>https://omkamal.github.io/articles/images-models/hidream-o1-image.html</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Machine Learning Cheatsheets -->
+  <url><loc>https://omkamal.github.io/cheatsheets/scikitlearn.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/numpy_cheatsheet.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/statistical_tests_python.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/machine_learning_algorithms.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/pycaret.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/xgboost.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/catboost.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/dimensionalityreduction.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/pca.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/pytorch.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/bupar_cheatsheet.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- LLM Cheatsheets -->
+  <url><loc>https://omkamal.github.io/cheatsheets/huggingface.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/finetuning_gradiant.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/peft.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/fabric.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/fabric_patterns.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/LangChainExpressionLanguage.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Agents -->
+  <url><loc>https://omkamal.github.io/cheatsheets/openai_agents_sdk.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/generative_ai_agents.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- DevOps & GitHub -->
+  <url><loc>https://omkamal.github.io/cheatsheets/docker.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/gh_cli.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/gh_gist.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/github_copilot.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Databases -->
+  <url><loc>https://omkamal.github.io/cheatsheets/sqlite.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/postgres_sql.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Aider -->
+  <url><loc>https://omkamal.github.io/cheatsheets/aider.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/aider_tips.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/aider-presentation.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://omkamal.github.io/cheatsheets/curser-presentation.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+</urlset>
