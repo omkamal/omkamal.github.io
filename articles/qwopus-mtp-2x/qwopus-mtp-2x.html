@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doubling Qwopus 3.6 on a Single RTX 4090 — Multi-Token Prediction with llama.cpp</title>
+<meta name="description" content="A hands-on walkthrough of Multi-Token Prediction on the Jackrong/Qwopus3.6-27B-v2-MTP-GGUF model: ~1.98× average speedup (peak 2.21×) on a single RTX 4090 via llama.cpp. Includes the failed Ollama attempt with the exact error, the working end-to-end install path, and three real use-case benchmarks." />
+<meta name="keywords" content="Qwopus 3.6, Qwopus MTP, multi-token prediction, llama.cpp, llama-server, RTX 4090, local LLM, speculative decoding, GGUF, Q4_K_M, Hugging Face, PopOS 22.04, Ollama qwen3next error, OpenAI-compatible API" />
+<meta name="author" content="Omar Kamal Hosney" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://omkamal.github.io/articles/qwopus-mtp-2x/qwopus-mtp-2x.html" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Omar Kamal Hosney" />
+<meta property="og:url" content="https://omkamal.github.io/articles/qwopus-mtp-2x/qwopus-mtp-2x.html" />
+<meta property="og:title" content="Doubling Qwopus 3.6 on a Single RTX 4090 — MTP with llama.cpp" />
+<meta property="og:description" content="A hands-on walkthrough of Multi-Token Prediction: ~2× generation speed on a single RTX 4090 with llama.cpp, including the failed Ollama detour and the working install path." />
+<meta property="og:image" content="https://omkamal.github.io/articles/qwopus-mtp-2x/demo_assets/00_hero.png" />
+<meta property="article:author" content="Omar Kamal Hosney" />
+<meta property="article:published_time" content="2026-05-22" />
+<meta property="article:section" content="AI Models" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Doubling Qwopus 3.6 on a Single RTX 4090 — MTP with llama.cpp" />
+<meta name="twitter:description" content="A hands-on walkthrough of Multi-Token Prediction: ~2× generation speed on a single RTX 4090 with llama.cpp." />
+<meta name="twitter:image" content="https://omkamal.github.io/articles/qwopus-mtp-2x/demo_assets/00_hero.png" />
+
+<link rel="icon" type="image/jpeg" href="../../omar.jpeg" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Doubling Qwopus 3.6 on a Single RTX 4090 — Multi-Token Prediction with llama.cpp",
+  "description": "A hands-on walkthrough of Multi-Token Prediction on the Jackrong/Qwopus3.6-27B-v2-MTP-GGUF model: ~1.98× average speedup (peak 2.21×) on a single RTX 4090.",
+  "image": "https://omkamal.github.io/articles/qwopus-mtp-2x/demo_assets/00_hero.png",
+  "datePublished": "2026-05-22",
+  "dateModified": "2026-05-22",
+  "author": {
+    "@type": "Person",
+    "name": "Omar Kamal Hosney",
+    "url": "https://omkamal.github.io/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Omar Kamal Hosney"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://omkamal.github.io/articles/qwopus-mtp-2x/qwopus-mtp-2x.html"
+  },
+  "articleSection": "AI Models",
+  "keywords": "Qwopus 3.6, multi-token prediction, llama.cpp, RTX 4090, GGUF, Ollama, qwen3next",
+  "video": {
+    "@type": "VideoObject",
+    "name": "Doubling Qwopus 3.6 on a single RTX 4090 — MTP in llama.cpp (2x faster)",
+    "description": "Tutorial video covering MTP, three use cases, the Ollama failure, and the working llama.cpp path.",
+    "thumbnailUrl": "https://omkamal.github.io/articles/qwopus-mtp-2x/demo_assets/00_hero.png",
+    "uploadDate": "2026-05-22",
+    "contentUrl": "https://youtu.be/as0r9D6a-q4"
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omkamal.github.io/articles/" },
+      { "@type": "ListItem", "position": 3, "name": "Qwopus 3.6 MTP", "item": "https://omkamal.github.io/articles/qwopus-mtp-2x/qwopus-mtp-2x.html" }
+    ]
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root {
+  --c-ink: #18181b;
+  --c-ink-soft: #27272a;
+  --c-prose: #3f3f46;
+  --c-muted: #71717a;
+  --c-mute-2: #a1a1aa;
+  --c-paper: #fafaf9;
+  --c-paper-2: #ffffff;
+  --c-line: #e7e5e4;
+  --c-line-soft: #f1f0ee;
+  --c-accent: #7c3aed;
+  --c-accent-2: #ec4899;
+  --c-accent-3: #f59e0b;
+  --c-accent-soft: #faf5ff;
+  --c-accent-line: #e9d5ff;
+  --c-blue: #2563eb;
+  --c-blue-soft: #eff6ff;
+  --c-blue-line: #bfdbfe;
+  --c-green: #16a34a;
+  --c-green-soft: #f0fdf4;
+  --c-green-line: #bbf7d0;
+  --c-warn: #b45309;
+  --c-warn-soft: #fffbeb;
+  --c-warn-line: #fde68a;
+  --c-red: #dc2626;
+  --c-red-soft: #fef2f2;
+  --c-red-line: #fecaca;
+  --c-code-bg: #0f172a;
+  --c-code-fg: #e2e8f0;
+  --c-code-comment: #94a3b8;
+  --c-code-string: #fde68a;
+  --c-code-keyword: #c4b5fd;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 24px 56px -16px rgba(15, 23, 42, 0.18), 0 8px 20px -6px rgba(15, 23, 42, 0.08);
+  --shadow-glow: 0 30px 60px -20px rgba(124, 58, 237, 0.35);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  font-family: 'Source Serif 4', Charter, Georgia, 'Times New Roman', serif;
+  font-size: 18px;
+  line-height: 1.75;
+  color: var(--c-prose);
+  background: var(--c-paper);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--c-accent); color: white; }
+
+/* === TOP NAV === */
+.top-nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(250, 250, 249, 0.85);
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  border-bottom: 1px solid var(--c-line);
+}
+.nav-inner { max-width: 1180px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 12px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--c-ink); text-decoration: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-accent) 100%); display: grid; place-items: center; font-weight: 800; font-size: 0.78rem; color: white; box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.4); }
+.nav-right { display: flex; gap: 4px; align-items: center; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+.nav-right a { color: var(--c-muted); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 500; transition: all 0.2s var(--ease); }
+.nav-right a:hover { color: var(--c-ink); background: rgba(0,0,0,0.04); }
+.nav-right a.active { color: var(--c-accent); background: var(--c-accent-soft); }
+
+/* === HERO === */
+.hero {
+  position: relative;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #4c1d95 100%);
+  color: #e2e8f0;
+  padding: 80px 0 100px;
+  margin-bottom: -60px;
+  overflow: hidden;
+}
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.35), transparent 50%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.30), transparent 50%), radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.10), transparent 60%); }
+.hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); pointer-events: none; }
+.hero-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 32px; }
+.crumbs { font-family: 'Inter', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; color: rgba(226, 232, 240, 0.65); margin-bottom: 22px; }
+.crumbs a { color: rgba(226, 232, 240, 0.85); text-decoration: none; border-bottom: 1px solid rgba(226, 232, 240, 0.3); transition: all 0.2s var(--ease); }
+.crumbs a:hover { color: white; border-bottom-color: white; }
+.crumbs .sep { margin: 0 0.5em; opacity: 0.4; }
+.article-header { margin: 0; padding: 0; border: 0; }
+.byline { display: inline-flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: #c4b5fd; padding: 5px 12px; background: rgba(168, 85, 247, 0.18); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50px; margin-bottom: 28px; }
+.byline span { color: #c4b5fd; }
+.byline span + span::before { content: "·"; opacity: 0.6; margin: 0 0.25rem; color: #c4b5fd; }
+h1 { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2.2rem, 4.8vw, 3.6rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.03em; color: #ffffff; margin: 0 0 22px; max-width: 880px; }
+.subtitle { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(1.05rem, 1.6vw, 1.28rem); line-height: 1.55; color: rgba(226, 232, 240, 0.82); font-style: italic; margin: 0; max-width: 720px; }
+.subtitle code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85em; font-style: normal; background: rgba(255, 255, 255, 0.12); padding: 2px 8px; border-radius: 5px; color: #fde68a; border: 1px solid rgba(255, 255, 255, 0.08); }
+
+/* === CONTAINER === */
+.container { max-width: 980px; margin: 0 auto; padding: 100px 32px 80px; position: relative; z-index: 2; }
+
+/* === TLDR === */
+.tldr {
+  background: linear-gradient(135deg, #ffffff 0%, var(--c-accent-soft) 100%);
+  border: 1px solid var(--c-accent-line);
+  border-left: 4px solid var(--c-accent);
+  padding: 26px 30px;
+  border-radius: 0 16px 16px 0;
+  margin: 0 0 60px;
+  box-shadow: var(--shadow-md);
+}
+.tldr h3 { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-accent); margin: 0 0 12px; }
+.tldr p { font-size: 1.05rem; color: var(--c-ink-soft); margin: 0 0 0.8rem; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+.tldr p:last-child { margin-bottom: 0; }
+.tldr strong { color: var(--c-ink); font-weight: 700; }
+.tldr code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(255,255,255,0.7); border: 1px solid var(--c-accent-line); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); }
+
+/* === TOC === */
+.toc { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; color: var(--c-prose); padding: 22px 28px; margin: 0 0 80px; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 16px; line-height: 2.1; box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: center; }
+.toc strong { display: inline-flex; align-items: center; gap: 7px; color: var(--c-ink); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; padding-right: 14px; margin-right: 6px; border-right: 1px solid var(--c-line); }
+.toc strong::before { content: ''; width: 3px; height: 14px; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+.toc a { color: var(--c-prose); text-decoration: none; padding: 4px 11px; border-radius: 50px; transition: all 0.2s var(--ease); font-weight: 500; }
+.toc a:hover { color: var(--c-accent); background: var(--c-accent-soft); }
+
+/* === ARTICLE SECTIONS === */
+.article-section { margin-bottom: 80px; scroll-margin-top: 80px; }
+.section-title {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(1.65rem, 3vw, 2.15rem);
+  font-weight: 700;
+  color: var(--c-ink);
+  margin: 0 0 28px;
+  letter-spacing: -0.025em;
+  line-height: 1.18;
+  position: relative;
+  padding-left: 18px;
+}
+.section-title::before { content: ''; position: absolute; left: 0; top: 0.18em; width: 5px; height: 0.85em; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 3px; }
+
+/* "Advanced" gate */
+.advanced-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: white; padding: 5px 12px;
+  background: linear-gradient(135deg, var(--c-warn) 0%, var(--c-accent-3) 100%);
+  border-radius: 50px; margin-bottom: 16px;
+  box-shadow: 0 4px 12px -2px rgba(180, 83, 9, 0.35);
+}
+
+/* === PROSE ===
+   Width matches the widest illustrations on the page — both flow to the full
+   container content-area (container is 980px max, padded to ~916px). */
+.prose {
+  max-width: 100%;
+  margin-bottom: 36px;
+  font-size: 1.06rem;
+  line-height: 1.78;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  text-wrap: pretty;
+}
+.prose p { margin: 0 0 1.25rem; color: var(--c-prose); text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+/* Headings & list items stay left-aligned — only paragraph body is justified */
+.prose h3 { text-align: left; hyphens: manual; }
+.prose ul, .prose ol { text-align: left; hyphens: manual; }
+.prose li { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--c-ink); font-weight: 600; }
+.prose em { color: var(--c-ink-soft); }
+.prose code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.86em; background: var(--c-accent-soft); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); border: 1px solid var(--c-accent-line); font-weight: 500; }
+.prose a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--c-accent-line); transition: all 0.2s var(--ease); }
+.prose a:hover { text-decoration-color: var(--c-accent); text-decoration-thickness: 2px; }
+.prose h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--c-ink); margin: 2.2rem 0 0.8rem; letter-spacing: -0.015em; display: flex; align-items: center; gap: 10px; }
+.prose h3::before { content: ''; width: 22px; height: 2px; background: linear-gradient(90deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+.prose ul, .prose ol { margin: 0 0 1.25rem 1.2rem; }
+.prose li { margin-bottom: 0.4rem; }
+
+/* === CODE BLOCKS === */
+.prose pre {
+  background: var(--c-code-bg);
+  color: var(--c-code-fg);
+  padding: 44px 26px 22px;
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  overflow-x: auto;
+  margin: 22px 0;
+  border: 1px solid #1e293b;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+.prose pre::before {
+  content: ''; position: absolute; top: 14px; left: 18px;
+  width: 11px; height: 11px; border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 18px 0 0 #f59e0b, 36px 0 0 #10b981;
+  opacity: 0.7;
+}
+.prose pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; border: 0; font-weight: 400; }
+
+/* === CALLOUTS === */
+.callout { background: var(--c-warn-soft); border: 1px solid var(--c-warn-line); border-left: 4px solid var(--c-accent-3); padding: 16px 22px; border-radius: 0 12px 12px 0; margin: 22px 0; font-size: 0.98rem; line-height: 1.7; color: var(--c-ink-soft); position: relative; box-shadow: var(--shadow-sm); text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+.callout.green { background: var(--c-green-soft); border-color: var(--c-green-line); border-left-color: var(--c-green); }
+.callout.red { background: var(--c-red-soft); border-color: var(--c-red-line); border-left-color: var(--c-red); }
+.callout.blue { background: var(--c-blue-soft); border-color: var(--c-blue-line); border-left-color: var(--c-blue); }
+.callout strong { color: var(--c-ink); }
+.callout code { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.3); color: var(--c-warn); }
+.callout.green code { background: rgba(22, 163, 74, 0.12); border-color: rgba(22, 163, 74, 0.3); color: var(--c-green); }
+.callout.red code { background: rgba(220, 38, 38, 0.10); border-color: rgba(220, 38, 38, 0.3); color: var(--c-red); }
+
+/* === VARIANT TABLE === */
+.variant-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 22px 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.88rem; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); }
+.variant-table th, .variant-table td { text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--c-line-soft); vertical-align: top; }
+.variant-table th { background: linear-gradient(180deg, #fafafa, #f5f5f4); font-weight: 700; color: var(--c-ink); letter-spacing: 0.02em; font-size: 0.78rem; text-transform: uppercase; }
+.variant-table tbody tr:last-child td { border-bottom: 0; }
+.variant-table tbody tr:hover td { background: var(--c-accent-soft); }
+.variant-table td { color: var(--c-prose); }
+.variant-table td strong { color: var(--c-ink); }
+.variant-table td.num { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+
+/* === FIGURES — always centered horizontally === */
+.figure {
+  margin: 28px auto;          /* horizontal centering */
+  text-align: center;
+  display: block;
+}
+.figure img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid var(--c-line);
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s var(--ease);
+  background: var(--c-paper-2);
+}
+.figure img:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); border-color: var(--c-accent-line); }
+.figure figcaption {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  color: var(--c-mute-2);
+  margin: 10px auto 0;
+  letter-spacing: 0.02em;
+  text-align: center;
+  max-width: 80%;
+}
+.figure.full img { background: white; }
+.figure-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 28px auto;
+  justify-items: center;
+  align-items: start;
+}
+.figure-grid .figure { margin: 0; width: 100%; }
+
+/* === EXAMPLE CARDS (for use cases) === */
+.example { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 18px; padding: 28px 30px; margin: 26px 0 36px; box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); }
+.example:hover { box-shadow: var(--shadow-lg); border-color: var(--c-accent-line); }
+.example-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1px solid var(--c-line-soft); flex-wrap: wrap; }
+.example-head h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--c-ink); margin: 0; letter-spacing: -0.018em; }
+.tps-chip { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; padding: 6px 14px; border-radius: 50px; color: white; background: linear-gradient(135deg, var(--c-green) 0%, #15803d 100%); box-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.35); }
+.tps-chip.amber { background: linear-gradient(135deg, var(--c-accent-3) 0%, var(--c-warn) 100%); box-shadow: 0 4px 12px -2px rgba(180, 83, 9, 0.35); }
+.tps-chip.fire { background: linear-gradient(135deg, var(--c-accent-2) 0%, #be185d 100%); box-shadow: 0 4px 12px -2px rgba(190, 24, 93, 0.35); }
+
+/* === YOUTUBE POSTER (link-out only — clicking opens YouTube) === */
+.video-poster {
+  display: block;
+  margin: 28px 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--c-line);
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+}
+.video-poster:hover { transform: translateY(-2px); box-shadow: 0 24px 70px -16px rgba(220, 38, 38, 0.45), var(--shadow-xl); }
+.video-poster img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; display: block; transition: transform 0.4s var(--ease);
+}
+.video-poster:hover img { transform: scale(1.02); }
+.video-poster::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%);
+}
+.video-poster .play-btn {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 96px; height: 96px;
+  background: rgba(220, 38, 38, 0.96);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  box-shadow: 0 20px 60px -10px rgba(220, 38, 38, 0.7), 0 0 0 10px rgba(255,255,255,0.18);
+  transition: all 0.25s var(--ease);
+  z-index: 1;
+}
+.video-poster:hover .play-btn {
+  transform: translate(-50%, -50%) scale(1.08);
+  background: #dc2626;
+  box-shadow: 0 24px 70px -12px rgba(220, 38, 38, 0.85), 0 0 0 14px rgba(255,255,255,0.25);
+}
+.video-poster .play-btn::after {
+  content: '';
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 19px 0 19px 30px;
+  border-color: transparent transparent transparent white;
+  margin-left: 6px;
+}
+.video-poster .yt-bar {
+  position: absolute; left: 20px; right: 20px; bottom: 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  z-index: 1;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+.video-poster .yt-bar .left  { font-weight: 700; font-size: 1rem; display: inline-flex; align-items: center; gap: 8px; }
+.video-poster .yt-bar .left::before {
+  content: ''; display: inline-block;
+  width: 24px; height: 17px; border-radius: 4px;
+  background: #ff0000;
+  position: relative;
+}
+.video-poster .yt-bar .left::after {
+  content: '';
+  position: absolute;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 4px 0 4px 6px;
+  border-color: transparent transparent transparent white;
+  transform: translate(-15px, 6.5px);
+}
+.video-poster .yt-bar .right { font-size: 0.82rem; opacity: 0.95; letter-spacing: 0.04em; font-family: 'JetBrains Mono', monospace; }
+.video-link { display: inline-flex; align-items: center; gap: 12px; padding: 14px 22px; background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); color: white; text-decoration: none; border-radius: 12px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 24px -6px rgba(220, 38, 38, 0.5); transition: all 0.3s var(--ease); }
+.video-link:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(220, 38, 38, 0.65); }
+.video-link::before { content: '▶'; font-size: 0.85em; }
+
+/* === COMMENTARY ASIDE === */
+.commentary { margin-top: 24px; padding: 20px 22px; background: var(--c-blue-soft); border: 1px solid var(--c-blue-line); border-left: 4px solid var(--c-blue); border-radius: 0 12px 12px 0; }
+.commentary h4 { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-blue); margin: 0 0 10px; display: inline-flex; align-items: center; gap: 7px; }
+.commentary h4::before { content: '💡'; font-size: 1.05em; filter: saturate(0) brightness(0.9); }
+.commentary p { font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); margin: 0; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+.commentary code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: rgba(37, 99, 235, 0.1); padding: 1.5px 6px; border-radius: 4px; color: var(--c-blue); border: 1px solid var(--c-blue-line); font-weight: 500; }
+.commentary strong { color: var(--c-ink); }
+
+/* === LINKS LIST === */
+.links { padding-left: 20px; max-width: 100%; }
+.links li { margin-bottom: 10px; line-height: 1.6; }
+.links li code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: var(--c-paper); border: 1px solid var(--c-line); padding: 1px 6px; border-radius: 4px; color: var(--c-ink-soft); }
+
+/* === PAGE FOOTER === */
+.page-footer { border-top: 1px solid var(--c-line); padding: 60px 0 80px; text-align: center; background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.03)); }
+.page-footer .inner { max-width: 980px; margin: 0 auto; padding: 0 32px; font-family: 'Inter', sans-serif; }
+.back-to-blog { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-2) 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 24px -6px rgba(124, 58, 237, 0.5); transition: all 0.3s var(--ease); margin-bottom: 32px; }
+.back-to-blog:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(124, 58, 237, 0.65); }
+.back-to-blog .arrow { transition: transform 0.3s var(--ease); }
+.back-to-blog:hover .arrow { transform: translateX(-4px); }
+.page-footer p { color: var(--c-muted); font-size: 0.88rem; margin-bottom: 18px; }
+.social { display: flex; justify-content: center; gap: 12px; }
+.social a { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: var(--c-paper-2); border: 1px solid var(--c-line); color: var(--c-muted); text-decoration: none; transition: all 0.3s var(--ease); font-family: 'Inter', sans-serif; font-weight: 700; }
+.social a:hover { color: var(--c-accent); border-color: var(--c-accent-line); background: var(--c-accent-soft); transform: translateY(-2px); }
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+  .hero { padding: 60px 0 80px; }
+  .hero-inner { padding: 0 20px; }
+  .container { padding: 80px 20px 60px; }
+  .nav-inner { padding: 12px 20px; }
+  h1 { font-size: 2rem; }
+  .section-title { font-size: 1.55rem; }
+  .figure-grid { grid-template-columns: 1fr; }
+  .example { padding: 22px 22px; border-radius: 14px; }
+  .toc { padding: 18px 20px; font-size: 0.8rem; gap: 6px; }
+  .toc strong { border-right: 0; margin-bottom: 4px; padding-right: 0; width: 100%; }
+  .nav-right a { padding: 6px 10px; font-size: 0.82rem; }
+}
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .prose { font-size: 1.02rem; }
+  .nav-right a:not(.active) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">OK</span>
+      <span>Omar Kamal Hosney</span>
+    </a>
+    <div class="nav-right">
+      <a href="../../cheatsheets/index.html">Cheatsheets</a>
+      <a href="../index.html" class="active">Blog</a>
+      <a href="../../resume.html" target="_blank">Resume</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="crumbs">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="../index.html">Blog</a>
+      <span class="sep">/</span>
+      AI Models
+    </p>
+    <div class="article-header">
+      <p class="byline"><span>Qwopus 3.6 · MTP</span><span>Field Notes</span><span>May 2026</span></p>
+      <h1>Doubling Qwopus 3.6 on a single RTX 4090</h1>
+      <p class="subtitle">A hands-on walkthrough of <strong>Multi-Token Prediction</strong> &mdash; what it is,
+      why it nearly doubles generation speed, and the end-to-end install path through
+      <code>llama.cpp</code>. Includes the failed <code>Ollama</code> detour, three real use cases,
+      and the production-ready <code>llama-server</code> recipe.</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- HERO IMAGE -->
+<figure class="figure" style="margin: 0 0 60px;">
+  <img src="demo_assets/00_hero.png" alt="Article hero — Omar Hosney with the QWOPUS 3.6 27B title and the headline 97.8 t/s figure over an RTX 4090 graphics card" loading="lazy" />
+</figure>
+
+<!-- TL;DR -->
+<div class="tldr">
+  <h3>TL;DR</h3>
+  <p>
+    On a single <strong>RTX 4090</strong>, the new <strong>Jackrong/Qwopus3.6-27B-v2-MTP-GGUF</strong>
+    runs the same model at <strong>1.98× the speed of the baseline</strong> (peak <strong>2.21×</strong>
+    on math reasoning) — no quality loss, just one extra CLI flag:
+    <code>--spec-type draft-mtp --spec-draft-n-max 3</code>.
+  </p>
+  <p>
+    I tried <strong>Ollama 0.24</strong> first because it was already installed. It refused to start
+    the model with <code>qwen3next: layer 64 missing attn_qkv/attn_gate projections</code>. So
+    <code>llama.cpp</code> from source it is — this article walks through the working path,
+    benchmarks three use cases, and shows the production recipe.
+  </p>
+</div>
+
+<!-- TOC -->
+<nav class="toc" aria-label="Table of contents">
+  <strong>Contents</strong>
+  <a href="#what-is-mtp">What MTP is</a>
+  <a href="#the-model">The model</a>
+  <a href="#use-cases">Three use cases</a>
+  <a href="#benchmark">The benchmark</a>
+  <a href="#why-not-ollama">Why not Ollama?</a>
+  <a href="#working-path">The working path</a>
+  <a href="#video">Watch the video</a>
+  <a href="#advanced">Advanced install</a>
+  <a href="#failures">Three install failures</a>
+  <a href="#refs">References</a>
+</nav>
+
+<!-- =========================================================
+     1. What MTP is
+============================================================ -->
+<section class="article-section" id="what-is-mtp">
+  <h2 class="section-title">What MTP is, and why it nearly doubles speed</h2>
+
+  <div class="prose">
+    <p>
+      Local large language models are bottlenecked by their <strong>sequential token output</strong>:
+      each new word has to wait for the previous one to finish, the way cars queue up on a
+      single-lane road. On a single RTX 4090, that ceiling is roughly <strong>44 tokens per
+      second</strong> for a dense 27B model in 4-bit quantization. It is fine on paper; in practice it
+      is the lag you feel between sentences whenever a local model is writing a long answer.
+    </p>
+
+    <p>
+      <strong>Multi-Token Prediction (MTP)</strong> — popularised by DeepSeek V3 and adopted by
+      Qwen 3.5 / 3.6 / Qwopus — collapses the road into multiple lanes. Instead of asking the model
+      "what is the next token?", MTP asks it to <strong>guess two or three tokens ahead</strong> in
+      the same forward pass and <strong>verify those guesses</strong> in the same pass. When the
+      guesses are correct (and they usually are), you get <strong>two or three tokens for the cost
+      of one</strong>. The verifier guarantees the output is identical to greedy decoding — there
+      is no quality trade-off.
+    </p>
+  </div>
+
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/concept_slow.png" alt="Sequential generation as a single-lane road of tokens at 44 t/s" loading="lazy" />
+      <figcaption>baseline — one lane, ~44 t/s</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/concept_mtp.png" alt="Multi-Token Prediction: model emits token+1, token+2, token+3 and verifies in one pass" loading="lazy" />
+      <figcaption>with MTP — drafts &amp; verifies in one pass</figcaption>
+    </figure>
+  </div>
+
+  <div class="figure">
+    <img src="demo_assets/concept_speedup.png" alt="About 2x speed-up: baseline 44 t/s vs 87 t/s with MTP, labelled 1.98x" loading="lazy" />
+    <figcaption>headline result — 1.98× average, peak 2.21× on math reasoning</figcaption>
+  </div>
+</section>
+
+<!-- =========================================================
+     2. The model
+============================================================ -->
+<section class="article-section" id="the-model">
+  <h2 class="section-title">The model in one paragraph</h2>
+
+  <div class="prose">
+    <p>
+      <a href="https://huggingface.co/Jackrong/Qwopus3.6-27B-v2-MTP-GGUF" target="_blank"><strong>Jackrong/Qwopus3.6-27B-v2-MTP-GGUF</strong></a>
+      is a dense <code>qwen35</code>-architecture model fine-tuned on top of Qwen 3.6-27B with the
+      MTP heads baked in. <strong>27.32 billion parameters</strong>, distributed as a single
+      <strong>GGUF</strong> file, available in twelve quantizations from <code>Q2_K</code> (10.9 GB)
+      to <code>BF16</code> (54.7 GB). For a 24 GB GPU the sweet spot is <strong>Q4_K_M</strong> at
+      <strong>16.8 GB</strong> — it leaves about 7 GB of headroom for context and activations.
+    </p>
+    <p>
+      License is <strong>Apache 2.0</strong>, so commercial use is fine. The author's recommended
+      sampler is <code>temperature=0.6 top_p=0.95 top_k=20</code>; the context window is 49,152
+      tokens (I used 8,192 for the bench).
+    </p>
+  </div>
+
+  <figure class="figure full">
+    <img src="demo_assets/concept_model.png" alt="QWOPUS 3.6 model card with 27B parameters, open source, fine-tuned, GGUF tags and Apache 2.0 badge" loading="lazy" />
+  </figure>
+</section>
+
+<!-- =========================================================
+     3. Use cases
+============================================================ -->
+<section class="article-section" id="use-cases">
+  <h2 class="section-title">Three real use cases</h2>
+
+  <div class="prose">
+    <p>
+      Before installation specifics, here is what the thing actually does. I picked three
+      prompts that exercise very different token distributions: idiomatic Python, a one-off DevOps
+      shell scripting question, and a step-by-step math proof. The whole point of MTP is that its
+      benefit varies with token predictability — and that effect shows up clearly here.
+    </p>
+  </div>
+
+  <div class="example">
+    <div class="example-head">
+      <h3>① Code — memoized Fibonacci</h3>
+      <span class="tps-chip">82.8 t/s · 1.87×</span>
+    </div>
+    <p class="prose" style="margin-bottom: 18px;">
+      The prompt was "write a Python function that computes the nth Fibonacci number using
+      memoization, just the code." The model picked <code>functools.lru_cache</code> — the
+      Pythonic choice — and added a guard against negative <code>n</code>. Idiomatic; ready
+      for an editor.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/uc_fib.png" alt="Use case 1 — terminal output of the Fibonacci function generated by Qwopus with MTP at 82.8 t/s" loading="lazy" />
+    </figure>
+  </div>
+
+  <div class="example">
+    <div class="example-head">
+      <h3>② DevOps — find the 5 largest files in <code>/var/log</code></h3>
+      <span class="tps-chip amber">81.6 t/s · 1.85×</span>
+    </div>
+    <p class="prose" style="margin-bottom: 18px;">
+      The model considered <code>du</code>, <code>ls -lSh</code> and an <code>awk</code> variant,
+      then committed to the tightest one-liner with a four-bullet explanation. The kind of
+      one-off shell-scripting answer you do every other Tuesday.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/uc_devops.png" alt="Use case 2 — bash one-liner with find, du -m, sort -nr, head, generated at 81.6 t/s" loading="lazy" />
+    </figure>
+  </div>
+
+  <div class="example">
+    <div class="example-head">
+      <h3>③ Math — probability without replacement</h3>
+      <span class="tps-chip fire">97.8 t/s · 2.21×</span>
+    </div>
+    <p class="prose" style="margin-bottom: 18px;">
+      A bag has 4 red and 6 blue marbles; you draw two without replacement; what is the
+      probability both are blue? The model walked through it step by step, then double-checked
+      with combinations <code>C(6,2)/C(10,2) = 15/45 = 1/3</code>. <strong>97.8 t/s</strong> on
+      this run — the fastest of the whole bench. Math reasoning has highly predictable tokens,
+      which is exactly what the MTP draft heads love.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/uc_math.png" alt="Use case 3 — step-by-step probability proof double-checked with combinations, 97.8 t/s and 2.21x speedup" loading="lazy" />
+    </figure>
+  </div>
+</section>
+
+<!-- =========================================================
+     4. Benchmark
+============================================================ -->
+<section class="article-section" id="benchmark">
+  <h2 class="section-title">The benchmark, in one chart</h2>
+
+  <div class="prose">
+    <p>
+      Three prompts × three modes (baseline / MTP <code>n=2</code> / MTP <code>n=3</code>) =
+      9 runs. The chart shows generation speed in tokens per second; the second panel is the
+      speedup factor over baseline. Same model, same hardware, same answer.
+    </p>
+  </div>
+
+  <figure class="figure full">
+    <img src="demo_assets/benchmark_chart.png" alt="Bar chart comparing baseline vs MTP n=2 vs MTP n=3 across the three use cases. Baseline is flat at ~44 t/s, MTP n=3 peaks at 97.8 t/s on math" loading="lazy" />
+  </figure>
+
+  <table class="variant-table">
+    <thead>
+      <tr>
+        <th>Use case</th>
+        <th>Baseline (t/s)</th>
+        <th>MTP <code>n=2</code></th>
+        <th>MTP <code>n=3</code></th>
+        <th>Best speedup</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Code · Fibonacci</strong></td><td class="num">44.3</td><td class="num">80.3</td><td class="num">82.8</td><td class="num">1.87×</td></tr>
+      <tr><td><strong>DevOps · log scan</strong></td><td class="num">44.1</td><td class="num">80.8</td><td class="num">81.6</td><td class="num">1.85×</td></tr>
+      <tr><td><strong>Math · probability</strong></td><td class="num">44.2</td><td class="num">85.2</td><td class="num">97.8</td><td class="num"><strong>2.21×</strong></td></tr>
+      <tr><td><strong>Average</strong></td><td class="num"><strong>44.2</strong></td><td class="num"><strong>82.1</strong></td><td class="num"><strong>87.4</strong></td><td class="num"><strong>1.98×</strong></td></tr>
+      <tr><td>Prompt-processing avg</td><td class="num">463.6</td><td class="num">322.8</td><td class="num">311.5</td><td class="num">0.67×</td></tr>
+    </tbody>
+  </table>
+
+  <div class="commentary">
+    <h4>Latency, not just throughput</h4>
+    <p>
+      Per-token latency drops from <strong>~22.6 ms</strong> baseline to <strong>~11.4 ms</strong>
+      with MTP <code>n=3</code> — about 50 % less time spent waiting between visible characters.
+      Note the trade-off in the last row: prompt prefill is ~30 % slower because the draft heads
+      add work to every forward pass. For interactive chat the generation speedup dominates;
+      for batch evaluation with very short answers the trade-off shifts.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     5. Why not Ollama
+============================================================ -->
+<section class="article-section" id="why-not-ollama">
+  <h2 class="section-title">Why not Ollama?</h2>
+
+  <div class="prose">
+    <p>
+      Honest question: Ollama was already installed, has a clean Modelfile API, and would have
+      saved me from compiling C++ from source. So I tried it first.
+    </p>
+  </div>
+
+  <figure class="figure full">
+    <img src="demo_assets/ollama_failure.png" alt="Terminal showing Ollama 0.24.0 importing the Qwopus GGUF successfully, then failing at /api/generate with 'qwen3next: layer 64 missing attn_qkv/attn_gate projections'" loading="lazy" />
+  </figure>
+
+  <div class="prose">
+    <p>
+      The import succeeds — the blob is hard-linked, no re-download, Ollama recognises the
+      architecture as <code>qwen35</code>. The very first generate call, however, throws an
+      <strong>error instead of a response</strong>:
+    </p>
+    <pre><code>{ "error": "failed to initialize model:
+            qwen3next: layer 64 missing attn_qkv/attn_gate projections" }</code></pre>
+    <p>
+      Zero tokens generated. To prove the runtime itself is fine, a plain non-MTP
+      <code>qwen3.5:0.8b</code> from the existing library runs cleanly at <strong>332 t/s</strong>
+      on the same API. It is specifically the MTP-augmented layer 64 that breaks Ollama.
+    </p>
+  </div>
+
+  <figure class="figure full">
+    <img src="demo_assets/concept_layer64.png" alt="Side-by-side: Gemma 4 design uses a separate draft.safetensors via the DRAFT keyword; Qwen 3.5/3.6 bakes draft heads into layer 64 of the same GGUF, where Ollama bails" loading="lazy" />
+  </figure>
+
+  <div class="prose">
+    <p>
+      Here is the root cause. Ollama's MTP support
+      (<a href="https://github.com/ollama/ollama/pull/15980" target="_blank">PR #15980</a>) was
+      designed for <strong>Gemma 4</strong>, which keeps its draft model in a <em>separate</em>
+      safetensors file pointed at via a new <code>DRAFT</code> Modelfile keyword. The Qwen
+      3.5 / 3.6 family — including Qwopus — takes the opposite approach: <strong>the draft heads
+      are baked directly into layer 64</strong> of the same GGUF. When Ollama's
+      <code>qwen3next</code> loader walks that layer expecting standard attention projections, it
+      finds MTP draft-head weights instead and bails out.
+    </p>
+    <p>
+      The fix has to come from Ollama upstream. A future minor release should add
+      <code>qwen3next</code> MTP support, at which point a five-line Modelfile is the entire
+      install. Until then, <code>llama.cpp</code> is the only engine that can actually use this
+      GGUF.
+    </p>
+  </div>
+
+  <div class="callout red">
+    <strong>Status as of May 2026.</strong> <code>ollama 0.24.0</code> on Linux x86_64.
+    The error is reproducible from any client of the
+    <code>POST /api/generate</code> endpoint with the imported model; it is the model loader,
+    not the chat template or the client.
+  </div>
+</section>
+
+<!-- =========================================================
+     6. The working path
+============================================================ -->
+<section class="article-section" id="working-path">
+  <h2 class="section-title">The working path — <code>llama.cpp</code> end to end</h2>
+
+  <div class="prose">
+    <p>
+      Six steps. Open-source toolchain. No Docker, no Kubernetes, no hosted dashboards.
+    </p>
+  </div>
+
+  <figure class="figure full">
+    <img src="demo_assets/concept_workingpath.png" alt="Process flow with six labelled steps: git clone, cmake configure, compile (j28), hf download Q4_K_M, llama-server with --spec-type draft-mtp, API on :8080 with 2x faster speed" loading="lazy" />
+  </figure>
+
+  <div class="prose">
+    <ol>
+      <li><strong>Clone</strong> the upstream <code>ggml-org/llama.cpp</code> main branch — MTP merged in PR <a href="https://github.com/ggml-org/llama.cpp/pull/22673" target="_blank">#22673</a>, May 2026.</li>
+      <li><strong>Configure</strong> cmake with <code>-DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=89</code>. Pinning sm_89 (the RTX 4090's native arch) turns a 25-minute build into ~7 minutes on a 28-thread box.</li>
+      <li><strong>Compile</strong>: <code>cmake --build build -j$(nproc)</code>. You end up with <code>llama-cli</code>, <code>llama-server</code>, and <code>llama-bench</code> in <code>build/bin/</code>.</li>
+      <li><strong>Download</strong> the model. Point <code>HF_HOME</code> at a data disk (the Q4_K_M is 16.8 GB; do not put it on your system drive). <code>hf download Jackrong/Qwopus3.6-27B-v2-MTP-GGUF Qwopus3.6-27B-v2-MTP-Q4_K_M.gguf</code> finishes in about 3 minutes.</li>
+      <li><strong>Run</strong> <code>llama-server</code> with the MTP flags (see below).</li>
+      <li><strong>Done</strong> — OpenAI-compatible API on port 8080, the built-in web UI at the same URL.</li>
+    </ol>
+  </div>
+
+  <h3 style="font-family:'Inter',sans-serif; font-size:1.25rem; font-weight:700; color:var(--c-ink); margin: 2.4rem 0 1rem; letter-spacing:-0.02em;">Production recipe — copy this</h3>
+
+  <div class="prose">
+<pre><code>MODEL=/d/hugging_face_cache/hub/models--Jackrong--Qwopus3.6-27B-v2-MTP-GGUF/\
+snapshots/&lt;hash&gt;/Qwopus3.6-27B-v2-MTP-Q4_K_M.gguf
+
+./build/bin/llama-server \
+    -m "$MODEL"                                      \
+    -ngl 99 -c 8192 -fa on                           \
+    --spec-type draft-mtp --spec-draft-n-max 3       \
+    -np 1 --jinja                                    \
+    --cache-type-k q8_0 --cache-type-v q8_0          \
+    --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.0   \
+    --host 0.0.0.0 --port 8080</code></pre>
+    <p>
+      Bind on <code>0.0.0.0</code> so other machines on your LAN can reach the API.
+      <code>--cache-type-k q8_0 --cache-type-v q8_0</code> halves the KV-cache memory with no
+      measurable quality drop at sensible context lengths. <code>-np 1</code> is required for
+      MTP today.
+    </p>
+  </div>
+
+  <div class="callout green">
+    <strong>Browser UI included.</strong> Once <code>llama-server</code> is running, point any
+    browser at <code>http://localhost:8080</code> (or
+    <code>http://&lt;lan-ip&gt;:8080</code> from another machine) and you get the bundled
+    chat UI. It is a SvelteKit single-page app shipped inside the binary — no Docker, no Node,
+    no extra dependencies.
+  </div>
+</section>
+
+<!-- =========================================================
+     7. Watch the video
+============================================================ -->
+<section class="article-section" id="video">
+  <h2 class="section-title">Watch the full walkthrough</h2>
+
+  <div class="prose">
+    <p>
+      A 15-minute narrated tutorial covers the same material: use cases first, then the
+      benchmark, then the Ollama failure, then the working <code>llama.cpp</code> path, then an
+      "Advanced" deep-dive into the install. The deck was rendered with
+      <a href="https://www.remotion.dev" target="_blank">Remotion</a> and narrated with
+      a local <code>supertonic-tts</code> M1 voice on the same RTX 4090.
+    </p>
+  </div>
+
+  <a class="video-poster"
+     href="https://youtu.be/as0r9D6a-q4"
+     target="_blank" rel="noopener"
+     aria-label="Watch the full walkthrough on YouTube (opens in a new tab)">
+    <img src="demo_assets/00_hero.png"
+         alt="Video thumbnail: Omar Hosney, RTX 4090 and the 97.8 t/s headline" loading="lazy">
+    <span class="play-btn" aria-hidden="true"></span>
+    <div class="yt-bar">
+      <span class="left">Watch on YouTube</span>
+      <span class="right">15:15 · 1080p</span>
+    </div>
+  </a>
+  <p style="text-align:center; margin-top: 10px;">
+    <a class="video-link" href="https://youtu.be/as0r9D6a-q4" target="_blank" rel="noopener">Open in YouTube</a>
+  </p>
+
+  <p style="text-align:center; margin-top: 8px;">
+    <a class="video-link" href="https://youtu.be/as0r9D6a-q4" target="_blank">Watch on YouTube</a>
+  </p>
+</section>
+
+<!-- =========================================================
+     8. Advanced install (collapsible-feel section)
+============================================================ -->
+<section class="article-section" id="advanced">
+  <span class="advanced-badge">▲ Advanced</span>
+  <h2 class="section-title">Installation deep-dive</h2>
+
+  <div class="prose">
+    <p>
+      Heads up — from here on, it gets technical. If you just wanted the recipe, you already
+      have it. If you want to reproduce on your own machine, here's every step plus every wall
+      I hit on the first run.
+    </p>
+  </div>
+
+  <h3 style="font-family:'Inter',sans-serif; font-size:1.2rem; font-weight:700; color:var(--c-ink); margin: 2rem 0 1rem; letter-spacing:-0.02em;">The hardware</h3>
+
+  <figure class="figure full">
+    <img src="demo_assets/gpu_check.png" alt="nvidia-smi output showing the NVIDIA RTX 4090 with 24 GB VRAM, driver 580.x, CUDA 13.0 runtime" loading="lazy" />
+  </figure>
+
+  <div class="prose">
+    <ul>
+      <li><strong>NVIDIA RTX 4090</strong>, 24 GB VRAM (the magic number for 27B Q4_K_M)</li>
+      <li><strong>PopOS 22.04</strong> (Ubuntu base), kernel 6.17</li>
+      <li><strong>CUDA toolkit 12.9</strong> on disk with the matching 13.0 driver</li>
+      <li>A separate data volume for the GGUF (<code>/d/hugging_face_cache/</code>) — keep model weights off the system drive</li>
+    </ul>
+  </div>
+
+  <h3 style="font-family:'Inter',sans-serif; font-size:1.2rem; font-weight:700; color:var(--c-ink); margin: 2rem 0 1rem; letter-spacing:-0.02em;">Step 1 — project-local Python with asdf</h3>
+
+  <div class="prose">
+    <p>
+      Pin a specific Python version and keep dependencies project-local so nothing leaks into
+      the system. Watch out for any stray <code>VIRTUAL_ENV</code> that might be active in
+      your shell — it picks up the wrong interpreter at <code>venv</code> creation time.
+    </p>
+<pre><code>$ asdf local python 3.12.3
+$ unset VIRTUAL_ENV
+$ python -m venv .venv
+$ .venv/bin/pip install huggingface_hub pillow matplotlib</code></pre>
+  </div>
+
+  <h3 style="font-family:'Inter',sans-serif; font-size:1.2rem; font-weight:700; color:var(--c-ink); margin: 2rem 0 1rem; letter-spacing:-0.02em;">Step 2 — configure &amp; build llama.cpp</h3>
+
+  <figure class="figure full">
+    <img src="demo_assets/cmake_config.png" alt="cmake configure output: Found CUDAToolkit 12.9.86, CUDA compiler NVIDIA 12.9, Using CMAKE_CUDA_ARCHITECTURES=89 native, Build files written" loading="lazy" />
+  </figure>
+
+  <div class="prose">
+<pre><code>$ git clone --depth 1 https://github.com/ggml-org/llama.cpp
+$ cd llama.cpp
+$ /usr/bin/cmake -B build \
+    -DGGML_CUDA=ON \
+    -DCMAKE_CUDA_ARCHITECTURES=89 \
+    -DLLAMA_CURL=ON
+$ /usr/bin/cmake --build build -j$(nproc)</code></pre>
+  </div>
+
+  <figure class="figure full">
+    <img src="demo_assets/build_success.png" alt="Final 100% build stage showing llama-cli, llama-server, llama-bench all built" loading="lazy" />
+  </figure>
+
+  <h3 style="font-family:'Inter',sans-serif; font-size:1.2rem; font-weight:700; color:var(--c-ink); margin: 2rem 0 1rem; letter-spacing:-0.02em;">Step 3 — download the model</h3>
+
+  <figure class="figure full">
+    <img src="demo_assets/hf_download.png" alt="Hugging Face hf download command pulling Qwopus3.6-27B-v2-MTP-Q4_K_M.gguf at 16.8 GiB to /d/hugging_face_cache/hub" loading="lazy" />
+  </figure>
+
+  <div class="prose">
+<pre><code>$ export HF_HOME=/d/hugging_face_cache HF_HUB_ENABLE_HF_TRANSFER=1
+$ .venv/bin/hf download Jackrong/Qwopus3.6-27B-v2-MTP-GGUF \
+      Qwopus3.6-27B-v2-MTP-Q4_K_M.gguf \
+      --cache-dir /d/hugging_face_cache/hub</code></pre>
+    <p>
+      <strong>HF Xet</strong> does the heavy lifting under the hood — parallel chunks, resume
+      on disconnect. About 3 minutes on a reasonable connection.
+    </p>
+  </div>
+
+  <h3 style="font-family:'Inter',sans-serif; font-size:1.2rem; font-weight:700; color:var(--c-ink); margin: 2rem 0 1rem; letter-spacing:-0.02em;">First successful MTP run</h3>
+
+  <figure class="figure full">
+    <img src="demo_assets/mtp_first_run.png" alt="First MTP run output — model loads, generates a Fibonacci snippet with the chain-of-thought, and prints Prompt 250.2 t/s Generation 76.7 t/s" loading="lazy" />
+  </figure>
+
+  <div class="prose">
+    <p>
+      The first time the <code>--spec-type draft-mtp --spec-draft-n-max 2</code> combination
+      worked end-to-end. <strong>76.7 t/s</strong> out of the gate. Once stable, bumping
+      <code>n-max</code> to 3 picks up another 5–15 % on most prompts (and the headline 2.21×
+      on math).
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     9. Failures
+============================================================ -->
+<section class="article-section" id="failures">
+  <span class="advanced-badge">▲ Advanced</span>
+  <h2 class="section-title">Three failures during install (and the fixes)</h2>
+
+  <div class="prose">
+    <p>
+      Nothing was smooth on the first pass. If you are following along at home, this is the
+      section that will save you the most time.
+    </p>
+  </div>
+
+  <h3 style="font-family:'Inter',sans-serif; font-size:1.2rem; font-weight:700; color:var(--c-ink); margin: 2rem 0 1rem; letter-spacing:-0.02em;">① asdf hijacked <code>cmake</code></h3>
+
+  <figure class="figure full">
+    <img src="demo_assets/fail_asdf.png" alt="asdf error: No preset version installed for command cmake. Please install a version..." loading="lazy" />
+  </figure>
+
+  <div class="callout">
+    <strong>Symptom:</strong> running plain <code>cmake</code> triggered an asdf shim error.
+    <br/><strong>Root cause:</strong> asdf had a phantom <code>cmake</code> plugin entry but no
+    version pinned.
+    <br/><strong>Fix:</strong> bypass asdf — call <code>/usr/bin/cmake</code> directly, or add
+    <code>cmake system</code> to <code>.tool-versions</code>.
+  </div>
+
+  <h3 style="font-family:'Inter',sans-serif; font-size:1.2rem; font-weight:700; color:var(--c-ink); margin: 2rem 0 1rem; letter-spacing:-0.02em;">② Runaway log — 4.5 GiB in 6 minutes</h3>
+
+  <figure class="figure full">
+    <img src="demo_assets/fail_runaway.png" alt="ls showing baseline_stdout.log at 4.5 GB after llama-cli looped, nvidia-smi shows 17 GiB VRAM still in use" loading="lazy" />
+  </figure>
+
+  <div class="callout">
+    <strong>Symptom:</strong> <code>llama-cli -no-cnv -p "Hi" -n 16</code> ran for six minutes
+    instead of producing 16 tokens. Log grew to 4.5 GiB.
+    <br/><strong>Root cause:</strong> <code>-no-cnv</code> was silently ignored on that build;
+    the CLI looped in conversational mode.
+    <br/><strong>Fix:</strong> pipe the prompt via stdin instead of <code>-p</code>:
+    <code>echo "$PROMPT" | ./llama-cli ... -st</code>. EOF on stdin terminates cleanly.
+  </div>
+
+  <h3 style="font-family:'Inter',sans-serif; font-size:1.2rem; font-weight:700; color:var(--c-ink); margin: 2rem 0 1rem; letter-spacing:-0.02em;">③ The flag became a hard error</h3>
+
+  <figure class="figure full">
+    <img src="demo_assets/fail_nocnv.png" alt="Error: --no-conversation is not supported by llama-cli, please use llama-completion instead" loading="lazy" />
+  </figure>
+
+  <div class="callout">
+    <strong>Symptom:</strong> on a slightly newer commit, <code>-no-cnv</code> stopped being
+    silently ignored and became a hard error.
+    <br/><strong>Fix:</strong> same as ② — pipe via stdin and use <code>-st</code> for the
+    speed stats. The CLI evolves fast; adapt your runner instead of fighting the defaults.
+  </div>
+</section>
+
+<!-- =========================================================
+     References
+============================================================ -->
+<section class="article-section" id="refs">
+  <h2 class="section-title">References</h2>
+
+  <ul class="links">
+    <li><a href="https://huggingface.co/Jackrong/Qwopus3.6-27B-v2-MTP-GGUF" target="_blank"><strong>Hugging Face</strong> — <code>Jackrong/Qwopus3.6-27B-v2-MTP-GGUF</code></a> — the model card with all twelve quantizations and the sampler recipe.</li>
+    <li><a href="https://github.com/ggml-org/llama.cpp/pull/22673" target="_blank"><strong>llama.cpp PR #22673</strong></a> — the merge that added <code>--spec-type draft-mtp</code> to main, May 2026.</li>
+    <li><a href="https://github.com/ollama/ollama/pull/15980" target="_blank"><strong>ollama PR #15980</strong></a> — Gemma 4 MTP / <code>DRAFT</code> Modelfile keyword, the design that does <em>not</em> work for Qwen 3.5/3.6.</li>
+    <li><a href="https://deepwiki.com/ggml-org/llama.cpp/8.3-speculative-decoding" target="_blank"><strong>DeepWiki</strong></a> — internals of speculative decoding in <code>llama.cpp</code>.</li>
+    <li><a href="https://github.com/ggml-org/llama.cpp/discussions/12130" target="_blank">llama.cpp discussion thread</a> — the original feature request.</li>
+    <li><a href="https://docs.vllm.ai/en/latest/features/speculative_decoding/mtp/" target="_blank">vLLM MTP docs</a> — alternative engine, FP/BF formats today.</li>
+    <li><a href="https://youtu.be/as0r9D6a-q4" target="_blank"><strong>YouTube — the narrated 15-minute walkthrough</strong></a></li>
+  </ul>
+</section>
+
+</div><!-- /container -->
+
+<!-- =========================================================
+     Footer
+============================================================ -->
+<footer class="page-footer">
+  <div class="inner">
+    <a class="back-to-blog" href="../index.html">
+      <span class="arrow">←</span>
+      <span>Back to the blog</span>
+    </a>
+    <p>Hardware: 1 × NVIDIA RTX 4090 (24 GiB, sm_89), PopOS 22.04, CUDA 12.9.<br />
+       Software: llama.cpp 1acee6b, Python 3.12.3, supertonic-tts M1, Remotion 4.x.<br />
+       Article by Omar Kamal Hosney · 2026-05-22</p>
+    <div class="social">
+      <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn">in</a>
+      <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium">M</a>
+      <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub">gh</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
