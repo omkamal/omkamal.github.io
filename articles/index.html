@@ -588,20 +588,20 @@
     </div>
 
     <section class="featured" aria-label="Featured article">
-      <a href="qwopus-mtp-2x/qwopus-mtp-2x.html" class="featured-card">
+      <a href="lance/lance.html" class="featured-card">
         <div class="featured-visual">
-          <img src="qwopus-mtp-2x/demo_assets/00_hero.png" alt="Qwopus 3.6 MTP — 97.8 t/s on a single RTX 4090" loading="lazy" />
-          <span class="overlay-emoji">⚡</span>
+          <img src="lance/demo_assets/hero.png" alt="Lance 3B unified multimodal model — image and video generation, editing and understanding on a single RTX 4090" loading="lazy" />
+          <span class="overlay-emoji">🎬</span>
         </div>
         <div class="featured-body">
           <span class="featured-tag">⭐ Featured · Latest</span>
-          <p class="featured-meta"><span>AI Models</span><span>Field Notes</span><span>May 2026</span><span>12 min read</span></p>
-          <h2>Doubling Qwopus 3.6 on a single RTX 4090 — Multi-Token Prediction with llama.cpp</h2>
+          <p class="featured-meta"><span>AI Models</span><span>Field Notes</span><span>May 2026</span><span>14 min read</span></p>
+          <h2>Lance 3B — a unified image &amp; video model on a single RTX 4090</h2>
           <p>
-            A hands-on walkthrough of <strong>Multi-Token Prediction</strong>: ~1.98× average
-            speedup (peak 2.21× on math) on the new Jackrong/Qwopus3.6-27B-v2-MTP-GGUF model.
-            Includes the failed Ollama attempt (with the exact <code>qwen3next: layer 64</code>
-            error), three benchmarked use cases, and the production <code>llama-server</code> recipe.
+            ByteDance's <strong>Lance</strong> does image/video understanding, generation and editing
+            in one 3B transformer. All seven modes demonstrated, the official benchmarks
+            (<strong>0.90 GenEval · 85.11 VBench</strong>), the two code fixes to fit 24 GB, the
+            measured per-mode performance, and the max <strong>10.08 s</strong> text-to-video duration.
           </p>
           <span class="featured-cta">Read the article <span class="arrow">→</span></span>
         </div>
@@ -610,6 +610,21 @@
 
     <p class="section-label">More articles</p>
     <div class="article-grid">
+      <a href="qwopus-mtp-2x/qwopus-mtp-2x.html" class="article-card" data-category="ai-models">
+        <div class="article-thumb">
+          <span class="emoji">⚡</span>
+        </div>
+        <div class="article-body">
+          <h3>Doubling Qwopus 3.6 on a single RTX 4090 — Multi-Token Prediction with llama.cpp</h3>
+          <p>
+            ~1.98× average speedup (peak 2.21× on math) via MTP on Jackrong/Qwopus3.6-27B-v2-MTP-GGUF —
+            with the failed Ollama detour and the production <code>llama-server</code> recipe.
+          </p>
+          <div class="article-meta">
+            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>May 2026</span>
+          </div>
+        </div>
+      </a>
       <a href="images-models/hidream-o1-image.html" class="article-card" data-category="ai-models">
         <div class="article-thumb">
           <span class="emoji">🎨</span>

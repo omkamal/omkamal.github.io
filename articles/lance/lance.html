@@ -1,0 +1,931 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lance 3B — A Unified Image &amp; Video Model on a Single RTX 4090</title>
+<meta name="description" content="A hands-on tour of ByteDance's Lance: a 3B native unified multimodal model that does image/video understanding, generation and editing in one transformer. All seven modes demonstrated, the official benchmarks, and the real performance + VRAM numbers I measured running it on a single 24 GB RTX 4090 — including the two code fixes needed to fit, max video duration, and where multi-reference composition breaks." />
+<meta name="keywords" content="Lance, ByteDance Lance, unified multimodal model, 3B, text-to-image, text-to-video, image editing, video editing, subject-driven, idip, image understanding, video understanding, RTX 4090, 24GB, bf16, flash-attn, Wan VAE, Qwen2.5-VL, GenEval, DPG-Bench, GEdit-Bench, VBench" />
+<meta name="author" content="Omar Kamal Hosney" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://omkamal.github.io/articles/lance/lance.html" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Omar Kamal Hosney" />
+<meta property="og:url" content="https://omkamal.github.io/articles/lance/lance.html" />
+<meta property="og:title" content="Lance 3B — A Unified Image & Video Model on a Single RTX 4090" />
+<meta property="og:description" content="All seven modes of ByteDance's Lance demonstrated, the official benchmarks, and the real performance + VRAM numbers on a single 24 GB RTX 4090." />
+<meta property="og:image" content="https://omkamal.github.io/articles/lance/demo_assets/hero.png" />
+<meta property="article:author" content="Omar Kamal Hosney" />
+<meta property="article:published_time" content="2026-05-23" />
+<meta property="article:section" content="AI Models" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Lance 3B — A Unified Image & Video Model on a Single RTX 4090" />
+<meta name="twitter:description" content="Seven modes, official benchmarks, and measured performance on a 24 GB RTX 4090." />
+<meta name="twitter:image" content="https://omkamal.github.io/articles/lance/demo_assets/hero.png" />
+
+<link rel="icon" type="image/jpeg" href="../../omar.jpeg" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Lance 3B — A Unified Image & Video Model on a Single RTX 4090",
+  "description": "A hands-on tour of ByteDance's Lance unified multimodal model: all seven modes, official benchmarks, and measured performance + VRAM on a single 24 GB RTX 4090.",
+  "image": "https://omkamal.github.io/articles/lance/demo_assets/hero.png",
+  "datePublished": "2026-05-23",
+  "dateModified": "2026-05-23",
+  "author": { "@type": "Person", "name": "Omar Kamal Hosney", "url": "https://omkamal.github.io/" },
+  "publisher": { "@type": "Person", "name": "Omar Kamal Hosney" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://omkamal.github.io/articles/lance/lance.html" },
+  "articleSection": "AI Models",
+  "keywords": "Lance, unified multimodal, 3B, text-to-image, text-to-video, image editing, video editing, subject-driven, RTX 4090, GenEval, VBench",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omkamal.github.io/articles/" },
+      { "@type": "ListItem", "position": 3, "name": "Lance 3B on a 4090", "item": "https://omkamal.github.io/articles/lance/lance.html" }
+    ]
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root {
+  --c-ink: #18181b;
+  --c-ink-soft: #27272a;
+  --c-prose: #3f3f46;
+  --c-muted: #71717a;
+  --c-mute-2: #a1a1aa;
+  --c-paper: #fafaf9;
+  --c-paper-2: #ffffff;
+  --c-line: #e7e5e4;
+  --c-line-soft: #f1f0ee;
+  --c-accent: #7c3aed;
+  --c-accent-2: #ec4899;
+  --c-accent-3: #f59e0b;
+  --c-accent-soft: #faf5ff;
+  --c-accent-line: #e9d5ff;
+  --c-blue: #2563eb;
+  --c-blue-soft: #eff6ff;
+  --c-blue-line: #bfdbfe;
+  --c-green: #16a34a;
+  --c-green-soft: #f0fdf4;
+  --c-green-line: #bbf7d0;
+  --c-warn: #b45309;
+  --c-warn-soft: #fffbeb;
+  --c-warn-line: #fde68a;
+  --c-red: #dc2626;
+  --c-red-soft: #fef2f2;
+  --c-red-line: #fecaca;
+  --c-code-bg: #0f172a;
+  --c-code-fg: #e2e8f0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 24px 56px -16px rgba(15, 23, 42, 0.18), 0 8px 20px -6px rgba(15, 23, 42, 0.08);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { font-family: 'Source Serif 4', Charter, Georgia, 'Times New Roman', serif; font-size: 18px; line-height: 1.75; color: var(--c-prose); background: var(--c-paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--c-accent); color: white; }
+
+.top-nav { position: sticky; top: 0; z-index: 50; background: rgba(250, 250, 249, 0.85); backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px); border-bottom: 1px solid var(--c-line); }
+.nav-inner { max-width: 1180px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 12px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--c-ink); text-decoration: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-accent) 100%); display: grid; place-items: center; font-weight: 800; font-size: 0.78rem; color: white; box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.4); }
+.nav-right { display: flex; gap: 4px; align-items: center; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+.nav-right a { color: var(--c-muted); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 500; transition: all 0.2s var(--ease); }
+.nav-right a:hover { color: var(--c-ink); background: rgba(0,0,0,0.04); }
+.nav-right a.active { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.hero { position: relative; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #4c1d95 100%); color: #e2e8f0; padding: 80px 0 100px; margin-bottom: -60px; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.35), transparent 50%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.30), transparent 50%), radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.10), transparent 60%); }
+.hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); pointer-events: none; }
+.hero-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 32px; }
+.crumbs { font-family: 'Inter', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; color: rgba(226, 232, 240, 0.65); margin-bottom: 22px; }
+.crumbs a { color: rgba(226, 232, 240, 0.85); text-decoration: none; border-bottom: 1px solid rgba(226, 232, 240, 0.3); transition: all 0.2s var(--ease); }
+.crumbs a:hover { color: white; border-bottom-color: white; }
+.crumbs .sep { margin: 0 0.5em; opacity: 0.4; }
+.article-header { margin: 0; padding: 0; border: 0; }
+.byline { display: inline-flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: #c4b5fd; padding: 5px 12px; background: rgba(168, 85, 247, 0.18); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50px; margin-bottom: 28px; }
+.byline span + span::before { content: "·"; opacity: 0.6; margin: 0 0.25rem; color: #c4b5fd; }
+h1 { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2.2rem, 4.8vw, 3.6rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.03em; color: #ffffff; margin: 0 0 22px; max-width: 880px; }
+.subtitle { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(1.05rem, 1.6vw, 1.28rem); line-height: 1.55; color: rgba(226, 232, 240, 0.82); font-style: italic; margin: 0; max-width: 720px; }
+.subtitle code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85em; font-style: normal; background: rgba(255, 255, 255, 0.12); padding: 2px 8px; border-radius: 5px; color: #fde68a; border: 1px solid rgba(255, 255, 255, 0.08); }
+
+.container { max-width: 980px; margin: 0 auto; padding: 100px 32px 80px; position: relative; z-index: 2; }
+
+.tldr { background: linear-gradient(135deg, #ffffff 0%, var(--c-accent-soft) 100%); border: 1px solid var(--c-accent-line); border-left: 4px solid var(--c-accent); padding: 26px 30px; border-radius: 0 16px 16px 0; margin: 0 0 60px; box-shadow: var(--shadow-md); }
+.tldr h3 { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-accent); margin: 0 0 12px; }
+.tldr p { font-size: 1.05rem; color: var(--c-ink-soft); margin: 0 0 0.8rem; text-align: justify; hyphens: auto; }
+.tldr p:last-child { margin-bottom: 0; }
+.tldr strong { color: var(--c-ink); font-weight: 700; }
+.tldr code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(255,255,255,0.7); border: 1px solid var(--c-accent-line); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); }
+
+.toc { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; color: var(--c-prose); padding: 22px 28px; margin: 0 0 80px; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 16px; line-height: 2.1; box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: center; }
+.toc strong { display: inline-flex; align-items: center; gap: 7px; color: var(--c-ink); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; padding-right: 14px; margin-right: 6px; border-right: 1px solid var(--c-line); }
+.toc strong::before { content: ''; width: 3px; height: 14px; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+.toc a { color: var(--c-prose); text-decoration: none; padding: 4px 11px; border-radius: 50px; transition: all 0.2s var(--ease); font-weight: 500; }
+.toc a:hover { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.article-section { margin-bottom: 80px; scroll-margin-top: 80px; }
+.section-title { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(1.65rem, 3vw, 2.15rem); font-weight: 700; color: var(--c-ink); margin: 0 0 28px; letter-spacing: -0.025em; line-height: 1.18; position: relative; padding-left: 18px; }
+.section-title::before { content: ''; position: absolute; left: 0; top: 0.18em; width: 5px; height: 0.85em; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 3px; }
+
+.prose { max-width: 100%; margin-bottom: 36px; font-size: 1.06rem; line-height: 1.78; text-align: justify; hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty; }
+.prose p { margin: 0 0 1.25rem; color: var(--c-prose); text-align: justify; hyphens: auto; }
+.prose h3 { text-align: left; hyphens: manual; }
+.prose ul, .prose ol { text-align: left; hyphens: manual; margin: 0 0 1.25rem 1.2rem; }
+.prose li { margin-bottom: 0.4rem; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--c-ink); font-weight: 600; }
+.prose em { color: var(--c-ink-soft); }
+.prose code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.86em; background: var(--c-accent-soft); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); border: 1px solid var(--c-accent-line); font-weight: 500; }
+.prose a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--c-accent-line); transition: all 0.2s var(--ease); }
+.prose a:hover { text-decoration-color: var(--c-accent); text-decoration-thickness: 2px; }
+.prose h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--c-ink); margin: 2.2rem 0 0.8rem; letter-spacing: -0.015em; display: flex; align-items: center; gap: 10px; }
+.prose h3::before { content: ''; width: 22px; height: 2px; background: linear-gradient(90deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+
+.prose pre { background: var(--c-code-bg); color: var(--c-code-fg); padding: 44px 26px 22px; border-radius: 12px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85rem; line-height: 1.65; overflow-x: auto; margin: 22px 0; border: 1px solid #1e293b; box-shadow: var(--shadow-lg); position: relative; }
+.prose pre::before { content: ''; position: absolute; top: 14px; left: 18px; width: 11px; height: 11px; border-radius: 50%; background: #ef4444; box-shadow: 18px 0 0 #f59e0b, 36px 0 0 #10b981; opacity: 0.7; }
+.prose pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; border: 0; font-weight: 400; }
+
+.callout { background: var(--c-warn-soft); border: 1px solid var(--c-warn-line); border-left: 4px solid var(--c-accent-3); padding: 16px 22px; border-radius: 0 12px 12px 0; margin: 22px 0; font-size: 0.98rem; line-height: 1.7; color: var(--c-ink-soft); position: relative; box-shadow: var(--shadow-sm); text-align: justify; hyphens: auto; }
+.callout.green { background: var(--c-green-soft); border-color: var(--c-green-line); border-left-color: var(--c-green); }
+.callout.red { background: var(--c-red-soft); border-color: var(--c-red-line); border-left-color: var(--c-red); }
+.callout.blue { background: var(--c-blue-soft); border-color: var(--c-blue-line); border-left-color: var(--c-blue); }
+.callout strong { color: var(--c-ink); }
+.callout code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--c-warn); padding: 1.5px 6px; border-radius: 4px; }
+.callout.green code { background: rgba(22, 163, 74, 0.12); border-color: rgba(22, 163, 74, 0.3); color: var(--c-green); }
+.callout.red code { background: rgba(220, 38, 38, 0.10); border-color: rgba(220, 38, 38, 0.3); color: var(--c-red); }
+.callout.blue code { background: rgba(37, 99, 235, 0.10); border-color: rgba(37,99,235,0.3); color: var(--c-blue); }
+
+.variant-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 22px 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.88rem; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); }
+.variant-table th, .variant-table td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--c-line-soft); vertical-align: top; }
+.variant-table th { background: linear-gradient(180deg, #fafafa, #f5f5f4); font-weight: 700; color: var(--c-ink); letter-spacing: 0.02em; font-size: 0.74rem; text-transform: uppercase; }
+.variant-table tbody tr:last-child td { border-bottom: 0; }
+.variant-table tbody tr:hover td { background: var(--c-accent-soft); }
+.variant-table td { color: var(--c-prose); }
+.variant-table td strong { color: var(--c-ink); }
+.variant-table td.num { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+.variant-table tr.hi td { background: var(--c-green-soft); }
+.variant-table tr.hi:hover td { background: var(--c-green-soft); }
+
+.figure { margin: 28px auto; text-align: center; display: block; }
+.figure img, .figure video { width: 100%; max-width: 100%; height: auto; border-radius: 14px; display: block; margin-left: auto; margin-right: auto; border: 1px solid var(--c-line); box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); background: var(--c-paper-2); }
+.figure video { background: #000; }
+.figure svg.radar { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 14px; box-shadow: var(--shadow-md); padding: 16px 10px; }
+.radar-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 20px; margin: 14px auto 0; font-family: 'Inter', sans-serif; font-size: 0.8rem; color: var(--c-prose); }
+.radar-legend span { display: inline-flex; align-items: center; gap: 8px; }
+.radar-legend i { width: 22px; height: 4px; border-radius: 2px; display: inline-block; }
+.figure img:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); border-color: var(--c-accent-line); }
+.figure figcaption { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; color: var(--c-mute-2); margin: 10px auto 0; letter-spacing: 0.02em; text-align: center; max-width: 85%; }
+.figure.full img { background: white; }
+.figure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px auto; justify-items: center; align-items: start; }
+.figure-grid .figure { margin: 0; width: 100%; }
+
+.example { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 18px; padding: 28px 30px; margin: 26px 0 36px; box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); }
+.example:hover { box-shadow: var(--shadow-lg); border-color: var(--c-accent-line); }
+.example-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1px solid var(--c-line-soft); flex-wrap: wrap; }
+.example-head h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--c-ink); margin: 0; letter-spacing: -0.018em; }
+.tps-chip { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; font-weight: 700; padding: 6px 14px; border-radius: 50px; color: white; background: linear-gradient(135deg, var(--c-green) 0%, #15803d 100%); box-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.35); }
+.tps-chip.amber { background: linear-gradient(135deg, var(--c-accent-3) 0%, var(--c-warn) 100%); box-shadow: 0 4px 12px -2px rgba(180, 83, 9, 0.35); }
+.tps-chip.fire { background: linear-gradient(135deg, var(--c-accent-2) 0%, #be185d 100%); box-shadow: 0 4px 12px -2px rgba(190, 24, 93, 0.35); }
+.tps-chip.blue { background: linear-gradient(135deg, var(--c-blue) 0%, #1d4ed8 100%); box-shadow: 0 4px 12px -2px rgba(37,99,235,0.35); }
+.prompt-line { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: var(--c-paper); border: 1px solid var(--c-line); border-left: 3px solid var(--c-accent); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 0 0 18px; color: var(--c-ink-soft); line-height: 1.5; }
+
+.commentary { margin-top: 24px; padding: 20px 22px; background: var(--c-blue-soft); border: 1px solid var(--c-blue-line); border-left: 4px solid var(--c-blue); border-radius: 0 12px 12px 0; }
+.commentary h4 { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-blue); margin: 0 0 10px; display: inline-flex; align-items: center; gap: 7px; }
+.commentary h4::before { content: '💡'; font-size: 1.05em; }
+.commentary p { font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); margin: 0; text-align: justify; hyphens: auto; }
+.commentary code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: rgba(37, 99, 235, 0.1); padding: 1.5px 6px; border-radius: 4px; color: var(--c-blue); border: 1px solid var(--c-blue-line); font-weight: 500; }
+.commentary strong { color: var(--c-ink); }
+
+/* model answer block (understanding) */
+.answer { font-family: 'Source Serif 4', Georgia, serif; font-style: italic; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); background: var(--c-green-soft); border: 1px solid var(--c-green-line); border-left: 4px solid var(--c-green); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 0; }
+.answer .q { font-family: 'Inter', sans-serif; font-style: normal; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-green); display: block; margin-bottom: 8px; }
+
+.links { padding-left: 20px; max-width: 100%; }
+.links li { margin-bottom: 10px; line-height: 1.6; }
+.links li code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: var(--c-paper); border: 1px solid var(--c-line); padding: 1px 6px; border-radius: 4px; color: var(--c-ink-soft); }
+
+.page-footer { border-top: 1px solid var(--c-line); padding: 60px 0 80px; text-align: center; background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.03)); }
+.page-footer .inner { max-width: 980px; margin: 0 auto; padding: 0 32px; font-family: 'Inter', sans-serif; }
+.back-to-blog { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-2) 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 24px -6px rgba(124, 58, 237, 0.5); transition: all 0.3s var(--ease); margin-bottom: 32px; }
+.back-to-blog:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(124, 58, 237, 0.65); }
+.back-to-blog .arrow { transition: transform 0.3s var(--ease); }
+.back-to-blog:hover .arrow { transform: translateX(-4px); }
+.page-footer p { color: var(--c-muted); font-size: 0.88rem; margin-bottom: 18px; }
+.social { display: flex; justify-content: center; gap: 12px; }
+.social a { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: var(--c-paper-2); border: 1px solid var(--c-line); color: var(--c-muted); text-decoration: none; transition: all 0.3s var(--ease); font-family: 'Inter', sans-serif; font-weight: 700; }
+.social a:hover { color: var(--c-accent); border-color: var(--c-accent-line); background: var(--c-accent-soft); transform: translateY(-2px); }
+
+@media (max-width: 900px) {
+  .hero { padding: 60px 0 80px; }
+  .hero-inner { padding: 0 20px; }
+  .container { padding: 80px 20px 60px; }
+  .nav-inner { padding: 12px 20px; }
+  h1 { font-size: 2rem; }
+  .section-title { font-size: 1.55rem; }
+  .figure-grid { grid-template-columns: 1fr; }
+  .example { padding: 22px 22px; border-radius: 14px; }
+  .toc { padding: 18px 20px; font-size: 0.8rem; gap: 6px; }
+  .toc strong { border-right: 0; margin-bottom: 4px; padding-right: 0; width: 100%; }
+  .nav-right a { padding: 6px 10px; font-size: 0.82rem; }
+}
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .prose { font-size: 1.02rem; }
+  .nav-right a:not(.active) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">OK</span>
+      <span>Omar Kamal Hosney</span>
+    </a>
+    <div class="nav-right">
+      <a href="../../cheatsheets/index.html">Cheatsheets</a>
+      <a href="../index.html" class="active">Blog</a>
+      <a href="../../resume.html" target="_blank">Resume</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="crumbs">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="../index.html">Blog</a>
+      <span class="sep">/</span>
+      AI Models
+    </p>
+    <div class="article-header">
+      <p class="byline"><span>Lance · ByteDance</span><span>Field Notes</span><span>May 2026</span></p>
+      <h1>Lance 3B: one model for image &amp; video, on a single RTX 4090</h1>
+      <p class="subtitle">ByteDance's <strong>Lance</strong> is a 3B <em>native unified</em> multimodal model — image and video
+      <strong>understanding, generation and editing</strong> in a single transformer. I ran all of its modes on one
+      24 GB <code>RTX 4090</code>: here are the results, the official benchmarks, the two code fixes it took to fit,
+      and the real performance + VRAM numbers — including the max video duration and where it breaks.</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- HERO IMAGE -->
+<figure class="figure" style="margin: 0 0 60px;">
+  <img src="demo_assets/hero.png" alt="Montage of Lance outputs on a 4090: a subject-driven astronaut portrait, a rainbow fox, an edited Santa-hat portrait, a sunset coastline frame and a red-panda surfer frame" loading="lazy" />
+</figure>
+
+<!-- TL;DR -->
+<div class="tldr">
+  <h3>TL;DR</h3>
+  <p>
+    <strong>Lance</strong> packs image/video understanding, generation and editing into <strong>one 3B model</strong>
+    and — despite its size — matches or beats much larger unified models: <strong>0.90 GenEval</strong>,
+    <strong>84.67 DPG</strong>, <strong>7.30 GEdit-Bench</strong>, <strong>85.11 VBench</strong>.
+  </p>
+  <p>
+    On a single 24 GB 4090 it needs two small patches to fit (a <strong>bf16-before-GPU load order</strong> and a
+    <strong>flash-attn rotary fix</strong>). After that: text-to-image ~<strong>10 s/image</strong>, and
+    <strong>full 10.08 s text-to-video at native 480p</strong> — t2v memory is flat at ~24 GB regardless of length.
+    Understanding (VQA / OCR / captioning) is excellent and cheap.
+  </p>
+  <p>
+    The one real wall: <strong>multi-reference composition</strong> (combine two people, person + object, or a
+    style-reference image) collapses to reproducing one input. Style transfer still works beautifully — just
+    describe the style in <em>text</em>, not with a reference image.
+  </p>
+</div>
+
+<!-- TOC -->
+<nav class="toc" aria-label="Table of contents">
+  <strong>Contents</strong>
+  <a href="#what">What Lance is</a>
+  <a href="#modes">The modes</a>
+  <a href="#gen">Image generation</a>
+  <a href="#subject">Subject-driven</a>
+  <a href="#style">Style transfer</a>
+  <a href="#understand">Understanding</a>
+  <a href="#video">Video</a>
+  <a href="#benchmarks">Benchmarks</a>
+  <a href="#run">Running on a 4090</a>
+  <a href="#perf">Performance</a>
+  <a href="#duration">Max video duration</a>
+  <a href="#limits">Where it breaks</a>
+  <a href="#refs">References</a>
+</nav>
+
+<!-- =========================================================
+     1. What Lance is
+============================================================ -->
+<section class="article-section" id="what">
+  <h2 class="section-title">What Lance is, in one paragraph</h2>
+  <div class="prose">
+    <p>
+      <a href="https://github.com/bytedance/Lance" target="_blank"><strong>Lance</strong></a>
+      ("Unified Multimodal Modeling by Multi-Task Synergy", ByteDance) is a <strong>3 billion active-parameter</strong>
+      model that does six things most stacks need six models for: <strong>text→image</strong>, <strong>text→video</strong>,
+      <strong>image editing</strong>, <strong>video editing</strong>, and <strong>image / video understanding</strong>
+      (visual question answering and captioning). The transformer backbone is a Qwen2-derived
+      <strong>Mixture-of-Transformer</strong> with separate expert weights for "understanding" and "generation" tokens;
+      it is trained <em>from scratch</em> (only the ViT and VAE encoders are pretrained) on a 128×A100 budget. The two
+      visual front-ends are a <strong>Qwen2.5-VL ViT</strong> (for understanding/conditioning) and a
+      <strong>Wan 2.2 video VAE</strong> (for generation). Two checkpoints ship: <code>Lance_3B</code> for images and
+      <code>Lance_3B_Video</code> for video.
+    </p>
+    <p>
+      What makes it interesting for a home lab is the size. A 3B unified model that posts numbers next to 7B–20B
+      systems is exactly the kind of thing that should run on a single consumer GPU — so I downloaded the weights to a
+      data disk and pointed it at my <strong>RTX 4090</strong>. The rest of this article is what came out.
+    </p>
+  </div>
+  <div class="callout blue">
+    <strong>Setup.</strong> Weights (≈57 GB across both checkpoints + ViT + VAE) on a data disk; a
+    <code>uv</code> venv on Python 3.11; <code>torch 2.5.1+cu124</code>, <code>flash-attn 2.8.3</code>,
+    <code>transformers 4.49</code>, <code>diffusers 0.29.1</code>. All runs are bf16 with flash-attention and the
+    KV-cache path enabled.
+  </div>
+</section>
+
+<!-- =========================================================
+     2. The modes overview
+============================================================ -->
+<section class="article-section" id="modes">
+  <h2 class="section-title">Seven modes, one set of weights</h2>
+  <div class="prose">
+    <p>
+      The CLI dispatches on a <code>--task</code> flag. Six modes are documented; a seventh —
+      <code>image_idip</code>, subject-driven generation — lives in the code but isn't wired into the launcher, so I
+      registered it to test reference-conditioned generation properly. Here's the map before we look at outputs.
+    </p>
+  </div>
+  <table class="variant-table">
+    <thead>
+      <tr><th>Mode</th><th>Task flag</th><th>Input → Output</th><th>Checkpoint</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Text → Image</strong></td><td class="num">t2i</td><td>prompt → image</td><td class="num">Lance_3B</td></tr>
+      <tr><td><strong>Image editing</strong></td><td class="num">image_edit</td><td>image + instruction → image</td><td class="num">Lance_3B</td></tr>
+      <tr><td><strong>Subject-driven</strong></td><td class="num">image_idip</td><td>reference image + prompt → image</td><td class="num">Lance_3B</td></tr>
+      <tr><td><strong>Image understanding</strong></td><td class="num">x2t_image</td><td>image + question → text</td><td class="num">Lance_3B</td></tr>
+      <tr><td><strong>Text → Video</strong></td><td class="num">t2v</td><td>prompt → video</td><td class="num">Lance_3B_Video</td></tr>
+      <tr><td><strong>Video editing</strong></td><td class="num">video_edit</td><td>video + instruction → video</td><td class="num">Lance_3B_Video</td></tr>
+      <tr><td><strong>Video understanding</strong></td><td class="num">x2t_video</td><td>video + question → text</td><td class="num">Lance_3B_Video</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- =========================================================
+     3. Image generation + editing
+============================================================ -->
+<section class="article-section" id="gen">
+  <h2 class="section-title">Image generation &amp; editing</h2>
+  <div class="prose">
+    <p>
+      Text-to-image is the most polished mode. The model renders clean in-image text (the cat's "STOP" sign on the
+      project page is real), holds long compositional prompts together, and runs in about <strong>10 seconds per
+      768² image</strong> on the 4090.
+    </p>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/t2i_fox.png" alt="Text-to-image: anthropomorphic rainbow fox with stardust fur on a glowing fantasy grassland" loading="lazy" />
+      <figcaption>t2i — "anthropomorphic rainbow fox, stardust fur, glowing grassland"</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/t2i_bookstore.png" alt="Text-to-image: cozy bookstore cafe at golden hour, sunlight through tall windows" loading="lazy" />
+      <figcaption>t2i — "cozy bookstore café at golden hour, photorealistic"</figcaption>
+    </figure>
+  </div>
+
+  <div class="prose">
+    <h3>Instruction-guided editing</h3>
+    <p>
+      <code>image_edit</code> takes a source image and a free-form instruction. It preserves identity and pose while
+      applying local edits (objects, relighting) or a whole-image restyle. Two examples — adding accessories to my own
+      portrait, and a full 3D-cartoon restyle of a friend's photo:
+    </p>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/edit_in_omar.png" alt="Input portrait, black and white" loading="lazy" />
+      <figcaption>input</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/edit_omar_santa.png" alt="Edited: round black sunglasses and a red Santa hat added, identity preserved" loading="lazy" />
+      <figcaption>"add round black sunglasses and a red Santa hat"</figcaption>
+    </figure>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/edit_in_friend.png" alt="Input portrait of a man with a turban in a rustic setting" loading="lazy" />
+      <figcaption>input</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/edit_friend_pixar.png" alt="Edited: same man rendered as a 3D Pixar-style cartoon, setting preserved" loading="lazy" />
+      <figcaption>"convert into a 3D Pixar-style cartoon render"</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- =========================================================
+     4. Subject-driven (idip)
+============================================================ -->
+<section class="article-section" id="subject">
+  <h2 class="section-title">Subject-driven generation</h2>
+  <div class="prose">
+    <p>
+      Give Lance a single reference photo of a subject and a prompt, and it generates a new scene that keeps the
+      subject's identity. This is the <code>image_idip</code> path (identity-preserving), and with <em>one</em>
+      reference it works really well. Outputs are saved as a <code>[reference | generated]</code> pair:
+    </p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/idip_astronaut.png" alt="Left: reference portrait. Right: the same man generated as an astronaut in space with Earth behind him, identity preserved" loading="lazy" />
+    <figcaption>idip — "the same man as an astronaut, Earth behind him" · identity preserved [reference | generated]</figcaption>
+  </figure>
+</section>
+
+<!-- =========================================================
+     5. Style transfer
+============================================================ -->
+<section class="article-section" id="style">
+  <h2 class="section-title">Style transfer — describe it, don't reference it</h2>
+  <div class="prose">
+    <p>
+      Style transfer is just <code>image_edit</code> with the target style <strong>described in text</strong>. That is
+      the "free-form manipulation" the project page shows, and it is excellent — the subject stays recognizable while
+      the medium changes completely:
+    </p>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/style_comic.png" alt="Portrait restyled as a flat bold-outlined comic cartoon" loading="lazy" />
+      <figcaption>"change the style to a flat comic cartoon" (text)</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/style_watercolor.png" alt="Portrait restyled as a soft watercolor painting" loading="lazy" />
+      <figcaption>"change the style to a watercolor painting" (text)</figcaption>
+    </figure>
+  </div>
+  <div class="callout red">
+    <strong>What does not work:</strong> handing the model a <em>style-reference image</em> (a "make this look like
+    that" Two2One edit). It simply reproduces the reference instead of transferring its style onto the subject — the
+    same failure mode as all multi-reference composition (see <a href="#limits" style="color:var(--c-red);">Where it breaks</a>).
+  </div>
+</section>
+
+<!-- =========================================================
+     6. Understanding
+============================================================ -->
+<section class="article-section" id="understand">
+  <h2 class="section-title">Image &amp; video understanding</h2>
+  <div class="prose">
+    <p>
+      The understanding modes (<code>x2t_image</code>, <code>x2t_video</code>) take a visual plus a question and emit
+      text. They're fast (~3 s per image) and accurate — including OCR and symbol recognition. A few real answers,
+      verbatim:
+    </p>
+  </div>
+
+  <div class="example">
+    <div class="example-head"><h3>① Symbol &amp; scene recognition</h3><span class="tps-chip blue">x2t_image</span></div>
+    <div class="figure-grid" style="margin-top:0">
+      <figure class="figure full"><img src="demo_assets/x2t_in_6october.jpg" alt="Iwo-Jima-style photo of soldiers raising an Egyptian flag" loading="lazy" /><figcaption>input</figcaption></figure>
+      <div>
+        <p class="answer"><span class="q">Q · what are the people doing, and what flag?</span>
+        "The people in the image are soldiers, and they are raising an <strong>Egyptian flag</strong> atop a destroyed building."</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-head"><h3>② OCR — reading a poster</h3><span class="tps-chip blue">x2t_image</span></div>
+    <div class="figure-grid" style="margin-top:0">
+      <figure class="figure full"><img src="demo_assets/x2t_in_diagrams.jpg" alt="Framed poster reading Diagrams as Code" loading="lazy" /><figcaption>input</figcaption></figure>
+      <div>
+        <p class="answer"><span class="q">Q · read the text and describe the image</span>
+        "…a poster that reads <strong>\"DIAGRAMS AS CODE\"</strong> in large blue letters. The design is simple yet striking…"</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-head"><h3>③ Video captioning — a film scene</h3><span class="tps-chip blue">x2t_video</span></div>
+    <div class="figure-grid" style="margin-top:0">
+      <figure class="figure full"><video src="demo_assets/x2t_in_mokhtar.mp4" controls muted loop playsinline preload="metadata"></video><figcaption>input · a peace-negotiation scene (3 s clip)</figcaption></figure>
+      <div>
+        <p class="answer"><span class="q">Q · describe the people, clothing and setting</span>
+        "…an elderly man with a white beard and white headwrap… sitting in a room with a <strong>solemn expression</strong>… a white tunic with a high collar. The room has a wooden door and a window with white curtains… deep in thought or concerned about something."</p>
+      </div>
+    </div>
+  </div>
+  <div class="commentary">
+    <h4>Note on video understanding</h4>
+    <p>The descriptions are accurate on people, attire, setting and mood — but the model does not name proper nouns
+    (it describes the scene, not "Omar Mukhtar"). On 24 GB this mode needs <strong>short clips at a reduced ViT
+    resolution</strong>: a ~10 s clip at 480p tries to allocate a 33 GB attention mask and OOMs, so I cap at ~3 s and
+    <code>video_360p</code>.</p>
+  </div>
+</section>
+
+<!-- =========================================================
+     7. Video
+============================================================ -->
+<section class="article-section" id="video">
+  <h2 class="section-title">Video — generation &amp; editing</h2>
+  <div class="prose">
+    <p>
+      Text-to-video runs from the <code>Lance_3B_Video</code> checkpoint at 848×480, 12 fps. Quality is strong and
+      motion is coherent. Two clips — a tropical sunset coastline and a red-panda surfer:
+    </p>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <video src="demo_assets/t2v_coast.mp4" controls muted loop playsinline preload="metadata"></video>
+      <figcaption>t2v — "tropical coastline at sunset, moving waves, swaying palms"</figcaption>
+    </figure>
+    <figure class="figure full">
+      <video src="demo_assets/t2v_panda.mp4" controls muted loop playsinline preload="metadata"></video>
+      <figcaption>t2v — "red panda riding a wooden surfboard on a wave"</figcaption>
+    </figure>
+  </div>
+
+  <div class="prose">
+    <h3>Video editing</h3>
+    <p>
+      <code>video_edit</code> recolors subjects and replaces backgrounds while keeping motion. It is the most
+      memory-hungry mode (it holds the reference video <em>and</em> the generated target at once), so on 24 GB it runs
+      at <code>video_360p</code> on short clips. Input → edited:
+    </p>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <video src="demo_assets/vedit_in_car.mp4" controls muted loop playsinline preload="metadata"></video>
+      <figcaption>input</figcaption>
+    </figure>
+    <figure class="figure full">
+      <video src="demo_assets/vedit_car_red.mp4" controls muted loop playsinline preload="metadata"></video>
+      <figcaption>"make the car bright red, background a snowy mountain road"</figcaption>
+    </figure>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <video src="demo_assets/vedit_in_woman.mp4" controls muted loop playsinline preload="metadata"></video>
+      <figcaption>input</figcaption>
+    </figure>
+    <figure class="figure full">
+      <video src="demo_assets/vedit_woman_castle.mp4" controls muted loop playsinline preload="metadata"></video>
+      <figcaption>"change the background to a fairytale castle by a lake at sunset"</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- =========================================================
+     8. Benchmarks
+============================================================ -->
+<section class="article-section" id="benchmarks">
+  <h2 class="section-title">The official benchmarks — punching above 3B</h2>
+  <div class="prose">
+    <p>
+      The reason a 3B unified model is worth your disk space is the score-to-size ratio. From the Lance paper, here is
+      where it lands against larger unified models on the four headline suites (Lance highlighted):
+    </p>
+  </div>
+  <table class="variant-table">
+    <thead>
+      <tr><th>Model</th><th>Params</th><th>GenEval ↑</th><th>DPG ↑</th><th>GEdit-Bench ↑</th><th>VBench ↑</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>BAGEL</td><td class="num">7B</td><td class="num">0.88</td><td class="num">85.07</td><td class="num">6.52</td><td class="num">—</td></tr>
+      <tr><td>Show-o2</td><td class="num">7B</td><td class="num">0.76</td><td class="num">86.14</td><td class="num">—</td><td class="num">81.34</td></tr>
+      <tr><td>InternVL-U</td><td class="num">1.7B</td><td class="num">0.85</td><td class="num">85.18</td><td class="num">6.66</td><td class="num">—</td></tr>
+      <tr><td>TUNA</td><td class="num">7B / 1.5B</td><td class="num">0.90</td><td class="num">86.76</td><td class="num">—</td><td class="num">84.06</td></tr>
+      <tr><td>Qwen-Image</td><td class="num">20B</td><td class="num">0.87</td><td class="num">88.32</td><td class="num">—</td><td class="num">—</td></tr>
+      <tr><td>Wan2.1-T2V</td><td class="num">14B</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">83.69</td></tr>
+      <tr class="hi"><td><strong>🌟 Lance</strong></td><td class="num"><strong>3B</strong></td><td class="num"><strong>0.90</strong></td><td class="num"><strong>84.67</strong></td><td class="num"><strong>7.30</strong></td><td class="num"><strong>85.11</strong></td></tr>
+    </tbody>
+  </table>
+  <div class="prose">
+    <p>
+      The standout is <strong>image editing</strong>: <strong>7.30 on GEdit-Bench</strong> beats BAGEL (6.52) and
+      InternVL-U (6.66) by a clear margin, and <strong>video generation</strong> at <strong>85.11 VBench</strong> edges
+      out the 14B Wan2.1-T2V. On <strong>GenEval</strong> it ties the 7B TUNA at <strong>0.90</strong> and beats the
+      20B Qwen-Image. DPG (84.67) is the one suite where the bigger models keep a small lead.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     9. Running on a 4090
+============================================================ -->
+<section class="article-section" id="run">
+  <h2 class="section-title">Running it on a 24 GB 4090 — two fixes</h2>
+  <div class="prose">
+    <p>
+      The README asks for a 40 GB GPU. The 4090 has 24. It fits, but only after two changes — both worth knowing if
+      you try this yourself.
+    </p>
+    <h3>① Load in bf16 <em>before</em> moving to the GPU</h3>
+    <p>
+      The image checkpoint is <strong>6.19 B parameters stored in fp32 (~24 GB)</strong>. The stock loader moves the
+      fp32 model to the GPU and only <em>then</em> casts to bf16 — which OOMs a 24 GB card at load time. Casting on
+      CPU first, then moving the ~12 GB bf16 model to the GPU, fixes it:
+    </p>
+<pre><code># inference_lance.py — cast on CPU, defer the GPU move
+model = model.to(dtype=torch.bfloat16)     # was: model.to(DEVICE)  [fp32 -> OOM]
+# ... load checkpoint, resize embeddings ...
+model = model.to(device=DEVICE, dtype=torch.bfloat16)   # GPU holds bf16 only</code></pre>
+    <h3>② Swap the flash-attn rotary kernel</h3>
+    <p>
+      flash-attn 2.8.3's Triton <code>apply_rotary_emb</code> calls <code>torch.library.wrap_triton</code>, which only
+      exists in torch ≥ 2.6 (this repo pins 2.5.1). Any ViT pass — every edit, every understanding call — crashes with
+      <code>AttributeError</code>. The pure-torch variant has identical math and is a drop-in; the fast attention
+      kernel is untouched:
+    </p>
+<pre><code># modeling/vit/qwen2_5_vl_vit.py
+from flash_attn.layers.rotary import apply_rotary_emb_torch as apply_rotary_emb</code></pre>
+    <p>
+      With those in place, plus <code>PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True</code> to keep video
+      generation from fragmenting, everything runs.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     10. Performance
+============================================================ -->
+<section class="article-section" id="perf">
+  <h2 class="section-title">Performance — every mode, measured</h2>
+  <div class="prose">
+    <p>
+      All seven modes, run back-to-back on the 4090. "Load" is checkpoint load + bf16 cast + GPU move; "Gen" is the
+      denoise/decode (or autoregressive decode for understanding). Peak VRAM is the max sampled during the run.
+    </p>
+  </div>
+  <table class="variant-table">
+    <thead>
+      <tr><th>Mode</th><th>Checkpoint</th><th>Load (s)</th><th>Gen (s)</th><th>Per&nbsp;example</th><th>Peak VRAM</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>t2i</strong></td><td class="num">Lance_3B</td><td class="num">42</td><td class="num">20</td><td class="num">10.0 s</td><td class="num">16.3 GB</td></tr>
+      <tr><td><strong>image_edit</strong></td><td class="num">Lance_3B</td><td class="num">67</td><td class="num">25</td><td class="num">12.5 s</td><td class="num">16.6 GB</td></tr>
+      <tr><td><strong>image_idip</strong></td><td class="num">Lance_3B</td><td class="num">43</td><td class="num">57</td><td class="num">14.2 s</td><td class="num">20.0 GB</td></tr>
+      <tr><td><strong>x2t_image</strong></td><td class="num">Lance_3B</td><td class="num">41</td><td class="num">13</td><td class="num">3.2 s</td><td class="num">16.2 GB</td></tr>
+      <tr><td><strong>t2v</strong> (33f)</td><td class="num">Lance_3B_Video</td><td class="num">114</td><td class="num">155</td><td class="num">77.5 s</td><td class="num">24.0 GB</td></tr>
+      <tr><td><strong>x2t_video</strong></td><td class="num">Lance_3B_Video</td><td class="num">102</td><td class="num">77</td><td class="num">38.5 s</td><td class="num">21.7 GB</td></tr>
+      <tr><td><strong>video_edit</strong></td><td class="num">Lance_3B_Video</td><td class="num">102</td><td class="num">11</td><td class="num">5.5 s</td><td class="num">17.4 GB</td></tr>
+    </tbody>
+  </table>
+  <div class="commentary">
+    <h4>Reading the table</h4>
+    <p>Image modes are comfortable (16–20 GB) and fast (3–14 s each). The video model loads slower (the checkpoint is
+    larger) and t2v is the only mode that pushes the 24 GB ceiling. Model load dominates short jobs — keep the process
+    warm if you're generating in bulk.</p>
+  </div>
+
+  <figure class="figure" style="margin-top:8px;">
+    <svg class="radar" viewBox="0 0 620 470" role="img" xmlns="http://www.w3.org/2000/svg">
+<polygon points="310.0,180.0 337.4,193.2 344.1,222.8 325.2,246.5 294.8,246.5 275.9,222.8 282.6,193.2" fill="none" stroke="#e7e5e4" stroke-width="1"/>
+<text x="315" y="183" font-family="JetBrains Mono, monospace" font-size="9" fill="#a1a1aa">25</text>
+<polygon points="310.0,145.0 364.7,171.4 378.2,230.6 340.4,278.1 279.6,278.1 241.8,230.6 255.3,171.4" fill="none" stroke="#e7e5e4" stroke-width="1"/>
+<text x="315" y="148" font-family="JetBrains Mono, monospace" font-size="9" fill="#a1a1aa">50</text>
+<polygon points="310.0,110.0 392.1,149.5 412.4,238.4 355.6,309.6 264.4,309.6 207.6,238.4 227.9,149.5" fill="none" stroke="#e7e5e4" stroke-width="1"/>
+<text x="315" y="113" font-family="JetBrains Mono, monospace" font-size="9" fill="#a1a1aa">75</text>
+<polygon points="310.0,75.0 419.5,127.7 446.5,246.2 370.7,341.1 249.3,341.1 173.5,246.2 200.5,127.7" fill="none" stroke="#e7e5e4" stroke-width="1"/>
+<text x="315" y="78" font-family="JetBrains Mono, monospace" font-size="9" fill="#a1a1aa">100</text>
+<line x1="310" y1="215" x2="310.0" y2="75.0" stroke="#e7e5e4" stroke-width="1"/>
+<text x="310.0" y="48.6" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">t2i</text>
+<text x="310.0" y="61.6" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">16.3 GB</text>
+<line x1="310" y1="215" x2="419.5" y2="127.7" stroke="#e7e5e4" stroke-width="1"/>
+<text x="437.0" y="117.7" text-anchor="start" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">image_edit</text>
+<text x="437.0" y="130.7" text-anchor="start" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">16.6 GB</text>
+<line x1="310" y1="215" x2="446.5" y2="246.2" stroke="#e7e5e4" stroke-width="1"/>
+<text x="468.3" y="255.1" text-anchor="start" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">image_idip</text>
+<text x="468.3" y="268.1" text-anchor="start" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">20.0 GB</text>
+<line x1="310" y1="215" x2="370.7" y2="341.1" stroke="#e7e5e4" stroke-width="1"/>
+<text x="380.5" y="365.3" text-anchor="start" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">x2t_image</text>
+<text x="380.5" y="378.3" text-anchor="start" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">16.2 GB</text>
+<line x1="310" y1="215" x2="249.3" y2="341.1" stroke="#e7e5e4" stroke-width="1"/>
+<text x="239.5" y="365.3" text-anchor="end" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">t2v</text>
+<text x="239.5" y="378.3" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">24.0 GB</text>
+<line x1="310" y1="215" x2="173.5" y2="246.2" stroke="#e7e5e4" stroke-width="1"/>
+<text x="151.7" y="255.1" text-anchor="end" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">x2t_video</text>
+<text x="151.7" y="268.1" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">21.7 GB</text>
+<line x1="310" y1="215" x2="200.5" y2="127.7" stroke="#e7e5e4" stroke-width="1"/>
+<text x="183.0" y="117.7" text-anchor="end" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">video_edit</text>
+<text x="183.0" y="130.7" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">17.4 GB</text>
+<polygon points="310.0,122.3 384.1,155.9 420.8,240.3 350.2,298.4 250.5,338.5 189.5,242.5 232.3,153.0" fill="#dc2626" fill-opacity="0.16" stroke="#dc2626" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="310.0" cy="122.3" r="3.2" fill="#dc2626"/>
+<circle cx="384.1" cy="155.9" r="3.2" fill="#dc2626"/>
+<circle cx="420.8" cy="240.3" r="3.2" fill="#dc2626"/>
+<circle cx="350.2" cy="298.4" r="3.2" fill="#dc2626"/>
+<circle cx="250.5" cy="338.5" r="3.2" fill="#dc2626"/>
+<circle cx="189.5" cy="242.5" r="3.2" fill="#dc2626"/>
+<circle cx="232.3" cy="153.0" r="3.2" fill="#dc2626"/>
+<polygon points="310.0,196.9 327.6,200.9 335.0,220.7 312.5,220.2 249.3,341.1 242.2,230.5 302.2,208.8" fill="#2563eb" fill-opacity="0.16" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="310.0" cy="196.9" r="3.2" fill="#2563eb"/>
+<circle cx="327.6" cy="200.9" r="3.2" fill="#2563eb"/>
+<circle cx="335.0" cy="220.7" r="3.2" fill="#2563eb"/>
+<circle cx="312.5" cy="220.2" r="3.2" fill="#2563eb"/>
+<circle cx="249.3" cy="341.1" r="3.2" fill="#2563eb"/>
+<circle cx="242.2" cy="230.5" r="3.2" fill="#2563eb"/>
+<circle cx="302.2" cy="208.8" r="3.2" fill="#2563eb"/>
+</svg>
+    <div class="radar-legend"><span><i style="background:#dc2626"></i>Peak VRAM (% of 24.6 GB)</span><span><i style="background:#2563eb"></i>Time per example (% of slowest, 77.5 s)</span></div>
+    <figcaption>resource footprint per mode — VRAM (red) vs time-per-example (blue), each normalized to its own ceiling</figcaption>
+  </figure>
+  <div class="commentary">
+    <h4>What the shape says</h4>
+    <p>
+      <strong>t2v is the lone outlier</strong> — it is the only mode that reaches <em>both</em> rims at once
+      (~98&nbsp;% of VRAM <em>and</em> 100&nbsp;% of the time axis). The four image modes collapse into a small
+      inner cluster (66&ndash;81&nbsp;% VRAM, under 19&nbsp;% time): cheap and interactive. <code>x2t_image</code>
+      is the fastest point on the whole chart at <strong>3.2&nbsp;s/image</strong> (4&nbsp;% of the time axis),
+      while <code>x2t_video</code> is the second memory peak (88&nbsp;%) at mid-speed. The geometry makes the
+      operational rule visual: <strong>everything on the image checkpoint is real-time-ish; only video generation
+      is a "launch it and walk away" job.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     11. Duration
+============================================================ -->
+<section class="article-section" id="duration">
+  <h2 class="section-title">Maximum video duration on 24 GB</h2>
+  <div class="prose">
+    <p>
+      Output is hard-coded to <strong>12 fps</strong> and the model caps at <strong>121 frames</strong>, so the
+      absolute ceiling is <strong>10.08 s</strong>. The surprise: t2v memory is <strong>flat at ~24 GB regardless of
+      frame count</strong> — flash-attention keeps the long-sequence denoise cheap and the Wan VAE decodes
+      frame-by-frame — so the full 121 frames fit <em>even at native 480p</em>. I swept it to confirm:
+    </p>
+  </div>
+  <table class="variant-table">
+    <thead>
+      <tr><th>Resolution</th><th>Frames</th><th>Duration</th><th>Peak VRAM (MiB)</th><th>Result</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">848×480</td><td class="num">57</td><td class="num">4.75 s</td><td class="num">23960</td><td>OK</td></tr>
+      <tr><td class="num">848×480</td><td class="num">73</td><td class="num">6.08 s</td><td class="num">24035</td><td>OK</td></tr>
+      <tr><td class="num">848×480</td><td class="num">97</td><td class="num">8.08 s</td><td class="num">23991</td><td>OK</td></tr>
+      <tr class="hi"><td class="num"><strong>848×480</strong></td><td class="num"><strong>121</strong></td><td class="num"><strong>10.08 s</strong></td><td class="num"><strong>24043</strong></td><td><strong>OK · max</strong></td></tr>
+      <tr><td class="num">640×384</td><td class="num">121</td><td class="num">10.08 s</td><td class="num">21793</td><td>OK</td></tr>
+      <tr><td class="num">512×288</td><td class="num">121</td><td class="num">10.08 s</td><td class="num">19445</td><td>OK</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <strong>Image-to-video</strong> is <em>not</em> exposed in the released inference code — the frame-conditioning
+    hooks (<code>frame_condition_idx</code>, an <code>ff2v</code> "first-frame→video" prompt) exist but aren't wired to
+    any task. The closest routable capability is <code>video_idip</code> (image-reference → video), which shares the
+    same 10.08 s ceiling. True first-frame i2v would need the conditioning path wired up.
+  </div>
+
+  <figure class="figure" style="margin-top:8px;">
+    <svg class="radar" viewBox="0 0 620 470" role="img" xmlns="http://www.w3.org/2000/svg">
+<polygon points="310.0,180.0 340.3,197.5 340.3,232.5 310.0,250.0 279.7,232.5 279.7,197.5" fill="none" stroke="#e7e5e4" stroke-width="1"/>
+<text x="315" y="183" font-family="JetBrains Mono, monospace" font-size="9" fill="#a1a1aa">25</text>
+<polygon points="310.0,145.0 370.6,180.0 370.6,250.0 310.0,285.0 249.4,250.0 249.4,180.0" fill="none" stroke="#e7e5e4" stroke-width="1"/>
+<text x="315" y="148" font-family="JetBrains Mono, monospace" font-size="9" fill="#a1a1aa">50</text>
+<polygon points="310.0,110.0 400.9,162.5 400.9,267.5 310.0,320.0 219.1,267.5 219.1,162.5" fill="none" stroke="#e7e5e4" stroke-width="1"/>
+<text x="315" y="113" font-family="JetBrains Mono, monospace" font-size="9" fill="#a1a1aa">75</text>
+<polygon points="310.0,75.0 431.2,145.0 431.2,285.0 310.0,355.0 188.8,285.0 188.8,145.0" fill="none" stroke="#e7e5e4" stroke-width="1"/>
+<text x="315" y="78" font-family="JetBrains Mono, monospace" font-size="9" fill="#a1a1aa">100</text>
+<line x1="310" y1="215" x2="310.0" y2="75.0" stroke="#e7e5e4" stroke-width="1"/>
+<text x="310.0" y="48.6" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">57f · 480p</text>
+<text x="310.0" y="61.6" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">4.75 s</text>
+<line x1="310" y1="215" x2="431.2" y2="145.0" stroke="#e7e5e4" stroke-width="1"/>
+<text x="450.6" y="137.8" text-anchor="start" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">73f · 480p</text>
+<text x="450.6" y="150.8" text-anchor="start" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">6.08 s</text>
+<line x1="310" y1="215" x2="431.2" y2="285.0" stroke="#e7e5e4" stroke-width="1"/>
+<text x="450.6" y="300.2" text-anchor="start" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">97f · 480p</text>
+<text x="450.6" y="313.2" text-anchor="start" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">8.08 s</text>
+<line x1="310" y1="215" x2="310.0" y2="355.0" stroke="#e7e5e4" stroke-width="1"/>
+<text x="310.0" y="389.4" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">121f · 480p</text>
+<text x="310.0" y="402.4" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">10.08 s</text>
+<line x1="310" y1="215" x2="188.8" y2="285.0" stroke="#e7e5e4" stroke-width="1"/>
+<text x="169.4" y="300.2" text-anchor="end" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">121f · 384p</text>
+<text x="169.4" y="313.2" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">10.08 s</text>
+<line x1="310" y1="215" x2="188.8" y2="145.0" stroke="#e7e5e4" stroke-width="1"/>
+<text x="169.4" y="137.8" text-anchor="end" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#27272a">121f · 288p</text>
+<text x="169.4" y="150.8" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#71717a">10.08 s</text>
+<polygon points="310.0,78.5 428.6,146.5 428.5,283.4 310.0,352.1 202.5,277.1 214.0,159.6" fill="#dc2626" fill-opacity="0.16" stroke="#dc2626" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="310.0" cy="78.5" r="3.2" fill="#dc2626"/>
+<circle cx="428.6" cy="146.5" r="3.2" fill="#dc2626"/>
+<circle cx="428.5" cy="283.4" r="3.2" fill="#dc2626"/>
+<circle cx="310.0" cy="352.1" r="3.2" fill="#dc2626"/>
+<circle cx="202.5" cy="277.1" r="3.2" fill="#dc2626"/>
+<circle cx="214.0" cy="159.6" r="3.2" fill="#dc2626"/>
+<polygon points="310.0,149.1 383.1,172.8 407.2,271.1 310.0,355.0 188.8,285.0 188.8,145.0" fill="#16a34a" fill-opacity="0.16" stroke="#16a34a" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="310.0" cy="149.1" r="3.2" fill="#16a34a"/>
+<circle cx="383.1" cy="172.8" r="3.2" fill="#16a34a"/>
+<circle cx="407.2" cy="271.1" r="3.2" fill="#16a34a"/>
+<circle cx="310.0" cy="355.0" r="3.2" fill="#16a34a"/>
+<circle cx="188.8" cy="285.0" r="3.2" fill="#16a34a"/>
+<circle cx="188.8" cy="145.0" r="3.2" fill="#16a34a"/>
+</svg>
+    <div class="radar-legend"><span><i style="background:#dc2626"></i>Peak VRAM (% of 24.6 GB)</span><span><i style="background:#16a34a"></i>Duration reached (% of 10.08 s cap)</span></div>
+    <figcaption>VRAM stays pinned near the rim while duration grows — then resolution cuts (last two axes) only buy headroom</figcaption>
+  </figure>
+  <div class="commentary">
+    <h4>Reading the two polygons</h4>
+    <p>
+      The <strong>red (VRAM) polygon is almost a flat arc</strong> across the four 480p axes &mdash;
+      97.5&nbsp;%, 97.8&nbsp;%, 97.7&nbsp;%, 97.9&nbsp;% at 57&rarr;121 frames &mdash; so memory barely
+      moves as the clip lengthens. The <strong>green (duration) polygon expands from 47&nbsp;% to 100&nbsp;%</strong>
+      over those same axes: <em>more seconds for the same memory</em>. Only the last two axes (384p, 288p) pull the
+      red polygon inward, and the green stays pinned at 100&nbsp;% &mdash; proof that dropping resolution buys
+      headroom you don't need, since native 480p already hits the 10.08&nbsp;s frame cap.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     12. Limits
+============================================================ -->
+<section class="article-section" id="limits">
+  <h2 class="section-title">Where it breaks: multi-reference composition</h2>
+  <div class="prose">
+    <p>
+      The one capability that consistently fails is composing <strong>two reference images</strong> into one output —
+      whether that's two people, a person plus an object, or a content image plus a style image. The model anchors on
+      one reference and reproduces or blends toward it. Three attempts, all on the correct subject-driven path:
+    </p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/idip_multiperson.png" alt="Two reference portraits and a generated image where both output figures take on one reference's look" loading="lazy" />
+    <figcaption>multi-person (me + a friend) — both output faces drift toward one reference [ref · ref · generated]</figcaption>
+  </figure>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/idip_multisubject.png" alt="Person plus shoe references; output just re-renders the portrait" loading="lazy" />
+      <figcaption>person + object — ignores "wearing the shoes"</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/style_two2one.png" alt="Content portrait plus comic style image; output copies the style image" loading="lazy" />
+      <figcaption>content + style image — copies the style reference</figcaption>
+    </figure>
+  </div>
+  <div class="prose">
+    <p>
+      The cause is mechanical: the position-id logic shifts <em>all</em> reference tokens to the same coordinate
+      offset, so multiple references overlap in position space and the model can't keep them distinct. It is not a
+      prompt problem and not a bug I introduced — multi-reference composition simply isn't a trained, exposed capability
+      of the released 3B weights (the docs advertise only single-input tasks). The practical rule: <strong>one image
+      reference for subject-driven generation; text instructions for style and edits.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     References
+============================================================ -->
+<section class="article-section" id="refs">
+  <h2 class="section-title">References</h2>
+  <ul class="links">
+    <li><a href="https://github.com/bytedance/Lance" target="_blank"><strong>GitHub</strong> — <code>bytedance/Lance</code></a> — code, inference scripts and the README benchmark tables.</li>
+    <li><a href="https://huggingface.co/bytedance-research/Lance" target="_blank"><strong>Hugging Face</strong> — <code>bytedance-research/Lance</code></a> — the <code>Lance_3B</code> and <code>Lance_3B_Video</code> weights, ViT and Wan VAE.</li>
+    <li><a href="https://lance-project.github.io/" target="_blank"><strong>Project page</strong></a> — visual galleries for editing, video and understanding.</li>
+    <li><a href="https://arxiv.org/abs/2605.18678" target="_blank"><strong>arXiv 2605.18678</strong></a> — "Lance: Unified Multimodal Modeling by Multi-Task Synergy".</li>
+    <li>Acknowledged components: <a href="https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct" target="_blank">Qwen2.5-VL</a> (ViT), <a href="https://github.com/Wan-Video/Wan2.2" target="_blank">Wan 2.2</a> (video VAE), <a href="https://github.com/ByteDance-Seed/bagel" target="_blank">BAGEL</a>.</li>
+  </ul>
+</section>
+
+</div><!-- /container -->
+
+<footer class="page-footer">
+  <div class="inner">
+    <a class="back-to-blog" href="../index.html">
+      <span class="arrow">←</span>
+      <span>Back to the blog</span>
+    </a>
+    <p>Hardware: 1 × NVIDIA RTX 4090 (24 GiB, sm_89), PopOS 22.04, CUDA 12.4.<br />
+       Software: Lance (bytedance/Lance), torch 2.5.1+cu124, flash-attn 2.8.3, Python 3.11, bf16.<br />
+       Article by Omar Kamal Hosney · 2026-05-23</p>
+    <div class="social">
+      <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn">in</a>
+      <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium">M</a>
+      <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub">gh</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

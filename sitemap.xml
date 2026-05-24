@@ -27,6 +27,12 @@
 
   <!-- Articles -->
   <url>
+    <loc>https://omkamal.github.io/articles/lance/lance.html</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://omkamal.github.io/articles/qwopus-mtp-2x/qwopus-mtp-2x.html</loc>
     <lastmod>2026-05-22</lastmod>
     <changefreq>monthly</changefreq>
