@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bonsai-Image-4B — a 1.58-bit text-to-image model on a single RTX 4090</title>
+<meta name="description" content="A hands-on look at PrismML's Bonsai-Image-4B: a 1.58-bit ternary, gemlite-quantized text-to-image model distilled to 4 steps. How it runs locally on a single 24 GB RTX 4090 from a data-disk cache, the measured load/throughput/VRAM numbers, a multi-aspect-ratio gallery and ten prompt-engineered style presets — plus the one honest limit (generation only, no editing)." />
+<meta name="keywords" content="Bonsai-Image, Bonsai-Image-4B, PrismML, 1.58-bit, ternary quantization, BitNet, gemlite, HQQ, text-to-image, FLUX.2, distilled, 4 steps, RTX 4090, 24GB, local image generation, aspect ratio, style presets, comic, vector art, sketch, caricature, typography" />
+<meta name="author" content="Omar Kamal Hosney" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://omkamal.github.io/articles/bonsai-image/bonsai-image.html" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Omar Kamal Hosney" />
+<meta property="og:url" content="https://omkamal.github.io/articles/bonsai-image/bonsai-image.html" />
+<meta property="og:title" content="Bonsai-Image-4B — a 1.58-bit text-to-image model on a single RTX 4090" />
+<meta property="og:description" content="PrismML's 1.58-bit ternary, 4-step text-to-image model, run locally on a 24 GB 4090 — measured numbers, a multi-aspect gallery and ten style presets." />
+<meta property="og:image" content="https://omkamal.github.io/articles/bonsai-image/demo_assets/hero.png" />
+<meta property="article:author" content="Omar Kamal Hosney" />
+<meta property="article:published_time" content="2026-05-26" />
+<meta property="article:section" content="AI Models" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Bonsai-Image-4B — a 1.58-bit text-to-image model on a single RTX 4090" />
+<meta name="twitter:description" content="A 1.58-bit, 4-step text-to-image model running locally on a 24 GB 4090 — gallery, style presets and measured numbers." />
+<meta name="twitter:image" content="https://omkamal.github.io/articles/bonsai-image/demo_assets/hero.png" />
+
+<link rel="icon" type="image/jpeg" href="../../omar.jpeg" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Bonsai-Image-4B — a 1.58-bit text-to-image model on a single RTX 4090",
+  "description": "A hands-on look at PrismML's Bonsai-Image-4B: a 1.58-bit ternary, gemlite-quantized text-to-image model distilled to 4 steps, run locally on a single 24 GB RTX 4090 with a multi-aspect-ratio gallery and ten style presets.",
+  "image": "https://omkamal.github.io/articles/bonsai-image/demo_assets/hero.png",
+  "datePublished": "2026-05-26",
+  "dateModified": "2026-05-26",
+  "author": { "@type": "Person", "name": "Omar Kamal Hosney", "url": "https://omkamal.github.io/" },
+  "publisher": { "@type": "Person", "name": "Omar Kamal Hosney" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://omkamal.github.io/articles/bonsai-image/bonsai-image.html" },
+  "articleSection": "AI Models",
+  "keywords": "Bonsai-Image-4B, PrismML, 1.58-bit, ternary, gemlite, text-to-image, FLUX.2, distilled, RTX 4090, style presets, aspect ratio",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omkamal.github.io/articles/" },
+      { "@type": "ListItem", "position": 3, "name": "Bonsai-Image-4B on a 4090", "item": "https://omkamal.github.io/articles/bonsai-image/bonsai-image.html" }
+    ]
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root {
+  --c-ink: #18181b;
+  --c-ink-soft: #27272a;
+  --c-prose: #3f3f46;
+  --c-muted: #71717a;
+  --c-mute-2: #a1a1aa;
+  --c-paper: #fafaf9;
+  --c-paper-2: #ffffff;
+  --c-line: #e7e5e4;
+  --c-line-soft: #f1f0ee;
+  --c-accent: #7c3aed;
+  --c-accent-2: #ec4899;
+  --c-accent-3: #f59e0b;
+  --c-accent-soft: #faf5ff;
+  --c-accent-line: #e9d5ff;
+  --c-blue: #2563eb;
+  --c-blue-soft: #eff6ff;
+  --c-blue-line: #bfdbfe;
+  --c-green: #16a34a;
+  --c-green-soft: #f0fdf4;
+  --c-green-line: #bbf7d0;
+  --c-warn: #b45309;
+  --c-warn-soft: #fffbeb;
+  --c-warn-line: #fde68a;
+  --c-red: #dc2626;
+  --c-red-soft: #fef2f2;
+  --c-red-line: #fecaca;
+  --c-code-bg: #0f172a;
+  --c-code-fg: #e2e8f0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 24px 56px -16px rgba(15, 23, 42, 0.18), 0 8px 20px -6px rgba(15, 23, 42, 0.08);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { font-family: 'Source Serif 4', Charter, Georgia, 'Times New Roman', serif; font-size: 18px; line-height: 1.75; color: var(--c-prose); background: var(--c-paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--c-accent); color: white; }
+
+.top-nav { position: sticky; top: 0; z-index: 50; background: rgba(250, 250, 249, 0.85); backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px); border-bottom: 1px solid var(--c-line); }
+.nav-inner { max-width: 1180px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 12px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--c-ink); text-decoration: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-accent) 100%); display: grid; place-items: center; font-weight: 800; font-size: 0.78rem; color: white; box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.4); }
+.nav-right { display: flex; gap: 4px; align-items: center; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+.nav-right a { color: var(--c-muted); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 500; transition: all 0.2s var(--ease); }
+.nav-right a:hover { color: var(--c-ink); background: rgba(0,0,0,0.04); }
+.nav-right a.active { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.hero { position: relative; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #4c1d95 100%); color: #e2e8f0; padding: 80px 0 100px; margin-bottom: -60px; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.35), transparent 50%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.30), transparent 50%), radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.10), transparent 60%); }
+.hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); pointer-events: none; }
+.hero-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 32px; }
+.crumbs { font-family: 'Inter', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; color: rgba(226, 232, 240, 0.65); margin-bottom: 22px; }
+.crumbs a { color: rgba(226, 232, 240, 0.85); text-decoration: none; border-bottom: 1px solid rgba(226, 232, 240, 0.3); transition: all 0.2s var(--ease); }
+.crumbs a:hover { color: white; border-bottom-color: white; }
+.crumbs .sep { margin: 0 0.5em; opacity: 0.4; }
+.article-header { margin: 0; padding: 0; border: 0; }
+.byline { display: inline-flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: #c4b5fd; padding: 5px 12px; background: rgba(168, 85, 247, 0.18); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50px; margin-bottom: 28px; }
+.byline span + span::before { content: "·"; opacity: 0.6; margin: 0 0.25rem; color: #c4b5fd; }
+h1 { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2.2rem, 4.8vw, 3.6rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.03em; color: #ffffff; margin: 0 0 22px; max-width: 880px; }
+.subtitle { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(1.05rem, 1.6vw, 1.28rem); line-height: 1.55; color: rgba(226, 232, 240, 0.82); font-style: italic; margin: 0; max-width: 720px; }
+.subtitle code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85em; font-style: normal; background: rgba(255, 255, 255, 0.12); padding: 2px 8px; border-radius: 5px; color: #fde68a; border: 1px solid rgba(255, 255, 255, 0.08); }
+
+.container { max-width: 980px; margin: 0 auto; padding: 100px 32px 80px; position: relative; z-index: 2; }
+
+.tldr { background: linear-gradient(135deg, #ffffff 0%, var(--c-accent-soft) 100%); border: 1px solid var(--c-accent-line); border-left: 4px solid var(--c-accent); padding: 26px 30px; border-radius: 0 16px 16px 0; margin: 0 0 60px; box-shadow: var(--shadow-md); }
+.tldr h3 { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-accent); margin: 0 0 12px; }
+.tldr p { font-size: 1.05rem; color: var(--c-ink-soft); margin: 0 0 0.8rem; text-align: justify; hyphens: auto; }
+.tldr p:last-child { margin-bottom: 0; }
+.tldr strong { color: var(--c-ink); font-weight: 700; }
+.tldr code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(255,255,255,0.7); border: 1px solid var(--c-accent-line); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); }
+
+.toc { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; color: var(--c-prose); padding: 22px 28px; margin: 0 0 80px; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 16px; line-height: 2.1; box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: center; }
+.toc strong { display: inline-flex; align-items: center; gap: 7px; color: var(--c-ink); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; padding-right: 14px; margin-right: 6px; border-right: 1px solid var(--c-line); }
+.toc strong::before { content: ''; width: 3px; height: 14px; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+.toc a { color: var(--c-prose); text-decoration: none; padding: 4px 11px; border-radius: 50px; transition: all 0.2s var(--ease); font-weight: 500; }
+.toc a:hover { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.article-section { margin-bottom: 80px; scroll-margin-top: 80px; }
+.section-title { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(1.65rem, 3vw, 2.15rem); font-weight: 700; color: var(--c-ink); margin: 0 0 28px; letter-spacing: -0.025em; line-height: 1.18; position: relative; padding-left: 18px; }
+.section-title::before { content: ''; position: absolute; left: 0; top: 0.18em; width: 5px; height: 0.85em; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 3px; }
+
+.prose { max-width: 100%; margin-bottom: 36px; font-size: 1.06rem; line-height: 1.78; text-align: justify; hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty; }
+.prose p { margin: 0 0 1.25rem; color: var(--c-prose); text-align: justify; hyphens: auto; }
+.prose h3 { text-align: left; hyphens: manual; }
+.prose ul, .prose ol { text-align: left; hyphens: manual; margin: 0 0 1.25rem 1.2rem; }
+.prose li { margin-bottom: 0.4rem; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--c-ink); font-weight: 600; }
+.prose em { color: var(--c-ink-soft); }
+.prose code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.86em; background: var(--c-accent-soft); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); border: 1px solid var(--c-accent-line); font-weight: 500; }
+.prose a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--c-accent-line); transition: all 0.2s var(--ease); }
+.prose a:hover { text-decoration-color: var(--c-accent); text-decoration-thickness: 2px; }
+.prose h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--c-ink); margin: 2.2rem 0 0.8rem; letter-spacing: -0.015em; display: flex; align-items: center; gap: 10px; }
+.prose h3::before { content: ''; width: 22px; height: 2px; background: linear-gradient(90deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+
+.prose pre { background: var(--c-code-bg); color: var(--c-code-fg); padding: 44px 26px 22px; border-radius: 12px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85rem; line-height: 1.65; overflow-x: auto; margin: 22px 0; border: 1px solid #1e293b; box-shadow: var(--shadow-lg); position: relative; }
+.prose pre::before { content: ''; position: absolute; top: 14px; left: 18px; width: 11px; height: 11px; border-radius: 50%; background: #ef4444; box-shadow: 18px 0 0 #f59e0b, 36px 0 0 #10b981; opacity: 0.7; }
+.prose pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; border: 0; font-weight: 400; }
+
+.callout { background: var(--c-warn-soft); border: 1px solid var(--c-warn-line); border-left: 4px solid var(--c-accent-3); padding: 16px 22px; border-radius: 0 12px 12px 0; margin: 22px 0; font-size: 0.98rem; line-height: 1.7; color: var(--c-ink-soft); position: relative; box-shadow: var(--shadow-sm); text-align: justify; hyphens: auto; }
+.callout.green { background: var(--c-green-soft); border-color: var(--c-green-line); border-left-color: var(--c-green); }
+.callout.red { background: var(--c-red-soft); border-color: var(--c-red-line); border-left-color: var(--c-red); }
+.callout.blue { background: var(--c-blue-soft); border-color: var(--c-blue-line); border-left-color: var(--c-blue); }
+.callout strong { color: var(--c-ink); }
+.callout code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--c-warn); padding: 1.5px 6px; border-radius: 4px; }
+.callout.green code { background: rgba(22, 163, 74, 0.12); border-color: rgba(22, 163, 74, 0.3); color: var(--c-green); }
+.callout.red code { background: rgba(220, 38, 38, 0.10); border-color: rgba(220, 38, 38, 0.3); color: var(--c-red); }
+.callout.blue code { background: rgba(37, 99, 235, 0.10); border-color: rgba(37,99,235,0.3); color: var(--c-blue); }
+
+.variant-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 22px 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.88rem; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); }
+.variant-table th, .variant-table td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--c-line-soft); vertical-align: top; }
+.variant-table th { background: linear-gradient(180deg, #fafafa, #f5f5f4); font-weight: 700; color: var(--c-ink); letter-spacing: 0.02em; font-size: 0.74rem; text-transform: uppercase; }
+.variant-table tbody tr:last-child td { border-bottom: 0; }
+.variant-table tbody tr:hover td { background: var(--c-accent-soft); }
+.variant-table td { color: var(--c-prose); }
+.variant-table td strong { color: var(--c-ink); }
+.variant-table td.num { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+.variant-table tr.hi td { background: var(--c-green-soft); }
+.variant-table tr.hi:hover td { background: var(--c-green-soft); }
+
+.figure { margin: 28px auto; text-align: center; display: block; }
+.figure img, .figure video { width: 100%; max-width: 100%; height: auto; border-radius: 14px; display: block; margin-left: auto; margin-right: auto; border: 1px solid var(--c-line); box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); background: var(--c-paper-2); }
+.figure video { background: #000; }
+.figure svg.radar { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 14px; box-shadow: var(--shadow-md); padding: 16px 10px; }
+.radar-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 20px; margin: 14px auto 0; font-family: 'Inter', sans-serif; font-size: 0.8rem; color: var(--c-prose); }
+.radar-legend span { display: inline-flex; align-items: center; gap: 8px; }
+.radar-legend i { width: 22px; height: 4px; border-radius: 2px; display: inline-block; }
+.figure img:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); border-color: var(--c-accent-line); }
+.figure figcaption { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; color: var(--c-mute-2); margin: 10px auto 0; letter-spacing: 0.02em; text-align: center; max-width: 85%; }
+.figure.full img { background: white; }
+.figure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px auto; justify-items: center; align-items: start; }
+.figure-grid .figure { margin: 0; width: 100%; }
+
+.example { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 18px; padding: 28px 30px; margin: 26px 0 36px; box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); }
+.example:hover { box-shadow: var(--shadow-lg); border-color: var(--c-accent-line); }
+.example-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1px solid var(--c-line-soft); flex-wrap: wrap; }
+.example-head h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--c-ink); margin: 0; letter-spacing: -0.018em; }
+.tps-chip { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; font-weight: 700; padding: 6px 14px; border-radius: 50px; color: white; background: linear-gradient(135deg, var(--c-green) 0%, #15803d 100%); box-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.35); }
+.tps-chip.amber { background: linear-gradient(135deg, var(--c-accent-3) 0%, var(--c-warn) 100%); box-shadow: 0 4px 12px -2px rgba(180, 83, 9, 0.35); }
+.tps-chip.fire { background: linear-gradient(135deg, var(--c-accent-2) 0%, #be185d 100%); box-shadow: 0 4px 12px -2px rgba(190, 24, 93, 0.35); }
+.tps-chip.blue { background: linear-gradient(135deg, var(--c-blue) 0%, #1d4ed8 100%); box-shadow: 0 4px 12px -2px rgba(37,99,235,0.35); }
+.prompt-line { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: var(--c-paper); border: 1px solid var(--c-line); border-left: 3px solid var(--c-accent); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 0 0 18px; color: var(--c-ink-soft); line-height: 1.5; }
+
+.commentary { margin-top: 24px; padding: 20px 22px; background: var(--c-blue-soft); border: 1px solid var(--c-blue-line); border-left: 4px solid var(--c-blue); border-radius: 0 12px 12px 0; }
+.commentary h4 { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-blue); margin: 0 0 10px; display: inline-flex; align-items: center; gap: 7px; }
+.commentary h4::before { content: '💡'; font-size: 1.05em; }
+.commentary p { font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); margin: 0; text-align: justify; hyphens: auto; }
+.commentary code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: rgba(37, 99, 235, 0.1); padding: 1.5px 6px; border-radius: 4px; color: var(--c-blue); border: 1px solid var(--c-blue-line); font-weight: 500; }
+.commentary strong { color: var(--c-ink); }
+
+/* model answer block (understanding) */
+.answer { font-family: 'Source Serif 4', Georgia, serif; font-style: italic; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); background: var(--c-green-soft); border: 1px solid var(--c-green-line); border-left: 4px solid var(--c-green); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 0; }
+.answer .q { font-family: 'Inter', sans-serif; font-style: normal; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-green); display: block; margin-bottom: 8px; }
+
+.links { padding-left: 20px; max-width: 100%; }
+.links li { margin-bottom: 10px; line-height: 1.6; }
+.links li code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: var(--c-paper); border: 1px solid var(--c-line); padding: 1px 6px; border-radius: 4px; color: var(--c-ink-soft); }
+
+.page-footer { border-top: 1px solid var(--c-line); padding: 60px 0 80px; text-align: center; background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.03)); }
+.page-footer .inner { max-width: 980px; margin: 0 auto; padding: 0 32px; font-family: 'Inter', sans-serif; }
+.back-to-blog { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-2) 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 24px -6px rgba(124, 58, 237, 0.5); transition: all 0.3s var(--ease); margin-bottom: 32px; }
+.back-to-blog:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(124, 58, 237, 0.65); }
+.back-to-blog .arrow { transition: transform 0.3s var(--ease); }
+.back-to-blog:hover .arrow { transform: translateX(-4px); }
+.page-footer p { color: var(--c-muted); font-size: 0.88rem; margin-bottom: 18px; }
+.social { display: flex; justify-content: center; gap: 12px; }
+.social a { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: var(--c-paper-2); border: 1px solid var(--c-line); color: var(--c-muted); text-decoration: none; transition: all 0.3s var(--ease); font-family: 'Inter', sans-serif; font-weight: 700; }
+.social a:hover { color: var(--c-accent); border-color: var(--c-accent-line); background: var(--c-accent-soft); transform: translateY(-2px); }
+
+@media (max-width: 900px) {
+  .hero { padding: 60px 0 80px; }
+  .hero-inner { padding: 0 20px; }
+  .container { padding: 80px 20px 60px; }
+  .nav-inner { padding: 12px 20px; }
+  h1 { font-size: 2rem; }
+  .section-title { font-size: 1.55rem; }
+  .figure-grid { grid-template-columns: 1fr; }
+  .example { padding: 22px 22px; border-radius: 14px; }
+  .toc { padding: 18px 20px; font-size: 0.8rem; gap: 6px; }
+  .toc strong { border-right: 0; margin-bottom: 4px; padding-right: 0; width: 100%; }
+  .nav-right a { padding: 6px 10px; font-size: 0.82rem; }
+}
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .prose { font-size: 1.02rem; }
+  .nav-right a:not(.active) { display: none; }
+}
+</style>
+
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">OK</span>
+      <span>Omar Kamal Hosney</span>
+    </a>
+    <div class="nav-right">
+      <a href="../../cheatsheets/index.html">Cheatsheets</a>
+      <a href="../index.html" class="active">Blog</a>
+      <a href="../../resume.html" target="_blank">Resume</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="crumbs">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="../index.html">Blog</a>
+      <span class="sep">/</span>
+      AI Models
+    </p>
+    <div class="article-header">
+      <p class="byline"><span>Bonsai-Image · PrismML</span><span>Field Notes</span><span>May 2026</span></p>
+      <h1>Bonsai-Image-4B: a 1.58-bit text-to-image model on a single RTX 4090</h1>
+      <p class="subtitle">PrismML's <strong>Bonsai-Image-4B</strong> is a FLUX.2-family text-to-image model squeezed
+      down to <strong>1.58-bit ternary weights</strong> and <strong>distilled to 4 steps</strong>. I ran it locally on
+      one 24 GB <code>RTX 4090</code> straight from a data-disk cache: here is what it is, the numbers I measured, a
+      gallery across seven aspect ratios, and ten prompt-engineered style presets.</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- HERO IMAGE -->
+<figure class="figure" style="margin: 0 0 60px;">
+  <img src="demo_assets/hero.png" alt="An icy bonsai tree in a rainy pine forest with snowy mountains behind it, generated by Bonsai-Image-4B" loading="lazy" />
+  <figcaption>Bonsai-Image-4B · ternary · 4 steps · "an icy bonsai tree in a rainy pine forest with snowy mountains"</figcaption>
+</figure>
+
+<!-- TL;DR -->
+<div class="tldr">
+  <h3>TL;DR</h3>
+  <p>
+    <strong>Bonsai-Image-4B</strong> is a 4-billion-parameter image generator quantized to <strong>1.58 bits per
+    weight</strong> (ternary &minus;1/0/+1) and <strong>step-distilled to 4 steps</strong>. The whole ternary build is
+    <strong>~4.3 GB on disk</strong> and sits in <strong>~5 GB of VRAM</strong> — small enough to live comfortably on a
+    consumer 24 GB card with room to spare.
+  </p>
+  <p>
+    On my <strong>RTX 4090</strong> it loads in <strong>~16 s</strong> (imports + weights + prewarm), then renders a
+    warm 512&ndash;768&sup2; image in <strong>~0.5&ndash;1 s</strong> at 4 steps. The first image at any new resolution
+    pays a one-time Triton JIT + gemlite autotune (a few seconds), so the right way to use it is in <strong>batches</strong>:
+    load once, render many.
+  </p>
+  <p>
+    It is <strong>text-to-image only</strong> — this build strips out img2img / editing. Quality is strong on
+    photographic and illustrative looks, it renders <strong>short text</strong> cleanly (a logo word), and a single
+    <code>--style</code> flag pushes it convincingly into comic, vector, sketch, caricature and other styles.
+  </p>
+</div>
+
+<!-- TOC -->
+<nav class="toc" aria-label="Table of contents">
+  <strong>Contents</strong>
+  <a href="#what">What it is</a>
+  <a href="#run">Running it on a 4090</a>
+  <a href="#aspects">Aspect-ratio gallery</a>
+  <a href="#styles">Style presets</a>
+  <a href="#limits">Strengths &amp; the one limit</a>
+  <a href="#refs">References</a>
+</nav>
+
+<!-- =========================================================
+     1. What it is
+============================================================ -->
+<section class="article-section" id="what">
+  <h2 class="section-title">What Bonsai-Image-4B is, in one paragraph</h2>
+  <div class="prose">
+    <p>
+      <strong>Bonsai-Image-4B</strong> (PrismML) is a <strong>4-billion-parameter</strong> FLUX.2-family rectified-flow
+      text-to-image transformer that has been pushed through <strong>extreme post-training quantization</strong>: its
+      weights are <strong>ternary</strong> — each one is just &minus;1, 0 or +1, i.e. <strong>1.58 bits</strong> — with
+      a lighter <strong>1-bit binary</strong> sibling also released. Inference runs on <a
+      href="https://github.com/dropbox/gemlite" target="_blank">gemlite</a> + <a href="https://github.com/dropbox/hqq"
+      target="_blank">HQQ</a> low-bit Triton kernels on CUDA (and on <code>mflux</code>/MLX on Apple Silicon). On top of
+      the quantization, the sampler is <strong>distilled to four steps</strong>, so a render is four transformer passes,
+      not the usual 20&ndash;50.
+    </p>
+    <p>
+      The point of all this is <em>size without a quality cliff</em>. The recommended <strong>ternary</strong> build is
+      the sweet spot — about <strong>4.3 GB on disk</strong>, broken down as a <strong>~1.5 GB</strong> int2-packed
+      transformer, a <strong>~2.8 GB</strong> HQQ-4bit text encoder and a <strong>~0.17 GB</strong> VAE. That is exactly
+      the kind of model that should run on one consumer GPU, so I pointed it at my <strong>RTX 4090</strong> and used it
+      from a small batch wrapper. The rest of this article is what came out.
+    </p>
+  </div>
+  <div class="callout blue">
+    <strong>Setup.</strong> Linux GPU path (Pop!_OS 22.04, CUDA 13 driver). Weights cached on a data disk
+    (<code>/d/hugging_face_cache</code>) — not the system drive; a <code>uv</code> venv on Python 3.11 with
+    <code>torch</code>/cu13, gemlite and HQQ. The pipeline is the demo repo's <code>backend_gpu.GpuPipeline</code>,
+    driven in-process so the model loads once and a whole batch reuses it.
+  </div>
+</section>
+
+<!-- =========================================================
+     2. Running it on a 4090
+============================================================ -->
+<section class="article-section" id="run">
+  <h2 class="section-title">Running it on a 4090 — load once, render many</h2>
+  <div class="prose">
+    <p>
+      The expensive part of a low-bit render is not the diffusion — it's the cold start. Imports, the ~4 GB weight load,
+      and the first-time Triton JIT + gemlite autotune for a given output shape dominate; the four-step forward pass
+      itself is sub-second. gemlite even auto-selects a tuning profile for the card (<code>4090.json</code> here). So the
+      whole pipeline is built to be loaded <strong>once</strong> and reused across a batch.
+    </p>
+  </div>
+  <table class="variant-table">
+    <thead>
+      <tr><th>What I measured (RTX 4090, ternary)</th><th>Number</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Model load — imports + weights + prewarm</td><td class="num">~16 s (once per batch)</td></tr>
+      <tr><td>Warm render, 512&ndash;768&sup2;, 4 steps</td><td class="num">~0.5&ndash;1 s / image</td></tr>
+      <tr><td>First render at a <em>new</em> resolution (JIT + autotune)</td><td class="num">~2&ndash;11 s (one-off)</td></tr>
+      <tr><td>Resident VRAM</td><td class="num">~4.7&ndash;5.2 GB</td></tr>
+      <tr class="hi"><td>8-image aspect set in one model load</td><td class="num">~46 s total</td></tr>
+      <tr class="hi"><td>10-image style set (shapes pre-warmed)</td><td class="num">~26 s total</td></tr>
+    </tbody>
+  </table>
+  <div class="prose">
+    <p>
+      To make that batch behaviour easy I wrapped the pipeline in a thin CLI — a single-image runner and a batch runner
+      that takes a JSONL of jobs and keeps the model resident for the whole list. Every job can set its own prompt,
+      aspect ratio, size, seed and style. The galleries below were each produced by <strong>one</strong> such batch:
+    </p>
+    <pre><code># one model load, the whole gallery (each line = one job)
+bonsai_batch.sh --jsonl jobs.jsonl   --name demo      # the aspect-ratio set
+bonsai_batch.sh --jsonl styles.jsonl --name style     # the style-preset set
+
+# a single image — outputs land in the current directory
+bonsai_run.sh -p "an icy bonsai in a snowy forest" --aspect 3:2 --size 768 --seed 9909</code></pre>
+    <p>
+      Output dimensions are snapped to <strong>multiples of 32</strong> (a requirement of the gemlite diffusion path),
+      with <code>--size</code> as the long edge and <code>--aspect W:H</code> setting the ratio.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     3. Aspect-ratio gallery
+============================================================ -->
+<section class="article-section" id="aspects">
+  <h2 class="section-title">One model, seven aspect ratios</h2>
+  <div class="prose">
+    <p>
+      All eight images below came out of a single batch (one model load). The caption on each is its exact
+      <strong>configuration</strong> — ratio, resolved pixel size and seed — followed by the prompt. Same prompt + same
+      seed + same size is fully reproducible.
+    </p>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/square_bonsai_pot.png" alt="A tiny bonsai tree in a glowing ceramic pot, studio lighting" loading="lazy" />
+      <figcaption>1:1 · 768×768 · seed 7 — "a tiny bonsai tree in a glowing ceramic pot, soft studio lighting"</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/wide_icy_bonsai.png" alt="An icy bonsai tree in a rainy pine forest with snowy mountains" loading="lazy" />
+      <figcaption>3:2 · 768×512 · seed 9909 — "an icy bonsai tree in a rainy pine forest with snowy mountains"</figcaption>
+    </figure>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/wide_mountain_valley.png" alt="A cinematic mountain valley at golden hour, layered ridgelines" loading="lazy" />
+      <figcaption>16:9 · 1024×576 · seed 42 — "a cinematic mountain valley at golden hour, volumetric light"</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/ultrawide_desert.png" alt="A panoramic view of red desert sand dunes at sunset" loading="lazy" />
+      <figcaption>2:1 · 1024×512 · seed 13 — "panoramic red desert sand dunes at sunset, long shadows"</figcaption>
+    </figure>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/portrait_gardener.png" alt="A portrait of a wise old bonsai gardener tending a miniature tree" loading="lazy" />
+      <figcaption>2:3 · 512×768 · seed 21 — "a wise old bonsai gardener tending a miniature tree, warm rim light"</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/square_robot_bonsai.png" alt="A cute friendly robot watering a small bonsai, Pixar-style render" loading="lazy" />
+      <figcaption>1:1 · 768×768 · seed 100 — "a cute friendly robot watering a small bonsai, Pixar-style render"</figcaption>
+    </figure>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/tall_waterfall.png" alt="A tall waterfall cascading through a lush mossy rainforest" loading="lazy" />
+      <figcaption>9:16 · 576×1024 · seed 5 — "a tall waterfall through a lush mossy rainforest, mist and god rays"</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/tall_lighthouse.png" alt="A lone lighthouse on a rocky cliff at dawn, dramatic clouds" loading="lazy" />
+      <figcaption>1:2 · 512×1024 · seed 3 — "a lone lighthouse on a rocky cliff at dawn, dramatic clouds"</figcaption>
+    </figure>
+  </div>
+  <div class="commentary">
+    <h4>Reading the configs</h4>
+    <p>
+      Each card is one line of the batch's <code>jobs.jsonl</code>, e.g.
+      <code>{"prompt": "...", "aspect": "16:9", "size": 1024, "seed": 42}</code>. Wide ratios (16:9, 2:1) keep
+      composition together well; very tall ratios (9:16, 1:2) are where a 4-step model is most likely to want a seed
+      reroll.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     4. Style presets
+============================================================ -->
+<section class="article-section" id="styles">
+  <h2 class="section-title">Ten style presets from one flag</h2>
+  <div class="prose">
+    <p>
+      Bonsai is a single general model — there are no style LoRAs here. Each look below is a <strong>prompt fragment</strong>
+      appended by a <code>--style</code> flag (e.g. <code>--style comic</code> adds "comic book art, bold ink outlines,
+      halftone shading…"). Ten presets, one batch, one model load. Captions show the style flag, ratio and seed.
+    </p>
+    <pre><code># global style for a whole batch, or per-job "style" in the JSONL
+bonsai_run.sh -p "a superhero bonsai flying over a city" --style comic --aspect 3:2
+# styles: comic · illustration · cartoon · vector · minimalist-vector ·
+#         sketch · stickman · infographic · typography · caricature</code></pre>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/style_comic.png" alt="Comic-book style: a superhero bonsai tree flying over a city skyline" loading="lazy" />
+      <figcaption>--style comic · 3:2 · seed 1 — "a superhero bonsai tree flying over a city skyline"</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/style_illustration.png" alt="Digital illustration: a magical treehouse built inside a giant glowing bonsai" loading="lazy" />
+      <figcaption>--style illustration · 16:9 · seed 2 — "a magical treehouse inside a giant glowing bonsai"</figcaption>
+    </figure>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/style_cartoon.png" alt="Cartoon style: a happy little cat watering a bonsai with a tiny watering can" loading="lazy" />
+      <figcaption>--style cartoon · 1:1 · seed 3 — "a happy little cat watering a bonsai"</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/style_vector.png" alt="Flat 2D vector art: a mountain landscape with a rising sun, lake and pine trees" loading="lazy" />
+      <figcaption>--style vector · 16:9 · seed 4 — "a mountain landscape with a rising sun, lake and pine trees"</figcaption>
+    </figure>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/style_minimal_vector.png" alt="Minimalist flat vector: a single bonsai tree in a round pot, limited palette" loading="lazy" />
+      <figcaption>--style minimalist-vector · 1:1 · seed 5 — "a single bonsai tree in a round pot"</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/style_sketch.png" alt="Pencil sketch: an old gnarled bonsai tree with twisting roots, cross-hatching" loading="lazy" />
+      <figcaption>--style sketch · 2:3 · seed 6 — "an old gnarled bonsai tree with twisting roots"</figcaption>
+    </figure>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/style_stickman.png" alt="Stick-figure doodle: a person watering a small potted plant on white background" loading="lazy" />
+      <figcaption>--style stickman · 1:1 · seed 7 — "a person watering a small potted plant"</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/style_caricature.png" alt="Caricature: a cheerful gardener with huge round glasses holding tiny scissors" loading="lazy" />
+      <figcaption>--style caricature · 2:3 · seed 10 — "a cheerful gardener with huge glasses holding tiny scissors"</figcaption>
+    </figure>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/style_infographic.png" alt="Infographic style: the four stages of growing a bonsai tree with icons and steps" loading="lazy" />
+      <figcaption>--style infographic · 3:2 · seed 8 — "the four stages of growing a bonsai tree, numbered"</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/style_typography.png" alt="Typography: the word BONSAI in large bold letters with a small tree growing from them" loading="lazy" />
+      <figcaption>--style typography · 2:1 · seed 9 — the word "BONSAI" with a tree growing from the letters</figcaption>
+    </figure>
+  </div>
+  <div class="commentary">
+    <h4>On text and infographics</h4>
+    <p>
+      Short text comes out clean — the <strong>"BONSAI"</strong> word-art above is rendered correctly. Long label text
+      does <strong>not</strong>: the infographic reads structurally as a numbered stages diagram, but its small labels
+      are gibberish. That's a known limit of the base image model, not the styling — for crisp labelled diagrams a
+      design-trained model is the better tool.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     5. Strengths & the one limit
+============================================================ -->
+<section class="article-section" id="limits">
+  <h2 class="section-title">Strengths, and the one limit</h2>
+  <div class="prose">
+    <p>
+      For a model this compressed, the photographic and illustrative output holds up remarkably well at 4 steps — the
+      icy-bonsai and golden-hour-valley shots above would be hard to pick out as "1.58-bit". Style coverage is broad
+      from a single flag, and reproducibility (seed + size) is exact.
+    </p>
+  </div>
+  <div class="callout red">
+    <strong>Generation only — no editing.</strong> I checked the inference code directly: this build starts from pure
+    noise and only ever <em>decodes</em> through the VAE, and the API exposes no image input. The diffusion module even
+    states it takes the upstream FLUX.2 path "but strips out img2img, condition images". So Bonsai-Image-4B is
+    <strong>text-to-image only</strong> — there is no instruction editing, img2img or reference-image conditioning in
+    the released weights. For those, a FLUX.2-klein-class editor is the right tool.
+  </div>
+  <div class="prose">
+    <p>
+      The practical workflow, then: pick your aspect ratio and style, fire a batch so the ~16 s load is paid once, and
+      reroll the seed when a tall composition or a fine detail isn't quite right. On a 24 GB 4090 with ~5 GB resident
+      and sub-second warm renders, it is a genuinely fast local text-to-image option.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     References
+============================================================ -->
+<section class="article-section" id="refs">
+  <h2 class="section-title">References</h2>
+  <ul class="links">
+    <li><a href="https://prismml.com" target="_blank"><strong>PrismML</strong></a> — the team behind Bonsai-Image.</li>
+    <li><a href="https://huggingface.co/collections/prism-ml/bonsai-image" target="_blank"><strong>Hugging Face</strong> — <code>prism-ml/bonsai-image</code></a> — the ternary &amp; binary weights (mlx + gemlite builds).</li>
+    <li><a href="https://github.com/PrismML-Eng/Bonsai-Image-Demo" target="_blank"><strong>GitHub</strong> — <code>PrismML-Eng/Bonsai-Image-Demo</code></a> — the demo: setup, model download and the FastAPI + Next.js studio.</li>
+    <li>Low-bit kernels: <a href="https://github.com/dropbox/gemlite" target="_blank">gemlite</a> and <a href="https://github.com/dropbox/hqq" target="_blank">HQQ</a> (CUDA); <a href="https://github.com/filipstrand/mflux" target="_blank">mflux</a> + MLX on Apple Silicon.</li>
+  </ul>
+</section>
+
+</div><!-- /container -->
+
+<footer class="page-footer">
+  <div class="inner">
+    <a class="back-to-blog" href="../index.html">
+      <span class="arrow">←</span>
+      <span>Back to the blog</span>
+    </a>
+    <p>Hardware: 1 × NVIDIA RTX 4090 (24 GiB, sm_89), Pop!_OS 22.04.<br />
+       Software: Bonsai-Image-4B (PrismML, ternary/gemlite), backend_gpu GpuPipeline, gemlite + HQQ, Python 3.11, 4 steps.<br />
+       Article by Omar Kamal Hosney · 2026-05-26</p>
+    <div class="social">
+      <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn">in</a>
+      <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium">M</a>
+      <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub">gh</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
