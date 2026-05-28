@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Two-Tower Recommender System — Matching Articles to Publishers</title>
+  <meta name="description" content="An animated, non-technical-friendly presentation explaining a two-tower deep-learning recommender system that matches articles to publishers, including collaborative filtering, the scoring head, training and a worked use case." />
+  <meta name="keywords" content="two-tower model, recommender system, deep learning, embeddings, collaborative filtering, article recommendation, publisher matching, neural network, Omar Kamal Hosney" />
+  <meta name="author" content="Omar Kamal Hosney" />
+  <link rel="canonical" href="https://omkamal.github.io/cheatsheets/two-tower-recommender-system.html" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Two-Tower Recommender System — Matching Articles to Publishers" />
+  <meta property="og:description" content="An animated walkthrough of a two-tower recommender: two embedding towers, a fully-connected scoring head, collaborative filtering, and a real use case — explained for executives." />
+  <meta property="og:url" content="https://omkamal.github.io/cheatsheets/two-tower-recommender-system.html" />
+  <meta property="og:image" content="https://omkamal.github.io/omar.jpeg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Two-Tower Recommender System — Matching Articles to Publishers" />
+  <meta name="twitter:description" content="An animated walkthrough of a two-tower recommender, explained for executives and engineers alike." />
+  <meta name="twitter:image" content="https://omkamal.github.io/omar.jpeg" />
+
+  <link rel="icon" type="image/jpeg" href="../omar.jpeg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    :root {
+      --c-bg-1: #0f172a;
+      --c-bg-2: #1e293b;
+      --c-bg-3: #312e81;
+      --c-primary: #3b82f6;
+      --c-primary-dark: #2563eb;
+      --c-accent: #a855f7;
+      --c-accent-dark: #7c3aed;
+      --c-pink: #ec4899;
+      --c-green: #10b981;
+      --c-amber: #f59e0b;
+      --c-text: #e2e8f0;
+      --c-text-muted: #94a3b8;
+      --c-text-dim: #64748b;
+      --c-card: rgba(30, 41, 59, 0.55);
+      --c-card-hover: rgba(30, 41, 59, 0.85);
+      --c-border: rgba(148, 163, 184, 0.16);
+      --c-border-hover: rgba(148, 163, 184, 0.32);
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --radius-xl: 32px;
+      --shadow-glow-blue: 0 20px 60px -20px rgba(59, 130, 246, 0.45);
+      --shadow-glow-purple: 0 20px 60px -20px rgba(168, 85, 247, 0.45);
+      --shadow-deep: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--c-text);
+      background: var(--c-bg-1);
+      min-height: 100vh;
+      overflow: hidden;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Animated gradient backdrop */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 18% 0%, rgba(59, 130, 246, 0.28), transparent 60%),
+        radial-gradient(ellipse 60% 50% at 82% 100%, rgba(168, 85, 247, 0.24), transparent 60%),
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(236, 72, 153, 0.10), transparent 60%),
+        linear-gradient(180deg, var(--c-bg-1) 0%, var(--c-bg-2) 50%, var(--c-bg-1) 100%);
+      z-index: -2;
+      animation: bgShift 18s ease-in-out infinite alternate;
+    }
+    @keyframes bgShift {
+      0%   { transform: scale(1) translateY(0); }
+      100% { transform: scale(1.08) translateY(-12px); }
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(148,163,184,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148,163,184,0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      z-index: -1;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, #000 30%, transparent 80%);
+    }
+
+    /* ---- Progress bar ---- */
+    .progress {
+      position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+      background: linear-gradient(90deg, var(--c-primary), var(--c-accent), var(--c-pink));
+      z-index: 100; transition: width .5s var(--ease);
+      box-shadow: 0 0 14px rgba(168,85,247,0.6);
+    }
+
+    /* ---- Top bar ---- */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 26px; pointer-events: none;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.82rem;
+      letter-spacing: .04em; color: var(--c-text-muted); pointer-events: auto;
+    }
+    .brand .dot {
+      width: 22px; height: 22px; border-radius: 7px;
+      background: linear-gradient(135deg, var(--c-primary), var(--c-accent));
+      box-shadow: var(--shadow-glow-blue);
+    }
+    .topbar a {
+      pointer-events: auto; text-decoration: none; color: var(--c-text-muted);
+      font-size: 0.8rem; font-weight: 500; border: 1px solid var(--c-border);
+      padding: 7px 14px; border-radius: 999px; transition: all .25s var(--ease);
+      background: rgba(15,23,42,0.4); backdrop-filter: blur(6px);
+    }
+    .topbar a:hover { color: #fff; border-color: var(--c-border-hover); transform: translateY(-1px); }
+
+    /* ---- Deck / slides ---- */
+    .deck { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .slide {
+      position: absolute; inset: 0;
+      display: none;
+      flex-direction: column; align-items: center; justify-content: flex-start;
+      padding: 90px 6vw 96px;
+      text-align: center;
+      overflow-y: auto;
+    }
+    .slide.active { display: flex; animation: slideIn .6s var(--ease); }
+    @keyframes slideIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .slide-inner { width: 100%; max-width: 1120px; margin: auto; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--c-accent); padding: 6px 14px; border-radius: 999px;
+      border: 1px solid rgba(168,85,247,0.3); background: rgba(168,85,247,0.08);
+      margin-bottom: 22px;
+    }
+    .eyebrow::before { content:''; width:6px; height:6px; border-radius:50%; background: var(--c-accent); box-shadow:0 0 10px var(--c-accent); }
+
+    h1 {
+      font-family: 'Poppins', sans-serif; font-weight: 800; line-height: 1.08;
+      font-size: clamp(2.1rem, 5.4vw, 4rem); letter-spacing: -0.02em;
+      margin-bottom: 18px;
+    }
+    h2 {
+      font-family: 'Poppins', sans-serif; font-weight: 700; line-height: 1.12;
+      font-size: clamp(1.6rem, 3.6vw, 2.7rem); letter-spacing: -0.01em;
+      margin-bottom: 14px;
+    }
+    .gradient {
+      background: linear-gradient(120deg, var(--c-primary) 0%, var(--c-accent) 55%, var(--c-pink) 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .lead { font-size: clamp(1rem, 1.7vw, 1.25rem); color: var(--c-text-muted); max-width: 760px; margin: 0 auto; }
+    p.body { color: var(--c-text-muted); font-size: clamp(.95rem,1.4vw,1.08rem); }
+
+    /* ---- Entrance animation for child elements ---- */
+    .anim { opacity: 0; transform: translateY(22px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+    .anim.show { opacity: 1; transform: translateY(0); }
+    .anim.pop { transform: scale(.9); }
+    .anim.pop.show { transform: scale(1); }
+
+    /* ---- Cards / grids ---- */
+    .grid { display: grid; gap: 16px; margin-top: 26px; }
+    .g2 { grid-template-columns: repeat(2, 1fr); }
+    .g3 { grid-template-columns: repeat(3, 1fr); }
+    .g4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: var(--c-card); border: 1px solid var(--c-border); border-radius: var(--radius-lg);
+      padding: 22px 20px; text-align: left; backdrop-filter: blur(10px);
+      transition: transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+    }
+    .card:hover { transform: translateY(-4px); border-color: var(--c-border-hover); box-shadow: var(--shadow-deep); }
+    .card .ico { font-size: 1.7rem; margin-bottom: 10px; display:block; }
+    .card h3 { font-family:'Poppins',sans-serif; font-size: 1.02rem; font-weight: 600; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--c-text-muted); }
+
+    .pill {
+      display:inline-block; padding:5px 12px; border-radius:999px; font-size:.8rem; font-weight:600;
+      border:1px solid var(--c-border); background: rgba(148,163,184,0.06); color: var(--c-text-muted);
+      margin:4px;
+    }
+    .pill.blue { color:#93c5fd; border-color: rgba(59,130,246,.4); background: rgba(59,130,246,.1); }
+    .pill.purple { color:#d8b4fe; border-color: rgba(168,85,247,.4); background: rgba(168,85,247,.1); }
+    .pill.green { color:#6ee7b7; border-color: rgba(16,185,129,.4); background: rgba(16,185,129,.1); }
+
+    /* ---- Two-tower diagram (slide) ---- */
+    .towers { display:flex; align-items:flex-end; justify-content:center; gap: clamp(20px,7vw,90px); margin-top: 18px; flex-wrap: wrap; }
+    .tower { display:flex; flex-direction:column; align-items:center; gap:12px; width: 260px; max-width: 42vw; }
+    .tower .feats { display:flex; flex-direction:column; gap:8px; width:100%; }
+    .feat {
+      padding:10px 14px; border-radius:12px; font-size:.85rem; font-weight:500; text-align:left;
+      border:1px solid var(--c-border); background: var(--c-card); backdrop-filter: blur(8px);
+    }
+    .flow {
+      width: 4px; height: 46px; border-radius: 4px;
+      background: linear-gradient(180deg, currentColor 0 45%, transparent 45% 55%, currentColor 55% 100%);
+      background-size: 100% 22px; animation: flowDown .9s linear infinite;
+    }
+    @keyframes flowDown { to { background-position: 0 22px; } }
+    .encoder {
+      width:100%; padding:14px; border-radius:16px; font-weight:700; font-family:'Poppins',sans-serif; font-size:.95rem;
+      border:1px solid var(--c-border-hover); position:relative; overflow:hidden;
+    }
+    .encoder::after{
+      content:''; position:absolute; inset:0;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.14), transparent);
+      transform: translateX(-120%); animation: shine 2.6s ease-in-out infinite;
+    }
+    @keyframes shine { 0%,60%{transform:translateX(-120%);} 100%{transform:translateX(120%);} }
+    .vec { display:flex; gap:6px; padding:10px; border-radius:12px; background: rgba(2,6,23,.5); border:1px solid var(--c-border); }
+    .vec span { width:14px; height:30px; border-radius:4px; display:block; animation: bob 1.8s ease-in-out infinite; }
+    .vec span:nth-child(2){animation-delay:.15s} .vec span:nth-child(3){animation-delay:.3s}
+    .vec span:nth-child(4){animation-delay:.45s} .vec span:nth-child(5){animation-delay:.6s} .vec span:nth-child(6){animation-delay:.75s}
+    @keyframes bob { 0%,100%{transform:scaleY(.7); opacity:.6} 50%{transform:scaleY(1); opacity:1} }
+
+    .blueC { color: var(--c-primary); }
+    .purpleC { color: var(--c-accent); }
+    .tower.article .encoder { background: linear-gradient(135deg, rgba(59,130,246,.22), rgba(59,130,246,.06)); color:#bfdbfe; box-shadow: var(--shadow-glow-blue); }
+    .tower.pub .encoder { background: linear-gradient(135deg, rgba(168,85,247,.22), rgba(168,85,247,.06)); color:#e9d5ff; box-shadow: var(--shadow-glow-purple); }
+    .tower.article .vec span { background: linear-gradient(180deg,#60a5fa,#2563eb); }
+    .tower.pub .vec span { background: linear-gradient(180deg,#c084fc,#7c3aed); }
+    .tower .tlabel { font-family:'Poppins',sans-serif; font-weight:700; font-size:1.05rem; }
+
+    .merge-zone { display:flex; flex-direction:column; align-items:center; gap:10px; min-width:200px; }
+    .merge-box {
+      padding:12px 18px; border-radius:14px; font-weight:700; font-family:'Poppins',sans-serif; font-size:.9rem;
+      background: linear-gradient(135deg, rgba(16,185,129,.2), rgba(16,185,129,.05)); color:#6ee7b7;
+      border:1px solid rgba(16,185,129,.4);
+    }
+    .score-gauge {
+      width:160px; height:160px; border-radius:50%;
+      background: conic-gradient(var(--c-green) calc(var(--p,0)*1%), rgba(148,163,184,.12) 0);
+      display:flex; align-items:center; justify-content:center; transition: background 1.2s var(--ease);
+      position:relative;
+    }
+    .score-gauge::before{ content:''; position:absolute; inset:14px; border-radius:50%; background: var(--c-bg-1); }
+    .score-gauge b{ position:relative; font-family:'Poppins',sans-serif; font-size:2rem; font-weight:800; }
+
+    /* ---- Neural net SVG ---- */
+    .net-wrap { margin-top: 14px; }
+    svg.net { width:100%; max-width: 980px; height:auto; }
+    .net .edge { stroke: rgba(148,163,184,.25); stroke-width:1.2; fill:none; stroke-dasharray: 5 7; animation: dashflow 1.2s linear infinite; }
+    @keyframes dashflow { to { stroke-dashoffset: -24; } }
+    .net circle { animation: nodePulse 2.4s ease-in-out infinite; }
+    @keyframes nodePulse { 0%,100%{ opacity:.85 } 50%{ opacity:1; } }
+    .net text { font-family:'Inter',sans-serif; font-size: 13px; fill: var(--c-text-muted); }
+
+    /* ---- Use case ---- */
+    .usecase { display:grid; grid-template-columns: 300px 1fr; gap: 28px; align-items:center; margin-top: 22px; }
+    .article-card {
+      text-align:left; padding:22px; border-radius:var(--radius-lg);
+      background: linear-gradient(135deg, rgba(59,130,246,.16), rgba(15,23,42,.6));
+      border:1px solid rgba(59,130,246,.35); box-shadow: var(--shadow-glow-blue);
+    }
+    .article-card .tag{ font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:#93c5fd; font-weight:700;}
+    .article-card h3{ font-family:'Poppins',sans-serif; font-size:1.15rem; margin:8px 0 12px; }
+    .pubrow { display:flex; flex-direction:column; gap:14px; }
+    .pubmatch { display:flex; align-items:center; gap:16px; padding:14px 18px; border-radius:16px; background:var(--c-card); border:1px solid var(--c-border); text-align:left; }
+    .pubmatch .info{ flex:1; min-width:0; }
+    .pubmatch .info b{ font-family:'Poppins',sans-serif; font-weight:600; font-size:.98rem; display:block; }
+    .pubmatch .info span{ font-size:.82rem; color:var(--c-text-muted); }
+    .bar { flex: 0 0 230px; height:14px; border-radius:999px; background: rgba(148,163,184,.12); overflow:hidden; position:relative; }
+    .bar > i { display:block; height:100%; width:0; border-radius:999px; transition: width 1.3s var(--ease); }
+    .scoreNum { flex:0 0 64px; text-align:right; font-family:'Poppins',sans-serif; font-weight:800; font-size:1.25rem; }
+    .verdict{ flex:0 0 132px; text-align:center; font-size:.78rem; font-weight:700; padding:6px 8px; border-radius:999px; }
+    .v-yes{ background:rgba(16,185,129,.15); color:#6ee7b7; border:1px solid rgba(16,185,129,.4);}
+    .v-maybe{ background:rgba(245,158,11,.15); color:#fcd34d; border:1px solid rgba(245,158,11,.4);}
+    .v-no{ background:rgba(239,68,68,.13); color:#fca5a5; border:1px solid rgba(239,68,68,.4);}
+
+    .quote {
+      font-style: italic; color: var(--c-text); background: rgba(2,6,23,.4);
+      border-left: 3px solid var(--c-accent); padding: 14px 18px; border-radius: 8px;
+      max-width: 720px; margin: 8px auto 0; text-align:left; font-size:.95rem;
+    }
+    .mono { font-family:'JetBrains Mono', monospace; font-size:.86rem; }
+
+    .takeaways { display:flex; flex-direction:column; gap:14px; max-width:760px; margin: 24px auto 0; text-align:left; }
+    .takeaway { display:flex; gap:14px; align-items:flex-start; padding:16px 18px; border-radius:14px; background:var(--c-card); border:1px solid var(--c-border); }
+    .takeaway .num{ flex:0 0 34px; height:34px; border-radius:10px; display:flex;align-items:center;justify-content:center;font-weight:800;font-family:'Poppins',sans-serif;
+      background: linear-gradient(135deg,var(--c-primary),var(--c-accent)); color:#fff; }
+    .takeaway p{ font-size:.92rem; color:var(--c-text-muted); } .takeaway b{ color:var(--c-text); }
+
+    /* ---- Controls ---- */
+    .controls {
+      position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); z-index: 70;
+      display:flex; align-items:center; gap: 14px;
+      background: rgba(15,23,42,.6); backdrop-filter: blur(12px);
+      border:1px solid var(--c-border); border-radius:999px; padding:8px 12px;
+      box-shadow: var(--shadow-deep);
+    }
+    .ctrl-btn {
+      width:40px; height:40px; border-radius:50%; border:1px solid var(--c-border);
+      background: rgba(148,163,184,.06); color:var(--c-text); cursor:pointer; font-size:1rem;
+      display:flex; align-items:center; justify-content:center; transition: all .2s var(--ease);
+    }
+    .ctrl-btn:hover { background: linear-gradient(135deg,var(--c-primary),var(--c-accent)); border-color:transparent; transform: scale(1.08); }
+    .ctrl-btn:disabled { opacity:.35; cursor:not-allowed; transform:none; background: rgba(148,163,184,.06); }
+    .counter { font-size:.82rem; color:var(--c-text-muted); font-weight:600; min-width:54px; text-align:center; font-family:'JetBrains Mono',monospace; }
+    .dots { display:flex; gap:6px; }
+    .dots i { width:7px; height:7px; border-radius:50%; background:rgba(148,163,184,.3); cursor:pointer; transition: all .25s var(--ease); }
+    .dots i.on { width:22px; border-radius:999px; background: linear-gradient(90deg,var(--c-primary),var(--c-accent)); }
+
+    .hint { position: fixed; bottom: 76px; left:50%; transform:translateX(-50%); z-index:60; font-size:.74rem; color:var(--c-text-dim); }
+    .author { position: fixed; bottom: 22px; right: 24px; z-index:60; font-size:.76rem; color:var(--c-text-dim); display:flex; gap:12px; align-items:center; }
+    .author a{ color:var(--c-text-muted); text-decoration:none; } .author a:hover{ color:#fff; }
+
+    @media (max-width: 860px) {
+      .g3,.g4,.g2 { grid-template-columns: 1fr 1fr; }
+      .usecase { grid-template-columns: 1fr; }
+      .bar{ flex-basis:120px; } .verdict{ flex-basis:96px; }
+      .slide { padding: 84px 20px 110px; }
+      .author { display:none; }
+    }
+    @media (max-width: 560px) {
+      .g3,.g4,.g2 { grid-template-columns: 1fr; }
+      .towers{ gap:14px; } .tower{ width:46vw; }
+      .pubmatch{ flex-wrap:wrap; } .bar{ flex-basis:100%; order:5; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; }
+      .anim { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span> Omar Kamal Hosney</div>
+    <a href="../index.html">&#8592; Home</a>
+  </div>
+
+  <div class="deck" id="deck">
+
+    <!-- 1 — TITLE -->
+    <section class="slide active">
+      <div class="slide-inner">
+        <span class="eyebrow anim">Deep Learning · Recommender Systems</span>
+        <h1 class="anim">The <span class="gradient">Two-Tower</span> Recommender</h1>
+        <h2 class="anim" style="font-size:clamp(1.1rem,2.6vw,1.7rem); color:var(--c-text-muted); font-weight:500;">
+          Matching the right <span class="blueC" style="font-weight:700">article</span>
+          to the right <span class="purpleC" style="font-weight:700">publisher</span>
+        </h2>
+        <p class="lead anim" style="margin-top:18px;">
+          A visual, plain-language tour of how two neural "towers" learn to predict
+          whether a story belongs with a publisher — scored from 0 to 1.
+        </p>
+        <div class="anim" style="margin-top:26px;">
+          <span class="pill blue">Article features</span>
+          <span class="pill purple">Publisher profile</span>
+          <span class="pill green">Collaborative filtering</span>
+          <span class="pill">Match score</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 — THE PROBLEM -->
+    <section class="slide">
+      <div class="slide-inner">
+        <span class="eyebrow anim">The Challenge</span>
+        <h2 class="anim">Too many stories, too many <span class="gradient">publishers</span></h2>
+        <p class="lead anim">Hand-matching content to the right outlet is slow, inconsistent, and impossible at scale.</p>
+        <div class="grid g4">
+          <div class="card anim"><span class="ico">📰</span><h3>Thousands of articles</h3><p>New stories arrive every hour across every topic and region.</p></div>
+          <div class="card anim"><span class="ico">🏢</span><h3>Hundreds of publishers</h3><p>Each has its own focus, audience, region and appetite.</p></div>
+          <div class="card anim"><span class="ico">🐌</span><h3>Manual & slow</h3><p>Editors can't review every possible pairing by hand.</p></div>
+          <div class="card anim"><span class="ico">🎯</span><h3>The goal</h3><p>Auto-score every (article, publisher) pair from 0 to 1.</p></div>
+        </div>
+        <p class="body anim" style="margin-top:24px;">
+          We want a model that, for <em>any</em> story and <em>any</em> publisher, instantly answers:
+          <b style="color:var(--c-text)">"How likely is this a good match?"</b>
+        </p>
+      </div>
+    </section>
+
+    <!-- 3 — BIG IDEA (non-exec) -->
+    <section class="slide">
+      <div class="slide-inner">
+        <span class="eyebrow anim">The Big Idea — In Plain Words</span>
+        <h2 class="anim">Think of it as a <span class="gradient">matchmaker</span></h2>
+        <div class="grid g4" style="margin-top:30px;">
+          <div class="card anim pop"><span class="ico">📝</span><h3>1. Two profiles</h3><p>The article describes itself; the publisher describes itself.</p></div>
+          <div class="card anim pop"><span class="ico">🔢</span><h3>2. Two fingerprints</h3><p>The model turns each profile into a compact list of numbers.</p></div>
+          <div class="card anim pop"><span class="ico">⚖️</span><h3>3. Compare</h3><p>It checks how well the two fingerprints fit together.</p></div>
+          <div class="card anim pop"><span class="ico">💯</span><h3>4. A match score</h3><p>Out comes a number from 0 (no) to 1 (perfect fit).</p></div>
+        </div>
+        <p class="body anim" style="margin-top:28px; max-width:760px; margin-left:auto; margin-right:auto;">
+          Just like a dating app compares two people, the two-tower model compares a <span class="blueC">story</span>
+          and a <span class="purpleC">publisher</span> — and predicts the chance they belong together.
+        </p>
+      </div>
+    </section>
+
+    <!-- 4 — WHAT IS AN EMBEDDING -->
+    <section class="slide">
+      <div class="slide-inner">
+        <span class="eyebrow anim">First, a Key Concept</span>
+        <h2 class="anim">What is an <span class="gradient">embedding</span>?</h2>
+        <p class="lead anim">A way to turn words and features into <b style="color:var(--c-text)">coordinates on a map</b>, where similar things sit close together.</p>
+        <div class="grid g3" style="margin-top:28px;">
+          <div class="card anim"><span class="ico">🗺️</span><h3>Meaning becomes location</h3><p>"Human rights in Brazil" lands near "Politics in LATAM" — far from "Pacific Rim chips".</p></div>
+          <div class="card anim"><span class="ico">📐</span><h3>A list of numbers</h3><p>Each item becomes a vector, e.g. <span class="mono">[0.21, -0.88, 0.04, …]</span> — its fingerprint.</p></div>
+          <div class="card anim"><span class="ico">🤝</span><h3>Closeness = relevance</h3><p>If two fingerprints are near each other, the items are related.</p></div>
+        </div>
+        <p class="body anim" style="margin-top:24px;">An <b style="color:var(--c-text)">embedding tower</b> is simply the part of the model that produces these fingerprints.</p>
+      </div>
+    </section>
+
+    <!-- 5 — TWO TOWERS OVERVIEW -->
+    <section class="slide">
+      <div class="slide-inner">
+        <span class="eyebrow anim">The Architecture</span>
+        <h2 class="anim">Two towers, built <span class="gradient">independently</span></h2>
+        <p class="lead anim">Each tower is its own small neural network. They never share inputs — they only meet at the very top.</p>
+        <div class="towers">
+          <div class="tower article anim">
+            <div class="tlabel blueC">🗞️ Article Tower</div>
+            <div class="encoder">Article Encoder</div>
+            <div class="flow blueC"></div>
+            <div class="vec"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="pill blue">article embedding</div>
+          </div>
+          <div class="tower pub anim">
+            <div class="tlabel purpleC">🏢 Publisher Tower</div>
+            <div class="encoder">Publisher Encoder</div>
+            <div class="flow purpleC"></div>
+            <div class="vec"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="pill purple">publisher embedding</div>
+          </div>
+        </div>
+        <p class="body anim" style="margin-top:26px;">
+          Because the towers are separate, we can <b style="color:var(--c-text)">pre-compute publisher fingerprints once</b>
+          and reuse them — making real-time scoring extremely fast.
+        </p>
+      </div>
+    </section>
+
+    <!-- 6 — ARTICLE TOWER -->
+    <section class="slide">
+      <div class="slide-inner">
+        <span class="eyebrow anim" style="color:var(--c-primary); border-color:rgba(59,130,246,.3); background:rgba(59,130,246,.08);">Tower 1</span>
+        <h2 class="anim">The <span class="blueC">Article</span> Tower</h2>
+        <p class="lead anim">It takes everything we know about the story and compresses it into one blue fingerprint.</p>
+        <div class="grid g3" style="margin-top:26px;">
+          <div class="card anim"><span class="ico">🏷️</span><h3>Category / Topic</h3><p>Politics, human rights, tech, sports…</p></div>
+          <div class="card anim"><span class="ico">⭐</span><h3>Quality score</h3><p>Editorial quality, sourcing, depth.</p></div>
+          <div class="card anim"><span class="ico">⏱️</span><h3>Recency</h3><p>Is it breaking / timely, or evergreen?</p></div>
+          <div class="card anim"><span class="ico">🌎</span><h3>Region covered</h3><p>LATAM, Pacific Rim, EMEA, global…</p></div>
+          <div class="card anim"><span class="ico">📏</span><h3>Format & length</h3><p>Brief, feature, investigation, op-ed.</p></div>
+          <div class="card anim"><span class="ico">🗣️</span><h3>Language & tone</h3><p>Language, sentiment, sensitivity.</p></div>
+        </div>
+        <p class="body anim" style="margin-top:22px;">
+          These features flow up the tower → out comes the <span class="pill blue">article embedding</span>.
+        </p>
+      </div>
+    </section>
+
+    <!-- 7 — PUBLISHER TOWER -->
+    <section class="slide">
+      <div class="slide-inner">
+        <span class="eyebrow anim" style="color:var(--c-accent);">Tower 2</span>
+        <h2 class="anim">The <span class="purpleC">Publisher</span> Tower</h2>
+        <p class="lead anim">A publisher is best described in words — so this tower reads a short profile <em>and</em> structured facts.</p>
+        <p class="quote anim">
+          "Independent newsroom focused on <b>politics</b> and <b>human rights</b>, with strong coverage across
+          <b>LATAM</b>. High weekly publishing capacity and a long, reliable track record with us."
+        </p>
+        <div class="grid g4" style="margin-top:22px;">
+          <div class="card anim"><span class="ico">🧭</span><h3>Topical interests</h3><p>Politics, human rights, climate…</p></div>
+          <div class="card anim"><span class="ico">🌐</span><h3>Regions covered</h3><p>LATAM, Pacific Rim, EMEA…</p></div>
+          <div class="card anim"><span class="ico">⚙️</span><h3>Capacity</h3><p>How much they can publish.</p></div>
+          <div class="card anim"><span class="ico">🤝</span><h3>History with us</h3><p>Relationship length & reliability.</p></div>
+        </div>
+        <p class="body anim" style="margin-top:20px;">
+          A <b style="color:var(--c-text)">text encoder</b> turns the paragraph into numbers, combined with the structured facts →
+          <span class="pill purple">publisher embedding</span>.
+        </p>
+      </div>
+    </section>
+
+    <!-- 8 — MERGE / SCORING HEAD -->
+    <section class="slide">
+      <div class="slide-inner">
+        <span class="eyebrow anim">The Scoring Head</span>
+        <h2 class="anim">Where the towers <span class="gradient">meet</span></h2>
+        <p class="lead anim">Join the two fingerprints, pass them through a fully-connected network, and squeeze the result into a 0–1 score.</p>
+        <div class="net-wrap anim">
+          <svg class="net" id="netSvg" viewBox="0 0 980 420" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Neural network forward pass diagram"></svg>
+        </div>
+        <p class="body anim" style="margin-top:14px;">
+          <b style="color:var(--c-text)">Concatenate</b> → <b style="color:var(--c-text)">fully-connected (dense) layers</b>
+          → <b style="color:var(--c-text)">sigmoid</b> → a probability between 0 and 1.
+        </p>
+        <p class="body anim" style="margin-top:8px; font-size:.85rem; color:var(--c-text-dim); max-width:780px; margin-left:auto;margin-right:auto;">
+          Classic two-tower setups compare fingerprints with a simple dot-product for ultra-fast retrieval; adding this dense
+          "interaction head" trades a little speed for sharper ranking accuracy.
+        </p>
+      </div>
+    </section>
+
+    <!-- 9 — COLLABORATIVE FILTERING -->
+    <section class="slide">
+      <div class="slide-inner">
+        <span class="eyebrow anim">Going Further</span>
+        <h2 class="anim">Adding <span class="gradient">collaborative filtering</span></h2>
+        <p class="lead anim">Content features describe <em>what</em> things are. Collaborative filtering learns from <em>who interacted with what</em>.</p>
+        <div class="grid g2" style="margin-top:24px;">
+          <div class="card anim"><span class="ico">🆔</span><h3>ID embeddings (hybrid)</h3><p>Give every publisher &amp; article a learned ID vector, concatenated with the content fingerprint — capturing behavior the words don't.</p></div>
+          <div class="card anim"><span class="ico">📚</span><h3>History pooling</h3><p>Average the embeddings of articles a publisher previously accepted to build a "taste vector".</p></div>
+          <div class="card anim"><span class="ico">🕸️</span><h3>Graph / GNN signal</h3><p>Model the publisher–article interaction graph (e.g. LightGCN) and learn embeddings from the connections themselves.</p></div>
+          <div class="card anim"><span class="ico">❄️</span><h3>Solves cold-start</h3><p>Content handles brand-new items; collaborative signal sharpens matches for familiar ones. Best of both.</p></div>
+        </div>
+        <p class="body anim" style="margin-top:22px;">
+          The winning recipe is usually <b style="color:var(--c-text)">hybrid</b>:
+          <span class="pill blue">content</span> + <span class="pill green">collaborative</span> in the same two towers.
+        </p>
+      </div>
+    </section>
+
+    <!-- 10 — TRAINING -->
+    <section class="slide">
+      <div class="slide-inner">
+        <span class="eyebrow anim">How It Learns</span>
+        <h2 class="anim">Teaching the model from <span class="gradient">past matches</span></h2>
+        <div class="grid g3" style="margin-top:28px;">
+          <div class="card anim"><span class="ico">✅</span><h3>Positive &amp; negative pairs</h3><p>Pairs that were accepted &rarr; label <b>1</b>. Pairs ignored or never shown (sampled) &rarr; label <b>0</b>.</p></div>
+          <div class="card anim"><span class="ico">📉</span><h3>Binary cross-entropy</h3><p>The model is penalised whenever its predicted score is far from the true 0/1 label.</p></div>
+          <div class="card anim"><span class="ico">🔁</span><h3>Trained jointly</h3><p>Both towers <em>and</em> the scoring head learn together via gradient descent, sharpening every fingerprint.</p></div>
+        </div>
+        <p class="body anim" style="margin-top:26px; max-width:780px; margin-left:auto;margin-right:auto;">
+          Over millions of historical <span class="blueC">article</span>–<span class="purpleC">publisher</span> interactions, the towers learn to place
+          good matches close together and bad matches far apart.
+        </p>
+      </div>
+    </section>
+
+    <!-- 11 — USE CASE -->
+    <section class="slide">
+      <div class="slide-inner">
+        <span class="eyebrow anim">A Worked Example</span>
+        <h2 class="anim">One story, scored against <span class="gradient">three publishers</span></h2>
+        <div class="usecase">
+          <div class="article-card anim">
+            <div class="tag">Incoming article</div>
+            <h3>"Crackdown on press freedom across LATAM"</h3>
+            <div>
+              <span class="pill blue">Politics</span>
+              <span class="pill blue">Human rights</span>
+              <span class="pill blue">LATAM</span>
+              <span class="pill blue">Breaking</span>
+              <span class="pill blue">High quality</span>
+            </div>
+          </div>
+          <div class="pubrow">
+            <div class="pubmatch anim" data-score="93">
+              <div class="info"><b>🏢 Publisher A — LATAM Politics &amp; Rights desk</b><span>Politics · human rights · LATAM · high capacity</span></div>
+              <div class="bar"><i style="background:linear-gradient(90deg,#34d399,#10b981)"></i></div>
+              <div class="scoreNum" style="color:#6ee7b7">0.93</div>
+              <div class="verdict v-yes">✅ Recommend</div>
+            </div>
+            <div class="pubmatch anim" data-score="71">
+              <div class="info"><b>🏢 Publisher B — Global human-rights review</b><span>Human rights · global · medium capacity</span></div>
+              <div class="bar"><i style="background:linear-gradient(90deg,#fbbf24,#f59e0b)"></i></div>
+              <div class="scoreNum" style="color:#fcd34d">0.71</div>
+              <div class="verdict v-maybe">🤔 Consider</div>
+            </div>
+            <div class="pubmatch anim" data-score="8">
+              <div class="info"><b>🏢 Publisher C — Pacific Rim tech &amp; business</b><span>Technology · business · Pacific Rim</span></div>
+              <div class="bar"><i style="background:linear-gradient(90deg,#f87171,#ef4444)"></i></div>
+              <div class="scoreNum" style="color:#fca5a5">0.08</div>
+              <div class="verdict v-no">❌ Skip</div>
+            </div>
+          </div>
+        </div>
+        <p class="body anim" style="margin-top:22px;">The model ranks publishers instantly — editors act on a short, confident shortlist.</p>
+      </div>
+    </section>
+
+    <!-- 12 — BUSINESS VALUE -->
+    <section class="slide">
+      <div class="slide-inner">
+        <span class="eyebrow anim">Why It Matters</span>
+        <h2 class="anim">The business <span class="gradient">payoff</span></h2>
+        <div class="grid g3" style="margin-top:28px;">
+          <div class="card anim"><span class="ico">⚡</span><h3>Scale &amp; speed</h3><p>Millions of pairings scored in milliseconds — far beyond manual reach.</p></div>
+          <div class="card anim"><span class="ico">🎯</span><h3>Better relevance</h3><p>Sharper matches lift acceptance and audience engagement.</p></div>
+          <div class="card anim"><span class="ico">❄️</span><h3>Cold-start ready</h3><p>Content features score brand-new stories and publishers from day one.</p></div>
+          <div class="card anim"><span class="ico">🧑‍⚖️</span><h3>Frees editors</h3><p>People focus on judgment calls, not screening every pair.</p></div>
+          <div class="card anim"><span class="ico">📈</span><h3>Self-improving</h3><p>Every new interaction makes the next recommendation better.</p></div>
+          <div class="card anim"><span class="ico">🔍</span><h3>Consistent &amp; auditable</h3><p>Data-driven scores replace ad-hoc, subjective routing.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 — SUMMARY -->
+    <section class="slide">
+      <div class="slide-inner">
+        <span class="eyebrow anim">In a Nutshell</span>
+        <h2 class="anim">Key <span class="gradient">takeaways</span></h2>
+        <div class="takeaways">
+          <div class="takeaway anim"><div class="num">1</div><p><b>Two independent towers</b> turn an article and a publisher into comparable numeric fingerprints (embeddings).</p></div>
+          <div class="takeaway anim"><div class="num">2</div><p>A <b>fully-connected head with a sigmoid</b> joins the fingerprints and outputs a 0–1 match score.</p></div>
+          <div class="takeaway anim"><div class="num">3</div><p>Mixing <b>content features with collaborative filtering</b> captures both meaning and behavior — and beats cold-start.</p></div>
+          <div class="takeaway anim"><div class="num">4</div><p>Pre-computed publisher fingerprints make it <b>fast, scalable, and self-improving</b> in production.</p></div>
+        </div>
+        <p class="lead anim" style="margin-top:30px;">The right story reaches the right publisher — automatically, and at scale.</p>
+        <p class="body anim" style="margin-top:14px; font-size:.82rem; color:var(--c-text-dim);">Presentation by Omar Kamal Hosney · omkamal.github.io</p>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="hint" id="hint">Use ← / → arrow keys, or swipe</div>
+
+  <div class="author">
+    <a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://medium.com/@omkamal" target="_blank" rel="noopener">Medium</a>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn" id="prevBtn" aria-label="Previous slide">&#8592;</button>
+    <span class="counter" id="counter">01 / 13</span>
+    <div class="dots" id="dots"></div>
+    <button class="ctrl-btn" id="nextBtn" aria-label="Next slide">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const total = slides.length;
+    let current = 0;
+
+    // build dots
+    const dotsEl = document.getElementById('dots');
+    slides.forEach((_, i) => {
+      const d = document.createElement('i');
+      d.addEventListener('click', () => go(i));
+      dotsEl.appendChild(d);
+    });
+    const dots = Array.from(dotsEl.children);
+
+    const progress = document.getElementById('progress');
+    const counter = document.getElementById('counter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const hint = document.getElementById('hint');
+
+    function pad(n){ return String(n).padStart(2,'0'); }
+
+    function revealChildren(slide){
+      const items = slide.querySelectorAll('.anim');
+      items.forEach((el,i) => {
+        el.classList.remove('show');
+        setTimeout(() => el.classList.add('show'), 90 + i*110);
+      });
+    }
+
+    function runSlideHooks(slide){
+      // gauges / bars in use-case
+      slide.querySelectorAll('.pubmatch').forEach((row, i) => {
+        const score = +row.getAttribute('data-score');
+        const bar = row.querySelector('.bar > i');
+        if (bar){ bar.style.width = '0%'; setTimeout(()=> bar.style.width = score+'%', 500 + i*250); }
+      });
+    }
+
+    function go(index){
+      if (index < 0 || index >= total) return;
+      slides[current].classList.remove('active');
+      current = index;
+      const slide = slides[current];
+      slide.classList.add('active');
+      revealChildren(slide);
+      runSlideHooks(slide);
+
+      progress.style.width = ((current)/(total-1))*100 + '%';
+      counter.textContent = pad(current+1) + ' / ' + pad(total);
+      dots.forEach((d,i)=> d.classList.toggle('on', i===current));
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === total-1;
+      if (current > 0 && hint) hint.style.opacity = '0';
+    }
+
+    const next = () => go(current+1);
+    const prev = () => go(current-1);
+    nextBtn.addEventListener('click', next);
+    prevBtn.addEventListener('click', prev);
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); prev(); }
+      else if (e.key === 'Home'){ go(0); }
+      else if (e.key === 'End'){ go(total-1); }
+    });
+
+    // touch swipe
+    let tx = 0;
+    document.addEventListener('touchstart', e => tx = e.changedTouches[0].clientX, {passive:true});
+    document.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - tx;
+      if (Math.abs(dx) > 55){ dx < 0 ? next() : prev(); }
+    }, {passive:true});
+
+    /* ---- Build the neural-network diagram ---- */
+    (function buildNet(){
+      const svg = document.getElementById('netSvg');
+      const NS = 'http://www.w3.org/2000/svg';
+      const H = 420;
+      // layers: x position, count, color, label
+      const layers = [
+        { x: 90,  ys: spread(4, 60, 180),  r: 14, color:'#3b82f6', label:'Article\nembedding' },
+        { x: 90,  ys: spread(4, 240, 360), r: 14, color:'#a855f7', label:'Publisher\nembedding' },
+        { x: 320, ys: spread(8, 50, 370),  r: 10, color:'#10b981', label:'Concatenate' },
+        { x: 520, ys: spread(6, 90, 330),  r: 11, color:'#22d3ee', label:'Dense' },
+        { x: 700, ys: spread(4, 130, 290), r: 11, color:'#818cf8', label:'Dense' },
+        { x: 860, ys: [210],               r: 16, color:'#ec4899', label:'Sigmoid' }
+      ];
+
+      function spread(n, top, bottom){
+        if (n === 1) return [(top+bottom)/2];
+        const step = (bottom-top)/(n-1); const a=[];
+        for (let i=0;i<n;i++) a.push(top + step*i);
+        return a;
+      }
+
+      // edges: towers(0,1) -> concat(2) -> dense(3) -> dense(4) -> out(5)
+      const connect = [ [0,2],[1,2],[2,3],[3,4],[4,5] ];
+      const edgeGroup = document.createElementNS(NS,'g');
+      svg.appendChild(edgeGroup);
+      connect.forEach(([a,b]) => {
+        layers[a].ys.forEach(ya => {
+          layers[b].ys.forEach(yb => {
+            const line = document.createElementNS(NS,'line');
+            line.setAttribute('x1', layers[a].x); line.setAttribute('y1', ya);
+            line.setAttribute('x2', layers[b].x); line.setAttribute('y2', yb);
+            line.setAttribute('class','edge');
+            line.style.animationDelay = (Math.random()*1.2)+'s';
+            edgeGroup.appendChild(line);
+          });
+        });
+      });
+
+      // nodes
+      layers.forEach((L, li) => {
+        L.ys.forEach((y, ni) => {
+          const c = document.createElementNS(NS,'circle');
+          c.setAttribute('cx', L.x); c.setAttribute('cy', y); c.setAttribute('r', L.r);
+          c.setAttribute('fill', L.color);
+          c.setAttribute('opacity','0.9');
+          c.style.animationDelay = ((li*0.18)+(ni*0.08))+'s';
+          c.setAttribute('filter','drop-shadow(0 0 6px '+L.color+'aa)');
+          svg.appendChild(c);
+        });
+      });
+
+      // labels
+      const labels = [
+        { x:90,  y:30,  t:'🗞️ Article emb', fill:'#93c5fd', anchor:'middle' },
+        { x:90,  y:398, t:'🏢 Publisher emb', fill:'#d8b4fe', anchor:'middle' },
+        { x:320, y:30,  t:'Concatenate', fill:'#6ee7b7', anchor:'middle' },
+        { x:610, y:30,  t:'Fully-connected layers', fill:'#a5b4fc', anchor:'middle' },
+        { x:860, y:178, t:'Sigmoid', fill:'#f9a8d4', anchor:'middle' }
+      ];
+      labels.forEach(l => {
+        const t = document.createElementNS(NS,'text');
+        t.setAttribute('x', l.x); t.setAttribute('y', l.y);
+        t.setAttribute('text-anchor', l.anchor); t.setAttribute('fill', l.fill);
+        t.setAttribute('font-weight','600');
+        t.textContent = l.t;
+        svg.appendChild(t);
+      });
+
+      // output score badge
+      const scoreT = document.createElementNS(NS,'text');
+      scoreT.setAttribute('x', 860); scoreT.setAttribute('y', 260);
+      scoreT.setAttribute('text-anchor','middle'); scoreT.setAttribute('fill','#fff');
+      scoreT.setAttribute('font-weight','800'); scoreT.setAttribute('font-size','18');
+      scoreT.textContent = '0 – 1';
+      svg.appendChild(scoreT);
+    })();
+
+    // init
+    go(0);
+  </script>
+</body>
+</html>
