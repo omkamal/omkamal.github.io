@@ -1,0 +1,1052 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ideogram 4 — Structured JSON Prompting on a Single RTX 4090</title>
+<meta name="description" content="A hands-on deep dive into Ideogram 4, the 9.3B open-weight text-to-image model: nf4 vs fp8, the three quality modes, the structured JSON caption schema with bounding-box layout control, LLM-powered magic prompts, a 14-image style gallery with honest quality scores (including Arabic typography artifacts), and measured RTX 4090 benchmarks across presets and aspect ratios." />
+<meta name="keywords" content="Ideogram 4, open weights, text-to-image, JSON prompting, structured captions, bounding box layout, magic prompt, nf4, fp8, bitsandbytes, RTX 4090, flow matching, DiT, Qwen3-VL, typography, Arabic text rendering, benchmark" />
+<meta name="author" content="Omar Kamal Hosney" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://omkamal.github.io/articles/ideogram4/ideogram4.html" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Omar Kamal Hosney" />
+<meta property="og:url" content="https://omkamal.github.io/articles/ideogram4/ideogram4.html" />
+<meta property="og:title" content="Ideogram 4 — Structured JSON Prompting on a Single RTX 4090" />
+<meta property="og:description" content="The 9.3B open-weight design model hands-on: JSON captions with bbox layout control, magic prompts, a 14-image quality-scored gallery, and real 4090 benchmarks." />
+<meta property="og:image" content="https://omkamal.github.io/articles/ideogram4/demo_assets/hero.jpg" />
+<meta property="article:author" content="Omar Kamal Hosney" />
+<meta property="article:published_time" content="2026-06-04" />
+<meta property="article:section" content="AI Models" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Ideogram 4 — Structured JSON Prompting on a Single RTX 4090" />
+<meta name="twitter:description" content="JSON captions with bbox layout control, magic prompts, a quality-scored 14-image gallery, and real RTX 4090 benchmarks." />
+<meta name="twitter:image" content="https://omkamal.github.io/articles/ideogram4/demo_assets/hero.jpg" />
+
+<link rel="icon" type="image/jpeg" href="../../omar.jpeg" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Ideogram 4 — Structured JSON Prompting on a Single RTX 4090",
+  "description": "Hands-on with the 9.3B open-weight design model: nf4/fp8 formats, three quality modes, the JSON caption schema, magic prompts, a quality-scored gallery, and measured 4090 benchmarks.",
+  "image": "https://omkamal.github.io/articles/ideogram4/demo_assets/hero.jpg",
+  "datePublished": "2026-06-04",
+  "dateModified": "2026-06-04",
+  "author": { "@type": "Person", "name": "Omar Kamal Hosney", "url": "https://omkamal.github.io/" },
+  "publisher": { "@type": "Person", "name": "Omar Kamal Hosney" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://omkamal.github.io/articles/ideogram4/ideogram4.html" },
+  "articleSection": "AI Models",
+  "keywords": "Ideogram 4, JSON prompting, open weights, text-to-image, RTX 4090, nf4, magic prompt, Arabic typography",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omkamal.github.io/articles/" },
+      { "@type": "ListItem", "position": 3, "name": "Ideogram 4 on a 4090", "item": "https://omkamal.github.io/articles/ideogram4/ideogram4.html" }
+    ]
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root {
+  --c-ink: #18181b;
+  --c-ink-soft: #27272a;
+  --c-prose: #3f3f46;
+  --c-muted: #71717a;
+  --c-mute-2: #a1a1aa;
+  --c-paper: #fafaf9;
+  --c-paper-2: #ffffff;
+  --c-line: #e7e5e4;
+  --c-line-soft: #f1f0ee;
+  --c-accent: #7c3aed;
+  --c-accent-2: #ec4899;
+  --c-accent-3: #f59e0b;
+  --c-accent-soft: #faf5ff;
+  --c-accent-line: #e9d5ff;
+  --c-blue: #2563eb;
+  --c-blue-soft: #eff6ff;
+  --c-blue-line: #bfdbfe;
+  --c-green: #16a34a;
+  --c-green-soft: #f0fdf4;
+  --c-green-line: #bbf7d0;
+  --c-warn: #b45309;
+  --c-warn-soft: #fffbeb;
+  --c-warn-line: #fde68a;
+  --c-red: #dc2626;
+  --c-red-soft: #fef2f2;
+  --c-red-line: #fecaca;
+  --c-code-bg: #0f172a;
+  --c-code-fg: #e2e8f0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 24px 56px -16px rgba(15, 23, 42, 0.18), 0 8px 20px -6px rgba(15, 23, 42, 0.08);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { font-family: 'Source Serif 4', Charter, Georgia, 'Times New Roman', serif; font-size: 18px; line-height: 1.75; color: var(--c-prose); background: var(--c-paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--c-accent); color: white; }
+
+.top-nav { position: sticky; top: 0; z-index: 50; background: rgba(250, 250, 249, 0.85); backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px); border-bottom: 1px solid var(--c-line); }
+.nav-inner { max-width: 1180px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 12px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--c-ink); text-decoration: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-accent) 100%); display: grid; place-items: center; font-weight: 800; font-size: 0.78rem; color: white; box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.4); }
+.nav-right { display: flex; gap: 4px; align-items: center; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+.nav-right a { color: var(--c-muted); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 500; transition: all 0.2s var(--ease); }
+.nav-right a:hover { color: var(--c-ink); background: rgba(0,0,0,0.04); }
+.nav-right a.active { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.hero { position: relative; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #4c1d95 100%); color: #e2e8f0; padding: 80px 0 100px; margin-bottom: -60px; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.35), transparent 50%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.30), transparent 50%), radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.10), transparent 60%); }
+.hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); pointer-events: none; }
+.hero-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 32px; }
+.crumbs { font-family: 'Inter', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; color: rgba(226, 232, 240, 0.65); margin-bottom: 22px; }
+.crumbs a { color: rgba(226, 232, 240, 0.85); text-decoration: none; border-bottom: 1px solid rgba(226, 232, 240, 0.3); transition: all 0.2s var(--ease); }
+.crumbs a:hover { color: white; border-bottom-color: white; }
+.crumbs .sep { margin: 0 0.5em; opacity: 0.4; }
+.article-header { margin: 0; padding: 0; border: 0; }
+.byline { display: inline-flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: #c4b5fd; padding: 5px 12px; background: rgba(168, 85, 247, 0.18); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50px; margin-bottom: 28px; }
+.byline span + span::before { content: "·"; opacity: 0.6; margin: 0 0.25rem; color: #c4b5fd; }
+h1 { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2.2rem, 4.8vw, 3.6rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.03em; color: #ffffff; margin: 0 0 22px; max-width: 880px; }
+.subtitle { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(1.05rem, 1.6vw, 1.28rem); line-height: 1.55; color: rgba(226, 232, 240, 0.82); font-style: italic; margin: 0; max-width: 720px; }
+.subtitle code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85em; font-style: normal; background: rgba(255, 255, 255, 0.12); padding: 2px 8px; border-radius: 5px; color: #fde68a; border: 1px solid rgba(255, 255, 255, 0.08); }
+
+.container { max-width: 980px; margin: 0 auto; padding: 100px 32px 80px; position: relative; z-index: 2; }
+
+.tldr { background: linear-gradient(135deg, #ffffff 0%, var(--c-accent-soft) 100%); border: 1px solid var(--c-accent-line); border-left: 4px solid var(--c-accent); padding: 26px 30px; border-radius: 0 16px 16px 0; margin: 0 0 60px; box-shadow: var(--shadow-md); }
+.tldr h3 { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-accent); margin: 0 0 12px; }
+.tldr p { font-size: 1.05rem; color: var(--c-ink-soft); margin: 0 0 0.8rem; text-align: justify; hyphens: auto; }
+.tldr p:last-child { margin-bottom: 0; }
+.tldr strong { color: var(--c-ink); font-weight: 700; }
+.tldr code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(255,255,255,0.7); border: 1px solid var(--c-accent-line); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); }
+
+.toc { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; color: var(--c-prose); padding: 22px 28px; margin: 0 0 80px; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 16px; line-height: 2.1; box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: center; }
+.toc strong { display: inline-flex; align-items: center; gap: 7px; color: var(--c-ink); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; padding-right: 14px; margin-right: 6px; border-right: 1px solid var(--c-line); }
+.toc strong::before { content: ''; width: 3px; height: 14px; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+.toc a { color: var(--c-prose); text-decoration: none; padding: 4px 11px; border-radius: 50px; transition: all 0.2s var(--ease); font-weight: 500; }
+.toc a:hover { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.article-section { margin-bottom: 80px; scroll-margin-top: 80px; }
+.section-title { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(1.65rem, 3vw, 2.15rem); font-weight: 700; color: var(--c-ink); margin: 0 0 28px; letter-spacing: -0.025em; line-height: 1.18; position: relative; padding-left: 18px; }
+.section-title::before { content: ''; position: absolute; left: 0; top: 0.18em; width: 5px; height: 0.85em; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 3px; }
+
+.prose { max-width: 100%; margin-bottom: 36px; font-size: 1.06rem; line-height: 1.78; text-align: justify; hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty; }
+.prose p { margin: 0 0 1.25rem; color: var(--c-prose); text-align: justify; hyphens: auto; }
+.prose h3 { text-align: left; hyphens: manual; }
+.prose ul, .prose ol { text-align: left; hyphens: manual; margin: 0 0 1.25rem 1.2rem; }
+.prose li { margin-bottom: 0.4rem; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--c-ink); font-weight: 600; }
+.prose em { color: var(--c-ink-soft); }
+.prose code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.86em; background: var(--c-accent-soft); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); border: 1px solid var(--c-accent-line); font-weight: 500; }
+.prose a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--c-accent-line); transition: all 0.2s var(--ease); }
+.prose a:hover { text-decoration-color: var(--c-accent); text-decoration-thickness: 2px; }
+.prose h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--c-ink); margin: 2.2rem 0 0.8rem; letter-spacing: -0.015em; display: flex; align-items: center; gap: 10px; }
+.prose h3::before { content: ''; width: 22px; height: 2px; background: linear-gradient(90deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+
+.prose pre { background: var(--c-code-bg); color: var(--c-code-fg); padding: 44px 26px 22px; border-radius: 12px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85rem; line-height: 1.65; overflow-x: auto; margin: 22px 0; border: 1px solid #1e293b; box-shadow: var(--shadow-lg); position: relative; }
+.prose pre::before { content: ''; position: absolute; top: 14px; left: 18px; width: 11px; height: 11px; border-radius: 50%; background: #ef4444; box-shadow: 18px 0 0 #f59e0b, 36px 0 0 #10b981; opacity: 0.7; }
+.prose pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; border: 0; font-weight: 400; }
+
+.callout { background: var(--c-warn-soft); border: 1px solid var(--c-warn-line); border-left: 4px solid var(--c-accent-3); padding: 16px 22px; border-radius: 0 12px 12px 0; margin: 22px 0; font-size: 0.98rem; line-height: 1.7; color: var(--c-ink-soft); position: relative; box-shadow: var(--shadow-sm); text-align: justify; hyphens: auto; }
+.callout.green { background: var(--c-green-soft); border-color: var(--c-green-line); border-left-color: var(--c-green); }
+.callout.red { background: var(--c-red-soft); border-color: var(--c-red-line); border-left-color: var(--c-red); }
+.callout.blue { background: var(--c-blue-soft); border-color: var(--c-blue-line); border-left-color: var(--c-blue); }
+.callout strong { color: var(--c-ink); }
+.callout code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--c-warn); padding: 1.5px 6px; border-radius: 4px; }
+.callout.green code { background: rgba(22, 163, 74, 0.12); border-color: rgba(22, 163, 74, 0.3); color: var(--c-green); }
+.callout.red code { background: rgba(220, 38, 38, 0.10); border-color: rgba(220, 38, 38, 0.3); color: var(--c-red); }
+.callout.blue code { background: rgba(37, 99, 235, 0.10); border-color: rgba(37,99,235,0.3); color: var(--c-blue); }
+
+.variant-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 22px 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.88rem; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); }
+.variant-table th, .variant-table td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--c-line-soft); vertical-align: top; }
+.variant-table th { background: linear-gradient(180deg, #fafafa, #f5f5f4); font-weight: 700; color: var(--c-ink); letter-spacing: 0.02em; font-size: 0.74rem; text-transform: uppercase; }
+.variant-table tbody tr:last-child td { border-bottom: 0; }
+.variant-table tbody tr:hover td { background: var(--c-accent-soft); }
+.variant-table td { color: var(--c-prose); }
+.variant-table td strong { color: var(--c-ink); }
+.variant-table td.num { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+.variant-table tr.hi td { background: var(--c-green-soft); }
+.variant-table tr.hi:hover td { background: var(--c-green-soft); }
+
+.figure { margin: 28px auto; text-align: center; display: block; }
+.figure img, .figure video { width: 100%; max-width: 100%; height: auto; border-radius: 14px; display: block; margin-left: auto; margin-right: auto; border: 1px solid var(--c-line); box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); background: var(--c-paper-2); }
+.figure video { background: #000; }
+.figure svg.radar { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 14px; box-shadow: var(--shadow-md); padding: 16px 10px; }
+.radar-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 20px; margin: 14px auto 0; font-family: 'Inter', sans-serif; font-size: 0.8rem; color: var(--c-prose); }
+.radar-legend span { display: inline-flex; align-items: center; gap: 8px; }
+.radar-legend i { width: 22px; height: 4px; border-radius: 2px; display: inline-block; }
+.figure img:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); border-color: var(--c-accent-line); }
+.figure figcaption { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; color: var(--c-mute-2); margin: 10px auto 0; letter-spacing: 0.02em; text-align: center; max-width: 85%; }
+.figure.full img { background: white; }
+.figure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px auto; justify-items: center; align-items: start; }
+.figure-grid .figure { margin: 0; width: 100%; }
+
+.example { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 18px; padding: 28px 30px; margin: 26px 0 36px; box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); }
+.example:hover { box-shadow: var(--shadow-lg); border-color: var(--c-accent-line); }
+.example-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1px solid var(--c-line-soft); flex-wrap: wrap; }
+.example-head h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--c-ink); margin: 0; letter-spacing: -0.018em; }
+.tps-chip { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; font-weight: 700; padding: 6px 14px; border-radius: 50px; color: white; background: linear-gradient(135deg, var(--c-green) 0%, #15803d 100%); box-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.35); }
+.tps-chip.amber { background: linear-gradient(135deg, var(--c-accent-3) 0%, var(--c-warn) 100%); box-shadow: 0 4px 12px -2px rgba(180, 83, 9, 0.35); }
+.tps-chip.fire { background: linear-gradient(135deg, var(--c-accent-2) 0%, #be185d 100%); box-shadow: 0 4px 12px -2px rgba(190, 24, 93, 0.35); }
+.tps-chip.blue { background: linear-gradient(135deg, var(--c-blue) 0%, #1d4ed8 100%); box-shadow: 0 4px 12px -2px rgba(37,99,235,0.35); }
+.prompt-line { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: var(--c-paper); border: 1px solid var(--c-line); border-left: 3px solid var(--c-accent); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 0 0 18px; color: var(--c-ink-soft); line-height: 1.5; }
+
+.commentary { margin-top: 24px; padding: 20px 22px; background: var(--c-blue-soft); border: 1px solid var(--c-blue-line); border-left: 4px solid var(--c-blue); border-radius: 0 12px 12px 0; }
+.commentary h4 { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-blue); margin: 0 0 10px; display: inline-flex; align-items: center; gap: 7px; }
+.commentary h4::before { content: '💡'; font-size: 1.05em; }
+.commentary p { font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); margin: 0; text-align: justify; hyphens: auto; }
+.commentary code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: rgba(37, 99, 235, 0.1); padding: 1.5px 6px; border-radius: 4px; color: var(--c-blue); border: 1px solid var(--c-blue-line); font-weight: 500; }
+.commentary strong { color: var(--c-ink); }
+
+/* model answer block (understanding) */
+.answer { font-family: 'Source Serif 4', Georgia, serif; font-style: italic; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); background: var(--c-green-soft); border: 1px solid var(--c-green-line); border-left: 4px solid var(--c-green); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 0; }
+.answer .q { font-family: 'Inter', sans-serif; font-style: normal; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-green); display: block; margin-bottom: 8px; }
+
+.links { padding-left: 20px; max-width: 100%; }
+.links li { margin-bottom: 10px; line-height: 1.6; }
+.links li code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: var(--c-paper); border: 1px solid var(--c-line); padding: 1px 6px; border-radius: 4px; color: var(--c-ink-soft); }
+
+.page-footer { border-top: 1px solid var(--c-line); padding: 60px 0 80px; text-align: center; background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.03)); }
+.page-footer .inner { max-width: 980px; margin: 0 auto; padding: 0 32px; font-family: 'Inter', sans-serif; }
+.back-to-blog { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-2) 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 24px -6px rgba(124, 58, 237, 0.5); transition: all 0.3s var(--ease); margin-bottom: 32px; }
+.back-to-blog:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(124, 58, 237, 0.65); }
+.back-to-blog .arrow { transition: transform 0.3s var(--ease); }
+.back-to-blog:hover .arrow { transform: translateX(-4px); }
+.page-footer p { color: var(--c-muted); font-size: 0.88rem; margin-bottom: 18px; }
+.social { display: flex; justify-content: center; gap: 12px; }
+.social a { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: var(--c-paper-2); border: 1px solid var(--c-line); color: var(--c-muted); text-decoration: none; transition: all 0.3s var(--ease); font-family: 'Inter', sans-serif; font-weight: 700; }
+.social a:hover { color: var(--c-accent); border-color: var(--c-accent-line); background: var(--c-accent-soft); transform: translateY(-2px); }
+
+@media (max-width: 900px) {
+  .hero { padding: 60px 0 80px; }
+  .hero-inner { padding: 0 20px; }
+  .container { padding: 80px 20px 60px; }
+  .nav-inner { padding: 12px 20px; }
+  h1 { font-size: 2rem; }
+  .section-title { font-size: 1.55rem; }
+  .figure-grid { grid-template-columns: 1fr; }
+  .example { padding: 22px 22px; border-radius: 14px; }
+  .toc { padding: 18px 20px; font-size: 0.8rem; gap: 6px; }
+  .toc strong { border-right: 0; margin-bottom: 4px; padding-right: 0; width: 100%; }
+  .nav-right a { padding: 6px 10px; font-size: 0.82rem; }
+}
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .prose { font-size: 1.02rem; }
+  .nav-right a:not(.active) { display: none; }
+}
+
+
+/* ─── article-specific additions ─── */
+.prompt-details { margin: 18px 0 26px; border: 1px solid var(--c-line); border-radius: 12px; background: var(--c-paper-2); box-shadow: var(--shadow-sm); overflow: hidden; }
+.prompt-details summary { cursor: pointer; list-style: none; padding: 13px 18px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700; color: var(--c-accent); display: flex; align-items: center; gap: 10px; user-select: none; }
+.prompt-details summary::-webkit-details-marker { display: none; }
+.prompt-details summary::before { content: '▸'; transition: transform .2s; }
+.prompt-details[open] summary::before { transform: rotate(90deg); }
+.prompt-details pre { margin: 0 !important; border-radius: 0 !important; border: 0 !important; border-top: 1px solid #1e293b !important; }
+.prompt-details pre::before { display: none; }
+.score-chip { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; padding: 3px 12px; border-radius: 50px; color: #fff; background: linear-gradient(135deg, var(--c-green), #15803d); vertical-align: middle; }
+.score-chip.mid { background: linear-gradient(135deg, var(--c-accent-3), #b45309); }
+.score-chip.low { background: linear-gradient(135deg, var(--c-red), #b91c1c); }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">OK</span>
+      <span>Omar Kamal Hosney</span>
+    </a>
+    <div class="nav-right">
+      <a href="../../cheatsheets/index.html">Cheatsheets</a>
+      <a href="../index.html" class="active">Blog</a>
+      <a href="../../resume.html" target="_blank">Resume</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="crumbs">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="../index.html">Blog</a>
+      <span class="sep">/</span>
+      AI Models
+    </p>
+    <div class="article-header">
+      <p class="byline"><span>Ideogram 4 · open weights</span><span>Field Notes</span><span>June 2026</span></p>
+      <h1>Ideogram 4: structured JSON prompting, hands-on, on a single RTX 4090</h1>
+      <p class="subtitle">Ideogram's first open-weight model is a <strong>9.3B design-focused</strong> text-to-image
+      foundation model with a trick nobody else has: it speaks <strong>JSON</strong>. I ran it locally in
+      <code>nf4</code> on one 24&nbsp;GB <code>RTX 4090</code> — this is the full tour: the architecture, both
+      quantization formats, all three quality modes, the caption schema with <strong>bounding-box layout
+      control</strong>, LLM-powered magic prompts, a <strong>14-image style gallery with honest quality scores</strong>
+      (Arabic included — artifacts and all), and a 21-run speed benchmark.</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- HERO IMAGE -->
+<figure class="figure" style="margin: 0 0 14px;">
+  <img src="demo_assets/hero.jpg" alt="Collage of Ideogram 4 sample outputs spanning photorealism, illustration, typography and poster design" loading="lazy" />
+  <figcaption>Sample collage — Ideogram 4 repository (ideogram-oss/ideogram4)</figcaption>
+</figure>
+
+<!-- TL;DR -->
+<div class="tldr">
+  <h3>TL;DR</h3>
+  <p>
+    <strong>Ideogram 4</strong> is a 9.3B from-scratch foundation model — a single-stream DiT with a
+    <strong>Qwen3-VL text encoder</strong> — and the top open-weight image model on Design Arena. Its superpower is
+    <strong>structured JSON prompting</strong>: exact text strings, hex palettes, and per-element
+    <strong>bounding boxes</strong> that the model actually respects.
+  </p>
+  <p>
+    On a 24 GB 4090 in <code>nf4</code>: <strong>~21 s</strong> per 1024² draft (Turbo), <strong>~32 s</strong>
+    default, <strong>~72 s</strong> top quality — and native 2048² fits at <strong>23.3 GB</strong> peak with a
+    text-encoder offload. Time scales linearly with steps, super-linearly with pixels (4× area ≈ 6.3× time).
+  </p>
+  <p>
+    Quality across 14 styles averaged <strong>8.6 / 10</strong>: photorealism and bbox-driven diagrams are superb;
+    small-text labels wobble; <strong>Arabic body text garbles</strong> — keep Arabic short and display-sized.
+  </p>
+</div>
+
+<!-- TOC -->
+<nav class="toc" aria-label="Table of contents">
+  <strong>Contents</strong>
+  <a href="#what">What Ideogram 4 is</a>
+  <a href="#arch">Architecture</a>
+  <a href="#quant">nf4 vs fp8</a>
+  <a href="#modes">Three quality modes</a>
+  <a href="#json">The JSON caption schema</a>
+  <a href="#magic">Magic prompt</a>
+  <a href="#gallery">Gallery: photoreal</a>
+  <a href="#painting">Painting &amp; illustration</a>
+  <a href="#diagrams">Diagrams &amp; cloud</a>
+  <a href="#editorial">Infographics &amp; magazines</a>
+  <a href="#arabic">Arabic results</a>
+  <a href="#quality">Quality scorecard</a>
+  <a href="#bench">4090 benchmarks</a>
+  <a href="#refs">References</a>
+</nav>
+
+<!-- 1. WHAT -->
+<section class="article-section" id="what">
+  <h2 class="section-title">What Ideogram 4 is</h2>
+  <div class="prose">
+    <p>
+      Ideogram has been the "text-in-images" lab since its first model, and <strong>Ideogram 4</strong> is its first
+      open-weight release. It is <em>not</em> a fine-tune of an existing checkpoint — it's a
+      <strong>9.3B-parameter foundation model trained from scratch</strong>, aimed squarely at design work:
+      typography, layout, posters, diagrams, brand color.
+    </p>
+    <p>
+      The receipts are public. On <a href="https://www.designarena.ai/" target="_blank">Design Arena</a>'s image Elo
+      board it is the <strong>top-ranked open-weight model</strong>, trailing only proprietary GPT and Gemini image
+      models; filtered to open weights it leads by a commanding margin. In ContraLabs' blind typography evaluation,
+      ten professional designers picked it first <strong>47.9%</strong> of the time — ahead of Nano Banana 2 (30.0%),
+      FLUX.2 [max] (15.5%) and Grok Imagine (15.0%).
+    </p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/design_arena.png" alt="Design Arena overall image Elo leaderboard with Ideogram 4 as the top open-weight model" loading="lazy" />
+    <figcaption>Design Arena leaderboard — chart from the Ideogram 4 repository</figcaption>
+  </figure>
+  <div class="prose">
+    <p>
+      Parameter efficiency is the other headline: at 9.3B it beats much larger open models on text rendering —
+      Qwen-Image (20B), FLUX.2 [dev] (32B), even HunyuanImage 3.0's 80B MoE.
+    </p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/opensource_params.png" alt="Scatter plot of text-rendering score vs parameter count, Ideogram 4 leading all open-weight models at 9.3B" loading="lazy" />
+    <figcaption>Text rendering vs. parameters — chart from the Ideogram 4 repository benchmarks</figcaption>
+  </figure>
+</section>
+
+<!-- 2. ARCHITECTURE -->
+<section class="article-section" id="arch">
+  <h2 class="section-title">Architecture: one stream, a VLM encoder, flow matching</h2>
+  <div class="prose">
+    <p>
+      Three design decisions define the model. First, it's a <strong>fully single-stream Diffusion
+      Transformer</strong>: text tokens and image latent tokens are concatenated into <em>one</em> sequence and
+      processed by the same 34 layers — no separate branches, so text and pixels interact at every depth. Positioning
+      uses 3D multimodal RoPE so both modalities share one coordinate space.
+    </p>
+    <p>
+      Second, the text encoder is not CLIP or T5 — it's <strong>Qwen3-VL-8B-Instruct</strong>, a full vision-language
+      model run in text-only mode. Hidden states are extracted from <strong>13 layers</strong> (0, 3, 6 … 35) and
+      concatenated, handing the DiT a multi-scale representation from surface tokens to deep semantics. I suspect
+      this is a big part of why JSON captions work so well: a VLM has seen structured descriptions of images.
+    </p>
+    <p>
+      Third, generation is <strong>flow matching</strong>: the network predicts a velocity field and an Euler sampler
+      integrates from noise to image. Classifier-free guidance is <strong>dual-branch with two separate
+      transformers</strong> — and the negative branch is <em>asymmetric</em>, processing image tokens only, which
+      makes the unconditional pass cheaper than the conditional one.
+    </p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/arch_diagram.png" alt="Pipeline diagram: Qwen3-VL text encoder with 13 stacked layers feeding a 34-layer single-stream DiT with a mixed text and image token row, then a KL VAE decoder producing the image" loading="lazy" />
+    <figcaption>The pipeline at a glance — illustration: GPT Image 2 (OpenAI)</figcaption>
+  </figure>
+</section>
+
+<!-- 3. QUANT -->
+<section class="article-section" id="quant">
+  <h2 class="section-title">nf4 vs fp8 — pick your format</h2>
+  <div class="prose">
+    <p>
+      The weights ship in two quantizations on Hugging Face (gated — accept the license and set <code>HF_TOKEN</code>).
+      Everything in this article ran <strong>nf4</strong>.
+    </p>
+  </div>
+  <table class="variant-table">
+    <thead><tr><th>&nbsp;</th><th>nf4 (what I use)</th><th>fp8</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Encoding</strong></td><td class="num">bitsandbytes NormalFloat-4</td><td class="num">float8 e4m3, weight-only</td></tr>
+      <tr><td><strong>Hardware</strong></td><td>CUDA only</td><td>Any device — no FP8 hardware needed (activations stay bf16)</td></tr>
+      <tr><td><strong>Resident VRAM</strong></td><td class="num">~16 GB total (2 DiT branches + Qwen3-VL + VAE)</td><td class="num">larger</td></tr>
+      <tr><td><strong>Diffusers</strong></td><td>Yes</td><td>No</td></tr>
+      <tr><td><strong>Best for</strong></td><td><strong>24 GB NVIDIA cards</strong> — the 4090 sweet spot</td><td>Mac / CPU fallback</td></tr>
+    </tbody>
+  </table>
+  <div class="callout blue">
+    <strong>Memory note.</strong> ~16 GB resident leaves only ~7 GB of activation headroom on a 4090. For native
+    2048² I offload the 5.5 GB text encoder to CPU during sampling (it runs exactly once, before the loop) and
+    pre-cast the text features to bf16 — peak lands at <strong>23.3 GB</strong>, just under the ceiling.
+  </div>
+</section>
+
+<!-- 4. MODES -->
+<section class="article-section" id="modes">
+  <h2 class="section-title">Three quality modes</h2>
+  <div class="prose">
+    <p>
+      Sampling is controlled by named presets — same model, different step budgets. All three share one clever
+      recipe: most steps run at guidance 7 for adherence, then the <em>last few</em> drop to guidance 3 — gentle
+      "polish" passes that clean artifacts right before the image resolves.
+    </p>
+  </div>
+  <table class="variant-table">
+    <thead><tr><th>Preset</th><th>Steps</th><th>1024² on the 4090</th><th>Use for</th></tr></thead>
+    <tbody>
+      <tr><td class="num"><strong>V4_TURBO_12</strong></td><td class="num">12</td><td class="num">20.9 s</td><td>Drafts, exploration</td></tr>
+      <tr class="hi"><td class="num"><strong>V4_DEFAULT_20</strong></td><td class="num">20</td><td class="num">31.8 s</td><td>Daily work (this article's gallery)</td></tr>
+      <tr><td class="num"><strong>V4_QUALITY_48</strong></td><td class="num">48</td><td class="num">72.0 s</td><td>Finals, small typography</td></tr>
+    </tbody>
+  </table>
+  <div class="prose">
+    <p>The entire registry is ~25 lines of source — with one gotcha worth knowing:</p>
+    <pre><code># src/ideogram4/sampler_configs.py
+# guidance_schedule is in loop-INDEX order:
+# index 0 is the LAST (polish) step.
+PRESETS = {
+  "V4_QUALITY_48": SamplerParameters(
+    num_steps=48,
+    guidance_schedule=(3.0,) * 3 + (7.0,) * 45,
+    mu=0.0, std=1.5,
+  ),
+  "V4_DEFAULT_20": SamplerParameters(
+    num_steps=20,
+    guidance_schedule=(3.0,) * 2 + (7.0,) * 18,
+    mu=0.0, std=1.75,
+  ),
+  "V4_TURBO_12": SamplerParameters(
+    num_steps=12,
+    guidance_schedule=(3.0,) * 1 + (7.0,) * 11,
+    mu=0.5, std=1.75,
+  ),
+}</code></pre>
+  </div>
+</section>
+
+<!-- 5. JSON SCHEMA -->
+<section class="article-section" id="json">
+  <h2 class="section-title">The JSON caption schema — the model's native language</h2>
+  <div class="prose">
+    <p>
+      Ideogram 4 was trained on <strong>structured JSON captions</strong>, not free text. Plain sentences work, but a
+      schema-compliant JSON object unlocks the controllability this model is famous for. Three top-level keys:
+    </p>
+    <ul>
+      <li><code>high_level_description</code> — one summary sentence.</li>
+      <li><code>style_description</code> — aesthetics, lighting, medium, an optional hex
+        <code>color_palette</code>, and <em>exactly one of</em> <code>photo</code> (photographic) or
+        <code>art_style</code> (everything else).</li>
+      <li><code>compositional_deconstruction</code> — a <code>background</code> plus an <code>elements</code> list.
+        Each element is <code>obj</code> or <code>text</code>, with a description, an exact <code>text</code> string
+        when applicable, and an optional <code>bbox</code> as <code>[ymin, xmin, ymax, xmax]</code> in a
+        <strong>0–1000 space</strong> independent of output resolution.</li>
+    </ul>
+    <p>Here's a real caption from my library, and the image it produced — every service icon landed inside its declared box:</p>
+  </div>
+
+  <div class="example">
+    <div class="example-head"><h3>Prompt → output: AWS serverless architecture</h3><span class="tps-chip blue">JSON caption</span></div>
+    <details class="prompt-details" open>
+      <summary>caption.json — the exact prompt sent to the model</summary>
+      <pre><code>{
+  "high_level_description": "An AWS cloud architecture diagram of a serverless web application: users flow through CloudFront and API Gateway to Lambda functions and a DynamoDB table, with S3 for static assets.",
+  "style_description": {
+    "aesthetics": "official cloud documentation style, orderly, easy to scan",
+    "lighting": "flat diagram lighting with no shadows",
+    "medium": "vector architecture diagram",
+    "art_style": "AWS-style architecture diagram with orange and dark-blue service icons in rounded squares, a dashed cloud boundary box, thin grey connector arrows with small labels",
+    "color_palette": [
+      "#FFFFFF",
+      "#FF9900",
+      "#232F3E",
+      "#E8EAED",
+      "#527FFF"
+    ]
+  },
+  "compositional_deconstruction": {
+    "background": "A white canvas containing one large dashed rounded rectangle labeled AWS Cloud occupying the right four-fifths of the frame, straight grey arrows connecting the services left to right, each arrow carrying a tiny request label.",
+    "elements": [
+      {
+        "type": "text",
+        "bbox": [
+          50,
+          300,
+          140,
+          700
+        ],
+        "text": "Serverless Web Application",
+        "desc": "Dark slate sans-serif diagram title centered along the top edge."
+      },
+      {
+        "type": "obj",
+        "bbox": [
+          420,
+          30,
+          620,
+          150
+        ],
+        "desc": "A user icon: a simple dark circle-and-shoulders pictogram above the label Users, placed outside the cloud boundary at the far left."
+      },
+      {
+        "type": "obj",
+        "bbox": [
+          400,
+          220,
+          640,
+          380
+        ],
+        "desc": "An orange rounded-square AWS service icon with a globe-and-waves glyph labeled Amazon CloudFront."
+      },
+      {
+        "type": "obj",
+        "bbox": [
+          150,
+          430,
+          390,
+          590
+        ],
+        "desc": "An orange rounded-square AWS service icon with a bucket glyph labeled Amazon S3 static assets, connected upward to CloudFront by a grey arrow."
+      },
+      {
+        "type": "obj",
+        "bbox": [
+          400,
+          450,
+          640,
+          610
+        ],
+        "desc": "An orange rounded-square AWS service icon with a gateway glyph labeled Amazon API Gateway."
+      },
+      {
+        "type": "obj",
+        "bbox": [
+          400,
+          660,
+          640,
+          820
+        ],
+        "desc": "An orange rounded-square AWS service icon with the lambda glyph labeled AWS Lambda, two small stacked copies suggesting multiple functions."
+      },
+      {
+        "type": "obj",
+        "bbox": [
+          650,
+          700,
+          890,
+          860
+        ],
+        "desc": "A dark-blue rounded-square AWS service icon with a database table glyph labeled Amazon DynamoDB, connected from Lambda by a grey arrow."
+      }
+    ]
+  }
+}</code></pre>
+    </details>
+    <figure class="figure full">
+      <img src="demo_assets/aws.png" alt="Generated AWS architecture diagram: users flowing through CloudFront and API Gateway to Lambda and DynamoDB, with S3 for static assets, inside a dashed AWS Cloud boundary" loading="lazy" />
+      <figcaption>Output, 1536×1024, V4_DEFAULT_20, seed 11 — <span class="score-chip">9.5 / 10</span> every icon on its bbox</figcaption>
+    </figure>
+  </div>
+
+  <div class="callout green">
+    <strong>Why this matters.</strong> Bounding-box layout control from a prompt is something even most
+    closed-source models can't do. Across every layout-critical generation in this article, the
+    <em>topology was never scrambled</em> — boxes land where you put them.
+  </div>
+</section>
+
+<!-- 6. MAGIC PROMPT -->
+<section class="article-section" id="magic">
+  <h2 class="section-title">Magic prompt — let an LLM write the JSON</h2>
+  <div class="prose">
+    <p>
+      Hand-writing captions is powerful but slow, so the repo ships <strong>magic prompt</strong>: an LLM expands
+      your one-liner into a full schema-compliant caption, aspect-ratio aware. Backends: Ideogram's hosted endpoint
+      (<strong>free</strong> with an <code>IDEOGRAM_API_KEY</code>), Claude Opus/Sonnet via OpenRouter using the
+      open-source system prompt that ships in the repo, and a <strong>Gemini Flash-Lite backend I added</strong> —
+      fractions of a cent per expansion.
+    </p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/magic_flow.png" alt="Pipeline diagram: plain prompt to LLM to JSON caption to Ideogram 4, with Ideogram, Claude and Gemini as selectable LLM chips" loading="lazy" />
+    <figcaption>The magic-prompt flow — illustration: GPT Image 2 (OpenAI)</figcaption>
+  </figure>
+
+  <div class="example">
+    <div class="example-head"><h3>Before &amp; after: eleven words in</h3><span class="tps-chip amber">magic prompt</span></div>
+    <div class="prose">
+      <p><strong>Input:</strong> <em>"a ginger cat wearing a tiny wizard hat reading a spellbook"</em></p>
+      <p><strong>Output (excerpt of ~3,000 chars):</strong></p>
+      <pre><code>{
+  "high_level_description": "A painterly children's-book illustration
+   of a ginger tabby cat in a pointed wizard hat studying an open
+   spellbook glowing with a cyan sigil by candlelight...",
+  "compositional_deconstruction": {
+    "background": "A cozy wizard's study at twilight... warm amber
+     light pools from the left where the candle burns, cool cyan
+     glow spills from the book toward the right...",
+    "elements": [
+      {"type": "obj", "desc": "Crystal ball on a carved wooden
+        pedestal, faint violet mist swirling inside..."},
+      {"type": "obj", "desc": "Ginger tabby cat on a crimson velvet
+        cushion... left side of face lit warm amber, right side
+        washed cool cyan from the sigil..."},
+      {"type": "text", "text": "INCANTATIO · III",
+       "desc": "Hand-lettered header on the open left page..."}
+    ]
+  }
+}</code></pre>
+    </div>
+    <figure class="figure full">
+      <img src="demo_assets/wizard_cat.jpg" alt="Generated image: ginger tabby cat in a wizard hat reading a glowing spellbook by candlelight, crystal ball beside it" loading="lazy" />
+      <figcaption>The result — candle left, sigil right, split lighting on the cat's face, crystal ball, and the invented chapter heading. Every detail the LLM art-directed is in the image. 1024², V4_TURBO_12.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 7. GALLERY PHOTOREAL -->
+<section class="article-section" id="gallery">
+  <h2 class="section-title">Gallery — photorealistic</h2>
+  <div class="prose">
+    <p>
+      I wrote a library of <strong>14 hand-crafted JSON captions</strong> across every style I could think of and
+      generated them all locally (V4_DEFAULT_20, seed 11). Each result below shows the source, the output, and an
+      honest verdict. We start with photorealism.
+    </p>
+  </div>
+
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/fisherman.jpg" alt="Photorealistic studio portrait of an elderly fisherman in a navy cap and cream wool sweater, Rembrandt lighting" loading="lazy" />
+      <figcaption>Studio portrait — <span class="score-chip">9.5 / 10</span></figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/snow_leopard_2048.jpg" alt="Photorealistic snow leopard resting on a rocky Himalayan cliff at golden hour, native 2048 by 2048" loading="lazy" />
+      <figcaption>Native 2048² wildlife — Gemini magic prompt, 23.3 GB peak</figcaption>
+    </figure>
+  </div>
+  <details class="prompt-details">
+    <summary>fisherman caption.json — hand-written JSON prompt</summary>
+    <pre><code>{
+  "high_level_description": "A tightly framed studio portrait photograph of an elderly Portuguese fisherman with deeply weathered skin, looking directly into the camera against a dark backdrop.",
+  "style_description": {
+    "aesthetics": "intimate, dignified, painterly realism",
+    "lighting": "single Rembrandt key light from the upper left, soft falloff, dark moody background",
+    "photo": "85mm portrait lens, f/2.0, shallow depth of field, eye-level, ultra-sharp focus on the eyes",
+    "medium": "photograph",
+    "color_palette": [
+      "#2B2420",
+      "#C8A172",
+      "#704C2E",
+      "#E8DCC8",
+      "#1A1714"
+    ]
+  },
+  "compositional_deconstruction": {
+    "background": "A seamless charcoal-grey studio backdrop falling into near-black at the edges, with a faint warm gradient behind the subject's head.",
+    "elements": [
+      {
+        "type": "obj",
+        "desc": "An elderly man in his late seventies filling the frame from chest up. Deep wrinkles across his forehead and around pale blue eyes, white stubble on a sun-leathered face, a faded navy fisherman's cap pushed back on his head. He wears a coarse cream wool sweater with a rolled collar. His expression is calm and direct, the hint of a smile at the corner of his mouth."
+      }
+    ]
+  }
+}</code></pre>
+  </details>
+  <div class="prose">
+    <p>
+      The portrait asked for a single Rembrandt key light, an 85mm f/2 look, the navy cap and cream wool sweater —
+      and delivered pore-level skin detail, white stubble, and catchlights in pale blue eyes with zero uncanny
+      artifacts. Only miss: the requested "hint of a smile" came out neutral. The snow leopard ran the <em>full</em>
+      pipeline — one plain sentence → my Gemini backend → JSON → native 2048², no upscaler.
+    </p>
+  </div>
+</section>
+
+<!-- 8. PAINTING + ILLUSTRATION -->
+<section class="article-section" id="painting">
+  <h2 class="section-title">Painting, cartoon, doodle, vector, storybook</h2>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/renaissance.jpg" alt="Renaissance oil portrait of a young woman in an emerald velvet gown with gold-embroidered sleeves, window landscape upper right" loading="lazy" />
+      <figcaption>Renaissance oil — <span class="score-chip">9.5 / 10</span> sfumato, glazing, craquelure</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/fox.jpg" alt="Cartoon red fox inventor with brass goggles and tool belt presenting a small hovering robot in an attic workshop" loading="lazy" />
+      <figcaption>Cartoon fox — <span class="score-chip mid">8.5 / 10</span> style drifted painterly vs. cel-shaded</figcaption>
+    </figure>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/doodle.jpg" alt="Hand-drawn notebook doodle page about coffee with the hand-lettered words BUT FIRST, COFFEE" loading="lazy" />
+      <figcaption>Doodle page — <span class="score-chip">9 / 10</span> hand-lettering rendered perfectly</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/dunes.jpg" alt="Minimal flat vector desert dunes at dawn with a striped hot air balloon and a small palm oasis" loading="lazy" />
+      <figcaption>Flat vector dunes — <span class="score-chip">9 / 10</span> balloon exactly on its bbox</figcaption>
+    </figure>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/lighthouse.jpg" alt="Storybook illustration: girl in a yellow raincoat with a lantern and her dog climbing toward a striped lighthouse in a storm" loading="lazy" />
+    <figcaption>Storybook lighthouse — <span class="score-chip">9.5 / 10</span> the best prompt-adherence of the whole set: girl, lantern, matching-raincoat terrier, glowing windows, beam, pencil-stroke rain — every clause delivered</figcaption>
+  </figure>
+  <div class="prose">
+    <p>
+      Switching <code>photo</code> → <code>art_style</code> turns the model into a painter with deep art-history
+      vocabulary: "sfumato blending, fine glazing layers, visible craquelure" produced exactly those. The one
+      interesting miss of the whole experiment is the fox: every prop arrived (goggles, tool belt, one-eyed robot)
+      but the requested flat TV-cartoon cel shading drifted toward painterly storybook. Style adherence is strong but
+      not absolute — register can drift toward the model's design-forward house taste.
+    </p>
+  </div>
+</section>
+
+<!-- 9. DIAGRAMS + CLOUD -->
+<section class="article-section" id="diagrams">
+  <h2 class="section-title">Software diagrams &amp; cloud architecture</h2>
+  <div class="prose">
+    <p>
+      This is where bounding boxes earn their keep — and where the model's one systematic weakness shows. Structure:
+      flawless. Small labels: occasionally wobbly.
+    </p>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/cicd.png" alt="Generated CI/CD flowchart with five labeled stages: commit, build, test, scan, deploy" loading="lazy" />
+      <figcaption>CI/CD flowchart — <span class="score-chip mid">8.5 / 10</span> "SCAN" → "SCAH", one stray caption</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/gcp.png" alt="Generated Google Cloud streaming pipeline diagram: Pub/Sub, Dataflow, BigQuery, Looker" loading="lazy" />
+      <figcaption>GCP pipeline — <span class="score-chip mid">8.5 / 10</span> "Pub/Suk", "analytics wanshouse"</figcaption>
+    </figure>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/microservices.png" alt="Generated microservices architecture: API gateway over four services with database cylinders and an event bus" loading="lazy" />
+    <figcaption>Microservices system — <span class="score-chip mid">8.5 / 10</span> perfect topology, "AFI Gateway" typo</figcaption>
+  </figure>
+  <div class="callout">
+    <strong>Rule of thumb.</strong> Trust it with <em>topology</em> — across all five layout-heavy generations,
+    nothing was ever misplaced. Double-check the <em>small print</em>: medium-size labels are ~95% clean, tiny
+    sub-captions garble. Thirty seconds of retouching makes any of these production-ready.
+  </div>
+</section>
+
+<!-- 10. EDITORIAL -->
+<section class="article-section" id="editorial">
+  <h2 class="section-title">Infographics &amp; magazine covers — English</h2>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/infographic_en.jpg" alt="Generated coffee infographic with title, two statistic callouts, an ascending bar chart and a source line" loading="lazy" />
+      <figcaption>Coffee infographic — <span class="score-chip mid">8.5 / 10</span> words clean, chart numerals garbled</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/magazine_en.jpg" alt="Generated CIRCUIT tech magazine cover with a humanoid robot overlapping the masthead" loading="lazy" />
+      <figcaption>CIRCUIT cover — <span class="score-chip">9 / 10</span> masthead overlap exactly as designed</figcaption>
+    </figure>
+  </div>
+  <div class="prose">
+    <p>
+      The infographic delivered its headline, both stat callouts (2.25&nbsp;billion cups / 25&nbsp;million growers),
+      the ascending bars, and the source credit — but the numbers <em>inside</em> the chart corrupted
+      ("652,00"). Lesson: <strong>words render better than digits</strong>. The magazine cover is near print-ready;
+      I asked for the robot's head to partially overlap the masthead for depth and got exactly that layering. One
+      small teaser line wobbled.
+    </p>
+  </div>
+</section>
+
+<!-- 11. ARABIC -->
+<section class="article-section" id="arabic">
+  <h2 class="section-title">Arabic — the honest part</h2>
+  <div class="prose">
+    <p>
+      I saved Arabic for last deliberately, because the story is mixed and worth telling straight. Structurally these
+      are impressive: the infographic flows <strong>right-to-left</strong> as Arabic must, text blocks are
+      right-aligned, the three tip cards sit on their bounding boxes, and it even used proper
+      <strong>Arabic-Indic numerals</strong> (١ ٢ ٣). The magazine's Andalusian-gate photography is stunning and the
+      gold-on-green palette followed my hex codes exactly.
+    </p>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/infographic_ar.jpg" alt="Generated Arabic water-conservation infographic, right-to-left layout with three tip cards — body text shows glyph artifacts" loading="lazy" />
+      <figcaption>الحفاظ على الماء infographic — <span class="score-chip low">6.5 / 10</span></figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/magazine_ar.jpg" alt="Generated Arabic culture magazine cover over an Andalusian palace gate — masthead shows phantom glyphs" loading="lazy" />
+      <figcaption>مجلة أفق cover — <span class="score-chip mid">7 / 10</span> carried by the photography</figcaption>
+    </figure>
+  </div>
+  <details class="prompt-details">
+    <summary>arabic infographic caption.json — RTL prompt with Arabic text elements</summary>
+    <pre><code>{
+  "high_level_description": "انفوجرافيك عربي عمودي بعنوان الحفاظ على الماء يعرض ثلاث نصائح مرقمة مع أيقونات، بتخطيط من اليمين إلى اليسار وخط عربي حديث.",
+  "style_description": {
+    "aesthetics": "نظيف وهادئ بأسلوب تحريري عربي معاصر",
+    "lighting": "إضاءة مسطحة مناسبة للطباعة",
+    "medium": "vector infographic",
+    "art_style": "تصميم مسطح حديث بأيقونات هندسية بسيطة وخط نسخ عربي واضح مع محاذاة يمينية كاملة",
+    "color_palette": [
+      "#EAF6F6",
+      "#0E7490",
+      "#22D3EE",
+      "#155E75",
+      "#FFFFFF"
+    ]
+  },
+  "compositional_deconstruction": {
+    "background": "خلفية فيروزية فاتحة عمودية مقسومة إلى شريط عنوان علوي وثلاث بطاقات بيضاء مستديرة الزوايا مرتبة عموديًا، مع موجات مائية رقيقة في أسفل التصميم.",
+    "elements": [
+      {
+        "type": "text",
+        "bbox": [
+          50,
+          150,
+          170,
+          850
+        ],
+        "text": "الحفاظ على الماء",
+        "desc": "عنوان رئيسي كبير بخط عربي عريض باللون الأزرق الداكن في وسط الشريط العلوي، تحته قطرة ماء مرسومة ببساطة."
+      },
+      {
+        "type": "text",
+        "bbox": [
+          240,
+          100,
+          400,
+          900
+        ],
+        "text": "١. أغلق الصنبور أثناء تنظيف الأسنان",
+        "desc": "البطاقة الأولى: نص النصيحة بمحاذاة اليمين وبجانبه من جهة اليمين أيقونة صنبور مغلق داخل دائرة فيروزية."
+      },
+      {
+        "type": "text",
+        "bbox": [
+          440,
+          100,
+          600,
+          900
+        ],
+        "text": "٢. استخدم الغسالة بحمولة كاملة",
+        "desc": "البطاقة الثانية: نص النصيحة بمحاذاة اليمين وبجانبه أيقونة غسالة ملابس داخل دائرة فيروزية."
+      },
+      {
+        "type": "text",
+        "bbox": [
+          640,
+          100,
+          800,
+          900
+        ],
+        "text": "٣. اجمع ماء المطر لري النباتات",
+        "desc": "البطاقة الثالثة: نص النصيحة بمحاذاة اليمين وبجانبه أيقونة سحابة مطر فوق نبتة داخل دائرة فيروزية."
+      },
+      {
+        "type": "text",
+        "bbox": [
+          870,
+          250,
+          950,
+          750
+        ],
+        "text": "كل قطرة تصنع فرقًا",
+        "desc": "شعار ختامي صغير بخط رفيع في أسفل التصميم فوق الموجات المائية."
+      }
+    ]
+  }
+}</code></pre>
+  </details>
+  <div class="callout red">
+    <strong>Where it falls short.</strong> Read the actual text and quality drops sharply: the infographic title
+    picked up inserted phantom letters, body copy is heavily garbled with duplicated fragments, and the masthead
+    أفق ("horizon" — three letters) grew extra glyphs. Arabic's connected, contextual letterforms are clearly much
+    harder than Latin. <strong>Practical rule from these runs:</strong> keep Arabic short and display-sized — large
+    single words fare far better than paragraphs — and budget for manual cleanup.
+  </div>
+</section>
+
+<!-- 12. QUALITY SCORECARD -->
+<section class="article-section" id="quality">
+  <h2 class="section-title">Quality scorecard — all 14, scored honestly</h2>
+  <div class="prose">
+    <p>
+      Each generation scored on four axes: <strong>adherence</strong> (did everything in the caption appear?),
+      <strong>layout</strong> (were bboxes respected?), <strong>text</strong> (fidelity of rendered strings) and
+      <strong>craft</strong> (quality of the medium itself). Set average: <strong>8.6 / 10</strong>.
+    </p>
+  </div>
+  <table class="variant-table">
+    <thead><tr><th>Example</th><th>Adherence</th><th>Layout</th><th>Text</th><th>Craft</th><th>Overall</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Fisherman portrait</strong></td><td class="num">9.5</td><td class="num">9</td><td class="num">—</td><td class="num">10</td><td class="num"><strong>9.5</strong></td></tr>
+      <tr><td><strong>Renaissance oil</strong></td><td class="num">9.5</td><td class="num">9.5</td><td class="num">—</td><td class="num">10</td><td class="num"><strong>9.5</strong></td></tr>
+      <tr><td><strong>Storybook lighthouse</strong></td><td class="num">10</td><td class="num">9.5</td><td class="num">—</td><td class="num">10</td><td class="num"><strong>9.5</strong></td></tr>
+      <tr><td><strong>AWS architecture</strong></td><td class="num">9.5</td><td class="num">9.5</td><td class="num">9</td><td class="num">9.5</td><td class="num"><strong>9.5</strong></td></tr>
+      <tr><td><strong>Coffee doodles</strong></td><td class="num">9.5</td><td class="num">9</td><td class="num">9.5</td><td class="num">9</td><td class="num"><strong>9</strong></td></tr>
+      <tr><td><strong>Vector dunes</strong></td><td class="num">9.5</td><td class="num">8.5</td><td class="num">—</td><td class="num">9.5</td><td class="num"><strong>9</strong></td></tr>
+      <tr><td><strong>Tech magazine (EN)</strong></td><td class="num">9.5</td><td class="num">9.5</td><td class="num">8.5</td><td class="num">9.5</td><td class="num"><strong>9</strong></td></tr>
+      <tr><td><strong>Cartoon fox</strong></td><td class="num">9</td><td class="num">8.5</td><td class="num">—</td><td class="num">9</td><td class="num"><strong>8.5</strong></td></tr>
+      <tr><td><strong>CI/CD flowchart</strong></td><td class="num">9</td><td class="num">9.5</td><td class="num">8</td><td class="num">9</td><td class="num"><strong>8.5</strong></td></tr>
+      <tr><td><strong>GCP pipeline</strong></td><td class="num">9</td><td class="num">9.5</td><td class="num">7</td><td class="num">9</td><td class="num"><strong>8.5</strong></td></tr>
+      <tr><td><strong>Microservices</strong></td><td class="num">9</td><td class="num">9.5</td><td class="num">7.5</td><td class="num">9</td><td class="num"><strong>8.5</strong></td></tr>
+      <tr><td><strong>Coffee infographic (EN)</strong></td><td class="num">9</td><td class="num">9</td><td class="num">7.5</td><td class="num">9</td><td class="num"><strong>8.5</strong></td></tr>
+      <tr><td><strong>Culture magazine (AR)</strong></td><td class="num">8.5</td><td class="num">9</td><td class="num">5</td><td class="num">9.5</td><td class="num"><strong>7</strong></td></tr>
+      <tr><td><strong>Water infographic (AR)</strong></td><td class="num">7.5</td><td class="num">8.5</td><td class="num">4.5</td><td class="num">7.5</td><td class="num"><strong>6.5</strong></td></tr>
+    </tbody>
+  </table>
+  <div class="callout green">
+    <strong>The pattern.</strong> Text fidelity degrades in a clean order:
+    <strong>large EN &gt; small EN &gt; large AR &gt; small AR</strong>. Put exact strings in <code>"text"</code>
+    fields, keep elements ≤ 5 per image, prefer round numbers in charts — and step up to
+    <code>V4_QUALITY_48</code> for typography-critical finals.
+  </div>
+</section>
+
+<!-- 13. BENCHMARKS -->
+<section class="article-section" id="bench">
+  <h2 class="section-title">RTX 4090 benchmarks — 21 runs, real numbers</h2>
+  <div class="prose">
+    <p>
+      Three presets × seven aspect ratios, fixed JSON caption and seed, one warmup excluded,
+      <code>torch.cuda.synchronize()</code> around every run. Each timing is the complete pipeline: text encode,
+      all sampling steps, VAE decode.
+    </p>
+  </div>
+  <table class="variant-table">
+    <thead><tr><th>Aspect ratio</th><th>Resolution</th><th>Turbo (12)</th><th>Default (20)</th><th>Quality (48)</th><th>Peak VRAM</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1:1</strong></td><td class="num">1024×1024</td><td class="num">20.9 s</td><td class="num">31.8 s</td><td class="num">72.0 s</td><td class="num">17.9 GB</td></tr>
+      <tr><td><strong>1:1 hi-res</strong></td><td class="num">2048×2048</td><td class="num">121.6 s</td><td class="num">199.7 s</td><td class="num">462.0 s</td><td class="num">23.3 GB</td></tr>
+      <tr><td><strong>3:2</strong></td><td class="num">1536×1024</td><td class="num">31.7 s</td><td class="num">51.2 s</td><td class="num">120.2 s</td><td class="num">18.8 GB</td></tr>
+      <tr><td><strong>2:3</strong></td><td class="num">1024×1536</td><td class="num">32.2 s</td><td class="num">51.1 s</td><td class="num">119.4 s</td><td class="num">18.8 GB</td></tr>
+      <tr><td><strong>16:9</strong></td><td class="num">1920×1088</td><td class="num">45.3 s</td><td class="num">73.4 s</td><td class="num">172.6 s</td><td class="num">19.6 GB</td></tr>
+      <tr><td><strong>9:16</strong></td><td class="num">1088×1920</td><td class="num">45.3 s</td><td class="num">73.5 s</td><td class="num">173.3 s</td><td class="num">19.6 GB</td></tr>
+      <tr><td><strong>4:1 banner</strong></td><td class="num">1600×400</td><td class="num">12.2 s</td><td class="num">18.7 s</td><td class="num">42.3 s</td><td class="num">17.2 GB</td></tr>
+    </tbody>
+  </table>
+
+  <figure class="figure full">
+    <img src="demo_assets/chart_comparison.png" alt="2x2 benchmark dashboard: grouped bars by preset, log-log scaling vs megapixels, per-step cost by resolution, peak VRAM vs megapixels with the 24 GB ceiling marked" loading="lazy" />
+    <figcaption>The full dashboard — chart: author's benchmark, ideogram4 / benchmark / results.csv</figcaption>
+  </figure>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/chart_turbo.png" alt="Turbo preset bar chart: seconds per aspect ratio with per-step and VRAM annotations" loading="lazy" />
+      <figcaption>Turbo (12 steps) — chart: author's benchmark</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/chart_default.png" alt="Default preset bar chart: seconds per aspect ratio with per-step and VRAM annotations" loading="lazy" />
+      <figcaption>Default (20 steps) — chart: author's benchmark</figcaption>
+    </figure>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/chart_quality.png" alt="Quality preset bar chart: 462 seconds at 2048 squared towering over the other aspect ratios" loading="lazy" />
+    <figcaption>Quality (48 steps) — 2048² takes nearly 8 minutes. Chart: author's benchmark</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h3>The three scaling laws</h3>
+    <ul>
+      <li><strong>Linear in steps.</strong> Per-step cost is constant per resolution across presets (1024²:
+        1.74 → 1.59 → 1.50 s/step). Quality ≈ 2.3× Default; Turbo saves ~35%.</li>
+      <li><strong>Super-linear in pixels.</strong> 4× the area costs ~6.3× the time — quadratic attention over 16k
+        image tokens at 2048². The log-log curve sits between linear and quadratic.</li>
+      <li><strong>VRAM follows resolution only, never steps</strong>: 17.2 → 23.3 GB, kissing the 4090's ceiling at
+        2048². Orientation is free — portrait ≡ landscape to the decimal.</li>
+    </ul>
+    <p>
+      <strong>The practical recipe:</strong> draft in Turbo at 1024², work in Default at ≤ 2 MP, and reserve
+      hi-res Quality renders for finals (and a coffee break).
+    </p>
+  </div>
+</section>
+
+<!-- 14. REFS -->
+<section class="article-section" id="refs">
+  <h2 class="section-title">References &amp; further reading</h2>
+  <ul class="links">
+    <li><a href="https://github.com/ideogram-oss/ideogram4" target="_blank"><strong>GitHub</strong> — <code>ideogram-oss/ideogram4</code></a> — inference code, prompting guide, the open-source magic-prompt system prompt.</li>
+    <li><a href="https://huggingface.co/ideogram-ai/ideogram-4-nf4" target="_blank"><strong>Hugging Face</strong> — <code>ideogram-ai/ideogram-4-nf4</code></a> and <a href="https://huggingface.co/ideogram-ai/ideogram-4-fp8" target="_blank"><code>ideogram-4-fp8</code></a> — gated weights (~16 GB, bundles both DiT branches + Qwen3-VL + VAE).</li>
+    <li><a href="https://ideogram.ai/blog/ideogram-4.0/" target="_blank"><strong>Technical blog post</strong></a> — the release announcement with the benchmark methodology.</li>
+    <li><a href="https://developer.ideogram.ai/" target="_blank"><strong>developer.ideogram.ai</strong></a> — free API key for the hosted magic prompt.</li>
+    <li><a href="https://www.designarena.ai/" target="_blank"><strong>Design Arena</strong></a> — the third-party design-focused image Elo leaderboard.</li>
+    <li>Companion video: a 22-minute narrated tutorial twin of this article, produced with the same assets.</li>
+  </ul>
+</section>
+
+</div><!-- /container -->
+
+<footer class="page-footer">
+  <div class="inner">
+    <a class="back-to-blog" href="../index.html">
+      <span class="arrow">←</span>
+      <span>Back to the blog</span>
+    </a>
+    <p>Hardware: 1 × NVIDIA RTX 4090 (24 GiB, sm_89), Pop!_OS 22.04, CUDA 12.9.<br />
+       Software: ideogram-4 (nf4, bitsandbytes), torch 2.12.0+cu130, Python 3.12.8 (asdf), uv 0.8.8, bf16 activations.<br />
+       Article by Omar Kamal Hosney · 2026-06-04</p>
+    <div class="social">
+      <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn">in</a>
+      <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium">M</a>
+      <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub">gh</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
