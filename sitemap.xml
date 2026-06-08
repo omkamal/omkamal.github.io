@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://omkamal.github.io/</loc>
-    <lastmod>2026-05-14</lastmod>
+    <lastmod>2026-06-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -14,7 +15,7 @@
   </url>
   <url>
     <loc>https://omkamal.github.io/articles/</loc>
-    <lastmod>2026-05-14</lastmod>
+    <lastmod>2026-06-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -31,36 +32,76 @@
     <lastmod>2026-06-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/lens/demo_assets/hero.png</image:loc>
+      <image:title>Lens — astronaut on a red desert dune, 1440 on an RTX 4090</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/lens/demo_assets/portrait_1440.png</image:loc>
+      <image:title>Lens — photorealistic fisherman portrait at 1440, FP8 DiT</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/lens/demo_assets/landscape_photoreal.png</image:loc>
+      <image:title>Lens — photorealistic mountain landscape with a glacial lake</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/lens/demo_assets/text_chalkboard.png</image:loc>
+      <image:title>Lens — chalkboard typography, in-image text rendering</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/lens/demo_assets/diagram.png</image:loc>
+      <image:title>Lens — water-cycle infographic with correct labels</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://omkamal.github.io/articles/ideogram4/ideogram4.html</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/ideogram4/demo_assets/hero.jpg</image:loc>
+      <image:title>Ideogram 4 — sample collage across photorealism, illustration and typography</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://omkamal.github.io/articles/bonsai-image/bonsai-image.html</loc>
     <lastmod>2026-05-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/bonsai-image/demo_assets/hero.png</image:loc>
+      <image:title>Bonsai-Image-4B — an icy bonsai in a snowy forest, 4-step ternary model</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://omkamal.github.io/articles/lance/lance.html</loc>
     <lastmod>2026-05-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/lance/demo_assets/hero.png</image:loc>
+      <image:title>Lance 3B — unified image and video model on a single RTX 4090</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://omkamal.github.io/articles/qwopus-mtp-2x/qwopus-mtp-2x.html</loc>
     <lastmod>2026-05-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/qwopus-mtp-2x/demo_assets/00_hero.png</image:loc>
+      <image:title>Doubling Qwopus 3.6 with Multi-Token Prediction on llama.cpp</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://omkamal.github.io/articles/images-models/hidream-o1-image.html</loc>
     <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/images-models/demo_assets/01_t2i.png</image:loc>
+      <image:title>HiDream-o1 — local text-to-image on a single RTX 4090</image:title>
+    </image:image>
   </url>
 
   <!-- Machine Learning Cheatsheets -->

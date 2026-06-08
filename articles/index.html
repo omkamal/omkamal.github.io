@@ -46,7 +46,75 @@
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
         { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omkamal.github.io/articles/" }
       ]
-    }
+    },
+    "blogPost": [
+      {
+        "@type": "BlogPosting",
+        "headline": "Lens — quantizing the DiT to run 1440 without offload on a single RTX 4090",
+        "url": "https://omkamal.github.io/articles/lens/lens.html",
+        "image": "https://omkamal.github.io/articles/lens/demo_assets/hero.png",
+        "datePublished": "2026-06-07",
+        "dateModified": "2026-06-07",
+        "author": { "@type": "Person", "name": "Omar Kamal Hosney" },
+        "keywords": "Lens, Microsoft Lens, text-to-image, GPT-OSS, MXFP4, FLUX.2 VAE, torchao, FP8, quantization, CPU offload, 1440, RTX 4090",
+        "description": "Microsoft's 3.8B text-to-image model with a 4-bit GPT-OSS-20B encoder: why no-offload bf16 OOMs above 1024, two eviction dead-ends, and the FP8 DiT quantization that unlocks 1440 fully on the GPU — with a category gallery and honest quality notes."
+      },
+      {
+        "@type": "BlogPosting",
+        "headline": "Ideogram 4 — structured JSON prompting on a single RTX 4090",
+        "url": "https://omkamal.github.io/articles/ideogram4/ideogram4.html",
+        "image": "https://omkamal.github.io/articles/ideogram4/demo_assets/hero.jpg",
+        "datePublished": "2026-06-04",
+        "dateModified": "2026-06-04",
+        "author": { "@type": "Person", "name": "Omar Kamal Hosney" },
+        "keywords": "Ideogram 4, text-to-image, JSON prompting, bounding box layout, magic prompt, nf4, RTX 4090, style gallery",
+        "description": "The 9.3B open-weight design model: JSON captions with bounding-box layout control, LLM magic prompts, a 14-image quality-scored style gallery and a 21-run speed benchmark, measured locally in nf4 on a 24 GB 4090."
+      },
+      {
+        "@type": "BlogPosting",
+        "headline": "Bonsai-Image-4B — a 1.58-bit text-to-image model on a single RTX 4090",
+        "url": "https://omkamal.github.io/articles/bonsai-image/bonsai-image.html",
+        "image": "https://omkamal.github.io/articles/bonsai-image/demo_assets/hero.png",
+        "datePublished": "2026-05-26",
+        "dateModified": "2026-05-26",
+        "author": { "@type": "Person", "name": "Omar Kamal Hosney" },
+        "keywords": "Bonsai-Image-4B, PrismML, 1.58-bit, ternary quantization, gemlite, HQQ, text-to-image, FLUX.2, distilled, RTX 4090, style presets",
+        "description": "PrismML's 4B image generator quantized to ternary (1.58-bit) and distilled to 4 steps — ~5 GB VRAM, sub-second warm renders, ten style presets and the measured throughput numbers."
+      },
+      {
+        "@type": "BlogPosting",
+        "headline": "Lance 3B — a unified image & video model on a single RTX 4090",
+        "url": "https://omkamal.github.io/articles/lance/lance.html",
+        "image": "https://omkamal.github.io/articles/lance/demo_assets/hero.png",
+        "datePublished": "2026-05-23",
+        "dateModified": "2026-05-23",
+        "author": { "@type": "Person", "name": "Omar Kamal Hosney" },
+        "keywords": "Lance, ByteDance, unified multimodal, text-to-image, text-to-video, image editing, video editing, VQA, RTX 4090",
+        "description": "ByteDance's Lance does image/video understanding, generation and editing in one 3B transformer — all seven modes, the official benchmarks, and the two code fixes needed to fit 24 GB."
+      },
+      {
+        "@type": "BlogPosting",
+        "headline": "Doubling Qwopus 3.6 on a single RTX 4090 — Multi-Token Prediction with llama.cpp",
+        "url": "https://omkamal.github.io/articles/qwopus-mtp-2x/qwopus-mtp-2x.html",
+        "image": "https://omkamal.github.io/articles/qwopus-mtp-2x/demo_assets/00_hero.png",
+        "datePublished": "2026-05-22",
+        "dateModified": "2026-05-22",
+        "author": { "@type": "Person", "name": "Omar Kamal Hosney" },
+        "keywords": "Qwopus, Multi-Token Prediction, MTP, llama.cpp, GGUF, speculative decoding, LLM inference, RTX 4090",
+        "description": "~1.98x average speedup (peak 2.21x on math) via Multi-Token Prediction on Qwopus 3.6-27B-MTP-GGUF — with the failed Ollama detour and the production llama-server recipe."
+      },
+      {
+        "@type": "BlogPosting",
+        "headline": "HiDream-o1 — local image generation on a single RTX 4090",
+        "url": "https://omkamal.github.io/articles/images-models/hidream-o1-image.html",
+        "image": "https://omkamal.github.io/articles/images-models/demo_assets/01_t2i.png",
+        "datePublished": "2026-05-14",
+        "dateModified": "2026-05-14",
+        "author": { "@type": "Person", "name": "Omar Kamal Hosney" },
+        "keywords": "HiDream, text-to-image, local image generation, RTX 4090, diffusion",
+        "description": "Hands-on field notes running a local image-generation model on a single 24 GB RTX 4090."
+      }
+    ]
   }
   </script>
   <style>
