@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lens on a single RTX 4090 — quantizing the DiT to run 1440 without offload</title>
+<meta name="description" content="A hands-on, honest look at Microsoft's Lens 3.8B text-to-image model on one 24 GB RTX 4090. The MXFP4 GPT-OSS encoder, why no-offload bf16 OOMs above 1024, the two eviction dead-ends, and the FP8-weight-only DiT quantization that lets 1440 run fully on the GPU — with a multi-category gallery, exact configs and prompts, and honest per-image quality notes." />
+<meta name="keywords" content="Lens, Microsoft Lens, text-to-image, GPT-OSS, MXFP4, FLUX.2 VAE, DiT, MMDiT, RTX 4090, 24GB, torchao, FP8, float8_weight_only, int8, quantization, CPU offload, 1440, diffusers, local image generation, photorealistic, prompt engineering" />
+<meta name="author" content="Omar Kamal Hosney" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://omkamal.github.io/articles/lens/lens.html" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Omar Kamal Hosney" />
+<meta property="og:url" content="https://omkamal.github.io/articles/lens/lens.html" />
+<meta property="og:title" content="Lens on a single RTX 4090 — quantizing the DiT to run 1440 without offload" />
+<meta property="og:description" content="Microsoft's Lens 3.8B T2I model run locally on a 24 GB 4090 — the MXFP4 encoder, the no-offload OOM wall, and the FP8 DiT fix that unlocks 1440. Gallery, configs and honest quality notes." />
+<meta property="og:image" content="https://omkamal.github.io/articles/lens/demo_assets/hero.png" />
+<meta property="article:author" content="Omar Kamal Hosney" />
+<meta property="article:published_time" content="2026-06-07" />
+<meta property="article:section" content="AI Models" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Lens on a single RTX 4090 — quantizing the DiT to run 1440 without offload" />
+<meta name="twitter:description" content="Microsoft's Lens 3.8B text-to-image model on a 24 GB 4090 — the MXFP4 encoder, the no-offload OOM wall, and the FP8 DiT fix for 1440. Gallery + honest quality notes." />
+<meta name="twitter:image" content="https://omkamal.github.io/articles/lens/demo_assets/hero.png" />
+
+<link rel="icon" type="image/jpeg" href="../../omar.jpeg" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Lens on a single RTX 4090 — quantizing the DiT to run 1440 without offload",
+  "description": "A hands-on, honest look at Microsoft's Lens 3.8B text-to-image model on one 24 GB RTX 4090: the MXFP4 GPT-OSS encoder, why no-offload bf16 OOMs above 1024, and the FP8-weight-only DiT quantization that lets 1440 run fully on the GPU.",
+  "image": "https://omkamal.github.io/articles/lens/demo_assets/hero.png",
+  "datePublished": "2026-06-07",
+  "dateModified": "2026-06-07",
+  "author": { "@type": "Person", "name": "Omar Kamal Hosney", "url": "https://omkamal.github.io/" },
+  "publisher": { "@type": "Person", "name": "Omar Kamal Hosney" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://omkamal.github.io/articles/lens/lens.html" },
+  "articleSection": "AI Models",
+  "keywords": "Lens, Microsoft Lens, text-to-image, GPT-OSS, MXFP4, FLUX.2 VAE, RTX 4090, torchao, FP8, quantization, CPU offload, 1440, diffusers",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omkamal.github.io/articles/" },
+      { "@type": "ListItem", "position": 3, "name": "Lens on a 4090", "item": "https://omkamal.github.io/articles/lens/lens.html" }
+    ]
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root {
+  --c-ink: #18181b;
+  --c-ink-soft: #27272a;
+  --c-prose: #3f3f46;
+  --c-muted: #71717a;
+  --c-mute-2: #a1a1aa;
+  --c-paper: #fafaf9;
+  --c-paper-2: #ffffff;
+  --c-line: #e7e5e4;
+  --c-line-soft: #f1f0ee;
+  --c-accent: #7c3aed;
+  --c-accent-2: #ec4899;
+  --c-accent-3: #f59e0b;
+  --c-accent-soft: #faf5ff;
+  --c-accent-line: #e9d5ff;
+  --c-blue: #2563eb;
+  --c-blue-soft: #eff6ff;
+  --c-blue-line: #bfdbfe;
+  --c-green: #16a34a;
+  --c-green-soft: #f0fdf4;
+  --c-green-line: #bbf7d0;
+  --c-warn: #b45309;
+  --c-warn-soft: #fffbeb;
+  --c-warn-line: #fde68a;
+  --c-red: #dc2626;
+  --c-red-soft: #fef2f2;
+  --c-red-line: #fecaca;
+  --c-code-bg: #0f172a;
+  --c-code-fg: #e2e8f0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 24px 56px -16px rgba(15, 23, 42, 0.18), 0 8px 20px -6px rgba(15, 23, 42, 0.08);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { font-family: 'Source Serif 4', Charter, Georgia, 'Times New Roman', serif; font-size: 18px; line-height: 1.75; color: var(--c-prose); background: var(--c-paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--c-accent); color: white; }
+
+.top-nav { position: sticky; top: 0; z-index: 50; background: rgba(250, 250, 249, 0.85); backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px); border-bottom: 1px solid var(--c-line); }
+.nav-inner { max-width: 1180px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 12px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--c-ink); text-decoration: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-accent) 100%); display: grid; place-items: center; font-weight: 800; font-size: 0.78rem; color: white; box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.4); }
+.nav-right { display: flex; gap: 4px; align-items: center; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+.nav-right a { color: var(--c-muted); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 500; transition: all 0.2s var(--ease); }
+.nav-right a:hover { color: var(--c-ink); background: rgba(0,0,0,0.04); }
+.nav-right a.active { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.hero { position: relative; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #4c1d95 100%); color: #e2e8f0; padding: 80px 0 100px; margin-bottom: -60px; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.35), transparent 50%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.30), transparent 50%), radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.10), transparent 60%); }
+.hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); pointer-events: none; }
+.hero-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 32px; }
+.crumbs { font-family: 'Inter', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; color: rgba(226, 232, 240, 0.65); margin-bottom: 22px; }
+.crumbs a { color: rgba(226, 232, 240, 0.85); text-decoration: none; border-bottom: 1px solid rgba(226, 232, 240, 0.3); transition: all 0.2s var(--ease); }
+.crumbs a:hover { color: white; border-bottom-color: white; }
+.crumbs .sep { margin: 0 0.5em; opacity: 0.4; }
+.article-header { margin: 0; padding: 0; border: 0; }
+.byline { display: inline-flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: #c4b5fd; padding: 5px 12px; background: rgba(168, 85, 247, 0.18); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50px; margin-bottom: 28px; }
+.byline span + span::before { content: "·"; opacity: 0.6; margin: 0 0.25rem; color: #c4b5fd; }
+h1 { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2.2rem, 4.8vw, 3.6rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.03em; color: #ffffff; margin: 0 0 22px; max-width: 880px; }
+.subtitle { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(1.05rem, 1.6vw, 1.28rem); line-height: 1.55; color: rgba(226, 232, 240, 0.82); font-style: italic; margin: 0; max-width: 720px; }
+.subtitle code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85em; font-style: normal; background: rgba(255, 255, 255, 0.12); padding: 2px 8px; border-radius: 5px; color: #fde68a; border: 1px solid rgba(255, 255, 255, 0.08); }
+
+.container { max-width: 980px; margin: 0 auto; padding: 100px 32px 80px; position: relative; z-index: 2; }
+
+.tldr { background: linear-gradient(135deg, #ffffff 0%, var(--c-accent-soft) 100%); border: 1px solid var(--c-accent-line); border-left: 4px solid var(--c-accent); padding: 26px 30px; border-radius: 0 16px 16px 0; margin: 0 0 60px; box-shadow: var(--shadow-md); }
+.tldr h3 { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-accent); margin: 0 0 12px; }
+.tldr p { font-size: 1.05rem; color: var(--c-ink-soft); margin: 0 0 0.8rem; text-align: justify; hyphens: auto; }
+.tldr p:last-child { margin-bottom: 0; }
+.tldr strong { color: var(--c-ink); font-weight: 700; }
+.tldr code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(255,255,255,0.7); border: 1px solid var(--c-accent-line); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); }
+
+.toc { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; color: var(--c-prose); padding: 22px 28px; margin: 0 0 80px; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 16px; line-height: 2.1; box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: center; }
+.toc strong { display: inline-flex; align-items: center; gap: 7px; color: var(--c-ink); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; padding-right: 14px; margin-right: 6px; border-right: 1px solid var(--c-line); }
+.toc strong::before { content: ''; width: 3px; height: 14px; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+.toc a { color: var(--c-prose); text-decoration: none; padding: 4px 11px; border-radius: 50px; transition: all 0.2s var(--ease); font-weight: 500; }
+.toc a:hover { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.article-section { margin-bottom: 80px; scroll-margin-top: 80px; }
+.section-title { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(1.65rem, 3vw, 2.15rem); font-weight: 700; color: var(--c-ink); margin: 0 0 28px; letter-spacing: -0.025em; line-height: 1.18; position: relative; padding-left: 18px; }
+.section-title::before { content: ''; position: absolute; left: 0; top: 0.18em; width: 5px; height: 0.85em; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 3px; }
+
+.prose { max-width: 100%; margin-bottom: 36px; font-size: 1.06rem; line-height: 1.78; text-align: justify; hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty; }
+.prose p { margin: 0 0 1.25rem; color: var(--c-prose); text-align: justify; hyphens: auto; }
+.prose h3 { text-align: left; hyphens: manual; }
+.prose ul, .prose ol { text-align: left; hyphens: manual; margin: 0 0 1.25rem 1.2rem; }
+.prose li { margin-bottom: 0.4rem; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--c-ink); font-weight: 600; }
+.prose em { color: var(--c-ink-soft); }
+.prose code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.86em; background: var(--c-accent-soft); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); border: 1px solid var(--c-accent-line); font-weight: 500; }
+.prose a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--c-accent-line); transition: all 0.2s var(--ease); }
+.prose a:hover { text-decoration-color: var(--c-accent); text-decoration-thickness: 2px; }
+.prose h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--c-ink); margin: 2.2rem 0 0.8rem; letter-spacing: -0.015em; display: flex; align-items: center; gap: 10px; }
+.prose h3::before { content: ''; width: 22px; height: 2px; background: linear-gradient(90deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+
+.prose pre { background: var(--c-code-bg); color: var(--c-code-fg); padding: 44px 26px 22px; border-radius: 12px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85rem; line-height: 1.65; overflow-x: auto; margin: 22px 0; border: 1px solid #1e293b; box-shadow: var(--shadow-lg); position: relative; }
+.prose pre::before { content: ''; position: absolute; top: 14px; left: 18px; width: 11px; height: 11px; border-radius: 50%; background: #ef4444; box-shadow: 18px 0 0 #f59e0b, 36px 0 0 #10b981; opacity: 0.7; }
+.prose pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; border: 0; font-weight: 400; }
+
+.callout { background: var(--c-warn-soft); border: 1px solid var(--c-warn-line); border-left: 4px solid var(--c-accent-3); padding: 16px 22px; border-radius: 0 12px 12px 0; margin: 22px 0; font-size: 0.98rem; line-height: 1.7; color: var(--c-ink-soft); position: relative; box-shadow: var(--shadow-sm); text-align: justify; hyphens: auto; }
+.callout.green { background: var(--c-green-soft); border-color: var(--c-green-line); border-left-color: var(--c-green); }
+.callout.red { background: var(--c-red-soft); border-color: var(--c-red-line); border-left-color: var(--c-red); }
+.callout.blue { background: var(--c-blue-soft); border-color: var(--c-blue-line); border-left-color: var(--c-blue); }
+.callout strong { color: var(--c-ink); }
+.callout code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--c-warn); padding: 1.5px 6px; border-radius: 4px; }
+.callout.green code { background: rgba(22, 163, 74, 0.12); border-color: rgba(22, 163, 74, 0.3); color: var(--c-green); }
+.callout.red code { background: rgba(220, 38, 38, 0.10); border-color: rgba(220, 38, 38, 0.3); color: var(--c-red); }
+.callout.blue code { background: rgba(37, 99, 235, 0.10); border-color: rgba(37,99,235,0.3); color: var(--c-blue); }
+
+.variant-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 22px 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.88rem; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); }
+.variant-table th, .variant-table td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--c-line-soft); vertical-align: top; }
+.variant-table th { background: linear-gradient(180deg, #fafafa, #f5f5f4); font-weight: 700; color: var(--c-ink); letter-spacing: 0.02em; font-size: 0.74rem; text-transform: uppercase; }
+.variant-table tbody tr:last-child td { border-bottom: 0; }
+.variant-table tbody tr:hover td { background: var(--c-accent-soft); }
+.variant-table td { color: var(--c-prose); }
+.variant-table td strong { color: var(--c-ink); }
+.variant-table td.num { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+.variant-table tr.hi td { background: var(--c-green-soft); }
+.variant-table tr.hi:hover td { background: var(--c-green-soft); }
+
+.figure { margin: 28px auto; text-align: center; display: block; }
+.figure img, .figure video { width: 100%; max-width: 100%; height: auto; border-radius: 14px; display: block; margin-left: auto; margin-right: auto; border: 1px solid var(--c-line); box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); background: var(--c-paper-2); }
+.figure video { background: #000; }
+.figure img:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); border-color: var(--c-accent-line); }
+.figure figcaption { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; color: var(--c-mute-2); margin: 10px auto 0; letter-spacing: 0.02em; text-align: center; max-width: 85%; }
+.figure.full img { background: white; }
+.figure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px auto; justify-items: center; align-items: start; }
+.figure-grid .figure { margin: 0; width: 100%; }
+
+.example { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 18px; padding: 28px 30px; margin: 26px 0 36px; box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); }
+.example:hover { box-shadow: var(--shadow-lg); border-color: var(--c-accent-line); }
+.example-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1px solid var(--c-line-soft); flex-wrap: wrap; }
+.example-head h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--c-ink); margin: 0; letter-spacing: -0.018em; }
+.tps-chip { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; font-weight: 700; padding: 6px 14px; border-radius: 50px; color: white; background: linear-gradient(135deg, var(--c-green) 0%, #15803d 100%); box-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.35); }
+.tps-chip.amber { background: linear-gradient(135deg, var(--c-accent-3) 0%, var(--c-warn) 100%); box-shadow: 0 4px 12px -2px rgba(180, 83, 9, 0.35); }
+.tps-chip.fire { background: linear-gradient(135deg, var(--c-accent-2) 0%, #be185d 100%); box-shadow: 0 4px 12px -2px rgba(190, 24, 93, 0.35); }
+.tps-chip.blue { background: linear-gradient(135deg, var(--c-blue) 0%, #1d4ed8 100%); box-shadow: 0 4px 12px -2px rgba(37,99,235,0.35); }
+.prompt-line { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: var(--c-paper); border: 1px solid var(--c-line); border-left: 3px solid var(--c-accent); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 0 0 18px; color: var(--c-ink-soft); line-height: 1.5; }
+
+.commentary { margin-top: 24px; padding: 20px 22px; background: var(--c-blue-soft); border: 1px solid var(--c-blue-line); border-left: 4px solid var(--c-blue); border-radius: 0 12px 12px 0; }
+.commentary h4 { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-blue); margin: 0 0 10px; display: inline-flex; align-items: center; gap: 7px; }
+.commentary h4::before { content: '💡'; font-size: 1.05em; }
+.commentary p { font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); margin: 0; text-align: justify; hyphens: auto; }
+.commentary code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: rgba(37, 99, 235, 0.1); padding: 1.5px 6px; border-radius: 4px; color: var(--c-blue); border: 1px solid var(--c-blue-line); font-weight: 500; }
+.commentary strong { color: var(--c-ink); }
+
+.links { padding-left: 20px; max-width: 100%; }
+.links li { margin-bottom: 10px; line-height: 1.6; }
+.links li code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: var(--c-paper); border: 1px solid var(--c-line); padding: 1px 6px; border-radius: 4px; color: var(--c-ink-soft); }
+
+.page-footer { border-top: 1px solid var(--c-line); padding: 60px 0 80px; text-align: center; background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.03)); }
+.page-footer .inner { max-width: 980px; margin: 0 auto; padding: 0 32px; font-family: 'Inter', sans-serif; }
+.back-to-blog { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-2) 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 24px -6px rgba(124, 58, 237, 0.5); transition: all 0.3s var(--ease); margin-bottom: 32px; }
+.back-to-blog:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(124, 58, 237, 0.65); }
+.back-to-blog .arrow { transition: transform 0.3s var(--ease); }
+.back-to-blog:hover .arrow { transform: translateX(-4px); }
+.page-footer p { color: var(--c-muted); font-size: 0.88rem; margin-bottom: 18px; }
+.social { display: flex; justify-content: center; gap: 12px; }
+.social a { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: var(--c-paper-2); border: 1px solid var(--c-line); color: var(--c-muted); text-decoration: none; transition: all 0.3s var(--ease); font-family: 'Inter', sans-serif; font-weight: 700; }
+.social a:hover { color: var(--c-accent); border-color: var(--c-accent-line); background: var(--c-accent-soft); transform: translateY(-2px); }
+
+@media (max-width: 900px) {
+  .hero { padding: 60px 0 80px; }
+  .hero-inner { padding: 0 20px; }
+  .container { padding: 80px 20px 60px; }
+  .nav-inner { padding: 12px 20px; }
+  h1 { font-size: 2rem; }
+  .section-title { font-size: 1.55rem; }
+  .figure-grid { grid-template-columns: 1fr; }
+  .example { padding: 22px 22px; border-radius: 14px; }
+  .toc { padding: 18px 20px; font-size: 0.8rem; gap: 6px; }
+  .toc strong { border-right: 0; margin-bottom: 4px; padding-right: 0; width: 100%; }
+  .nav-right a { padding: 6px 10px; font-size: 0.82rem; }
+}
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .prose { font-size: 1.02rem; }
+  .nav-right a:not(.active) { display: none; }
+}
+</style>
+
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">OK</span>
+      <span>Omar Kamal Hosney</span>
+    </a>
+    <div class="nav-right">
+      <a href="../../cheatsheets/index.html">Cheatsheets</a>
+      <a href="../index.html" class="active">Blog</a>
+      <a href="../../resume.html" target="_blank">Resume</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="crumbs">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="../index.html">Blog</a>
+      <span class="sep">/</span>
+      AI Models
+    </p>
+    <div class="article-header">
+      <p class="byline"><span>Lens · Microsoft</span><span>Field Notes</span><span>June 2026</span></p>
+      <h1>Lens on a single RTX 4090: quantizing the DiT to run 1440 without offload</h1>
+      <p class="subtitle">Microsoft's <strong>Lens</strong> is a 3.8B text-to-image model that pairs a
+      <strong>4-bit GPT-OSS-20B encoder</strong> with the FLUX.2 VAE. Getting it onto one 24 GB
+      <code>RTX 4090</code> was easy; getting <strong>1440</strong> to run <em>without</em> CPU offload was not. Here is
+      the honest story — the OOM wall, two dead-ends, the <code>FP8</code> fix that worked — with a gallery, exact
+      configs and prompts, and a candid quality verdict on every image.</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- HERO IMAGE -->
+<figure class="figure" style="margin: 0 0 60px;">
+  <img src="demo_assets/hero.png" alt="A lone astronaut on a red desert dune at dusk under distant moons, generated by Lens at 1440 on an RTX 4090" loading="lazy" />
+  <figcaption>Lens · 1440 · 2:1 · 28 steps · cfg 5.0 · FP8 DiT, no offload — "a lone astronaut on a windswept red desert dune at dusk, two distant moons, teal-and-orange grade"</figcaption>
+</figure>
+
+<!-- TL;DR -->
+<div class="tldr">
+  <h3>TL;DR</h3>
+  <p>
+    <strong>Lens</strong> (Microsoft) is a <strong>3.8B-parameter</strong> text-to-image DiT that conditions on
+    <strong>multi-layer features from a GPT-OSS-20B encoder</strong> and decodes through the <strong>FLUX.2 VAE</strong>.
+    The encoder ships in <strong>MXFP4 (4-bit)</strong>, which is the whole reason a 20B model fits at all (~11 GB).
+  </p>
+  <p>
+    On a 24 GB <strong>RTX 4090</strong> it runs out of the box <em>with</em> CPU offload at any resolution. Running it
+    <strong>without offload</strong> works up to <strong>1024</strong> — but only barely, peaking at <strong>~24 GB</strong>.
+    Every <strong>1440</strong> image OOMs in bf16, because the 4-bit encoder stays resident and the bf16 DiT eats the rest.
+  </p>
+  <p>
+    The fix is to quantize the one component that is <em>still</em> full precision: the DiT. A
+    <strong>weight-only FP8</strong> pass (<code>torchao</code>) halves it from ~7.6 GB to ~3.8 GB, dropping the 1440
+    peak from ~27 GB (OOM) to <strong>~23 GB (fits)</strong> — with <strong>no visible quality loss</strong>. After that,
+    Lens does <strong>1440 fully on the GPU, no offload</strong>.
+  </p>
+</div>
+
+<!-- TOC -->
+<nav class="toc" aria-label="Table of contents">
+  <strong>Contents</strong>
+  <a href="#what">What it is</a>
+  <a href="#run">Running it on a 4090</a>
+  <a href="#wall">The no-offload wall</a>
+  <a href="#fix">The FP8 fix</a>
+  <a href="#gallery">Category gallery</a>
+  <a href="#hires">1440, no offload</a>
+  <a href="#photoreal">A prompt lesson</a>
+  <a href="#verdict">Honest verdict</a>
+  <a href="#refs">References</a>
+</nav>
+
+<!-- =========================================================
+     1. What it is
+============================================================ -->
+<section class="article-section" id="what">
+  <h2 class="section-title">What Lens is, in one paragraph</h2>
+  <div class="prose">
+    <p>
+      <strong>Lens</strong> is a <strong>3.8B-parameter</strong> foundational text-to-image model from Microsoft, built
+      for training efficiency and high-resolution generation. Architecturally it is unusual: instead of a CLIP/T5 text
+      encoder, it conditions a <strong>48-block double-stream MMDiT</strong> on <strong>multi-layer hidden states</strong>
+      pulled from a <strong>GPT-OSS-20B</strong> language model (layers 5/11/17/23, concatenated), and it decodes latents
+      through the <strong>FLUX.2 VAE</strong>. Three checkpoints ship: the RL-tuned <code>microsoft/Lens</code> (20 steps,
+      cfg 5.0), a distilled 4-step <code>Lens-Turbo</code>, and the supervised <code>Lens-Base</code>.
+    </p>
+    <p>
+      The interesting consequence for a local run is the memory shape. That GPT-OSS-20B encoder is enormous for a text
+      encoder — but it is shipped in <strong>MXFP4</strong> (4-bit), so it lands at roughly <strong>11 GB</strong> instead
+      of ~40 GB. The denoiser and VAE are comparatively small. So the question on a 24 GB card is never "does it load" —
+      it is "how much room is left for the diffusion activations once that 4-bit encoder is sitting on the GPU."
+    </p>
+  </div>
+  <div class="callout blue">
+    <strong>Setup.</strong> Pop!_OS 22.04, one 24 GB RTX 4090 (Ada, sm_89), CUDA 12.9 driver. A <code>uv</code> venv on
+    Python 3.12 with <code>torch 2.11+cu126</code>, <code>diffusers 0.38</code>, <code>transformers 5.8</code>. All weights
+    cached on a data disk (<code>/d/hugging_face_cache</code>) — the full <code>microsoft/Lens</code> repo is ~29 GB.
+  </div>
+</section>
+
+<!-- =========================================================
+     2. Running it on a 4090
+============================================================ -->
+<section class="article-section" id="run">
+  <h2 class="section-title">Running it on a 4090 — the easy part</h2>
+  <div class="prose">
+    <p>
+      The reference path just works. Load the MXFP4 encoder, assemble the pipeline, move it to CUDA, and generate. On a
+      4090 a 1024² image at 20 steps takes <strong>~9 s</strong> once the model is warm. There are two non-obvious setup
+      details worth flagging up front, because both cost time before the first image appears:
+    </p>
+    <ul>
+      <li><strong>A pre-release dependency.</strong> <code>diffusers 0.38</code> pins a pre-release
+        <code>safetensors</code> (<code>0.8.0rc</code>), so the install needs <code>uv pip install --prerelease=allow</code>
+        — a plain install fails to resolve.</li>
+      <li><strong>MXFP4 on Ada.</strong> MXFP4 matmul kernels officially target Hopper (sm_90); the 4090 is Ada (sm_89).
+        In practice the <code>transformers</code> + <code>kernels</code> path still runs the 4-bit encoder fine here
+        (you get a harmless <code>kernels</code> deprecation warning). The naive "dequantize to bf16" escape hatch is a
+        trap — a dequantized 20B encoder is ~40 GB and will not fit in 24 GB at all.</li>
+    </ul>
+    <pre><code># install (note the pre-release flag)
+uv pip install torch==2.11.0+cu126 torchvision==0.26.0+cu126 \
+    --index-url https://download.pytorch.org/whl/cu126
+uv pip install --prerelease=allow -r requirements.txt
+
+# generate (with CPU offload — the out-of-the-box path, any resolution)
+python inference.py --prompt "a cinematic mountain lake at sunrise" \
+    --base_resolution 1440 --aspect_ratio 16:9 --steps 20 --cfg 5.0 --offload</code></pre>
+  </div>
+</section>
+
+<!-- =========================================================
+     3. The no-offload wall
+============================================================ -->
+<section class="article-section" id="wall">
+  <h2 class="section-title">The challenge: 1440 without offload OOMs</h2>
+  <div class="prose">
+    <p>
+      CPU offload works, but it is not free — it shuttles whole modules between CPU and GPU, and I wanted the encoder and
+      denoiser to simply stay resident. Dropping <code>--offload</code> and calling <code>pipe.to("cuda")</code> exposes
+      the real budget. The 4-bit encoder (~11 GB) plus the bf16 DiT (~7.6 GB) is ~19 GB <em>before any image</em>, leaving
+      ~5 GB for activations. That is enough for <strong>1024</strong> (it peaks right at the 24 GB ceiling) but not for
+      <strong>1440</strong>: every 1440 image hit a hard <code>CUDA out of memory</code>, the bf16 path needing ~27 GB.
+    </p>
+    <p>
+      Before the fix that worked, two reasonable-sounding ideas <em>failed</em>, and they are worth recording because both
+      look correct on paper:
+    </p>
+  </div>
+  <div class="callout red">
+    <strong>Dead-end #1 — "evict the encoder after encoding."</strong> The encoder is only needed at the start, so
+    encode every prompt, then <code>pipe.text_encoder.to("cpu")</code> to free ~11 GB before denoising. It frees almost
+    nothing: <strong>MXFP4 quantized weights don't release on <code>.to("cpu")</code></strong>, and moving the module
+    flips <code>pipe._execution_device</code> to CPU (latents then try to allocate on CPU → a generator/device mismatch).
+  </div>
+  <div class="callout red">
+    <strong>Dead-end #2 — "catch the OOM and retry smaller."</strong> Wrapping generation in <code>try/except
+    OutOfMemoryError</code> and retrying at 1024 still OOMs on the retry. The caught exception's <strong>traceback keeps
+    the failed forward's tensors alive</strong>, so <code>empty_cache()</code> frees nothing. The retry only works if you
+    leave the <code>except</code> block first, then <code>gc.collect()</code> + <code>empty_cache()</code> before trying
+    again.
+  </div>
+  <div class="prose">
+    <p>
+      Both dead-ends point at the same conclusion: you cannot claw the 11 GB encoder back at runtime. If 1440 is going to
+      fit, the savings have to come from the only component still at full precision — the DiT.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     4. The FP8 fix
+============================================================ -->
+<section class="article-section" id="fix">
+  <h2 class="section-title">The fix: weight-only FP8 on the DiT</h2>
+  <div class="prose">
+    <p>
+      The text encoder is already 4-bit; there is nothing left to take there. The DiT, however, was running in
+      <strong>bf16 (~7.6 GB)</strong>. Quantizing it <strong>weight-only to FP8</strong> via <code>torchao</code>
+      (<code>diffusers</code> exposes this through <code>TorchAoConfig</code>) roughly halves it to <strong>~3.8 GB</strong>.
+      The 4090 has FP8 tensor cores, and weight-only FP8 uses native PyTorch ops — so it runs even though two of torchao's
+      Hopper-only prebuilt kernels fail to load (they aren't needed here).
+    </p>
+    <p>
+      That ~3.8 GB saving is far more than the ~1–2 GB by which 1440 was overshooting. The 1440 peak drops from ~27 GB
+      (OOM) to <strong>~23 GB</strong>, and Lens generates 1440 <strong>fully on the GPU, no offload</strong>. I wired it
+      into a <code>--quant_transformer</code> flag; the model's own attention already uses memory-efficient SDPA, so the
+      only change needed was the weight precision.
+    </p>
+    <pre><code>uv pip install torchao
+
+# 1440, no offload, on a 24 GB 4090 — FP8-quantized DiT + MXFP4 encoder
+python inference.py --prompt "..." \
+    --base_resolution 1440 --aspect_ratio 16:9 --steps 30 --cfg 4.5 \
+    --quant_transformer float8_weight_only        # NOTE: no --offload</code></pre>
+  </div>
+  <h3 style="font-family:'Inter',sans-serif;font-size:1.15rem;font-weight:700;color:var(--c-ink);margin:2rem 0 0.6rem;">The config matrix I settled on</h3>
+  <table class="variant-table">
+    <thead>
+      <tr><th>Resolution / goal</th><th>Recommended config (RTX 4090, 24 GB)</th><th>Peak VRAM</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>≤ 1024, fastest</td><td>no offload, bf16 DiT</td><td class="num">~23.7–24.0 GB</td></tr>
+      <tr class="hi"><td><strong>1440, no offload</strong></td><td><strong>--quant_transformer float8_weight_only</strong></td><td class="num">~22.9–23.4 GB</td></tr>
+      <tr><td>1440, bf16 fidelity</td><td>bf16 DiT + --offload</td><td class="num">fits (slower)</td></tr>
+      <tr><td>1440, bf16, no offload</td><td>not possible</td><td class="num">~27 GB → OOM</td></tr>
+    </tbody>
+  </table>
+  <div class="callout green">
+    <strong>Why this generalizes.</strong> Any model that hangs a big quantized LLM off a smaller bf16 denoiser has the
+    same shape: the encoder is already as small as it gets, so the headroom you need at high resolution has to come from
+    quantizing the <em>denoiser</em>. FP8 weight-only is the gentlest lever; <code>int8_weight_only</code> saves about the
+    same with similar quality, and <code>int4_weight_only</code> saves more but starts to cost output quality.
+  </div>
+</section>
+
+<!-- =========================================================
+     5. Category gallery (1024, no offload)
+============================================================ -->
+<section class="article-section" id="gallery">
+  <h2 class="section-title">What it actually produces — eight categories</h2>
+  <div class="prose">
+    <p>
+      Every image below was generated <strong>no offload at 1024</strong> (the peak-VRAM edge case), one per category, to
+      see where Lens is strong and where it isn't. Each caption is the exact <strong>configuration</strong> — base
+      resolution, aspect ratio, steps, cfg and seed — followed by the prompt. Same prompt + seed + config is reproducible.
+    </p>
+  </div>
+
+  <div class="example">
+    <div class="example-head"><h3>Photorealistic — portrait</h3><span class="tps-chip">Strong</span></div>
+    <p class="prompt-line">"Photorealistic studio portrait of an elderly fisherman with a deeply weathered face, white stubble, bright yellow rain hat, dramatic Rembrandt lighting, 85mm f/1.4, hyper-detailed skin pores, sharp catchlights"</p>
+    <figure class="figure full" style="margin:0;">
+      <img src="demo_assets/portrait_1024.png" alt="Photorealistic studio portrait of an elderly fisherman in a yellow rain hat" loading="lazy" />
+      <figcaption>1024 · 3:4 · 30 steps · cfg 5.0 · seed 12 · no offload</figcaption>
+    </figure>
+    <div class="commentary">
+      <h4>Honest take</h4>
+      <p>This is Lens at its best. Skin texture, the catchlights, the wet sheen on the hat — it reads as a real
+      photograph, with no tell-tale "AI plastic" skin. Portraits and faces are clearly a strength.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-head"><h3>Cinematic — sci-fi still</h3><span class="tps-chip amber">Good, minor prompt drift</span></div>
+    <p class="prompt-line">"Cinematic film still, wide anamorphic shot of a lone astronaut on a windswept red desert dune at dusk, two distant moons, teal-and-orange color grade, volumetric dust, lens flare, shot on ARRI Alexa"</p>
+    <figure class="figure full" style="margin:0;">
+      <img src="demo_assets/cinematic_1024.png" alt="Cinematic astronaut on a red desert dune at dusk with distant moons" loading="lazy" />
+      <figcaption>1024 · 2:1 · 28 steps · cfg 5.0 · seed 11 · no offload</figcaption>
+    </figure>
+    <div class="commentary">
+      <h4>Honest take</h4>
+      <p>The mood, grade and lens flare are spot-on and genuinely cinematic. One honest miss: the prompt said
+      <em>two</em> moons and the model rendered <strong>three</strong>. Exact counts are not Lens's strong suit — a known
+      failure mode of most T2I models.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-head"><h3>Landscape / nature</h3><span class="tps-chip amber">Looks painterly</span></div>
+    <p class="prompt-line">"A sweeping landscape photograph of an alpine valley at golden hour, turquoise river, snow-capped peaks, pine forest, grazing deer, soft mist, ultra-wide vista, National Geographic style"</p>
+    <figure class="figure full" style="margin:0;">
+      <img src="demo_assets/landscape_painterly.png" alt="An alpine valley at golden hour with a river, peaks and deer" loading="lazy" />
+      <figcaption>1024 · 16:9 · 30 steps · cfg 5.0 · seed 13 · no offload</figcaption>
+    </figure>
+    <div class="commentary">
+      <h4>Honest take</h4>
+      <p>Beautiful, but it reads as a <strong>digital painting</strong>, not a photo — soft, slightly illustrative
+      lighting. The phrase "National Geographic style" nudged it toward render territory. This one bugged me enough that I
+      reshot it properly later in the article (see <a href="#photoreal">the prompt lesson</a>).</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-head"><h3>Text / typography</h3><span class="tps-chip">Strong</span></div>
+    <p class="prompt-line">'A vintage hand-lettered coffee-shop chalkboard reading "THE DAILY GRIND" in ornate white serif, with "Fresh Roast - Open 7am" beneath, coffee-bean illustrations, realistic slate texture'</p>
+    <figure class="figure full" style="margin:0;">
+      <img src="demo_assets/text_chalkboard.png" alt="A chalkboard sign reading THE DAILY GRIND, Fresh Roast Open 7am" loading="lazy" />
+      <figcaption>1024 · 1:1 · 26 steps · cfg 5.0 · seed 14 · no offload</figcaption>
+    </figure>
+    <div class="commentary">
+      <h4>Honest take</h4>
+      <p>Text rendering is a real strength here — both lines are spelled correctly and the styling matches the brief. This
+      is where the GPT-OSS text encoder seems to earn its keep; many T2I models would garble at least one word.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-head"><h3>Comics</h3><span class="tps-chip">Strong</span></div>
+    <p class="prompt-line">'A vibrant comic-book panel, masked superhero in a blue-and-red suit leaping between rooftops at night, bold black outlines, halftone shading, a yellow speech bubble saying "Not on my watch!"'</p>
+    <figure class="figure full" style="margin:0;">
+      <img src="demo_assets/comics.png" alt="Comic-book panel of a superhero leaping with a Not on my watch speech bubble" loading="lazy" />
+      <figcaption>1024 · 4:3 · 26 steps · cfg 5.0 · seed 15 · no offload</figcaption>
+    </figure>
+    <div class="commentary">
+      <h4>Honest take</h4>
+      <p>Convincing comic styling — inks, halftones, dynamic pose — and the speech bubble text is correct. Short in-image
+      text plus a defined art style is clearly in Lens's comfort zone.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-head"><h3>Caricature</h3><span class="tps-chip">On-style</span></div>
+    <p class="prompt-line">"A humorous exaggerated caricature of a cheerful Italian chef, enormous bushy mustache, huge round cheeks, tiny body, oversized chef hat, holding steaming spaghetti, bold linework with watercolor shading"</p>
+    <figure class="figure full" style="margin:0;">
+      <img src="demo_assets/caricature.png" alt="Caricature of a cheerful Italian chef holding spaghetti" loading="lazy" />
+      <figcaption>1024 · 3:4 · 24 steps · cfg 5.0 · seed 16 · no offload</figcaption>
+    </figure>
+    <div class="commentary">
+      <h4>Honest take</h4>
+      <p>The exaggeration reads correctly as caricature rather than cartoon — proportions pushed, features inflated, line
+      and watercolor handling on point. A solid result with no special prompting tricks.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-head"><h3>Diagram / infographic</h3><span class="tps-chip">Surprisingly strong</span></div>
+    <p class="prompt-line">'A clean educational infographic of the water cycle, labelled "EVAPORATION", "CONDENSATION", "PRECIPITATION", "COLLECTION" with arrows in a circular flow, flat vector style, pastel palette'</p>
+    <figure class="figure full" style="margin:0;">
+      <img src="demo_assets/diagram.png" alt="A water-cycle infographic with four correctly spelled labels" loading="lazy" />
+      <figcaption>1024 · 3:2 · 26 steps · cfg 5.0 · seed 17 · no offload</figcaption>
+    </figure>
+    <div class="commentary">
+      <h4>Honest take</h4>
+      <p>All four labels are spelled correctly and placed on a coherent circular flow — unusual for a general T2I model,
+      which usually turns diagram labels into gibberish. Not a substitute for a design tool, but genuinely useful for
+      rough explainer visuals.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-head"><h3>Illustration</h3><span class="tps-chip">Strong</span></div>
+    <p class="prompt-line">"A whimsical children's-book watercolor of a small red fox reading a book under a glowing paper lantern in an autumn forest, soft brush strokes, warm orange-and-teal palette, fireflies, cozy storybook mood"</p>
+    <figure class="figure full" style="margin:0;">
+      <img src="demo_assets/illustration.png" alt="Watercolor illustration of a red fox reading under a lantern" loading="lazy" />
+      <figcaption>1024 · 1:1 · 22 steps · cfg 5.0 · seed 18 · no offload</figcaption>
+    </figure>
+    <div class="commentary">
+      <h4>Honest take</h4>
+      <p>Exactly the requested storybook watercolor — soft edges, warm palette, cohesive mood. Illustrative styles come
+      out reliably and need the fewest steps (22 was plenty).</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     6. 1440, no offload
+============================================================ -->
+<section class="article-section" id="hires">
+  <h2 class="section-title">1440 — fully on the GPU, no offload</h2>
+  <div class="prose">
+    <p>
+      With the FP8 DiT, the three categories that benefit most from resolution run at <strong>1440</strong> with the
+      encoder and denoiser both resident. Captions show the measured <strong>peak VRAM</strong> — all comfortably under
+      the 24 GB ceiling that bf16 blew past. The extra resolution shows: the portrait in particular gains real
+      micro-detail in the skin and beard versus its 1024 version above.
+    </p>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/portrait_1440.png" alt="Fisherman portrait at 1440 with FP8 DiT, no offload" loading="lazy" />
+      <figcaption>1440 · 3:4 · 30 steps · cfg 5.0 · FP8 DiT · peak 22.9 GB</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/landscape_1440.png" alt="Alpine valley at 1440 with FP8 DiT, no offload" loading="lazy" />
+      <figcaption>1440 · 16:9 · 30 steps · cfg 5.0 · FP8 DiT · peak 23.2 GB</figcaption>
+    </figure>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/cinematic_1440.png" alt="Cinematic astronaut at 1440 with FP8 DiT, no offload" loading="lazy" />
+      <figcaption>1440 · 2:1 · 28 steps · cfg 5.0 · FP8 DiT · peak 23.4 GB</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/greenhouse_1440.png" alt="A glowing glass greenhouse in a snowy forest at night, 1440 FP8" loading="lazy" />
+      <figcaption>1440 · 16:9 · 20 steps · cfg 5.0 · FP8 DiT · "a glass greenhouse glowing at night in a snowy forest"</figcaption>
+    </figure>
+  </div>
+  <div class="commentary">
+    <h4>Quantization quality check</h4>
+    <p>
+      Side by side with the bf16 1024 versions, I could not pick out an "FP8 look" — no banding, no color shift, no loss
+      of fine texture. For <strong>weight-only</strong> FP8 on a diffusion transformer that matches expectations: the
+      activations stay bf16, only the stored weights are 8-bit. The win is pure headroom, paid for with essentially no
+      visible quality.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     7. A prompt lesson
+============================================================ -->
+<section class="article-section" id="photoreal">
+  <h2 class="section-title">A prompt lesson: "photo" vs "painting"</h2>
+  <div class="prose">
+    <p>
+      The alpine landscape in the gallery came out painterly, and the culprit was the prompt. "National Geographic style"
+      reads to the model as <em>an aesthetic</em>, not <em>a camera</em>. Swapping the art language for concrete
+      <strong>photographic</strong> cues — a body, a lens, an aperture, "RAW photo", "high dynamic range", "no haze",
+      "extreme detail" — and nudging cfg down to <strong>4.5</strong> pushes Lens firmly into photoreal territory.
+    </p>
+  </div>
+  <div class="figure-grid">
+    <figure class="figure full">
+      <img src="demo_assets/landscape_painterly.png" alt="Painterly alpine valley landscape" loading="lazy" />
+      <figcaption>BEFORE · "...National Geographic style" · cfg 5.0 — reads as a painting</figcaption>
+    </figure>
+    <figure class="figure full">
+      <img src="demo_assets/landscape_photoreal.png" alt="Photorealistic mountain range with a mirror-still glacial lake" loading="lazy" />
+      <figcaption>AFTER · "RAW photo, Nikon D850, 24-70mm f/11, HDR, no haze" · cfg 4.5 — reads as a photo</figcaption>
+    </figure>
+  </div>
+  <p class="prompt-line">"A photorealistic landscape photograph of a rugged mountain range at sunrise, sharp granite peaks dusted with fresh snow, a still glacial lake mirroring the peaks, pine forest along the shore, crisp clear air with no haze, soft warm side light, extreme detail, high dynamic range, RAW photo shot on a Nikon D850 with a 24-70mm lens at f/11, professional nature photography"</p>
+  <div class="commentary">
+    <h4>The rule of thumb</h4>
+    <p>
+      For photorealism with Lens: name a <strong>camera + lens + aperture</strong>, say "RAW photo / photograph", add
+      "high dynamic range / extreme detail / no haze", and <strong>avoid</strong> the words "style", "art" and "painting".
+      A slightly lower cfg (~4.0–4.5) tends to look more natural for photos than the default 5.0+.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     8. Honest verdict
+============================================================ -->
+<section class="article-section" id="verdict">
+  <h2 class="section-title">Honest verdict</h2>
+  <div class="prose">
+    <p>
+      Lens is a genuinely strong text-to-image model that punches above its 3.8B size, and the GPT-OSS encoder clearly
+      pays off where it matters most: <strong>text rendering, labelled diagrams, and prompt following</strong> are all
+      better than I expected from a model this size. Portraits, illustration and comic styling are reliably good. Where it
+      stumbles is the usual T2I weak spot — <strong>exact object counts</strong> ("two moons" became three) — and, like any
+      model, it does what the prompt literally says, so vague aesthetic words can quietly steer you away from photorealism.
+    </p>
+    <p>
+      On hardware, the headline is the memory story. The 4-bit encoder is a clever way to ship a 20B conditioner, but it
+      also fixes ~11 GB of your budget in place. On a 24 GB 4090 that makes 1024 the comfortable no-offload ceiling out of
+      the box — and a one-line <strong>FP8 quantization of the DiT</strong> is what turns "1440 needs offload" into "1440
+      runs fully on the GPU," with no quality I could see. That is the most reusable takeaway here: when the encoder is
+      already quantized, quantize the <em>denoiser</em>.
+    </p>
+  </div>
+  <div class="callout">
+    <strong>Practical recipe.</strong> ≤1024 → plain no offload. 1440 → add
+    <code>--quant_transformer float8_weight_only</code> (no offload). Want bf16 fidelity at 1440 → use <code>--offload</code>
+    instead. For photos, prompt a camera and lens, not a "style".
+  </div>
+</section>
+
+<!-- =========================================================
+     References
+============================================================ -->
+<section class="article-section" id="refs">
+  <h2 class="section-title">References</h2>
+  <ul class="links">
+    <li><a href="https://huggingface.co/microsoft/Lens" target="_blank"><strong>Hugging Face</strong> — <code>microsoft/Lens</code></a> — the RL-tuned weights (plus <code>Lens-Turbo</code> and <code>Lens-Base</code>).</li>
+    <li><a href="https://github.com/microsoft/Lens" target="_blank"><strong>GitHub</strong> — <code>microsoft/Lens</code></a> — the minimal inference code (<code>inference.py</code>, the <code>lens</code> package).</li>
+    <li><a href="https://github.com/pytorch/ao" target="_blank"><strong>torchao</strong></a> — the weight-only FP8/int8 quantization used on the DiT, exposed via <code>diffusers</code>' <code>TorchAoConfig</code>.</li>
+    <li>Building blocks: the <strong>GPT-OSS</strong> text encoder (MXFP4) and the <strong>FLUX.2 VAE</strong> for latent decoding.</li>
+  </ul>
+</section>
+
+</div><!-- /container -->
+
+<footer class="page-footer">
+  <div class="inner">
+    <a class="back-to-blog" href="../index.html">
+      <span class="arrow">←</span>
+      <span>Back to the blog</span>
+    </a>
+    <p>Hardware: 1 × NVIDIA RTX 4090 (24 GiB, sm_89), Pop!_OS 22.04.<br />
+       Software: Lens 3.8B (Microsoft), GPT-OSS-20B MXFP4 encoder + FLUX.2 VAE, diffusers 0.38, transformers 5.8, torch 2.11+cu126, torchao FP8.<br />
+       Article by Omar Kamal Hosney · 2026-06-07</p>
+    <div class="social">
+      <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn">in</a>
+      <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium">M</a>
+      <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub">gh</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
