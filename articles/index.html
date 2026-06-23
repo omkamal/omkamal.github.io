@@ -50,6 +50,17 @@
     "blogPost": [
       {
         "@type": "BlogPosting",
+        "headline": "LinearRAG on a single RTX 4090 — relation-free GraphRAG, hands-on",
+        "url": "https://omkamal.github.io/articles/linearrag/linearrag.html",
+        "image": "https://omkamal.github.io/articles/linearrag/demo_assets/hero.png",
+        "datePublished": "2026-06-22",
+        "dateModified": "2026-06-22",
+        "author": { "@type": "Person", "name": "Omar Kamal Hosney" },
+        "keywords": "LinearRAG, GraphRAG, relation-free, Tri-Graph, semantic bridging, Personalized PageRank, multi-hop reasoning, spaCy NER, sentence embeddings, gpt-5-mini, vectorized retrieval, RTX 4090, ICLR 2026",
+        "description": "A hands-on field test of LinearRAG (ICLR 2026): a relation-free GraphRAG that builds its Tri-Graph with zero LLM tokens, then does single-pass multi-hop retrieval via semantic bridging and Personalized PageRank — run end-to-end on one 24 GB RTX 4090 with gpt-5-mini."
+      },
+      {
+        "@type": "BlogPosting",
         "headline": "Boogu-Image on a single RTX 4090 — the Edit and Turbo models, hands-on",
         "url": "https://omkamal.github.io/articles/boogu-image/boogu-image.html",
         "image": "https://omkamal.github.io/articles/boogu-image/demo_assets/illus_hero.png",
@@ -667,21 +678,21 @@
     </div>
 
     <section class="featured" aria-label="Featured article">
-      <a href="boogu-image/boogu-image.html" class="featured-card">
+      <a href="linearrag/linearrag.html" class="featured-card">
         <div class="featured-visual">
-          <img src="boogu-image/demo_assets/illus_hero.png" alt="Boogu-Image concept: one engine that both perceives (an eye) and paints (a brush), running on an RTX 4090" loading="lazy" />
-          <span class="overlay-emoji">🎨</span>
+          <img src="linearrag/demo_assets/hero.png" alt="The LinearRAG Tri-Graph: stacked layers of entity, sentence and passage nodes forming a relation-free knowledge graph on an RTX 4090" loading="lazy" />
+          <span class="overlay-emoji">🕸️</span>
         </div>
         <div class="featured-body">
           <span class="featured-tag">⭐ Featured · Latest</span>
-          <p class="featured-meta"><span>AI Models</span><span>Field Notes</span><span>June 2026</span><span>14 min read</span></p>
-          <h2>Boogu-Image — the Edit and Turbo models, hands-on a 4090</h2>
+          <p class="featured-meta"><span>AI Models</span><span>Field Notes</span><span>June 2026</span><span>9 min read</span></p>
+          <h2>LinearRAG — relation-free GraphRAG, hands-on a 4090</h2>
           <p>
-            The Apache-2.0 <strong>10B unified</strong> image model on a 24 GB 4090: instruction-based
-            <strong>photo editing</strong> and a <strong>4-step Turbo</strong> text-to-image. Install with
-            screenshots, prompt/config galleries with per-image notes, and the honest edit-mode story —
-            blur, OOM, <strong>group offload</strong>, and the steps/CFG/<strong>identity-adherence</strong>
-            experiments.
+            <strong>GraphRAG without relation extraction.</strong> LinearRAG (ICLR 2026) builds its
+            <strong>Tri-Graph</strong> with <strong>zero LLM tokens</strong> — just NER and embeddings — then does
+            single-pass multi-hop retrieval via <strong>semantic bridging</strong> and <strong>Personalized
+            PageRank</strong>. Animated walkthroughs, three real multi-hop examples, and an end-to-end 4090 run where
+            <code>gpt-5-mini</code> took the demo to a perfect score.
           </p>
           <span class="featured-cta">Read the article <span class="arrow">→</span></span>
         </div>
@@ -690,6 +701,23 @@
 
     <p class="section-label">More articles</p>
     <div class="article-grid">
+      <a href="boogu-image/boogu-image.html" class="article-card" data-category="ai-models">
+        <div class="article-thumb">
+          <span class="emoji">🎨</span>
+        </div>
+        <div class="article-body">
+          <h3>Boogu-Image — the Edit and Turbo models, hands-on a 4090</h3>
+          <p>
+            The Apache-2.0 <strong>10B unified</strong> image model on a 24 GB 4090: instruction-based
+            <strong>photo editing</strong> and a <strong>4-step Turbo</strong> text-to-image — install with
+            screenshots, prompt/config galleries, and the honest blur/OOM/<strong>group offload</strong> and
+            steps/CFG/identity story.
+          </p>
+          <div class="article-meta">
+            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>June 2026</span>
+          </div>
+        </div>
+      </a>
       <a href="lens/lens.html" class="article-card" data-category="ai-models">
         <div class="article-thumb">
           <span class="emoji">🔭</span>

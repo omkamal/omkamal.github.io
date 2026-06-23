@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinearRAG on a single RTX 4090 — relation-free GraphRAG, hands-on</title>
+<meta name="description" content="A hands-on field test of LinearRAG (ICLR 2026): a relation-free GraphRAG that builds its graph with zero LLM tokens. The Tri-Graph, two-stage retrieval (semantic bridging + Personalized PageRank), three real multi-hop examples, and running it end-to-end on one 24 GB RTX 4090 — install, GPU vectorized retrieval, gpt-5-mini results and the demo UI." />
+<meta name="keywords" content="LinearRAG, GraphRAG, relation-free, RAG, retrieval-augmented generation, Tri-Graph, semantic bridging, Personalized PageRank, PPR, multi-hop reasoning, 2WikiMultiHop, spaCy NER, sentence embeddings, all-mpnet-base-v2, gpt-5-mini, vectorized retrieval, sparse matrix, RTX 4090, ICLR 2026" />
+<meta name="author" content="Omar Kamal Hosney" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://omkamal.github.io/articles/linearrag/linearrag.html" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Omar Kamal Hosney" />
+<meta property="og:url" content="https://omkamal.github.io/articles/linearrag/linearrag.html" />
+<meta property="og:title" content="LinearRAG on a single RTX 4090 — relation-free GraphRAG, hands-on" />
+<meta property="og:description" content="A relation-free GraphRAG that builds its graph with zero LLM tokens: the Tri-Graph, semantic bridging + Personalized PageRank, three real multi-hop examples, and an end-to-end run on a 24 GB 4090 with gpt-5-mini." />
+<meta property="og:image" content="https://omkamal.github.io/articles/linearrag/demo_assets/hero.png" />
+<meta property="article:author" content="Omar Kamal Hosney" />
+<meta property="article:published_time" content="2026-06-22" />
+<meta property="article:section" content="AI Models" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="LinearRAG on a single RTX 4090 — relation-free GraphRAG, hands-on" />
+<meta name="twitter:description" content="GraphRAG without relation extraction: a Tri-Graph built with zero LLM tokens, semantic bridging + PPR for single-pass multi-hop retrieval, run end-to-end on a 24 GB 4090." />
+<meta name="twitter:image" content="https://omkamal.github.io/articles/linearrag/demo_assets/hero.png" />
+
+<link rel="icon" type="image/jpeg" href="../../omar.jpeg" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "LinearRAG on a single RTX 4090 — relation-free GraphRAG, hands-on",
+  "description": "A hands-on field test of LinearRAG (ICLR 2026): a relation-free GraphRAG that builds its graph with zero LLM tokens. The Tri-Graph, two-stage retrieval (semantic bridging + Personalized PageRank), three real multi-hop examples, and running it end-to-end on one 24 GB RTX 4090.",
+  "image": "https://omkamal.github.io/articles/linearrag/demo_assets/hero.png",
+  "datePublished": "2026-06-22",
+  "dateModified": "2026-06-22",
+  "author": { "@type": "Person", "name": "Omar Kamal Hosney", "url": "https://omkamal.github.io/" },
+  "publisher": { "@type": "Person", "name": "Omar Kamal Hosney" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://omkamal.github.io/articles/linearrag/linearrag.html" },
+  "articleSection": "AI Models",
+  "keywords": "LinearRAG, GraphRAG, relation-free, Tri-Graph, semantic bridging, Personalized PageRank, multi-hop reasoning, spaCy NER, sentence embeddings, gpt-5-mini, vectorized retrieval, RTX 4090, ICLR 2026",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omkamal.github.io/articles/" },
+      { "@type": "ListItem", "position": 3, "name": "LinearRAG on a 4090", "item": "https://omkamal.github.io/articles/linearrag/linearrag.html" }
+    ]
+  }
+}
+</script>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root {
+  --c-ink: #18181b;
+  --c-ink-soft: #27272a;
+  --c-prose: #3f3f46;
+  --c-muted: #71717a;
+  --c-mute-2: #a1a1aa;
+  --c-paper: #fafaf9;
+  --c-paper-2: #ffffff;
+  --c-line: #e7e5e4;
+  --c-line-soft: #f1f0ee;
+  --c-accent: #7c3aed;
+  --c-accent-2: #ec4899;
+  --c-accent-3: #f59e0b;
+  --c-accent-soft: #faf5ff;
+  --c-accent-line: #e9d5ff;
+  --c-blue: #2563eb;
+  --c-blue-soft: #eff6ff;
+  --c-blue-line: #bfdbfe;
+  --c-green: #16a34a;
+  --c-green-soft: #f0fdf4;
+  --c-green-line: #bbf7d0;
+  --c-warn: #b45309;
+  --c-warn-soft: #fffbeb;
+  --c-warn-line: #fde68a;
+  --c-red: #dc2626;
+  --c-red-soft: #fef2f2;
+  --c-red-line: #fecaca;
+  --c-code-bg: #0f172a;
+  --c-code-fg: #e2e8f0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 24px 56px -16px rgba(15, 23, 42, 0.18), 0 8px 20px -6px rgba(15, 23, 42, 0.08);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { font-family: 'Source Serif 4', Charter, Georgia, 'Times New Roman', serif; font-size: 18px; line-height: 1.75; color: var(--c-prose); background: var(--c-paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--c-accent); color: white; }
+
+.top-nav { position: sticky; top: 0; z-index: 50; background: rgba(250, 250, 249, 0.85); backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px); border-bottom: 1px solid var(--c-line); }
+.nav-inner { max-width: 1180px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 12px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--c-ink); text-decoration: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-accent) 100%); display: grid; place-items: center; font-weight: 800; font-size: 0.78rem; color: white; box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.4); }
+.nav-right { display: flex; gap: 4px; align-items: center; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+.nav-right a { color: var(--c-muted); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 500; transition: all 0.2s var(--ease); }
+.nav-right a:hover { color: var(--c-ink); background: rgba(0,0,0,0.04); }
+.nav-right a.active { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.hero { position: relative; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #4c1d95 100%); color: #e2e8f0; padding: 80px 0 100px; margin-bottom: -60px; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.35), transparent 50%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.30), transparent 50%), radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.10), transparent 60%); }
+.hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); pointer-events: none; }
+.hero-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 32px; }
+.crumbs { font-family: 'Inter', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; color: rgba(226, 232, 240, 0.65); margin-bottom: 22px; }
+.crumbs a { color: rgba(226, 232, 240, 0.85); text-decoration: none; border-bottom: 1px solid rgba(226, 232, 240, 0.3); transition: all 0.2s var(--ease); }
+.crumbs a:hover { color: white; border-bottom-color: white; }
+.crumbs .sep { margin: 0 0.5em; opacity: 0.4; }
+.article-header { margin: 0; padding: 0; border: 0; }
+.byline { display: inline-flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: #c4b5fd; padding: 5px 12px; background: rgba(168, 85, 247, 0.18); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50px; margin-bottom: 28px; }
+.byline span + span::before { content: "·"; opacity: 0.6; margin: 0 0.25rem; color: #c4b5fd; }
+h1 { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2.2rem, 4.8vw, 3.6rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.03em; color: #ffffff; margin: 0 0 22px; max-width: 880px; }
+.subtitle { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(1.05rem, 1.6vw, 1.28rem); line-height: 1.55; color: rgba(226, 232, 240, 0.82); font-style: italic; margin: 0; max-width: 720px; }
+.subtitle code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85em; font-style: normal; background: rgba(255, 255, 255, 0.12); padding: 2px 8px; border-radius: 5px; color: #fde68a; border: 1px solid rgba(255, 255, 255, 0.08); }
+
+.container { max-width: 980px; margin: 0 auto; padding: 100px 32px 80px; position: relative; z-index: 2; }
+
+.tldr { background: linear-gradient(135deg, #ffffff 0%, var(--c-accent-soft) 100%); border: 1px solid var(--c-accent-line); border-left: 4px solid var(--c-accent); padding: 26px 30px; border-radius: 0 16px 16px 0; margin: 0 0 60px; box-shadow: var(--shadow-md); }
+.tldr h3 { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-accent); margin: 0 0 12px; }
+.tldr p { font-size: 1.05rem; color: var(--c-ink-soft); margin: 0 0 0.8rem; text-align: justify; hyphens: auto; }
+.tldr p:last-child { margin-bottom: 0; }
+.tldr strong { color: var(--c-ink); font-weight: 700; }
+.tldr code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(255,255,255,0.7); border: 1px solid var(--c-accent-line); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); }
+
+.toc { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; color: var(--c-prose); padding: 22px 28px; margin: 0 0 80px; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 16px; line-height: 2.1; box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: center; }
+.toc strong { display: inline-flex; align-items: center; gap: 7px; color: var(--c-ink); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; padding-right: 14px; margin-right: 6px; border-right: 1px solid var(--c-line); }
+.toc strong::before { content: ''; width: 3px; height: 14px; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+.toc a { color: var(--c-prose); text-decoration: none; padding: 4px 11px; border-radius: 50px; transition: all 0.2s var(--ease); font-weight: 500; }
+.toc a:hover { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.article-section { margin-bottom: 80px; scroll-margin-top: 80px; }
+.section-title { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(1.65rem, 3vw, 2.15rem); font-weight: 700; color: var(--c-ink); margin: 0 0 28px; letter-spacing: -0.025em; line-height: 1.18; position: relative; padding-left: 18px; }
+.section-title::before { content: ''; position: absolute; left: 0; top: 0.18em; width: 5px; height: 0.85em; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 3px; }
+
+.prose { max-width: 100%; margin-bottom: 36px; font-size: 1.06rem; line-height: 1.78; text-align: justify; hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty; }
+.prose p { margin: 0 0 1.25rem; color: var(--c-prose); text-align: justify; hyphens: auto; }
+.prose h3 { text-align: left; hyphens: manual; }
+.prose ul, .prose ol { text-align: left; hyphens: manual; margin: 0 0 1.25rem 1.2rem; }
+.prose li { margin-bottom: 0.4rem; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--c-ink); font-weight: 600; }
+.prose em { color: var(--c-ink-soft); }
+.prose code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.86em; background: var(--c-accent-soft); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); border: 1px solid var(--c-accent-line); font-weight: 500; }
+.prose a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--c-accent-line); transition: all 0.2s var(--ease); }
+.prose a:hover { text-decoration-color: var(--c-accent); text-decoration-thickness: 2px; }
+.prose h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--c-ink); margin: 2.2rem 0 0.8rem; letter-spacing: -0.015em; display: flex; align-items: center; gap: 10px; }
+.prose h3::before { content: ''; width: 22px; height: 2px; background: linear-gradient(90deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+
+.prose pre { background: var(--c-code-bg); color: var(--c-code-fg); padding: 44px 26px 22px; border-radius: 12px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85rem; line-height: 1.65; overflow-x: auto; margin: 22px 0; border: 1px solid #1e293b; box-shadow: var(--shadow-lg); position: relative; }
+.prose pre::before { content: ''; position: absolute; top: 14px; left: 18px; width: 11px; height: 11px; border-radius: 50%; background: #ef4444; box-shadow: 18px 0 0 #f59e0b, 36px 0 0 #10b981; opacity: 0.7; }
+.prose pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; border: 0; font-weight: 400; }
+
+.callout { background: var(--c-warn-soft); border: 1px solid var(--c-warn-line); border-left: 4px solid var(--c-accent-3); padding: 16px 22px; border-radius: 0 12px 12px 0; margin: 22px 0; font-size: 0.98rem; line-height: 1.7; color: var(--c-ink-soft); position: relative; box-shadow: var(--shadow-sm); text-align: justify; hyphens: auto; }
+.callout.green { background: var(--c-green-soft); border-color: var(--c-green-line); border-left-color: var(--c-green); }
+.callout.red { background: var(--c-red-soft); border-color: var(--c-red-line); border-left-color: var(--c-red); }
+.callout.blue { background: var(--c-blue-soft); border-color: var(--c-blue-line); border-left-color: var(--c-blue); }
+.callout strong { color: var(--c-ink); }
+.callout code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--c-warn); padding: 1.5px 6px; border-radius: 4px; }
+.callout.green code { background: rgba(22, 163, 74, 0.12); border-color: rgba(22, 163, 74, 0.3); color: var(--c-green); }
+.callout.red code { background: rgba(220, 38, 38, 0.10); border-color: rgba(220, 38, 38, 0.3); color: var(--c-red); }
+.callout.blue code { background: rgba(37, 99, 235, 0.10); border-color: rgba(37,99,235,0.3); color: var(--c-blue); }
+
+.variant-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 22px 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.88rem; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); }
+.variant-table th, .variant-table td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--c-line-soft); vertical-align: top; }
+.variant-table th { background: linear-gradient(180deg, #fafafa, #f5f5f4); font-weight: 700; color: var(--c-ink); letter-spacing: 0.02em; font-size: 0.74rem; text-transform: uppercase; }
+.variant-table tbody tr:last-child td { border-bottom: 0; }
+.variant-table tbody tr:hover td { background: var(--c-accent-soft); }
+.variant-table td { color: var(--c-prose); }
+.variant-table td strong { color: var(--c-ink); }
+.variant-table td.num { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+.variant-table tr.hi td { background: var(--c-green-soft); }
+.variant-table tr.hi:hover td { background: var(--c-green-soft); }
+
+.figure { margin: 28px auto; text-align: center; display: block; }
+.figure img, .figure video { width: 100%; max-width: 100%; height: auto; border-radius: 14px; display: block; margin-left: auto; margin-right: auto; border: 1px solid var(--c-line); box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); background: var(--c-paper-2); }
+.figure video { background: #000; }
+.figure img:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); border-color: var(--c-accent-line); }
+.figure figcaption { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; color: var(--c-mute-2); margin: 10px auto 0; letter-spacing: 0.02em; text-align: center; max-width: 85%; }
+.figure.full img { background: white; }
+.figure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px auto; justify-items: center; align-items: start; }
+.figure-grid .figure { margin: 0; width: 100%; }
+
+.example { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 18px; padding: 28px 30px; margin: 26px 0 36px; box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); }
+.example:hover { box-shadow: var(--shadow-lg); border-color: var(--c-accent-line); }
+.example-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1px solid var(--c-line-soft); flex-wrap: wrap; }
+.example-head h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--c-ink); margin: 0; letter-spacing: -0.018em; }
+.tps-chip { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; font-weight: 700; padding: 6px 14px; border-radius: 50px; color: white; background: linear-gradient(135deg, var(--c-green) 0%, #15803d 100%); box-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.35); }
+.tps-chip.amber { background: linear-gradient(135deg, var(--c-accent-3) 0%, var(--c-warn) 100%); box-shadow: 0 4px 12px -2px rgba(180, 83, 9, 0.35); }
+.tps-chip.fire { background: linear-gradient(135deg, var(--c-accent-2) 0%, #be185d 100%); box-shadow: 0 4px 12px -2px rgba(190, 24, 93, 0.35); }
+.tps-chip.blue { background: linear-gradient(135deg, var(--c-blue) 0%, #1d4ed8 100%); box-shadow: 0 4px 12px -2px rgba(37,99,235,0.35); }
+.prompt-line { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: var(--c-paper); border: 1px solid var(--c-line); border-left: 3px solid var(--c-accent); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 0 0 18px; color: var(--c-ink-soft); line-height: 1.5; }
+
+.commentary { margin-top: 24px; padding: 20px 22px; background: var(--c-blue-soft); border: 1px solid var(--c-blue-line); border-left: 4px solid var(--c-blue); border-radius: 0 12px 12px 0; }
+.commentary h4 { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-blue); margin: 0 0 10px; display: inline-flex; align-items: center; gap: 7px; }
+.commentary h4::before { content: '💡'; font-size: 1.05em; }
+.commentary p { font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); margin: 0; text-align: justify; hyphens: auto; }
+.commentary code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: rgba(37, 99, 235, 0.1); padding: 1.5px 6px; border-radius: 4px; color: var(--c-blue); border: 1px solid var(--c-blue-line); font-weight: 500; }
+.commentary strong { color: var(--c-ink); }
+
+.links { padding-left: 20px; max-width: 100%; }
+.links li { margin-bottom: 10px; line-height: 1.6; }
+.links li code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: var(--c-paper); border: 1px solid var(--c-line); padding: 1px 6px; border-radius: 4px; color: var(--c-ink-soft); }
+
+.page-footer { border-top: 1px solid var(--c-line); padding: 60px 0 80px; text-align: center; background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.03)); }
+.page-footer .inner { max-width: 980px; margin: 0 auto; padding: 0 32px; font-family: 'Inter', sans-serif; }
+.back-to-blog { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-2) 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 24px -6px rgba(124, 58, 237, 0.5); transition: all 0.3s var(--ease); margin-bottom: 32px; }
+.back-to-blog:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(124, 58, 237, 0.65); }
+.back-to-blog .arrow { transition: transform 0.3s var(--ease); }
+.back-to-blog:hover .arrow { transform: translateX(-4px); }
+.page-footer p { color: var(--c-muted); font-size: 0.88rem; margin-bottom: 18px; }
+.social { display: flex; justify-content: center; gap: 12px; }
+.social a { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: var(--c-paper-2); border: 1px solid var(--c-line); color: var(--c-muted); text-decoration: none; transition: all 0.3s var(--ease); font-family: 'Inter', sans-serif; font-weight: 700; }
+.social a:hover { color: var(--c-accent); border-color: var(--c-accent-line); background: var(--c-accent-soft); transform: translateY(-2px); }
+
+@media (max-width: 900px) {
+  .hero { padding: 60px 0 80px; }
+  .hero-inner { padding: 0 20px; }
+  .container { padding: 80px 20px 60px; }
+  .nav-inner { padding: 12px 20px; }
+  h1 { font-size: 2rem; }
+  .section-title { font-size: 1.55rem; }
+  .figure-grid { grid-template-columns: 1fr; }
+  .example { padding: 22px 22px; border-radius: 14px; }
+  .toc { padding: 18px 20px; font-size: 0.8rem; gap: 6px; }
+  .toc strong { border-right: 0; margin-bottom: 4px; padding-right: 0; width: 100%; }
+  .nav-right a { padding: 6px 10px; font-size: 0.82rem; }
+}
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .prose { font-size: 1.02rem; }
+  .nav-right a:not(.active) { display: none; }
+}
+</style>
+
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">OK</span>
+      <span>Omar Kamal Hosney</span>
+    </a>
+    <div class="nav-right">
+      <a href="../../cheatsheets/index.html">Cheatsheets</a>
+      <a href="../index.html" class="active">Blog</a>
+      <a href="../../resume.html" target="_blank">Resume</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="crumbs">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="../index.html">Blog</a>
+      <span class="sep">/</span>
+      AI Models
+    </p>
+    <div class="article-header">
+      <p class="byline"><span>LinearRAG</span><span>Field Notes</span><span>June 2026</span></p>
+      <h1>LinearRAG on a single RTX 4090: relation-free GraphRAG, hands-on</h1>
+      <p class="subtitle"><strong>LinearRAG</strong> (ICLR 2026) builds a reasoning graph over your documents using
+      only entity recognition and embeddings — <strong>zero LLM tokens</strong> at build time. No brittle relation
+      extraction, just a <em>Tri-Graph</em> and a two-stage retrieval that does multi-hop reasoning in a single pass.
+      I ran the whole thing end-to-end on one 24 GB <code>RTX 4090</code> — here is how it works, three real
+      multi-hop examples, and the honest setup story with <code>gpt-5-mini</code>.</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- HERO ILLUSTRATION -->
+<figure class="figure full" style="margin: 0 0 60px;">
+  <img src="demo_assets/hero.png" alt="The LinearRAG Tri-Graph: three stacked layers of nodes — blue entities on top, violet sentences in the middle, green passages at the bottom — connected into a tidy knowledge graph" loading="lazy" />
+  <figcaption>The LinearRAG Tri-Graph — entities (blue), sentences (violet) and passages (green), built with no LLM relation extraction</figcaption>
+</figure>
+
+<!-- TL;DR -->
+<div class="tldr">
+  <h3>TL;DR</h3>
+  <p>
+    Conventional <strong>GraphRAG</strong> asks an LLM to read every passage and extract relation triples. That is
+    expensive and noisy — extractors misread facts (<em>"Einstein did not win the Nobel"</em> becomes
+    <em>"Einstein won Nobel"</em>) and never reconcile triples across the corpus. <strong>LinearRAG</strong>'s claim
+    is blunt: explicit relation extraction is <em>unnecessary</em>. Shared <strong>entities</strong> are the anchors
+    that connect passages, and the relationships are already preserved, in context, in the original text.
+  </p>
+  <p>
+    So LinearRAG builds a relation-free <strong>Tri-Graph</strong> — entity, sentence and passage nodes — using only
+    <strong>spaCy NER</strong> and <strong>sentence embeddings</strong>. <strong>No LLM is called during
+    construction</strong>, so indexing scales linearly with the corpus and costs zero tokens. Retrieval is two
+    stages: <strong>semantic bridging</strong> spreads activation from query entities through shared sentences to
+    multi-hop "bridge" entities, then <strong>Personalized PageRank</strong> ranks the passages.
+  </p>
+  <p>
+    On a 24 GB 4090 it runs comfortably: GPU sentence embeddings, an optional <code>--use_vectorized_retrieval</code>
+    sparse-matrix path, and an answer model of your choice. Swapping the reader from <code>gpt-4o-mini</code> to
+    <code>gpt-5-mini</code> took my 12-question demo from <strong>0.67 → 1.00</strong> LLM-judge accuracy on the same
+    retrieved passages. The one real cost is a one-time CPU spaCy NER pass at index time — cached afterward.
+  </p>
+</div>
+
+<!-- TOC -->
+<nav class="toc" aria-label="Table of contents">
+  <strong>Contents</strong>
+  <a href="#what">What it is</a>
+  <a href="#why">Why GraphRAG breaks</a>
+  <a href="#trigraph">The Tri-Graph</a>
+  <a href="#retrieval">Two-stage retrieval</a>
+  <a href="#examples">Three worked examples</a>
+  <a href="#run">Running it on a 4090</a>
+  <a href="#modes">Modes &amp; results</a>
+  <a href="#verdict">Honest verdict</a>
+  <a href="#refs">References</a>
+</nav>
+
+<!-- 1. What it is -->
+<section class="article-section" id="what">
+  <h2 class="section-title">What LinearRAG is, in plain words</h2>
+  <div class="prose">
+    <p>
+      Retrieval-augmented generation grounds a language model in your own documents so it hallucinates less. That is
+      easy when the answer sits in one passage. It gets hard on <strong>multi-hop</strong> questions — <em>"when did
+      the performer of this song's mother die?"</em> — where the evidence is scattered across several documents and
+      no single chunk holds the answer.
+    </p>
+    <p>
+      <strong>GraphRAG</strong> tackles this by building a knowledge graph: entities become nodes, and the
+      relationships between them become edges, so retrieval can walk multiple hops. The standard recipe builds those
+      edges by having an LLM read each passage and emit structured <em>relation triples</em>. LinearRAG keeps the
+      graph idea but throws away the relation extraction — and with it, the cost and the noise.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/insight.png" alt="Two passage cards joined by one shared, glowing entity node, with a caption noting that relations stay in the text" loading="lazy" />
+      <figcaption>The key insight: shared entities are the anchors that connect passages — the relations stay in the original text</figcaption>
+    </figure>
+    <div class="callout blue">
+      <strong>The one-sentence version.</strong> Don't ask an LLM to <em>extract</em> relationships into a graph at
+      build time; let entities link the passages, keep the original sentences, and let the LLM <em>interpret</em> the
+      relationships at answer time, when it reads the retrieved text.
+    </div>
+  </div>
+</section>
+
+<!-- 2. Why GraphRAG breaks -->
+<section class="article-section" id="why">
+  <h2 class="section-title">Why conventional GraphRAG breaks</h2>
+  <div class="prose">
+    <p>
+      The LinearRAG paper opens with an uncomfortable finding: on many real tasks, GraphRAG systems
+      <em>underperform</em> plain vanilla RAG. The culprit is the automatically-constructed graph, which fails in two
+      distinct ways.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/graphrag-noisy.png" alt="A knowledge graph of entity nodes connected by labeled relation edges, with several edges marked by red warning triangles to indicate noisy, error-prone LLM extraction" loading="lazy" />
+      <figcaption>LLM-extracted relation edges are error-prone — wrong triples (red) corrupt the graph and mislead retrieval</figcaption>
+    </figure>
+    <p>
+      <strong>Local inaccuracy.</strong> Relation extraction routinely misreads the text. Negations get dropped,
+      compositional clauses get flattened into a single atomic triple, and the meaning inverts. Every wrong triple is
+      a wrong edge that quietly distorts retrieval.
+    </p>
+    <p>
+      <strong>Global inconsistency.</strong> Triples are extracted from each passage in isolation, with no mechanism
+      to reconcile them corpus-wide. The same entity ends up linked inconsistently across documents, and redundant or
+      contradictory edges accumulate. Bottom-up community clustering on top of a noisy graph only propagates the
+      errors upward.
+    </p>
+    <div class="callout red">
+      <strong>And it isn't cheap.</strong> Every passage in the corpus has to pass through the LLM extractor, so the
+      token bill — and the indexing time — grows with corpus size. LinearRAG's pitch is that you are paying that bill
+      to make retrieval <em>worse</em>.
+    </div>
+  </div>
+</section>
+
+<!-- 3. The Tri-Graph -->
+<section class="article-section" id="trigraph">
+  <h2 class="section-title">The Tri-Graph — built with zero LLM tokens</h2>
+  <div class="prose">
+    <p>
+      LinearRAG constructs a three-layer graph it calls the <strong>Tri-Graph</strong>. There are three kinds of
+      nodes — <strong>entity</strong>, <strong>sentence</strong> and <strong>passage</strong> — and just two relations
+      between them: a <em>contain</em> edge when a passage holds an entity, and a <em>mention</em> edge when a
+      sentence mentions one. The diagram below lays out all three layers at once.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/trigraph.png" alt="Diagram of the Tri-Graph: a blue entity layer, a violet sentence layer and a green passage layer, joined by labeled contain and mention edges, with a 'zero LLM tokens' badge" loading="lazy" />
+      <figcaption>The Tri-Graph — entity / sentence / passage layers joined by contain &amp; mention edges, with the relation words living on the sentence pills, not on graph edges</figcaption>
+    </figure>
+    <p>
+      Construction uses only two cheap, deterministic tools: <strong>spaCy NER</strong> to pull entities out of every
+      passage and sentence, and a <strong>sentence-transformer</strong> to embed the text. No language model is
+      involved, so there is no token cost and the work is linear in the corpus size. The embeddings are cached to
+      parquet, so re-indexing only touches new documents.
+    </p>
+    <pre><code># Construction = spaCy NER + sentence embeddings. No LLM, no relation triples.
+ner = SpacyNER("en_core_web_trf")
+passage_entities, sentence_entities = ner.batch_ner(passages, max_workers)
+
+# contain edges: passage -> entity  (weighted by normalized mention count)
+for passage, entities in passage_entities.items():
+    for ent in entities:
+        graph.add_edge(passage, ent, weight=count(ent) / total)
+
+# mention edges: sentence &lt;-&gt; entity  (these drive multi-hop bridging)
+for sentence, entities in sentence_entities.items():
+    for ent in entities:
+        entity_to_sentence[ent].add(sentence)</code></pre>
+    <div class="callout green">
+      <strong>Why it scales.</strong> Because the two relations are just sparse <em>contain</em> and <em>mention</em>
+      matrices, the index is linear in time and space — and the paper reports cutting indexing time by over
+      <strong>77%</strong> versus relation-extraction GraphRAG, while keeping every original passage as a lossless
+      knowledge carrier.
+    </div>
+  </div>
+</section>
+
+<!-- 4. Two-stage retrieval -->
+<section class="article-section" id="retrieval">
+  <h2 class="section-title">Two-stage retrieval: bridging, then PageRank</h2>
+  <div class="prose">
+    <p>
+      With the graph built, answering a question is two stages. The first is the clever part —
+      <strong>relevant entity activation via semantic bridging</strong> — and it is how LinearRAG does multi-hop
+      reasoning <em>without</em> any explicit relation edges.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/bridging.png" alt="Diagram of semantic bridging: a query activates a seed entity, the path runs through shared sentence pills to light up bridge entities (one weak branch pruned below threshold), then feeds a PageRank-ranked list of passages" loading="lazy" />
+      <figcaption>The two-stage flow — activation bridges from the query seed through shared sentences to multi-hop "bridge" entities (weak paths pruned), then Personalized PageRank ranks the passages</figcaption>
+    </figure>
+    <p>
+      The query's entities are matched to <strong>seed</strong> entity nodes. Activation then spreads hop by hop: a
+      lit entity activates the sentences that mention it; the sentence most relevant to the query (by embedding
+      similarity) lights up; and the <em>other</em> entities in that sentence become newly-activated
+      <strong>bridge</strong> entities. A threshold prunes weak paths, and after a few iterations you have a small,
+      query-focused set of entities — the multi-hop chain — without ever consulting a relation edge.
+    </p>
+    <p>
+      Stage two is <strong>global importance aggregation via Personalized PageRank</strong>. The activated entities
+      seed a PPR run over the passage–entity subgraph, with a hybrid initialization that blends each passage's direct
+      similarity to the query with the evidence accumulated from its entities. The top-ranked passages go to the LLM,
+      which reads them and writes the answer.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/ppr.png" alt="Diagram of Personalized PageRank: a cluster of activated entity nodes feeds a ranked list of passage cards, rank 1 brightest" loading="lazy" />
+      <figcaption>Stage 2 — activated entities seed Personalized PageRank, which ranks the passages handed to the reader model</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 5. Three worked examples -->
+<section class="article-section" id="examples">
+  <h2 class="section-title">Three worked examples (2WikiMultiHop)</h2>
+  <div class="prose">
+    <p>
+      The best way to feel the mechanism is to trace it on real questions. These three are from the
+      <strong>2WikiMultiHop</strong> set I indexed (658 passages), and each has a different graph shape.
+    </p>
+  </div>
+
+  <div class="example">
+    <div class="example-head">
+      <h3>① Compositional · a two-hop chain</h3>
+      <span class="tps-chip blue">2-HOP</span>
+    </div>
+    <p class="prompt-line">Q: "When did Lothair II's mother die?"</p>
+    <figure class="figure full" style="margin:0;">
+      <img src="demo_assets/example-lothair.png" alt="Diagram: seed entity Lothair II bridges via a 'mother' sentence to Ermengarde of Tours, then via 'date of death' to the answer 20 March 851" loading="lazy" />
+      <figcaption>Lothair II → (mother) → Ermengarde of Tours → (date of death) → <strong>20 March 851</strong></figcaption>
+    </figure>
+    <div class="commentary">
+      <h4>What happened</h4>
+      <p>
+        No single passage states the answer. LinearRAG seeds <code>Lothair II</code>, bridges through a shared
+        sentence to his mother <code>Ermengarde of Tours</code>, then bridges again to her date of death. Genuine
+        two-hop reasoning, in one retrieval pass, with no relation edges.
+      </p>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-head">
+      <h3>② Comparison · two parallel chains</h3>
+      <span class="tps-chip amber">PARALLEL</span>
+    </div>
+    <p class="prompt-line">Q: "Which film was released first, Aas Ka Panchhi or Phoolwari?"</p>
+    <figure class="figure full" style="margin:0;">
+      <img src="demo_assets/example-films.png" alt="Diagram: two seed entities in parallel, one bridging to 1961 and the other to 1946, converging on a compare node where 1946 wins" loading="lazy" />
+      <figcaption>Two parallel chains → 1961 vs 1946 → compare → <strong>Phoolwari (1946)</strong></figcaption>
+    </figure>
+    <div class="commentary">
+      <h4>What happened</h4>
+      <p>
+        A comparison question lights up <em>two</em> seeds at once. One chain bridges to <code>1961</code>, the other
+        to <code>1946</code>; both feed a compare step, and the earlier date wins. Notice the graph shape is
+        different from example ① — two parallel chains converging, rather than one linear bridge.
+      </p>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-head">
+      <h3>③ Compositional · song → performer → birthplace</h3>
+      <span class="tps-chip fire">2-HOP</span>
+    </div>
+    <p class="prompt-line">Q: "What is the place of birth of the performer of the song 'Changed It'?"</p>
+    <figure class="figure full" style="margin:0;">
+      <img src="demo_assets/example-changedit.png" alt="Diagram: the song Changed It bridges via 'performer' to Nicki Minaj, then via 'place of birth' to Port of Spain" loading="lazy" />
+      <figcaption>Changed It → (performer) → Nicki Minaj → (place of birth) → <strong>Port of Spain</strong></figcaption>
+    </figure>
+    <div class="commentary">
+      <h4>What happened</h4>
+      <p>
+        Same compositional pattern as ①, different domain: seed the song, bridge through the performer relation to
+        <code>Nicki Minaj</code>, then through place of birth to the answer. Three questions, three traversal shapes,
+        one mechanism — and not a single hand-built relation.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Running it on a 4090 -->
+<section class="article-section" id="run">
+  <h2 class="section-title">Running it end-to-end on a 4090</h2>
+  <div class="prose">
+    <p>
+      LinearRAG prefers Python 3.9 (its pins are old). Install a CUDA build of PyTorch first so the embeddings and
+      the vectorized retrieval land on the GPU, then the repo's requirements and the spaCy transformer model.
+    </p>
+    <pre><code># Python 3.9 venv (uv). GPU torch FIRST, then the repo pins.
+uv venv .venv --python 3.9.19 &amp;&amp; source .venv/bin/activate
+uv pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu124
+uv pip install -r requirements.txt
+uv pip install \
+  'https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.6.1/en_core_web_trf-3.6.1-py3-none-any.whl'</code></pre>
+    <p>
+      Datasets come from the project's HuggingFace repo. I used <strong>2WikiMultiHop</strong> (standard spaCy model,
+      658 passages); the four bundled sets span compositional, comparison and multi-hop reasoning.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/datasets.png" alt="Four labeled dataset cards: 2WikiMultiHop, HotpotQA, MuSiQue and Medical" loading="lazy" />
+      <figcaption>The four bundled benchmarks — I ran 2WikiMultiHop; Medical needs a scientific spaCy model</figcaption>
+    </figure>
+    <p>
+      One full command indexes, retrieves, answers and evaluates. The first run pays the one-time spaCy NER pass
+      (CPU, then cached to <code>import/</code>); every run after that reuses the cache and retrieves in seconds.
+    </p>
+    <pre><code>python run.py \
+    --spacy_model en_core_web_trf \
+    --embedding_model sentence-transformers/all-mpnet-base-v2 \
+    --dataset_name 2wikimultihop \
+    --llm_model gpt-5-mini \
+    --max_workers 16 \
+    --use_vectorized_retrieval        # GPU sparse-matrix retrieval</code></pre>
+    <p>
+      To make it tangible I wired up a small <strong>Gradio</strong> demo over the cached index: type any question
+      and it returns the answer alongside the PPR-ranked evidence passages and their scores.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/demo-ui.png" alt="Screenshot of the LinearRAG Gradio demo answering 'When did Lothair II's mother die?' with '20 March 851' and a ranked list of evidence passages" loading="lazy" />
+      <figcaption>The Gradio demo over the cached index — answer plus the Personalized-PageRank-ranked evidence</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 7. Modes & results -->
+<section class="article-section" id="modes">
+  <h2 class="section-title">Modes I tested, and the results</h2>
+  <div class="prose">
+    <p>
+      <strong>Vectorized GPU retrieval.</strong> The semantic-bridging step ships twice: a readable CPU
+      breadth-first-search reference, and a vectorized version that expresses the same propagation as sparse
+      matrix multiplications on CUDA. The <code>--use_vectorized_retrieval</code> flag switches between them; on the
+      4090, with the index cached, 12 queries retrieved in about <strong>1.5 seconds</strong>.
+    </p>
+    <p>
+      <strong>The reader model matters as much as retrieval.</strong> On the same retrieved passages, swapping the
+      answer model lifted accuracy sharply. (GPT-5-family models need <code>max_completion_tokens</code> instead of
+      <code>max_tokens</code> and reject <code>temperature=0</code> — a one-line client patch.)
+    </p>
+    <table class="variant-table">
+      <thead>
+        <tr><th>Reader model</th><th>LLM-judge accuracy</th><th>Contain accuracy</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>gpt-4o-mini</strong></td><td class="num">0.667 (8/12)</td><td class="num">0.833 (10/12)</td></tr>
+        <tr class="hi"><td><strong>gpt-5-mini</strong></td><td class="num">1.000 (12/12)</td><td class="num">0.917 (11/12)</td></tr>
+      </tbody>
+    </table>
+    <p>
+      <strong>Attribute-query fallback.</strong> Pure entity bridging can miss simple attribute lookups (<em>where was
+      X born?</em>). An opt-in hybrid mode boosts passages that share attribute keywords with the query — off by
+      default, enabled through the config object.
+    </p>
+    <pre><code>config = LinearRAGConfig(
+    dataset_name="2wikimultihop",
+    enable_hybrid_attribute_fallback=True,   # default: False
+    attribute_keyword_boost=0.25,            # born / died / located / founded ...
+)</code></pre>
+    <p>
+      <strong>Evaluation.</strong> After answering, LinearRAG scores predictions two ways in parallel — an LLM judge
+      (correct / incorrect against the gold answer) and a strict substring <em>contain</em> check — writing
+      everything to a timestamped <code>results/</code> folder. The knobs worth sweeping first on a new dataset are
+      <code>iteration_threshold</code>, <code>max_iterations</code>, <code>passage_ratio</code> and
+      <code>top_k_sentence</code>.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/tuning.png" alt="A control panel of labeled sliders and dials for iteration_threshold, max_iterations, passage_ratio, top_k_sentence and damping" loading="lazy" />
+      <figcaption>The tuning knobs — the repo ships per-dataset values; MuSiQue needs deeper bridging (5 iterations, low threshold)</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 8. Verdict -->
+<section class="article-section" id="verdict">
+  <h2 class="section-title">Honest verdict</h2>
+  <div class="prose">
+    <p>
+      LinearRAG is the rare paper whose central move is to <em>remove</em> something — relation extraction — and come
+      out ahead on cost, speed and quality. The Tri-Graph is genuinely cheap to build, the semantic-bridging idea is
+      an elegant way to get single-pass multi-hop reasoning out of a relation-free graph, and on a 24 GB 4090 the
+      whole pipeline is comfortable, with the GPU doing the embeddings and the sparse-matrix retrieval.
+    </p>
+    <p>
+      The one honest caveat: spaCy's transformer NER runs on CPU by the repo's design and is the indexing bottleneck
+      — about six minutes for 658 passages on my machine. It is a <em>one-time</em> cost (the result caches to
+      <code>import/</code>), but on a large corpus it is the thing to plan around. Everything that matters at query
+      time — embeddings, bridging, PageRank — is fast and GPU-friendly. For multi-hop RAG on a single workstation
+      GPU, this is one of the most pragmatic designs I've run.
+    </p>
+    <div class="callout">
+      <strong>Bottom line.</strong> If you've been put off GraphRAG by its token bill and noisy graphs, LinearRAG is
+      the counter-argument: keep the graph, drop the relation extraction, and let entities plus the original text do
+      the work.
+    </div>
+  </div>
+</section>
+
+<!-- 9. References -->
+<section class="article-section" id="refs">
+  <h2 class="section-title">References &amp; links</h2>
+  <ul class="links">
+    <li><a href="https://arxiv.org/abs/2510.10114" target="_blank"><strong>Paper</strong> — Zhuang et al., <em>LinearRAG: Linear Graph Retrieval-Augmented Generation on Large-Scale Corpora</em></a> (ICLR 2026), arXiv:2510.10114.</li>
+    <li><a href="https://github.com/DEEP-PolyU/LinearRAG" target="_blank"><strong>GitHub</strong> — <code>DEEP-PolyU/LinearRAG</code></a> — reference implementation, datasets and run scripts.</li>
+    <li>Building blocks: <strong>spaCy</strong> <code>en_core_web_trf</code> for NER, <strong>sentence-transformers</strong> <code>all-mpnet-base-v2</code> for embeddings, <strong>python-igraph</strong> for Personalized PageRank.</li>
+    <li>All concept illustrations and diagrams generated with <strong>Nano Banana Pro</strong>.</li>
+  </ul>
+</section>
+
+</div><!-- /container -->
+
+<footer class="page-footer">
+  <div class="inner">
+    <a class="back-to-blog" href="../index.html">
+      <span class="arrow">←</span>
+      <span>Back to the blog</span>
+    </a>
+    <p>Hardware: 1 × NVIDIA RTX 4090 (24 GiB, sm_89), Pop!_OS 22.04.<br />
+       Software: LinearRAG (ICLR 2026), spaCy <code>en_core_web_trf</code>, sentence-transformers <code>all-mpnet-base-v2</code>, torch 2.5.1+cu124, python-igraph 0.11.8, reader <code>gpt-5-mini</code>. Concept illustrations: Nano Banana Pro.<br />
+       Article by Omar Kamal Hosney · 2026-06-22</p>
+    <div class="social">
+      <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn">in</a>
+      <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium">M</a>
+      <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub">gh</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

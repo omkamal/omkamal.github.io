@@ -28,6 +28,24 @@
 
   <!-- Articles -->
   <url>
+    <loc>https://omkamal.github.io/articles/linearrag/linearrag.html</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/linearrag/demo_assets/hero.png</image:loc>
+      <image:title>LinearRAG — the relation-free Tri-Graph of entity, sentence and passage nodes</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/linearrag/demo_assets/bridging.png</image:loc>
+      <image:title>LinearRAG — semantic bridging spreads activation through shared sentences, then PageRank ranks passages</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/linearrag/demo_assets/demo-ui.png</image:loc>
+      <image:title>LinearRAG — the Gradio demo answering a multi-hop question with ranked evidence</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://omkamal.github.io/articles/boogu-image/boogu-image.html</loc>
     <lastmod>2026-06-18</lastmod>
     <changefreq>monthly</changefreq>
