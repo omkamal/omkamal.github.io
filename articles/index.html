@@ -50,6 +50,17 @@
     "blogPost": [
       {
         "@type": "BlogPosting",
+        "headline": "LightRAG, hands-on: fast graph-RAG with GPT-5 and Qdrant",
+        "url": "https://omkamal.github.io/articles/lightrag/lightrag.html",
+        "image": "https://omkamal.github.io/articles/lightrag/demo_assets/hero.png",
+        "datePublished": "2026-06-27",
+        "dateModified": "2026-06-27",
+        "author": { "@type": "Person", "name": "Omar Kamal Hosney" },
+        "keywords": "LightRAG, GraphRAG, RAG, knowledge graph, dual-level retrieval, GPT-5, gpt-5-mini, gpt-5.5, text-embedding-3-small, Qdrant, HKUDS, incremental update",
+        "description": "A hands-on walkthrough of LightRAG: graph-based knowledge-graph indexing plus a dual-level retrieval paradigm, run end-to-end with OpenAI GPT-5 models and a Qdrant vector store — with the knowledge graph it builds and the real setup issues and fixes."
+      },
+      {
+        "@type": "BlogPosting",
         "headline": "LinearRAG on a single RTX 4090 — relation-free GraphRAG, hands-on",
         "url": "https://omkamal.github.io/articles/linearrag/linearrag.html",
         "image": "https://omkamal.github.io/articles/linearrag/demo_assets/hero.png",
@@ -678,21 +689,21 @@
     </div>
 
     <section class="featured" aria-label="Featured article">
-      <a href="linearrag/linearrag.html" class="featured-card">
+      <a href="lightrag/lightrag.html" class="featured-card">
         <div class="featured-visual">
-          <img src="linearrag/demo_assets/hero.png" alt="The LinearRAG Tri-Graph: stacked layers of entity, sentence and passage nodes forming a relation-free knowledge graph on an RTX 4090" loading="lazy" />
+          <img src="lightrag/demo_assets/hero.png" alt="A document flowing into a glowing knowledge graph and then an answer — LightRAG indexing documents into a knowledge graph" loading="lazy" />
           <span class="overlay-emoji">🕸️</span>
         </div>
         <div class="featured-body">
           <span class="featured-tag">⭐ Featured · Latest</span>
           <p class="featured-meta"><span>AI Models</span><span>Field Notes</span><span>June 2026</span><span>9 min read</span></p>
-          <h2>LinearRAG — relation-free GraphRAG, hands-on a 4090</h2>
+          <h2>LightRAG — fast graph-RAG with GPT-5 + Qdrant, hands-on</h2>
           <p>
-            <strong>GraphRAG without relation extraction.</strong> LinearRAG (ICLR 2026) builds its
-            <strong>Tri-Graph</strong> with <strong>zero LLM tokens</strong> — just NER and embeddings — then does
-            single-pass multi-hop retrieval via <strong>semantic bridging</strong> and <strong>Personalized
-            PageRank</strong>. Animated walkthroughs, three real multi-hop examples, and an end-to-end 4090 run where
-            <code>gpt-5-mini</code> took the demo to a perfect score.
+            <strong>Graph-RAG without GraphRAG's bill.</strong> LightRAG (HKUDS) turns your documents into a
+            <strong>knowledge graph</strong> and answers with a <strong>dual-level retrieval</strong> paradigm —
+            comprehensive, but a single API call instead of community traversal, and incremental updates instead of
+            rebuilds. The seven core ideas, then a real end-to-end install on OpenAI <code>gpt-5-mini</code> /
+            <code>gpt-5.5</code> and a <code>Qdrant</code> vector store — with the graph it builds and the setup fixes.
           </p>
           <span class="featured-cta">Read the article <span class="arrow">→</span></span>
         </div>
@@ -701,6 +712,23 @@
 
     <p class="section-label">More articles</p>
     <div class="article-grid">
+      <a href="linearrag/linearrag.html" class="article-card" data-category="ai-models">
+        <div class="article-thumb">
+          <span class="emoji">🕸️</span>
+        </div>
+        <div class="article-body">
+          <h3>LinearRAG — relation-free GraphRAG, hands-on a 4090</h3>
+          <p>
+            <strong>GraphRAG without relation extraction.</strong> LinearRAG (ICLR 2026) builds its
+            <strong>Tri-Graph</strong> with <strong>zero LLM tokens</strong> — just NER and embeddings — then does
+            single-pass multi-hop retrieval via <strong>semantic bridging</strong> and <strong>Personalized
+            PageRank</strong>, run end-to-end on a 24 GB 4090 with <code>gpt-5-mini</code>.
+          </p>
+          <div class="article-meta">
+            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>June 2026</span>
+          </div>
+        </div>
+      </a>
       <a href="boogu-image/boogu-image.html" class="article-card" data-category="ai-models">
         <div class="article-thumb">
           <span class="emoji">🎨</span>

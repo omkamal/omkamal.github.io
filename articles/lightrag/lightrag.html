@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LightRAG, hands-on: fast graph-RAG with GPT-5 and Qdrant</title>
+<meta name="description" content="A hands-on walkthrough of LightRAG: a simple, fast graph-based RAG that extracts a knowledge graph from your documents and answers with a dual-level retrieval paradigm. The seven core ideas, then a real end-to-end install with OpenAI GPT-5 models and a Qdrant vector store, the knowledge graph it builds, and the setup issues hit along the way." />
+<meta name="keywords" content="LightRAG, GraphRAG, RAG, retrieval-augmented generation, knowledge graph, dual-level retrieval, GPT-5, gpt-5-mini, gpt-5.5, text-embedding-3-small, Qdrant, vector database, HKUDS, entity extraction, incremental update, LLM" />
+<meta name="author" content="Omar Kamal Hosney" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://omkamal.github.io/articles/lightrag/lightrag.html" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Omar Kamal Hosney" />
+<meta property="og:url" content="https://omkamal.github.io/articles/lightrag/lightrag.html" />
+<meta property="og:title" content="LightRAG, hands-on: fast graph-RAG with GPT-5 and Qdrant" />
+<meta property="og:description" content="Graph-based RAG that builds a knowledge graph from your docs and answers with dual-level retrieval. Seven core ideas, plus a real end-to-end install on OpenAI GPT-5 + Qdrant." />
+<meta property="og:image" content="https://omkamal.github.io/articles/lightrag/demo_assets/hero.png" />
+<meta property="article:author" content="Omar Kamal Hosney" />
+<meta property="article:published_time" content="2026-06-27" />
+<meta property="article:section" content="AI Models" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="LightRAG, hands-on: fast graph-RAG with GPT-5 and Qdrant" />
+<meta name="twitter:description" content="A simple, fast graph-RAG: knowledge-graph indexing + dual-level retrieval, run end-to-end on OpenAI GPT-5 and Qdrant." />
+<meta name="twitter:image" content="https://omkamal.github.io/articles/lightrag/demo_assets/hero.png" />
+
+<link rel="icon" type="image/jpeg" href="../../omar.jpeg" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "LightRAG, hands-on: fast graph-RAG with GPT-5 and Qdrant",
+  "description": "A hands-on walkthrough of LightRAG: graph-based knowledge-graph indexing plus a dual-level retrieval paradigm, run end-to-end with OpenAI GPT-5 models and a Qdrant vector store.",
+  "image": "https://omkamal.github.io/articles/lightrag/demo_assets/hero.png",
+  "datePublished": "2026-06-27",
+  "dateModified": "2026-06-27",
+  "author": { "@type": "Person", "name": "Omar Kamal Hosney", "url": "https://omkamal.github.io/" },
+  "publisher": { "@type": "Person", "name": "Omar Kamal Hosney" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://omkamal.github.io/articles/lightrag/lightrag.html" },
+  "articleSection": "AI Models",
+  "keywords": "LightRAG, GraphRAG, RAG, knowledge graph, dual-level retrieval, GPT-5, Qdrant, text-embedding-3-small, HKUDS",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omkamal.github.io/articles/" },
+      { "@type": "ListItem", "position": 3, "name": "LightRAG on GPT-5 + Qdrant", "item": "https://omkamal.github.io/articles/lightrag/lightrag.html" }
+    ]
+  }
+}
+</script>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root {
+  --c-ink: #18181b;
+  --c-ink-soft: #27272a;
+  --c-prose: #3f3f46;
+  --c-muted: #71717a;
+  --c-mute-2: #a1a1aa;
+  --c-paper: #fafaf9;
+  --c-paper-2: #ffffff;
+  --c-line: #e7e5e4;
+  --c-line-soft: #f1f0ee;
+  --c-accent: #7c3aed;
+  --c-accent-2: #ec4899;
+  --c-accent-3: #f59e0b;
+  --c-accent-soft: #faf5ff;
+  --c-accent-line: #e9d5ff;
+  --c-blue: #2563eb;
+  --c-blue-soft: #eff6ff;
+  --c-blue-line: #bfdbfe;
+  --c-green: #16a34a;
+  --c-green-soft: #f0fdf4;
+  --c-green-line: #bbf7d0;
+  --c-warn: #b45309;
+  --c-warn-soft: #fffbeb;
+  --c-warn-line: #fde68a;
+  --c-red: #dc2626;
+  --c-red-soft: #fef2f2;
+  --c-red-line: #fecaca;
+  --c-code-bg: #0f172a;
+  --c-code-fg: #e2e8f0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 24px 56px -16px rgba(15, 23, 42, 0.18), 0 8px 20px -6px rgba(15, 23, 42, 0.08);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { font-family: 'Source Serif 4', Charter, Georgia, 'Times New Roman', serif; font-size: 18px; line-height: 1.75; color: var(--c-prose); background: var(--c-paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--c-accent); color: white; }
+
+.top-nav { position: sticky; top: 0; z-index: 50; background: rgba(250, 250, 249, 0.85); backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px); border-bottom: 1px solid var(--c-line); }
+.nav-inner { max-width: 1180px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 12px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--c-ink); text-decoration: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-accent) 100%); display: grid; place-items: center; font-weight: 800; font-size: 0.78rem; color: white; box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.4); }
+.nav-right { display: flex; gap: 4px; align-items: center; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+.nav-right a { color: var(--c-muted); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 500; transition: all 0.2s var(--ease); }
+.nav-right a:hover { color: var(--c-ink); background: rgba(0,0,0,0.04); }
+.nav-right a.active { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.hero { position: relative; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #4c1d95 100%); color: #e2e8f0; padding: 80px 0 100px; margin-bottom: -60px; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.35), transparent 50%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.30), transparent 50%), radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.10), transparent 60%); }
+.hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); pointer-events: none; }
+.hero-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 32px; }
+.crumbs { font-family: 'Inter', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; color: rgba(226, 232, 240, 0.65); margin-bottom: 22px; }
+.crumbs a { color: rgba(226, 232, 240, 0.85); text-decoration: none; border-bottom: 1px solid rgba(226, 232, 240, 0.3); transition: all 0.2s var(--ease); }
+.crumbs a:hover { color: white; border-bottom-color: white; }
+.crumbs .sep { margin: 0 0.5em; opacity: 0.4; }
+.article-header { margin: 0; padding: 0; border: 0; }
+.byline { display: inline-flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: #c4b5fd; padding: 5px 12px; background: rgba(168, 85, 247, 0.18); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50px; margin-bottom: 28px; }
+.byline span + span::before { content: "·"; opacity: 0.6; margin: 0 0.25rem; color: #c4b5fd; }
+h1 { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2.2rem, 4.8vw, 3.6rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.03em; color: #ffffff; margin: 0 0 22px; max-width: 880px; }
+.subtitle { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(1.05rem, 1.6vw, 1.28rem); line-height: 1.55; color: rgba(226, 232, 240, 0.82); font-style: italic; margin: 0; max-width: 720px; }
+.subtitle code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85em; font-style: normal; background: rgba(255, 255, 255, 0.12); padding: 2px 8px; border-radius: 5px; color: #fde68a; border: 1px solid rgba(255, 255, 255, 0.08); }
+
+.container { max-width: 980px; margin: 0 auto; padding: 100px 32px 80px; position: relative; z-index: 2; }
+
+.tldr { background: linear-gradient(135deg, #ffffff 0%, var(--c-accent-soft) 100%); border: 1px solid var(--c-accent-line); border-left: 4px solid var(--c-accent); padding: 26px 30px; border-radius: 0 16px 16px 0; margin: 0 0 60px; box-shadow: var(--shadow-md); }
+.tldr h3 { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-accent); margin: 0 0 12px; }
+.tldr p { font-size: 1.05rem; color: var(--c-ink-soft); margin: 0 0 0.8rem; text-align: justify; hyphens: auto; }
+.tldr p:last-child { margin-bottom: 0; }
+.tldr strong { color: var(--c-ink); font-weight: 700; }
+.tldr code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(255,255,255,0.7); border: 1px solid var(--c-accent-line); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); }
+
+.toc { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; color: var(--c-prose); padding: 22px 28px; margin: 0 0 80px; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 16px; line-height: 2.1; box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: center; }
+.toc strong { display: inline-flex; align-items: center; gap: 7px; color: var(--c-ink); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; padding-right: 14px; margin-right: 6px; border-right: 1px solid var(--c-line); }
+.toc strong::before { content: ''; width: 3px; height: 14px; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+.toc a { color: var(--c-prose); text-decoration: none; padding: 4px 11px; border-radius: 50px; transition: all 0.2s var(--ease); font-weight: 500; }
+.toc a:hover { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.article-section { margin-bottom: 80px; scroll-margin-top: 80px; }
+.section-title { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(1.65rem, 3vw, 2.15rem); font-weight: 700; color: var(--c-ink); margin: 0 0 28px; letter-spacing: -0.025em; line-height: 1.18; position: relative; padding-left: 18px; }
+.section-title::before { content: ''; position: absolute; left: 0; top: 0.18em; width: 5px; height: 0.85em; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 3px; }
+
+.prose { max-width: 100%; margin-bottom: 36px; font-size: 1.06rem; line-height: 1.78; text-align: justify; hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty; }
+.prose p { margin: 0 0 1.25rem; color: var(--c-prose); text-align: justify; hyphens: auto; }
+.prose h3 { text-align: left; hyphens: manual; }
+.prose ul, .prose ol { text-align: left; hyphens: manual; margin: 0 0 1.25rem 1.2rem; }
+.prose li { margin-bottom: 0.4rem; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--c-ink); font-weight: 600; }
+.prose em { color: var(--c-ink-soft); }
+.prose code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.86em; background: var(--c-accent-soft); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); border: 1px solid var(--c-accent-line); font-weight: 500; }
+.prose a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--c-accent-line); transition: all 0.2s var(--ease); }
+.prose a:hover { text-decoration-color: var(--c-accent); text-decoration-thickness: 2px; }
+.prose h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--c-ink); margin: 2.2rem 0 0.8rem; letter-spacing: -0.015em; display: flex; align-items: center; gap: 10px; }
+.prose h3::before { content: ''; width: 22px; height: 2px; background: linear-gradient(90deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+
+.prose pre { background: var(--c-code-bg); color: var(--c-code-fg); padding: 44px 26px 22px; border-radius: 12px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85rem; line-height: 1.65; overflow-x: auto; margin: 22px 0; border: 1px solid #1e293b; box-shadow: var(--shadow-lg); position: relative; }
+.prose pre::before { content: ''; position: absolute; top: 14px; left: 18px; width: 11px; height: 11px; border-radius: 50%; background: #ef4444; box-shadow: 18px 0 0 #f59e0b, 36px 0 0 #10b981; opacity: 0.7; }
+.prose pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; border: 0; font-weight: 400; }
+
+.callout { background: var(--c-warn-soft); border: 1px solid var(--c-warn-line); border-left: 4px solid var(--c-accent-3); padding: 16px 22px; border-radius: 0 12px 12px 0; margin: 22px 0; font-size: 0.98rem; line-height: 1.7; color: var(--c-ink-soft); position: relative; box-shadow: var(--shadow-sm); text-align: justify; hyphens: auto; }
+.callout.green { background: var(--c-green-soft); border-color: var(--c-green-line); border-left-color: var(--c-green); }
+.callout.red { background: var(--c-red-soft); border-color: var(--c-red-line); border-left-color: var(--c-red); }
+.callout.blue { background: var(--c-blue-soft); border-color: var(--c-blue-line); border-left-color: var(--c-blue); }
+.callout strong { color: var(--c-ink); }
+.callout code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--c-warn); padding: 1.5px 6px; border-radius: 4px; }
+.callout.green code { background: rgba(22, 163, 74, 0.12); border-color: rgba(22, 163, 74, 0.3); color: var(--c-green); }
+.callout.red code { background: rgba(220, 38, 38, 0.10); border-color: rgba(220, 38, 38, 0.3); color: var(--c-red); }
+.callout.blue code { background: rgba(37, 99, 235, 0.10); border-color: rgba(37,99,235,0.3); color: var(--c-blue); }
+
+.variant-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 22px 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.88rem; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); }
+.variant-table th, .variant-table td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--c-line-soft); vertical-align: top; }
+.variant-table th { background: linear-gradient(180deg, #fafafa, #f5f5f4); font-weight: 700; color: var(--c-ink); letter-spacing: 0.02em; font-size: 0.74rem; text-transform: uppercase; }
+.variant-table tbody tr:last-child td { border-bottom: 0; }
+.variant-table tbody tr:hover td { background: var(--c-accent-soft); }
+.variant-table td { color: var(--c-prose); }
+.variant-table td strong { color: var(--c-ink); }
+.variant-table td.num { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+.variant-table tr.hi td { background: var(--c-green-soft); }
+.variant-table tr.hi:hover td { background: var(--c-green-soft); }
+
+.figure { margin: 28px auto; text-align: center; display: block; }
+.figure img, .figure video { width: 100%; max-width: 100%; height: auto; border-radius: 14px; display: block; margin-left: auto; margin-right: auto; border: 1px solid var(--c-line); box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); background: var(--c-paper-2); }
+.figure video { background: #000; }
+.figure img:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); border-color: var(--c-accent-line); }
+.figure figcaption { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; color: var(--c-mute-2); margin: 10px auto 0; letter-spacing: 0.02em; text-align: center; max-width: 85%; }
+.figure.full img { background: white; }
+.figure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px auto; justify-items: center; align-items: start; }
+.figure-grid .figure { margin: 0; width: 100%; }
+
+.example { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 18px; padding: 28px 30px; margin: 26px 0 36px; box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); }
+.example:hover { box-shadow: var(--shadow-lg); border-color: var(--c-accent-line); }
+.example-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1px solid var(--c-line-soft); flex-wrap: wrap; }
+.example-head h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--c-ink); margin: 0; letter-spacing: -0.018em; }
+.tps-chip { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; font-weight: 700; padding: 6px 14px; border-radius: 50px; color: white; background: linear-gradient(135deg, var(--c-green) 0%, #15803d 100%); box-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.35); }
+.tps-chip.amber { background: linear-gradient(135deg, var(--c-accent-3) 0%, var(--c-warn) 100%); box-shadow: 0 4px 12px -2px rgba(180, 83, 9, 0.35); }
+.tps-chip.fire { background: linear-gradient(135deg, var(--c-accent-2) 0%, #be185d 100%); box-shadow: 0 4px 12px -2px rgba(190, 24, 93, 0.35); }
+.tps-chip.blue { background: linear-gradient(135deg, var(--c-blue) 0%, #1d4ed8 100%); box-shadow: 0 4px 12px -2px rgba(37,99,235,0.35); }
+.prompt-line { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: var(--c-paper); border: 1px solid var(--c-line); border-left: 3px solid var(--c-accent); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 0 0 18px; color: var(--c-ink-soft); line-height: 1.5; }
+
+.commentary { margin-top: 24px; padding: 20px 22px; background: var(--c-blue-soft); border: 1px solid var(--c-blue-line); border-left: 4px solid var(--c-blue); border-radius: 0 12px 12px 0; }
+.commentary h4 { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-blue); margin: 0 0 10px; display: inline-flex; align-items: center; gap: 7px; }
+.commentary h4::before { content: '💡'; font-size: 1.05em; }
+.commentary p { font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); margin: 0; text-align: justify; hyphens: auto; }
+.commentary code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: rgba(37, 99, 235, 0.1); padding: 1.5px 6px; border-radius: 4px; color: var(--c-blue); border: 1px solid var(--c-blue-line); font-weight: 500; }
+.commentary strong { color: var(--c-ink); }
+
+.links { padding-left: 20px; max-width: 100%; }
+.links li { margin-bottom: 10px; line-height: 1.6; }
+.links li code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: var(--c-paper); border: 1px solid var(--c-line); padding: 1px 6px; border-radius: 4px; color: var(--c-ink-soft); }
+
+.page-footer { border-top: 1px solid var(--c-line); padding: 60px 0 80px; text-align: center; background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.03)); }
+.page-footer .inner { max-width: 980px; margin: 0 auto; padding: 0 32px; font-family: 'Inter', sans-serif; }
+.back-to-blog { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-2) 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 24px -6px rgba(124, 58, 237, 0.5); transition: all 0.3s var(--ease); margin-bottom: 32px; }
+.back-to-blog:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(124, 58, 237, 0.65); }
+.back-to-blog .arrow { transition: transform 0.3s var(--ease); }
+.back-to-blog:hover .arrow { transform: translateX(-4px); }
+.page-footer p { color: var(--c-muted); font-size: 0.88rem; margin-bottom: 18px; }
+.social { display: flex; justify-content: center; gap: 12px; }
+.social a { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: var(--c-paper-2); border: 1px solid var(--c-line); color: var(--c-muted); text-decoration: none; transition: all 0.3s var(--ease); font-family: 'Inter', sans-serif; font-weight: 700; }
+.social a:hover { color: var(--c-accent); border-color: var(--c-accent-line); background: var(--c-accent-soft); transform: translateY(-2px); }
+
+@media (max-width: 900px) {
+  .hero { padding: 60px 0 80px; }
+  .hero-inner { padding: 0 20px; }
+  .container { padding: 80px 20px 60px; }
+  .nav-inner { padding: 12px 20px; }
+  h1 { font-size: 2rem; }
+  .section-title { font-size: 1.55rem; }
+  .figure-grid { grid-template-columns: 1fr; }
+  .example { padding: 22px 22px; border-radius: 14px; }
+  .toc { padding: 18px 20px; font-size: 0.8rem; gap: 6px; }
+  .toc strong { border-right: 0; margin-bottom: 4px; padding-right: 0; width: 100%; }
+  .nav-right a { padding: 6px 10px; font-size: 0.82rem; }
+}
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .prose { font-size: 1.02rem; }
+  .nav-right a:not(.active) { display: none; }
+}
+</style>
+
+</head>
+
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">OK</span>
+      <span>Omar Kamal Hosney</span>
+    </a>
+    <div class="nav-right">
+      <a href="../../cheatsheets/index.html">Cheatsheets</a>
+      <a href="../index.html" class="active">Blog</a>
+      <a href="../../resume.html" target="_blank">Resume</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="crumbs">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="../index.html">Blog</a>
+      <span class="sep">/</span>
+      AI Models
+    </p>
+    <div class="article-header">
+      <p class="byline"><span>LightRAG</span><span>Field Notes</span><span>June 2026</span></p>
+      <h1>LightRAG, hands-on: fast graph-RAG with GPT-5 and Qdrant</h1>
+      <p class="subtitle"><strong>LightRAG</strong> turns your documents into a <em>knowledge graph</em> and answers
+      questions with a <strong>dual-level retrieval</strong> paradigm — comprehensive like GraphRAG, but cheaper and
+      faster, with incremental updates instead of full rebuilds. Here are the seven core ideas, then a real
+      end-to-end install wired to OpenAI's <code>gpt-5-mini</code>, <code>gpt-5.5</code> and
+      <code>text-embedding-3-small</code>, with a <code>Qdrant</code> vector store.</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<figure class="figure full" style="margin: 0 0 60px;">
+  <img src="demo_assets/hero.png" alt="A document on the left flowing into a glowing knowledge graph of connected nodes on the right, then into an answer" loading="lazy" />
+  <figcaption>LightRAG indexes documents into a knowledge graph, then fuses graph structure with vector search to answer queries</figcaption>
+</figure>
+
+<div class="tldr">
+  <h3>TL;DR</h3>
+  <p>
+    Conventional <strong>RAG</strong> chops a corpus into flat chunks and retrieves the few most similar to the
+    question. That fragments answers whenever the response depends on <em>relationships</em> between entities.
+    <strong>GraphRAG</strong> fixes comprehensiveness but is expensive — community detection and traversal across
+    hundreds of API calls, and a full rebuild whenever data changes. <strong>LightRAG</strong> (HKUDS) keeps the
+    knowledge graph but makes it cheap and incremental.
+  </p>
+  <p>
+    Indexing extracts entities and relationships per chunk, writes a compact <strong>key-value profile</strong> for
+    every node and edge, and deduplicates across the corpus. Retrieval is <strong>dual-level</strong>: low-level keys
+    fetch specific entities, high-level keys fetch broad themes, and the two are fused with the graph's one-hop
+    neighbours and a vector search. New documents merge into the graph as a simple <strong>union</strong> — no rebuild.
+  </p>
+  <p>
+    I ran it end-to-end as an API server with OpenAI's GPT-5 family and a <code>Qdrant</code> vector store:
+    <code>gpt-5-mini</code> for extraction, <code>gpt-5-nano</code> for keywords, <code>gpt-5.5</code> for the final
+    answer, and <code>text-embedding-3-small</code> (1536-dim) for embeddings. No GPU required — all the heavy compute
+    is API-side. Below is how it works, plus the real setup issues and their fixes.
+  </p>
+</div>
+
+<div class="callout blue">
+  <strong>Want the deep dive?</strong> This article is the companion write-up to my
+  <a href="https://www.youtube.com/watch?v=AzI-t7N9wEM" target="_blank"><strong>full Advanced RAG course on
+  YouTube</strong></a> — watch it for the complete, end-to-end treatment of graph-RAG, retrieval strategies and
+  production patterns. There is also a <a href="https://youtu.be/eGncma2nwfI" target="_blank">short video tutorial</a>
+  that walks through exactly this LightRAG build.
+</div>
+
+<nav class="toc" aria-label="Table of contents">
+  <strong>Contents</strong>
+  <a href="#what">What it is</a>
+  <a href="#indexing">Graph-based indexing</a>
+  <a href="#retrieval">Dual-level retrieval</a>
+  <a href="#efficiency">Efficiency &amp; updates</a>
+  <a href="#setup">Running it: GPT-5 + Qdrant</a>
+  <a href="#usage">Using it</a>
+  <a href="#kg">The knowledge graph</a>
+  <a href="#issues">Issues we hit</a>
+  <a href="#verdict">Verdict</a>
+  <a href="#refs">References</a>
+</nav>
+
+<section class="article-section" id="what">
+  <h2 class="section-title">What LightRAG is, in plain words</h2>
+  <div class="prose">
+    <p>
+      Retrieval-augmented generation grounds a language model in your own documents so it hallucinates less. That is
+      easy when the answer lives in one passage, and hard when it depends on how several entities relate across many
+      documents. Plain vector RAG returns disconnected chunks and leaves the model to guess how they fit together.
+    </p>
+    <p>
+      <strong>LightRAG</strong> keeps the answer grounded but adds structure: during indexing it uses an LLM to pull
+      <em>entities</em> and <em>relationships</em> out of every chunk and assemble them into a single knowledge graph.
+      At query time it reads from that graph on two levels at once — specific entities <em>and</em> broad themes — and
+      fuses the result with a vector search. The published architecture below shows the whole loop: graph-based text
+      indexing on the left, the dual-level retrieval paradigm on the right.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/paper-arch.png" alt="The overall LightRAG architecture from the paper: graph-based text indexing on the left feeding a dual-level retrieval paradigm on the right" loading="lazy" />
+      <figcaption>The overall LightRAG architecture. Figure: Guo et al., &ldquo;LightRAG: Simple and Fast Retrieval-Augmented Generation&rdquo;, arXiv:2410.05779</figcaption>
+    </figure>
+    <div class="callout blue">
+      <strong>The one-sentence version.</strong> Build a knowledge graph from your documents during indexing, then
+      answer by retrieving both specific entities and broad topics from that graph — fused with vector search — instead
+      of pulling isolated text chunks.
+    </div>
+  </div>
+</section>
+
+<section class="article-section" id="indexing">
+  <h2 class="section-title">Graph-based indexing: Recog &rarr; Prof &rarr; Dedupe</h2>
+  <div class="prose">
+    <p>
+      Indexing is three LLM-driven steps per chunk. <strong>Recog</strong> extracts the entities and the relationships
+      between them. <strong>Prof</strong> ("profiling") writes a short index <em>key</em> and a summarizing
+      <em>value</em> for each node and edge, so retrieval is both fast and precise. <strong>Dedupe</strong> merges
+      identical entities and relations that appear in different chunks, which keeps the graph compact and cheap to
+      operate over.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/indexing.png" alt="A document chunk flowing through three stages — Recog extracting a small graph, Prof attaching key and value tags, Dedupe merging duplicate nodes — into one compact knowledge graph" loading="lazy" />
+      <figcaption>Recog &rarr; Prof &rarr; Dedupe turns each chunk into nodes and edges, then merges duplicates into one compact knowledge graph</figcaption>
+    </figure>
+    <p>
+      The payoff is that the graph captures multi-hop structure across the whole corpus, and the key-value profiles give
+      retrieval a precise, vectorizable surface to match against — a better fit than either pure embedding similarity or
+      brute-force community traversal.
+    </p>
+  </div>
+</section>
+
+<section class="article-section" id="retrieval">
+  <h2 class="section-title">Dual-level retrieval &amp; five query modes</h2>
+  <div class="prose">
+    <p>
+      At query time LightRAG works on two levels at once. <strong>Low-level</strong> retrieval targets specific entities
+      and their attributes — perfect for detailed, pointed questions. <strong>High-level</strong> retrieval targets
+      broad topics and themes that span many entities — perfect for conceptual questions. Extracting both
+      <em>low-level</em> and <em>high-level</em> keys from a single query covers detail and big picture together.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/dual-level.png" alt="A query forking into low-level keys that zoom into specific entity nodes and high-level keys that highlight a whole cluster, both merging into one context" loading="lazy" />
+      <figcaption>Dual-level retrieval: low-level keys fetch specific entities, high-level keys fetch broad themes, then both merge into one context</figcaption>
+    </figure>
+    <p>
+      Those two levels combine into five <code>mode</code> values you pick per request: <strong>local</strong> (low-level
+      only), <strong>global</strong> (high-level only), <strong>hybrid</strong> (both), <strong>naive</strong> (plain
+      vector search, no graph), and <strong>mix</strong> (knowledge graph fused with vector retrieval — the recommended
+      mode, especially with a reranker). Under the hood, LightRAG matches local keywords to candidate entities and
+      global keywords to relations, then expands with the graph's one-hop neighbours for higher-order relatedness.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/query-modes.png" alt="Five labelled pills — local, global, hybrid, naive, mix — each with a small icon, with mix highlighted as recommended" loading="lazy" />
+      <figcaption>The five query modes; <code>mix</code> blends graph and vectors and is the recommended default</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="article-section" id="efficiency">
+  <h2 class="section-title">Why it is cheaper than GraphRAG &mdash; and updates without rebuilding</h2>
+  <div class="prose">
+    <p>
+      GraphRAG builds community summaries and traverses them with hundreds of API calls and hundreds of thousands of
+      tokens. LightRAG retrieves with a <strong>single API call</strong> using fewer than a hundred keyword tokens.
+      Indexing costs scale linearly — roughly <code>total_tokens / chunk_size</code> LLM calls — and that is the whole
+      pitch: simple and fast.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/efficiency.png" alt="A two-column comparison: GraphRAG with many community reports and API calls and a ~610,000 token counter, versus LightRAG with one API call and under 100 tokens" loading="lazy" />
+      <figcaption>Retrieval cost: GraphRAG&rsquo;s community traversal versus LightRAG&rsquo;s single keyword-driven call</figcaption>
+    </figure>
+    <p>
+      Updates are just as cheap. New documents go through the same indexing steps, then their nodes and edges merge into
+      the existing graph as a <strong>union</strong> — no full reprocessing, and old connections stay intact. That is the
+      design behind LightRAG&rsquo;s incremental pipeline and storage migrations.
+    </p>
+  </div>
+</section>
+
+<section class="article-section" id="setup">
+  <h2 class="section-title">Running it: OpenAI GPT-5 + Qdrant</h2>
+  <div class="prose">
+    <p>
+      I deployed LightRAG as its API server (which also serves a web UI) wired entirely to cloud APIs, so
+      <strong>no GPU is needed</strong>. Extraction makes the most LLM calls, so it uses the cost-effective
+      <code>gpt-5-mini</code>; keyword extraction uses the cheapest tier, <code>gpt-5-nano</code>; the final, user-facing
+      answer uses the flagship <code>gpt-5.5</code>. Embeddings use <code>text-embedding-3-small</code> at 1536
+      dimensions. Vectors live in <strong>Qdrant</strong>; the key-value store, graph and document status stay in local
+      files.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/deployment.png" alt="A conceptual diagram: a server connected up to a cloud API, down to a vector-database cylinder and a file folder" loading="lazy" />
+      <figcaption>The deployment: an API server talking to OpenAI for the LLMs and embeddings, with Qdrant for vectors and local files for the rest</figcaption>
+    </figure>
+    <p>Installation is six commands:</p>
+    <pre><code># 1. Pin tools + create the virtual env (asdf + uv)
+asdf local python 3.12.8 &amp;&amp; asdf local uv 0.8.8
+uv venv .venv --python "$(asdf which python)" &amp;&amp; source .venv/bin/activate
+# 2. Install LightRAG with the API server + Qdrant client
+uv pip install -e ".[api]" "qdrant-client&gt;=1.11.0,&lt;2.0.0"
+# 3. Build the WebUI (not shipped pre-built)
+( cd lightrag_webui &amp;&amp; bun install --frozen-lockfile &amp;&amp; bun run build )
+# 4. Start the Qdrant vector store
+docker start qdrant-demo
+# 5. Configure .env  (models, EMBEDDING_DIM=1536, QDRANT_URL, WORKSPACE)
+# 6. Launch the server + WebUI on port 9621
+lightrag-server</code></pre>
+    <figure class="figure full">
+      <img src="demo_assets/install.png" alt="Terminal screenshot showing lightrag-hku and the OpenAI and Qdrant clients installed into the local virtual environment, with no torch or CUDA packages" loading="lazy" />
+      <figcaption>Install complete &mdash; <code>lightrag-hku</code> with the OpenAI and Qdrant clients, and no torch/CUDA (API-only)</figcaption>
+    </figure>
+    <div class="callout">
+      <strong>Validate models before you configure.</strong> The repo&rsquo;s default model isn&rsquo;t always on your
+      key. A quick <code>GET /v1/models</code> first saved a broken config &mdash; I selected only IDs the key could
+      actually serve.
+    </div>
+  </div>
+</section>
+
+<section class="article-section" id="usage">
+  <h2 class="section-title">Using it: Python, then the API</h2>
+  <div class="prose">
+    <p>
+      From Python it is four steps, with one rule that trips everyone: you must <code>await
+      rag.initialize_storages()</code> before any insert or query, or you get an <code>AttributeError</code> /
+      <code>KeyError</code>. Insert text (which triggers extraction and embedding), query with a mode like
+      <code>mix</code>, and finalize on exit.
+    </p>
+    <pre><code>import asyncio
+from lightrag import LightRAG, QueryParam
+from lightrag.llm.openai import openai_complete_if_cache, openai_embed
+
+async def main():
+    rag = LightRAG(
+        working_dir="./rag_storage",
+        llm_model_func=openai_complete_if_cache,
+        embedding_func=openai_embed,
+    )
+    await rag.initialize_storages()   # REQUIRED before any insert/query
+    await rag.ainsert("LightRAG builds a knowledge graph from your docs.")
+    answer = await rag.aquery(
+        "What does LightRAG build?",
+        param=QueryParam(mode="mix"),
+    )
+    print(answer)
+    await rag.finalize_storages()
+
+asyncio.run(main())</code></pre>
+    <p>
+      Running the server, a quick health check confirms the wiring: the web UI is available, the LLM is
+      <code>gpt-5-mini</code>, the embedding model is <code>text-embedding-3-small</code>, and the vector store is
+      Qdrant &mdash; namespaced to its own <code>WORKSPACE</code> so it creates its own collections and leaves any
+      existing ones untouched.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/health.png" alt="Server health JSON showing webui_available true, gpt-5-mini, text-embedding-3-small, QdrantVectorDBStorage and the lightrag_demo workspace, plus the namespaced Qdrant collections" loading="lazy" />
+      <figcaption>Health check &mdash; models, vector storage and workspace all wired, with LightRAG&rsquo;s collections sitting beside the existing ones</figcaption>
+    </figure>
+    <p>
+      Then a full round-trip: insert a short document, ask a question in <code>mix</code> mode, and the flagship
+      <code>gpt-5.5</code> writes a grounded answer with a citation back to the source &mdash; over retrieval that found
+      14 entities, 13 relations and the relevant chunk.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/query.png" alt="An end-to-end query in mix mode returning a grounded, structured answer with a citation to the source file" loading="lazy" />
+      <figcaption>End-to-end query in <code>mix</code> mode &mdash; a grounded answer from <code>gpt-5.5</code> with a citation</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="article-section" id="kg">
+  <h2 class="section-title">The knowledge graph it built</h2>
+  <div class="prose">
+    <p>
+      The most satisfying part is seeing the graph LightRAG extracts. From a single short document it produced 14 nodes
+      and 13 edges, centred on the <em>LightRAG</em> node and the <em>Dual-Level Retrieval Paradigm</em> node &mdash; and
+      the counts match the extraction logs exactly. The built-in web UI renders it interactively, alongside tabs for
+      documents, retrieval and the API.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/kg.png" alt="The LightRAG web UI knowledge-graph view showing 14 nodes and 13 edges, centred on the LightRAG and Dual-Level Retrieval Paradigm nodes" loading="lazy" />
+      <figcaption>The knowledge graph in the web UI &mdash; 14 nodes, 13 edges, matching the extraction logs</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="article-section" id="issues">
+  <h2 class="section-title">Issues we hit (and the fixes)</h2>
+  <div class="prose">
+    <p>
+      Real installs are never perfectly smooth. The sneakiest issue: <strong>every query returned &ldquo;no relevant
+      context found&rdquo;</strong> even though retrieval was clearly succeeding and finding 14 entities. The real error
+      was downstream &mdash; <code>gpt-5.5</code> returned an HTTP 400 because the reasoning-effort value
+      <code>minimal</code> is not supported by that model. Since the setting applies to <em>every</em> role at once, and
+      <code>gpt-5-mini</code> accepts <code>minimal</code> but <code>gpt-5.5</code> does not, the fix was the tier both
+      share:
+    </p>
+    <div class="callout red">
+      <strong>Symptom:</strong> queries say &ldquo;no relevant context found&rdquo; while logs show retrieval working.
+      <strong>Cause:</strong> <code>gpt-5.5</code> rejects <code>reasoning_effort=minimal</code> (HTTP 400).
+      <strong>Fix:</strong> set <code>OPENAI_LLM_REASONING_EFFORT=low</code> &mdash; the only tier supported by both
+      <code>gpt-5-mini</code> and <code>gpt-5.5</code>.
+    </div>
+    <figure class="figure full">
+      <img src="demo_assets/gotchas.png" alt="A troubleshooting illustration: a wrench over a warning triangle and a checklist of resolved items" loading="lazy" />
+      <figcaption>Three more gotchas worth knowing before you start</figcaption>
+    </figure>
+    <p>Three more gotchas:</p>
+    <ul>
+      <li><strong>Model availability.</strong> The repo&rsquo;s default model wasn&rsquo;t on my key &mdash; validate
+      against <code>/v1/models</code> before writing config.</li>
+      <li><strong>The web UI isn&rsquo;t pre-built.</strong> Run the <code>bun run build</code> step, then restart the
+      server so it mounts the assets.</li>
+      <li><strong>Qdrant was stopped.</strong> Start the container, and use a <code>WORKSPACE</code> name so LightRAG
+      keeps its collections cleanly separated from any existing data.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="article-section" id="verdict">
+  <h2 class="section-title">Verdict</h2>
+  <div class="prose">
+    <p>
+      LightRAG hits a genuinely useful sweet spot: the comprehensiveness of a knowledge graph without GraphRAG&rsquo;s
+      token bill or its full-rebuild updates. The dual-level retrieval is an elegant way to serve both pointed and
+      conceptual questions from one index, and the OpenAI + Qdrant deployment is refreshingly light &mdash; no GPU, just
+      API calls and a vector store. The rough edges are operational, not conceptual: validate your model IDs, build the
+      web UI, and mind the cross-model <code>reasoning_effort</code> setting.
+    </p>
+    <div class="callout">
+      <strong>Bottom line.</strong> If GraphRAG&rsquo;s cost put you off, LightRAG is the pragmatic middle path: keep the
+      graph, drop the expensive traversal, and let dual-level retrieval plus vectors do the work. Pair it with the
+      <a href="https://www.youtube.com/watch?v=AzI-t7N9wEM" target="_blank">full Advanced RAG course</a> for the bigger
+      picture.
+    </div>
+  </div>
+</section>
+
+<section class="article-section" id="refs">
+  <h2 class="section-title">References &amp; links</h2>
+  <ul class="links">
+    <li><a href="https://www.youtube.com/watch?v=AzI-t7N9wEM" target="_blank"><strong>Full course</strong> &mdash; my <em>Advanced RAG</em> course on YouTube</a> &mdash; the complete, end-to-end treatment of graph-RAG and modern retrieval.</li>
+    <li><a href="https://youtu.be/eGncma2nwfI" target="_blank"><strong>Companion video</strong> &mdash; the LightRAG install &amp; usage tutorial</a> this article is based on.</li>
+    <li><a href="https://arxiv.org/abs/2410.05779" target="_blank"><strong>Paper</strong> &mdash; Guo, Xia, Yu, Ao, Huang, <em>LightRAG: Simple and Fast Retrieval-Augmented Generation</em></a>, arXiv:2410.05779.</li>
+    <li><a href="https://github.com/HKUDS/LightRAG" target="_blank"><strong>GitHub</strong> &mdash; <code>HKUDS/LightRAG</code></a> &mdash; reference implementation, API server and web UI.</li>
+    <li>Models: OpenAI <code>gpt-5-mini</code>, <code>gpt-5-nano</code>, <code>gpt-5.5</code> and <code>text-embedding-3-small</code>. Vector store: <a href="https://qdrant.tech/" target="_blank">Qdrant</a>.</li>
+    <li>The overall-architecture figure is reproduced from the LightRAG paper (Guo et al., arXiv:2410.05779). Concept illustrations are static frames from the companion video; remaining illustrations generated with <strong>Nano Banana Pro</strong>.</li>
+  </ul>
+</section>
+
+</div><!-- /container -->
+
+<footer class="page-footer">
+  <div class="inner">
+    <a class="back-to-blog" href="../index.html">
+      <span class="arrow">&larr;</span>
+      <span>Back to the blog</span>
+    </a>
+    <p>Stack: LightRAG (HKUDS), OpenAI <code>gpt-5-mini</code> / <code>gpt-5-nano</code> / <code>gpt-5.5</code>, <code>text-embedding-3-small</code> (1536-dim), Qdrant vector store, FastAPI server + web UI. No GPU required.<br />
+       Article by Omar Kamal Hosney &middot; 2026-06-27</p>
+    <div class="social">
+      <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn">in</a>
+      <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium">M</a>
+      <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub">gh</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
