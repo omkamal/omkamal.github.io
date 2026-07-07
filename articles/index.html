@@ -50,6 +50,28 @@
     "blogPost": [
       {
         "@type": "BlogPosting",
+        "headline": "Krea 2 on a single RTX 4090 — quantizing a 12B image model with GGUF (Pop!_OS)",
+        "url": "https://omkamal.github.io/articles/kera2-rtx4090/kera2-rtx4090.html",
+        "image": "https://omkamal.github.io/articles/kera2-rtx4090/demo_assets/hero.jpg",
+        "datePublished": "2026-07-06",
+        "dateModified": "2026-07-06",
+        "author": { "@type": "Person", "name": "Omar Kamal Hosney" },
+        "keywords": "Krea 2, Krea 2 Turbo, GGUF, Q6_K, quantization, RTX 4090, ComfyUI, Qwen3-VL, LoRA, local text-to-image, diffusion transformer, Pop!_OS, Linux",
+        "description": "Krea 2 Turbo, a 12B diffusion transformer, quantized to Q6_K GGUF and run fully local on one 24 GB RTX 4090 under Pop!_OS: install path, a 16-style quality gallery with honest per-image verdicts, and where diffusion text still breaks."
+      },
+      {
+        "@type": "BlogPosting",
+        "headline": "Unlimited-OCR, hands-on: long-horizon document parsing on a single RTX 4090",
+        "url": "https://omkamal.github.io/articles/unlimited-ocr/unlimited-ocr.html",
+        "image": "https://omkamal.github.io/articles/unlimited-ocr/demo_assets/hero.png",
+        "datePublished": "2026-06-30",
+        "dateModified": "2026-06-30",
+        "author": { "@type": "Person", "name": "Omar Kamal Hosney" },
+        "keywords": "Unlimited-OCR, Baidu, DeepSeek-OCR, Arabic OCR, document parsing, layout analysis, SGLang, RTX 4090, VLM, gundam, base, no-repeat-ngram, table extraction, historical documents",
+        "description": "A hands-on field test of Baidu's Unlimited-OCR (a DeepSeek-OCR-based long-horizon document-parsing VLM) on 39 scanned 1890s Arabic book pages, served with SGLang on one RTX 4090: strong layout analysis, mediocre historical-Arabic text recognition, CJK hallucinations, and the degenerate generation loop that image_mode=base fixes."
+      },
+      {
+        "@type": "BlogPosting",
         "headline": "LightRAG, hands-on: fast graph-RAG with GPT-5 and Qdrant",
         "url": "https://omkamal.github.io/articles/lightrag/lightrag.html",
         "image": "https://omkamal.github.io/articles/lightrag/demo_assets/hero.png",
@@ -689,21 +711,21 @@
     </div>
 
     <section class="featured" aria-label="Featured article">
-      <a href="lightrag/lightrag.html" class="featured-card">
+      <a href="kera2-rtx4090/kera2-rtx4090.html" class="featured-card">
         <div class="featured-visual">
-          <img src="lightrag/demo_assets/hero.png" alt="A document flowing into a glowing knowledge graph and then an answer — LightRAG indexing documents into a knowledge graph" loading="lazy" />
-          <span class="overlay-emoji">🕸️</span>
+          <img src="kera2-rtx4090/demo_assets/hero.jpg" alt="KERA2 — a 12B image model quantized to run on one RTX 4090, with a layered model-stack diagram and the author's portrait" loading="lazy" />
+          <span class="overlay-emoji">🎨</span>
         </div>
         <div class="featured-body">
           <span class="featured-tag">⭐ Featured · Latest</span>
-          <p class="featured-meta"><span>AI Models</span><span>Field Notes</span><span>June 2026</span><span>9 min read</span></p>
-          <h2>LightRAG — fast graph-RAG with GPT-5 + Qdrant, hands-on</h2>
+          <p class="featured-meta"><span>AI Models</span><span>Field Notes</span><span>July 2026</span><span>9 min read</span></p>
+          <h2>Krea 2 on a single RTX 4090 — quantizing a 12B image model with GGUF</h2>
           <p>
-            <strong>Graph-RAG without GraphRAG's bill.</strong> LightRAG (HKUDS) turns your documents into a
-            <strong>knowledge graph</strong> and answers with a <strong>dual-level retrieval</strong> paradigm —
-            comprehensive, but a single API call instead of community traversal, and incremental updates instead of
-            rebuilds. The seven core ideas, then a real end-to-end install on OpenAI <code>gpt-5-mini</code> /
-            <code>gpt-5.5</code> and a <code>Qdrant</code> vector store — with the graph it builds and the setup fixes.
+            A <strong>12-billion-parameter</strong> diffusion transformer, quantized to a <strong>Q6_K GGUF</strong>
+            (~10.6&nbsp;GB) and run entirely local on one 24&nbsp;GB 4090 under <strong>Pop!_OS</strong>. The install
+            path (isolated ComfyUI, torch cu130, the <code>krea2</code> encoder gotcha), a <strong>16-style</strong>
+            quality gallery with honest per-image verdicts, and the hard wall where diffusion <strong>text</strong>
+            still breaks.
           </p>
           <span class="featured-cta">Read the article <span class="arrow">→</span></span>
         </div>
@@ -712,6 +734,40 @@
 
     <p class="section-label">More articles</p>
     <div class="article-grid">
+      <a href="unlimited-ocr/unlimited-ocr.html" class="article-card" data-category="ai-models">
+        <div class="article-thumb">
+          <span class="emoji">📄</span>
+        </div>
+        <div class="article-body">
+          <h3>Unlimited-OCR — long-horizon document parsing on a 4090</h3>
+          <p>
+            Baidu's <strong>DeepSeek-OCR</strong>-based parsing VLM, served with <code>SGLang</code> on one
+            24&nbsp;GB 4090. <strong>Near-perfect on clean English</strong> — including exact table extraction — and
+            much harder on 1890s Arabic. Install steps, full-page → <strong>rendered-Markdown</strong> comparisons,
+            and the runaway loop <code>image_mode=base</code> fixes.
+          </p>
+          <div class="article-meta">
+            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>June 2026</span>
+          </div>
+        </div>
+      </a>
+      <a href="lightrag/lightrag.html" class="article-card" data-category="ai-models">
+        <div class="article-thumb">
+          <span class="emoji">🕸️</span>
+        </div>
+        <div class="article-body">
+          <h3>LightRAG — fast graph-RAG with GPT-5 + Qdrant, hands-on</h3>
+          <p>
+            <strong>Graph-RAG without GraphRAG's bill.</strong> LightRAG (HKUDS) turns your documents into a
+            <strong>knowledge graph</strong> and answers with a <strong>dual-level retrieval</strong> paradigm —
+            a single API call instead of community traversal, and incremental updates instead of rebuilds — run
+            end-to-end on OpenAI <code>gpt-5-mini</code> / <code>gpt-5.5</code> and a <code>Qdrant</code> store.
+          </p>
+          <div class="article-meta">
+            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>June 2026</span>
+          </div>
+        </div>
+      </a>
       <a href="linearrag/linearrag.html" class="article-card" data-category="ai-models">
         <div class="article-thumb">
           <span class="emoji">🕸️</span>

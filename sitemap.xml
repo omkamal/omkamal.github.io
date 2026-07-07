@@ -28,6 +28,34 @@
 
   <!-- Articles -->
   <url>
+    <loc>https://omkamal.github.io/articles/kera2-rtx4090/kera2-rtx4090.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/kera2-rtx4090/demo_assets/hero.jpg</image:loc>
+      <image:title>Krea 2 Turbo quantized to Q6_K GGUF, running on one RTX 4090 — the model-stack thumbnail</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://omkamal.github.io/articles/unlimited-ocr/unlimited-ocr.html</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/unlimited-ocr/demo_assets/hero.png</image:loc>
+      <image:title>Unlimited-OCR — one scanned Arabic page parsed into structured layout-tagged output</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/unlimited-ocr/demo_assets/demo-result.png</image:loc>
+      <image:title>Unlimited-OCR — the Gradio demo parsing a 19th-century Arabic page</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://omkamal.github.io/articles/unlimited-ocr/demo_assets/failure-loop.png</image:loc>
+      <image:title>Unlimited-OCR — the runaway generation loop and the image_mode=base fix</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://omkamal.github.io/articles/lightrag/lightrag.html</loc>
     <lastmod>2026-06-27</lastmod>
     <changefreq>monthly</changefreq>

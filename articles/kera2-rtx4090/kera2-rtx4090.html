@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krea 2 on a single RTX 4090 — quantizing a 12B image model with GGUF (Pop!_OS)</title>
+<meta name="description" content="A hands-on field test of Krea 2 Turbo, a 12B diffusion transformer, quantized to a Q6_K GGUF and run entirely local on one 24 GB RTX 4090 under Pop!_OS. The install path (isolated ComfyUI, torch cu130, the krea2 text-encoder gotcha), a 16-style quality gallery with honest per-image verdicts, and where diffusion text still breaks." />
+<meta name="keywords" content="Krea 2, Krea 2 Turbo, GGUF, Q6_K, quantization, RTX 4090, ComfyUI, ComfyUI-GGUF, Qwen3-VL, LoRA, local AI image generation, text-to-image, diffusion transformer, Pop!_OS, Ubuntu, Linux, CUDA, image model, Kera2" />
+<meta name="author" content="Omar Kamal Hosney" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://omkamal.github.io/articles/kera2-rtx4090/kera2-rtx4090.html" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Omar Kamal Hosney" />
+<meta property="og:url" content="https://omkamal.github.io/articles/kera2-rtx4090/kera2-rtx4090.html" />
+<meta property="og:title" content="Krea 2 on a single RTX 4090 — quantizing a 12B image model with GGUF" />
+<meta property="og:description" content="A 12B diffusion transformer, quantized to Q6_K GGUF, running fully local on one 24 GB RTX 4090 under Pop!_OS. Install path, a 16-style quality gallery with honest verdicts, and where diffusion text still breaks." />
+<meta property="og:image" content="https://omkamal.github.io/articles/kera2-rtx4090/demo_assets/hero.jpg" />
+<meta property="article:author" content="Omar Kamal Hosney" />
+<meta property="article:published_time" content="2026-07-06" />
+<meta property="article:section" content="AI Models" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Krea 2 (12B) local on one RTX 4090, quantized with GGUF" />
+<meta name="twitter:description" content="Quantizing a 12B image model to Q6_K GGUF to fit 24 GB — install on Pop!_OS, a 16-style quality gallery with honest verdicts, and where diffusion text still breaks." />
+<meta name="twitter:image" content="https://omkamal.github.io/articles/kera2-rtx4090/demo_assets/hero.jpg" />
+
+<link rel="icon" type="image/jpeg" href="../../omar.jpeg" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Krea 2 on a single RTX 4090 — quantizing a 12B image model with GGUF (Pop!_OS)",
+  "description": "A hands-on field test of Krea 2 Turbo, a 12B diffusion transformer, quantized to a Q6_K GGUF and run entirely local on one 24 GB RTX 4090 under Pop!_OS: the install path, a 16-style quality gallery with honest per-image verdicts, and where diffusion text still breaks.",
+  "image": "https://omkamal.github.io/articles/kera2-rtx4090/demo_assets/hero.jpg",
+  "datePublished": "2026-07-06",
+  "dateModified": "2026-07-06",
+  "author": { "@type": "Person", "name": "Omar Kamal Hosney", "url": "https://omkamal.github.io/" },
+  "publisher": { "@type": "Person", "name": "Omar Kamal Hosney" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://omkamal.github.io/articles/kera2-rtx4090/kera2-rtx4090.html" },
+  "articleSection": "AI Models",
+  "keywords": "Krea 2, Krea 2 Turbo, GGUF, Q6_K, quantization, RTX 4090, ComfyUI, Qwen3-VL, LoRA, local text-to-image, diffusion transformer, Pop!_OS, Linux",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omkamal.github.io/articles/" },
+      { "@type": "ListItem", "position": 3, "name": "Krea 2 on a single RTX 4090", "item": "https://omkamal.github.io/articles/kera2-rtx4090/kera2-rtx4090.html" }
+    ]
+  }
+}
+</script>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&family=Amiri:wght@400;700&display=swap">
+
+<style>
+:root {
+  --c-ink: #18181b;
+  --c-ink-soft: #27272a;
+  --c-prose: #3f3f46;
+  --c-muted: #71717a;
+  --c-mute-2: #a1a1aa;
+  --c-paper: #fafaf9;
+  --c-paper-2: #ffffff;
+  --c-line: #e7e5e4;
+  --c-line-soft: #f1f0ee;
+  --c-accent: #7c3aed;
+  --c-accent-2: #ec4899;
+  --c-accent-3: #f59e0b;
+  --c-accent-soft: #faf5ff;
+  --c-accent-line: #e9d5ff;
+  --c-blue: #2563eb;
+  --c-blue-soft: #eff6ff;
+  --c-blue-line: #bfdbfe;
+  --c-green: #16a34a;
+  --c-green-soft: #f0fdf4;
+  --c-green-line: #bbf7d0;
+  --c-warn: #b45309;
+  --c-warn-soft: #fffbeb;
+  --c-warn-line: #fde68a;
+  --c-red: #dc2626;
+  --c-red-soft: #fef2f2;
+  --c-red-line: #fecaca;
+  --c-code-bg: #0f172a;
+  --c-code-fg: #e2e8f0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 24px 56px -16px rgba(15, 23, 42, 0.18), 0 8px 20px -6px rgba(15, 23, 42, 0.08);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { font-family: 'Source Serif 4', Charter, Georgia, 'Times New Roman', serif; font-size: 18px; line-height: 1.75; color: var(--c-prose); background: var(--c-paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--c-accent); color: white; }
+
+.top-nav { position: sticky; top: 0; z-index: 50; background: rgba(250, 250, 249, 0.85); backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px); border-bottom: 1px solid var(--c-line); }
+.nav-inner { max-width: 1180px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 12px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--c-ink); text-decoration: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-accent) 100%); display: grid; place-items: center; font-weight: 800; font-size: 0.78rem; color: white; box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.4); }
+.nav-right { display: flex; gap: 4px; align-items: center; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+.nav-right a { color: var(--c-muted); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 500; transition: all 0.2s var(--ease); }
+.nav-right a:hover { color: var(--c-ink); background: rgba(0,0,0,0.04); }
+.nav-right a.active { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.hero { position: relative; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #4c1d95 100%); color: #e2e8f0; padding: 80px 0 100px; margin-bottom: -60px; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.35), transparent 50%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.30), transparent 50%), radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.10), transparent 60%); }
+.hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); pointer-events: none; }
+.hero-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 32px; }
+.crumbs { font-family: 'Inter', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; color: rgba(226, 232, 240, 0.65); margin-bottom: 22px; }
+.crumbs a { color: rgba(226, 232, 240, 0.85); text-decoration: none; border-bottom: 1px solid rgba(226, 232, 240, 0.3); transition: all 0.2s var(--ease); }
+.crumbs a:hover { color: white; border-bottom-color: white; }
+.crumbs .sep { margin: 0 0.5em; opacity: 0.4; }
+.article-header { margin: 0; padding: 0; border: 0; }
+.byline { display: inline-flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: #c4b5fd; padding: 5px 12px; background: rgba(168, 85, 247, 0.18); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50px; margin-bottom: 28px; }
+.byline span + span::before { content: "·"; opacity: 0.6; margin: 0 0.25rem; color: #c4b5fd; }
+h1 { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2.2rem, 4.8vw, 3.6rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.03em; color: #ffffff; margin: 0 0 22px; max-width: 880px; }
+.subtitle { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(1.05rem, 1.6vw, 1.28rem); line-height: 1.55; color: rgba(226, 232, 240, 0.82); font-style: italic; margin: 0; max-width: 720px; }
+.subtitle code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85em; font-style: normal; background: rgba(255, 255, 255, 0.12); padding: 2px 8px; border-radius: 5px; color: #fde68a; border: 1px solid rgba(255, 255, 255, 0.08); }
+
+.container { max-width: 980px; margin: 0 auto; padding: 100px 32px 80px; position: relative; z-index: 2; }
+
+.tldr { background: linear-gradient(135deg, #ffffff 0%, var(--c-accent-soft) 100%); border: 1px solid var(--c-accent-line); border-left: 4px solid var(--c-accent); padding: 26px 30px; border-radius: 0 16px 16px 0; margin: 0 0 60px; box-shadow: var(--shadow-md); }
+.tldr h3 { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-accent); margin: 0 0 12px; }
+.tldr p { font-size: 1.05rem; color: var(--c-ink-soft); margin: 0 0 0.8rem; text-align: justify; hyphens: auto; }
+.tldr p:last-child { margin-bottom: 0; }
+.tldr strong { color: var(--c-ink); font-weight: 700; }
+.tldr code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(255,255,255,0.7); border: 1px solid var(--c-accent-line); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); }
+
+.toc { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; color: var(--c-prose); padding: 22px 28px; margin: 0 0 80px; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 16px; line-height: 2.1; box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: center; }
+.toc strong { display: inline-flex; align-items: center; gap: 7px; color: var(--c-ink); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; padding-right: 14px; margin-right: 6px; border-right: 1px solid var(--c-line); }
+.toc strong::before { content: ''; width: 3px; height: 14px; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+.toc a { color: var(--c-prose); text-decoration: none; padding: 4px 11px; border-radius: 50px; transition: all 0.2s var(--ease); font-weight: 500; }
+.toc a:hover { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.article-section { margin-bottom: 80px; scroll-margin-top: 80px; }
+.section-title { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(1.65rem, 3vw, 2.15rem); font-weight: 700; color: var(--c-ink); margin: 0 0 28px; letter-spacing: -0.025em; line-height: 1.18; position: relative; padding-left: 18px; }
+.section-title::before { content: ''; position: absolute; left: 0; top: 0.18em; width: 5px; height: 0.85em; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 3px; }
+
+.prose { max-width: 100%; margin-bottom: 36px; font-size: 1.06rem; line-height: 1.78; text-align: justify; hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty; }
+.prose p { margin: 0 0 1.25rem; color: var(--c-prose); text-align: justify; hyphens: auto; }
+.prose h3 { text-align: left; hyphens: manual; }
+.prose ul, .prose ol { text-align: left; hyphens: manual; margin: 0 0 1.25rem 1.2rem; }
+.prose li { margin-bottom: 0.4rem; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--c-ink); font-weight: 600; }
+.prose em { color: var(--c-ink-soft); }
+.prose code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.86em; background: var(--c-accent-soft); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); border: 1px solid var(--c-accent-line); font-weight: 500; }
+.prose a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--c-accent-line); transition: all 0.2s var(--ease); }
+.prose a:hover { text-decoration-color: var(--c-accent); text-decoration-thickness: 2px; }
+.prose h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--c-ink); margin: 2.2rem 0 0.8rem; letter-spacing: -0.015em; display: flex; align-items: center; gap: 10px; }
+.prose h3::before { content: ''; width: 22px; height: 2px; background: linear-gradient(90deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+
+.prose pre { background: var(--c-code-bg); color: var(--c-code-fg); padding: 44px 26px 22px; border-radius: 12px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85rem; line-height: 1.65; overflow-x: auto; margin: 22px 0; border: 1px solid #1e293b; box-shadow: var(--shadow-lg); position: relative; }
+.prose pre::before { content: ''; position: absolute; top: 14px; left: 18px; width: 11px; height: 11px; border-radius: 50%; background: #ef4444; box-shadow: 18px 0 0 #f59e0b, 36px 0 0 #10b981; opacity: 0.7; }
+.prose pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; border: 0; font-weight: 400; }
+
+.callout { background: var(--c-warn-soft); border: 1px solid var(--c-warn-line); border-left: 4px solid var(--c-accent-3); padding: 16px 22px; border-radius: 0 12px 12px 0; margin: 22px 0; font-size: 0.98rem; line-height: 1.7; color: var(--c-ink-soft); position: relative; box-shadow: var(--shadow-sm); text-align: justify; hyphens: auto; }
+.callout.green { background: var(--c-green-soft); border-color: var(--c-green-line); border-left-color: var(--c-green); }
+.callout.red { background: var(--c-red-soft); border-color: var(--c-red-line); border-left-color: var(--c-red); }
+.callout.blue { background: var(--c-blue-soft); border-color: var(--c-blue-line); border-left-color: var(--c-blue); }
+.callout strong { color: var(--c-ink); }
+.callout code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--c-warn); padding: 1.5px 6px; border-radius: 4px; }
+.callout.green code { background: rgba(22, 163, 74, 0.12); border-color: rgba(22, 163, 74, 0.3); color: var(--c-green); }
+.callout.red code { background: rgba(220, 38, 38, 0.10); border-color: rgba(220, 38, 38, 0.3); color: var(--c-red); }
+.callout.blue code { background: rgba(37, 99, 235, 0.10); border-color: rgba(37,99,235,0.3); color: var(--c-blue); }
+
+.variant-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 22px 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.88rem; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); }
+.variant-table th, .variant-table td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--c-line-soft); vertical-align: top; }
+.variant-table th { background: linear-gradient(180deg, #fafafa, #f5f5f4); font-weight: 700; color: var(--c-ink); letter-spacing: 0.02em; font-size: 0.74rem; text-transform: uppercase; }
+.variant-table tbody tr:last-child td { border-bottom: 0; }
+.variant-table tbody tr:hover td { background: var(--c-accent-soft); }
+.variant-table td { color: var(--c-prose); }
+.variant-table td strong { color: var(--c-ink); }
+.variant-table td.num { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+.variant-table tr.hi td { background: var(--c-green-soft); }
+.variant-table tr.hi:hover td { background: var(--c-green-soft); }
+
+.figure { margin: 28px auto; text-align: center; display: block; }
+.figure img, .figure video { width: 100%; max-width: 100%; height: auto; border-radius: 14px; display: block; margin-left: auto; margin-right: auto; border: 1px solid var(--c-line); box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); background: var(--c-paper-2); }
+.figure video { background: #000; }
+.figure img:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); border-color: var(--c-accent-line); }
+.figure figcaption { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; color: var(--c-mute-2); margin: 10px auto 0; letter-spacing: 0.02em; text-align: center; max-width: 85%; }
+.figure.full img { background: white; }
+.figure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px auto; justify-items: center; align-items: start; }
+.figure-grid .figure { margin: 0; width: 100%; }
+
+.example { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 18px; padding: 28px 30px; margin: 26px 0 36px; box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); }
+.example:hover { box-shadow: var(--shadow-lg); border-color: var(--c-accent-line); }
+.example-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1px solid var(--c-line-soft); flex-wrap: wrap; }
+.example-head h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--c-ink); margin: 0; letter-spacing: -0.018em; }
+.tps-chip { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; font-weight: 700; padding: 6px 14px; border-radius: 50px; color: white; background: linear-gradient(135deg, var(--c-green) 0%, #15803d 100%); box-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.35); }
+.tps-chip.amber { background: linear-gradient(135deg, var(--c-accent-3) 0%, var(--c-warn) 100%); box-shadow: 0 4px 12px -2px rgba(180, 83, 9, 0.35); }
+.tps-chip.fire { background: linear-gradient(135deg, var(--c-accent-2) 0%, #be185d 100%); box-shadow: 0 4px 12px -2px rgba(190, 24, 93, 0.35); }
+.tps-chip.blue { background: linear-gradient(135deg, var(--c-blue) 0%, #1d4ed8 100%); box-shadow: 0 4px 12px -2px rgba(37,99,235,0.35); }
+.prompt-line { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: var(--c-paper); border: 1px solid var(--c-line); border-left: 3px solid var(--c-accent); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 0 0 18px; color: var(--c-ink-soft); line-height: 1.5; }
+
+.commentary { margin-top: 24px; padding: 20px 22px; background: var(--c-blue-soft); border: 1px solid var(--c-blue-line); border-left: 4px solid var(--c-blue); border-radius: 0 12px 12px 0; }
+.commentary h4 { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-blue); margin: 0 0 10px; display: inline-flex; align-items: center; gap: 7px; }
+.commentary h4::before { content: '💡'; font-size: 1.05em; }
+.commentary p { font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); margin: 0; text-align: justify; hyphens: auto; }
+.commentary code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: rgba(37, 99, 235, 0.1); padding: 1.5px 6px; border-radius: 4px; color: var(--c-blue); border: 1px solid var(--c-blue-line); font-weight: 500; }
+.commentary strong { color: var(--c-ink); }
+
+.links { padding-left: 20px; max-width: 100%; }
+.links li { margin-bottom: 10px; line-height: 1.6; }
+.links li code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: var(--c-paper); border: 1px solid var(--c-line); padding: 1px 6px; border-radius: 4px; color: var(--c-ink-soft); }
+
+.page-footer { border-top: 1px solid var(--c-line); padding: 60px 0 80px; text-align: center; background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.03)); }
+.page-footer .inner { max-width: 980px; margin: 0 auto; padding: 0 32px; font-family: 'Inter', sans-serif; }
+.back-to-blog { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-2) 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 24px -6px rgba(124, 58, 237, 0.5); transition: all 0.3s var(--ease); margin-bottom: 32px; }
+.back-to-blog:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(124, 58, 237, 0.65); }
+.back-to-blog .arrow { transition: transform 0.3s var(--ease); }
+.back-to-blog:hover .arrow { transform: translateX(-4px); }
+.page-footer p { color: var(--c-muted); font-size: 0.88rem; margin-bottom: 18px; }
+.social { display: flex; justify-content: center; gap: 12px; }
+.social a { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: var(--c-paper-2); border: 1px solid var(--c-line); color: var(--c-muted); text-decoration: none; transition: all 0.3s var(--ease); font-family: 'Inter', sans-serif; font-weight: 700; }
+.social a:hover { color: var(--c-accent); border-color: var(--c-accent-line); background: var(--c-accent-soft); transform: translateY(-2px); }
+
+@media (max-width: 900px) {
+  .hero { padding: 60px 0 80px; }
+  .hero-inner { padding: 0 20px; }
+  .container { padding: 80px 20px 60px; }
+  .nav-inner { padding: 12px 20px; }
+  h1 { font-size: 2rem; }
+  .section-title { font-size: 1.55rem; }
+  .figure-grid { grid-template-columns: 1fr; }
+  .example { padding: 22px 22px; border-radius: 14px; }
+  .toc { padding: 18px 20px; font-size: 0.8rem; gap: 6px; }
+  .toc strong { border-right: 0; margin-bottom: 4px; padding-right: 0; width: 100%; }
+  .nav-right a { padding: 6px 10px; font-size: 0.82rem; }
+}
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .prose { font-size: 1.02rem; }
+  .nav-right a:not(.active) { display: none; }
+}
+</style>
+
+<style>
+/* Article-specific additions: Arabic RTL output + det-tag chips + embedded extracted tables */
+.ar { font-family: 'Amiri', 'Source Serif 4', serif; direction: rtl; text-align: right; font-size: 1.18rem; line-height: 2.0; }
+.ocr-out { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 12px; padding: 18px 20px; margin: 22px 0; box-shadow: var(--shadow-sm); }
+.ocr-out .det { font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: var(--c-accent); background: var(--c-accent-soft); border: 1px solid var(--c-accent-line); padding: 1px 6px; border-radius: 4px; direction: ltr; display: inline-block; margin: 4px 0; }
+.ocr-out .det.green { color: var(--c-green); background: var(--c-green-soft); border-color: var(--c-green-line); }
+.ocr-out .det.blue { color: var(--c-blue); background: var(--c-blue-soft); border-color: var(--c-blue-line); }
+.ocr-out .det.red { color: var(--c-red); background: var(--c-red-soft); border-color: var(--c-red-line); }
+.scorecard { width: 100%; border-collapse: separate; border-spacing: 0; margin: 22px 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.9rem; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); }
+.scorecard th, .scorecard td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--c-line-soft); }
+.scorecard th { background: linear-gradient(180deg, #fafafa, #f5f5f4); font-weight: 700; color: var(--c-ink); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.scorecard tbody tr:last-child td { border-bottom: 0; }
+.scorecard td.num { font-family: 'JetBrains Mono', monospace; font-weight: 500; color: var(--c-ink-soft); }
+.scorecard tbody tr:hover td { background: var(--c-accent-soft); }
+/* The actual extracted HTML table, shown as the model emitted it */
+.realtable { width: 100%; border-collapse: collapse; margin: 6px 0 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; background: #fff; }
+.realtable caption { font-family: 'Inter', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--c-green); font-weight: 700; text-align: left; padding: 0 0 8px; }
+.realtable th, .realtable td { border: 1px solid var(--c-line); padding: 6px 10px; text-align: right; color: var(--c-ink-soft); }
+.realtable th { background: var(--c-green-soft); color: var(--c-ink); font-weight: 700; text-align: right; }
+.realtable td:first-child, .realtable th:first-child { text-align: left; }
+
+/* Rendered-Markdown output panel (what a consumer sees after stripping det tags) */
+.md-render { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 14px; padding: 22px 26px; box-shadow: var(--shadow-sm); font-family: 'Source Serif 4', Georgia, serif; }
+.md-render .md-bar { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-green); font-weight: 700; margin: 0 0 14px; display: flex; align-items: center; gap: 8px; }
+.md-render .md-bar::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--c-green); box-shadow: 0 0 0 3px var(--c-green-soft); }
+.md-render h2 { font-family: 'Inter', sans-serif; font-size: 1.12rem; font-weight: 700; color: var(--c-ink); margin: 18px 0 8px; padding: 0; letter-spacing: -0.01em; }
+.md-render h2:first-of-type { margin-top: 0; }
+.md-render p { font-size: 0.98rem; line-height: 1.7; color: var(--c-prose); margin: 0 0 12px; }
+.md-render p.ar, .md-render h2.ar { direction: rtl; text-align: right; font-family: 'Amiri', 'Source Serif 4', serif; }
+.md-render table { width: 100%; border-collapse: collapse; margin: 6px 0 16px; font-family: 'Inter', sans-serif; font-size: 0.8rem; }
+.md-render th, .md-render td { border: 1px solid var(--c-line); padding: 6px 10px; text-align: right; color: var(--c-ink-soft); }
+.md-render th { background: var(--c-paper); color: var(--c-ink); font-weight: 700; }
+.md-render td:first-child, .md-render th:first-child { text-align: left; }
+.md-render .muted { color: var(--c-mute-2); font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; }
+.rawout { background: var(--c-code-bg); color: #cbd5e1; border-radius: 10px; padding: 16px 18px; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; line-height: 1.7; overflow-x: auto; margin: 16px 0; border: 1px solid #1e293b; }
+.rawout .t { color: #c4b5fd; }
+.rawout .b { color: #64748b; }
+.compare-grid { display: grid; grid-template-columns: 0.85fr 1fr; gap: 22px; align-items: start; margin: 26px 0; }
+.compare-grid .figure { margin: 0; }
+@media (max-width: 820px){ .compare-grid { grid-template-columns: 1fr; } }
+</style>
+
+</head>
+
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">OK</span>
+      <span>Omar Kamal Hosney</span>
+    </a>
+    <div class="nav-right">
+      <a href="../../cheatsheets/index.html">Cheatsheets</a>
+      <a href="../index.html" class="active">Blog</a>
+      <a href="../../resume.html" target="_blank">Resume</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="crumbs">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="../index.html">Blog</a>
+      <span class="sep">/</span>
+      AI Models
+    </p>
+    <div class="article-header">
+      <p class="byline"><span>Krea 2 Turbo</span><span>Field Notes</span><span>July 2026</span></p>
+      <h1>Krea 2 on a single RTX 4090: quantizing a 12B image model with GGUF</h1>
+      <p class="subtitle"><strong>Krea 2 Turbo</strong> is a <em>12-billion-parameter</em> diffusion transformer that
+      normally lives in the cloud. I quantized it to a <strong>Q6_K GGUF</strong>, wired it into ComfyUI on
+      <strong>Pop!_OS</strong>, and ran it entirely on one <strong>24&nbsp;GB RTX 4090</strong> &mdash; then pushed it
+      across sixteen very different styles. The result is a model that is <em>astonishing</em> at art and
+      photography, and <em>honestly limited</em> the moment it has to spell.</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<figure class="figure full" style="margin: 0 0 60px;">
+  <img src="demo_assets/hero.jpg" alt="KERA2 title with a stacked model-layer diagram (LoRA, 12B DiT, Qwen3-VL encoder, VAE), an RTX 4090 badge, and the author's portrait" loading="lazy" />
+  <figcaption>The stack in one picture: LoRA styles on top of a 12&nbsp;B diffusion transformer, a Qwen3-VL text encoder and an image VAE &mdash; all fitting inside a single 24&nbsp;GB card.</figcaption>
+</figure>
+
+<div class="tldr">
+  <h3>TL;DR</h3>
+  <p>
+    <strong>Krea 2 Turbo is a spectacular image artist that is not a typesetter.</strong> A 12&nbsp;B diffusion
+    transformer &mdash; ~26&nbsp;GB in bf16 &mdash; does not fit a 24&nbsp;GB 4090. Quantized to a
+    <strong>Q6_K GGUF (~10.6&nbsp;GB)</strong> it not only fits, it leaves headroom to stack LoRAs, and it renders a
+    1024&times;1024 image in <strong>11&ndash;18&nbsp;seconds</strong> at just 8 steps.
+  </p>
+  <p>
+    Across sixteen styles the photographic and painterly results are <strong>reference-grade</strong> &mdash;
+    photoreal wildlife, pore-level portraits, oil-brush knights, 90s cel anime, a glass-and-chrome logo. The one hard
+    wall is <strong>text</strong>: infographics and technical diagrams look beautiful but the words collapse into
+    convincing gibberish. Generate the <em>design</em> here; add the <em>words</em> in an editor.
+  </p>
+  <p>
+    Everything below ran locally on a single RTX 4090 under <strong>Pop!_OS 22.04</strong> &mdash; the quantization
+    reasoning, the exact install path (including the one <code>ComfyUI</code> gotcha that cost me an afternoon), a
+    full quality gallery with honest per-image verdicts, and a companion video.
+  </p>
+</div>
+
+<nav class="toc" aria-label="Table of contents">
+  <strong>Contents</strong>
+  <a href="#what">The 12B-in-24GB problem</a>
+  <a href="#install">Install on Pop!_OS + 4090</a>
+  <a href="#flagship">Flagship: photoreal &amp; portraits</a>
+  <a href="#stylized">Stylized, zero LoRA</a>
+  <a href="#loras">Style LoRAs</a>
+  <a href="#limits">Where it breaks: text</a>
+  <a href="#verdict">Verdict</a>
+  <a href="#refs">References &amp; links</a>
+</nav>
+
+<section class="article-section" id="what">
+  <h2 class="section-title">A 12B model that shouldn&rsquo;t fit &mdash; and does</h2>
+  <div class="prose">
+    <p>
+      Krea 2 is a <strong>12-billion-parameter diffusion transformer</strong>. In native <code>bf16</code> the
+      transformer alone is about <strong>26&nbsp;GB</strong>, and once you add the Qwen3-VL text encoder
+      (~9&nbsp;GB) and the VAE, a naive load needs well over <strong>35&nbsp;GB</strong>. A 24&nbsp;GB RTX 4090
+      simply cannot hold that &mdash; the copy-paste <code>diffusers</code> snippet OOMs before it finishes loading.
+    </p>
+    <p>
+      The fix is <strong>quantization</strong>. Instead of storing every weight in 16 bits, a GGUF quant packs the
+      diffusion transformer into a mixed 6-bit format. The community <code>Q6_K</code> build lands at
+      <strong>~10.6&nbsp;GB</strong> &mdash; visually indistinguishable from the full-precision model, but small
+      enough that the DiT, a fp8 text encoder (~5&nbsp;GB) and the VAE all coexist on the card with room to spare.
+    </p>
+    <div class="callout blue">
+      <strong>Why Q6_K and not the smallest quant?</strong> LoRAs are the point of this model, and stacking a LoRA on
+      a GGUF unet briefly de-quantizes the patched layers &mdash; so you want headroom, not the absolute floor. Q6_K
+      (~10.6&nbsp;GB) is near-lossless and still leaves ~4&nbsp;GB free for LoRA patching. Q8_0 (13.7&nbsp;GB) is even
+      cleaner if you only run a single LoRA; Q4_K_M (7.5&nbsp;GB) is the budget pick.
+    </div>
+    <p>
+      Here is the whole stack, and what each layer costs on the GPU:
+    </p>
+    <div class="rawout">
+<span class="b"># the resident stack on a 24 GB RTX 4090</span><br>
+LoRA styles ............. patched onto the DiT (a few hundred MB each)<br>
+Krea 2 &middot; 12B DiT (Q6_K) .. ~10.6 GB   &larr; the quantized transformer<br>
+Qwen3-VL text encoder ... ~5.0 GB   (fp8)<br>
+Image VAE ............... ~0.25 GB<br>
+<br>
+<span class="b"># ~16 GB resident + activations &rarr; fits, with LoRA headroom</span>
+    </div>
+    <p>
+      &ldquo;Turbo&rdquo; is the other half of the trick. Krea distilled the sampler so the model produces a finished
+      image in <strong>8 steps</strong> at <code>CFG&nbsp;1.0</code> &mdash; not the 30+ steps a base diffusion model
+      needs. On the 4090 that is the difference between a five-second wait and a one-minute one.
+    </p>
+  </div>
+</section>
+
+<section class="article-section" id="install">
+  <h2 class="section-title">Installing it on Pop!_OS + one RTX 4090</h2>
+  <div class="prose">
+    <p>
+      My box is <strong>Pop!_OS 22.04</strong> (Ubuntu-based), CUDA 13, one RTX 4090. The runtime is
+      <strong>ComfyUI</strong> with the <code>ComfyUI-GGUF</code> loader. There is exactly one non-obvious catch, so
+      let me put it up front:
+    </p>
+    <div class="callout red">
+      <strong>The gotcha that cost me an afternoon.</strong> Krea 2 shipped in June 2026 and its text encoder is
+      <code>Qwen3-VL</code> with a bespoke <code>krea2</code> CLIP type. Any ComfyUI older than that release
+      <em>does not have that type</em> &mdash; you will get a cryptic <code>CLIPLoader</code> error. The fix is not to
+      fight it: run Krea 2 from a <strong>fresh, isolated ComfyUI</strong> on latest <code>master</code>, and leave
+      your main install untouched.
+    </div>
+    <p>
+      The five steps. First, pull the quantized weights straight into the models folder (this is the only large
+      download &mdash; ~10.6&nbsp;GB):
+    </p>
+    <pre><code># 1. the Q6_K GGUF weights (DiT)
+hf download vantagewithai/Krea-2-Turbo-GGUF \
+    krea2_turbo-Q6_K.gguf --local-dir /d/ComfyUI/models/unet
+
+# ...and the ComfyUI companions: fp8 Qwen3-VL encoder + VAE + official LoRAs
+hf download Comfy-Org/Krea-2 \
+    text_encoders/qwen3vl_4b_fp8_scaled.safetensors --local-dir /d/ComfyUI/models/text_encoders
+hf download Comfy-Org/Krea-2 vae/qwen_image_vae.safetensors --local-dir /d/ComfyUI/models/vae</code></pre>
+    <p>Second, clone a fresh ComfyUI (latest master, which knows the <code>krea2</code> encoder) and its nodes:</p>
+    <pre><code># 2. isolated ComfyUI + the GGUF loader + the Power LoRA loader
+git clone https://github.com/comfyanonymous/ComfyUI ComfyUI-krea2
+cd ComfyUI-krea2/custom_nodes
+git clone https://github.com/city96/ComfyUI-GGUF
+git clone https://github.com/rgthree/rgthree-comfy
+cd ..</code></pre>
+    <p>Third, symlink the shared models cache so nothing is duplicated on disk:</p>
+    <pre><code># 3. reuse the models you already downloaded &mdash; zero duplication
+ln -s /d/ComfyUI/models  /d/ComfyUI-krea2/models</code></pre>
+    <p>
+      Fourth, build an isolated Python environment with the PyTorch the card actually wants. On this machine that is
+      <strong>torch 2.9.1 for CUDA 13</strong>. (A subtle trap: <code>uv</code>&rsquo;s <code>--torch-backend</code>
+      shortcut capped at cu129, so install torch from the cu130 index URL directly &mdash; and pin
+      <code>torchaudio</code> to the same version or ComfyUI fails to import with an ABI error.)
+    </p>
+    <pre><code># 4. venv + matching CUDA torch (Pop!_OS, driver 580, CUDA 13)
+uv venv --python 3.12 .venv &amp;&amp; source .venv/bin/activate
+uv pip install torch==2.9.1 torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/cu130
+uv pip install -r requirements.txt gguf</code></pre>
+    <p>Fifth, launch it &mdash; the quantized model streams onto the GPU and you are ready to generate:</p>
+    <pre><code># 5. launch on its own port; main ComfyUI stays untouched
+python main.py --port 8288
+# -> Krea 2 Turbo (Q6_K) loads on the RTX 4090, ready on :8288</code></pre>
+    <div class="callout green">
+      <strong>Sampler settings that matter.</strong> Krea 2 Turbo wants <code>8 steps</code>, <code>CFG&nbsp;1.0</code>,
+      sampler <code>er_sde</code>, scheduler <code>simple</code>. Everything below was generated at exactly those
+      settings, 1024&times;1024 (or the noted aspect), on the Q6_K unet with the fp8 Qwen3-VL encoder.
+    </div>
+    <figure class="figure full">
+      <img src="demo_assets/install.gif" alt="Animated terminal showing the five install commands typing out in sequence, ending with the model loaded on the RTX 4090" loading="lazy" />
+      <figcaption>The five-command install, start to finish &mdash; pull weights, clone ComfyUI, symlink models, build the CUDA-13 venv, launch on :8288.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="article-section" id="flagship">
+  <h2 class="section-title">Flagship: photorealism &amp; portraits</h2>
+  <div class="prose">
+    <p>
+      Start where the model is strongest. With <strong>no LoRA at all</strong>, base Krea 2 produces photography that
+      genuinely passes for a camera. Note the visible breath in the cold air, the golden rim-light on individual
+      strands of fur, and the natural fall-off behind the subject.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/photorealistic.jpg" alt="A red fox in fresh snow at golden hour, breath visible" loading="lazy" />
+      <figcaption><em>&ldquo;A red fox in fresh snow at golden hour, breath visible&rdquo;</em> &middot; no LoRA &middot; 8 steps, er_sde &middot; <strong>Verdict: &#9733;&#9733;&#9733;&#9733;&#9733; reference-grade.</strong></figcaption>
+    </figure>
+    <p>
+      Faces are the real test, and the <strong>realism-v2</strong> LoRA at a gentle 0.7 strength delivers pore-level
+      skin, correct catchlights, and a believable 85&nbsp;mm depth of field. Push the same LoRA to 0.9 for the ramen
+      scene and the <em>atmosphere</em> is superb &mdash; but look closely at the neon signs and you get the first
+      hint of the text problem we&rsquo;ll return to.
+    </p>
+    <div class="figure-grid">
+      <figure class="figure">
+        <img src="demo_assets/portrait.jpg" alt="Close-up studio portrait of a weathered old fisherman" loading="lazy" />
+        <figcaption>Portrait &middot; realism-v2 @ 0.7 &middot; <strong>&#9733;&#9733;&#9733;&#9733;&#9733; pore-level detail.</strong></figcaption>
+      </figure>
+      <figure class="figure">
+        <img src="demo_assets/realism.jpg" alt="A bowl of steaming ramen on a rainy Tokyo night with neon reflections" loading="lazy" />
+        <figcaption>Tokyo ramen &middot; realism-v2 @ 0.9 &middot; <strong>&#9733;&#9733;&#9733;&#9733;&frac12; gorgeous &mdash; neon text garbled.</strong></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="article-section" id="stylized">
+  <h2 class="section-title">Stylized, with zero LoRA</h2>
+  <div class="prose">
+    <p>
+      Big models love to over-render; a good one knows when to stop. Purely from prompt engineering &mdash; no LoRA
+      &mdash; Krea 2 switches cleanly between a flat-vector mascot, an inked comic panel with real halftone shading, a
+      minimalist stick figure, and a glass-and-chrome product logo. That last one is a genuine hero asset you would
+      normally commission from a 3D artist.
+    </p>
+    <div class="figure-grid">
+      <figure class="figure">
+        <img src="demo_assets/cartoon.jpg" alt="A cheerful flat-vector robot holding a potted plant" loading="lazy" />
+        <figcaption>Flat-vector cartoon &middot; no LoRA &middot; <strong>&#9733;&#9733;&#9733;&#9733;&#9733;</strong></figcaption>
+      </figure>
+      <figure class="figure">
+        <img src="demo_assets/comics.jpg" alt="A masked superhero cat leaping between rooftops, comic book style" loading="lazy" />
+        <figcaption>Comic panel &middot; no LoRA &middot; <strong>&#9733;&#9733;&#9733;&#9733;&#9733; authentic halftone.</strong></figcaption>
+      </figure>
+      <figure class="figure">
+        <img src="demo_assets/stickman.jpg" alt="A minimalist stick figure celebrating on a hill" loading="lazy" />
+        <figcaption>xkcd-style stick figure &middot; no LoRA &middot; <strong>&#9733;&#9733;&#9733;&#9733;&#9733; perfectly restrained.</strong></figcaption>
+      </figure>
+      <figure class="figure">
+        <img src="demo_assets/3d-logo.jpg" alt="A 3D letter K made of liquid chrome and blue glass" loading="lazy" />
+        <figcaption>3D glass logo &middot; no LoRA &middot; <strong>&#9733;&#9733;&#9733;&#9733;&#9733; product-render quality.</strong></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="article-section" id="loras">
+  <h2 class="section-title">Style LoRAs: instant aesthetics</h2>
+  <div class="prose">
+    <p>
+      This is where the model becomes an instrument. A ~200&ndash;500&nbsp;MB LoRA, loaded on top of the quantized
+      unet, redirects the entire aesthetic from one keyword. Dark expressive oil brushwork, 1990s cel anime, soft
+      watercolour washes, a Rider-Waite tarot woodcut, a child&rsquo;s crayon drawing, and a dead-on
+      <em>Cyanide&nbsp;&amp;&nbsp;Happiness</em> webcomic &mdash; each one is a different LoRA, same base model,
+      same 8 steps.
+    </p>
+    <div class="figure-grid">
+      <figure class="figure">
+        <img src="demo_assets/darkbrush.jpg" alt="A lone knight before a ruined cathedral, dark oil painting" loading="lazy" />
+        <figcaption>Dark Brush LoRA &middot; <strong>&#9733;&#9733;&#9733;&#9733;&#9733; moody chiaroscuro.</strong></figcaption>
+      </figure>
+      <figure class="figure">
+        <img src="demo_assets/retroanime.jpg" alt="A girl in a school uniform gazing out a train window, 90s anime" loading="lazy" />
+        <figcaption>Retro Anime LoRA &middot; <strong>&#9733;&#9733;&#9733;&#9733;&#9733; nostalgic &amp; precise.</strong></figcaption>
+      </figure>
+      <figure class="figure">
+        <img src="demo_assets/watercolor.jpg" alt="A mountain village with cherry blossoms, soft watercolor" loading="lazy" />
+        <figcaption>Soft Watercolor LoRA &middot; <strong>&#9733;&#9733;&#9733;&#9733;&#9733; delicate washes.</strong></figcaption>
+      </figure>
+      <figure class="figure">
+        <img src="demo_assets/tarot.jpg" alt="The Moon tarot card with a wolf howling between two towers" loading="lazy" />
+        <figcaption>Vintage Tarot LoRA &middot; <strong>&#9733;&#9733;&#9733;&#9733;&frac12; authentic woodcut.</strong></figcaption>
+      </figure>
+      <figure class="figure">
+        <img src="demo_assets/kidsdrawing.jpg" alt="A child's crayon drawing of a family, house, sun and dog" loading="lazy" />
+        <figcaption>Kids&rsquo; Drawing LoRA &middot; <strong>&#9733;&#9733;&#9733;&#9733;&#9733; charmingly naive.</strong></figcaption>
+      </figure>
+      <figure class="figure">
+        <img src="demo_assets/cyanide.jpg" alt="Two simple cartoon characters at a bus stop, Cyanide and Happiness style" loading="lazy" />
+        <figcaption>Cyanide &amp; Happiness LoRA &middot; <strong>&#9733;&#9733;&#9733;&#9733;&#9733; spot-on match.</strong></figcaption>
+      </figure>
+    </div>
+    <div class="callout green">
+      <strong>The headroom paid off.</strong> Every image above was a LoRA patched onto the Q6_K unet with no OOM and
+      no offloading &mdash; exactly the reason to choose Q6_K over a bigger quant. The DeverStyle and RudySen
+      community LoRAs and the official Krea style LoRAs all load through the same rgthree Power-LoRA node.
+    </div>
+  </div>
+</section>
+
+<section class="article-section" id="limits">
+  <h2 class="section-title">Where it breaks: text, infographics, diagrams</h2>
+  <div class="prose">
+    <p>
+      Now the honest part. Ask Krea 2 for anything whose <em>value is the words</em> and the seams show. The layouts
+      are gorgeous &mdash; and the model even spells the <em>title</em> correctly &mdash; but the body text is
+      invented.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/blueprint.jpg" alt="A glowing wireframe blueprint of a vintage motorcycle with callout labels" loading="lazy" />
+      <figcaption>Blueprint Wireframe LoRA &middot; the <em>look</em> is a five; the callout labels are pure invented words. <strong>Style &#9733;&#9733;&#9733;&#9733;&#9733;, readable info &#9733;&#9733;.</strong></figcaption>
+    </figure>
+    <p>
+      A software architecture diagram pushes it further. The structure is genuinely impressive &mdash; labelled
+      boxes, directional arrows, grouped layers, even a database icon &mdash; and some labels (<em>users to CDN</em>,
+      <em>load balancer</em>, <em>Redis</em>) come out perfectly. But others degrade into near-words like
+      <em>Aqa Datadase</em>.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/architecture.jpg" alt="A flat software architecture diagram with labelled boxes and arrows, some labels garbled" loading="lazy" />
+      <figcaption>Web-app architecture &middot; no LoRA &middot; <strong>&#9733;&#9733;&#9733;&frac12; structure yes, labels half-right.</strong></figcaption>
+    </figure>
+    <p>
+      And the clearest limit of all &mdash; the infographic. As a <em>visual layout</em> it is fantastic: a clean
+      title, icons, pie and bar charts, bold percentage numbers, all beautifully arranged. Start reading the body
+      copy and it collapses into gibberish, and every section heading just repeats the word
+      <em>&ldquo;Hydration.&rdquo;</em>
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/infographic.jpg" alt="An infographic titled The Benefits of Drinking Water, with charts and gibberish body text" loading="lazy" />
+      <figcaption>Infographic &middot; no LoRA &middot; <strong>&#9733;&#9733;&#9733; looks right, reads wrong.</strong></figcaption>
+    </figure>
+    <div class="callout red">
+      <strong>The one rule to remember.</strong> Krea 2 is a spectacular <em>image</em> artist, not a typesetter. For
+      anything that depends on real words &mdash; infographics, diagrams, UI mockups &mdash; generate the design here,
+      then set the actual text in a real editor. Do not ship the model&rsquo;s lettering.
+    </div>
+  </div>
+</section>
+
+<section class="article-section" id="verdict">
+  <h2 class="section-title">Verdict</h2>
+  <div class="prose">
+    <p>
+      A 12-billion-parameter image model, quantized to <strong>10.6&nbsp;GB</strong>, running fully local on
+      <strong>one consumer GPU</strong> at eight steps, with community LoRAs snapping the style around at will &mdash;
+      and no cloud, no API, no per-image bill. For photography, illustration, painting and stylised art it is
+      <strong>astonishing</strong>. For anything with real text, treat it as a layout artist and finish the words
+      yourself. Knowing which half of the model to lean on is the whole skill.
+    </p>
+    <div class="callout">
+      <strong>Watch it run.</strong> I put the full 16-style tour, the synced install animation, and honest
+      per-image commentary into a short video:
+      <a href="https://youtu.be/ei97_pgrfYo" target="_blank">Run a 12B AI Image Model 100% local on one RTX 4090</a>.
+    </div>
+  </div>
+</section>
+
+<section class="article-section" id="refs">
+  <h2 class="section-title">References &amp; links</h2>
+  <div class="prose">
+    <ul class="links">
+      <li><strong>Krea 2 Turbo</strong> (base model) &mdash; <a href="https://huggingface.co/krea/Krea-2-Turbo" target="_blank">huggingface.co/krea/Krea-2-Turbo</a></li>
+      <li><strong>Q6_K GGUF quant</strong> &mdash; <a href="https://huggingface.co/vantagewithai/Krea-2-Turbo-GGUF" target="_blank">vantagewithai/Krea-2-Turbo-GGUF</a></li>
+      <li><strong>ComfyUI bundle</strong> (fp8 Qwen3-VL encoder + VAE + official style LoRAs) &mdash; <a href="https://huggingface.co/Comfy-Org/Krea-2" target="_blank">Comfy-Org/Krea-2</a></li>
+      <li><strong>LoRAs used</strong> &mdash; <a href="https://huggingface.co/RudySen/Krea2-realism-V2" target="_blank">RudySen/Krea2-realism-V2</a> &middot; <a href="https://huggingface.co/DeverStyle/Krea-2-Premium-Loras" target="_blank">DeverStyle/Krea-2-Premium-Loras</a> &middot; <a href="https://huggingface.co/krea/Krea-2-LoRA-darkbrush" target="_blank">krea/Krea-2-LoRA-darkbrush</a></li>
+      <li><strong>Runtime</strong> &mdash; <a href="https://github.com/comfyanonymous/ComfyUI" target="_blank">ComfyUI</a> &middot; <a href="https://github.com/city96/ComfyUI-GGUF" target="_blank">ComfyUI-GGUF (city96)</a> &middot; <a href="https://github.com/rgthree/rgthree-comfy" target="_blank">rgthree-comfy</a></li>
+      <li><strong>Companion video</strong> &mdash; <a href="https://youtu.be/ei97_pgrfYo" target="_blank">youtu.be/ei97_pgrfYo</a></li>
+      <li>Run on a single <strong>NVIDIA RTX 4090</strong> (24&nbsp;GB) under <strong>Pop!_OS 22.04</strong> &middot; Q6_K GGUF &middot; Qwen3-VL fp8 encoder &middot; er_sde, 8 steps, CFG&nbsp;1.0 &middot; thumbnail by Nano Banana Pro.</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+
+<footer class="page-footer">
+  <div class="inner">
+    <a href="../index.html" class="back-to-blog"><span class="arrow">←</span> Back to all articles</a>
+    <p>Written from actually running the model — field notes, not a press release.</p>
+    <div class="social">
+      <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn">in</a>
+      <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium">M</a>
+      <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub">GH</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
