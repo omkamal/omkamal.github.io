@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FalkorDB, explained: the graph database that's secretly linear algebra</title>
+<meta name="description" content="A friendly, illustrated explainer of FalkorDB — the ultra-fast graph database that stores your graph as sparse matrices and turns every query into matrix multiplication. Property graph model, GraphBLAS, one-Docker-command setup, openCypher, and native vector search for AI and RAG — all in one engine." />
+<meta name="keywords" content="FalkorDB, graph database, vector database, vector search, RAG, GraphRAG, knowledge graph, openCypher, Cypher, GraphBLAS, sparse matrix, adjacency matrix, linear algebra, Redis, embeddings, agent memory, AI database" />
+<meta name="author" content="Omar Kamal Hosney" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://omkamal.github.io/articles/falkordb-explained/falkordb-explained.html" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Omar Kamal Hosney" />
+<meta property="og:url" content="https://omkamal.github.io/articles/falkordb-explained/falkordb-explained.html" />
+<meta property="og:title" content="FalkorDB, explained: the graph database that's secretly linear algebra" />
+<meta property="og:description" content="FalkorDB stores your graph as sparse matrices and turns queries into matrix multiplication — one engine for graphs, vectors and AI. An illustrated, jargon-light explainer." />
+<meta property="og:image" content="https://omkamal.github.io/articles/falkordb-explained/demo_assets/hero.png" />
+<meta property="article:author" content="Omar Kamal Hosney" />
+<meta property="article:published_time" content="2026-07-09" />
+<meta property="article:section" content="Databases" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="FalkorDB, explained: a graph database that's secretly linear algebra" />
+<meta name="twitter:description" content="Store your graph as sparse matrices, query it with matrix multiplication, and get native vector search in the same engine. An illustrated explainer." />
+<meta name="twitter:image" content="https://omkamal.github.io/articles/falkordb-explained/demo_assets/hero.png" />
+
+<link rel="icon" type="image/jpeg" href="../../omar.jpeg" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "FalkorDB, explained: the graph database that's secretly linear algebra",
+  "description": "A friendly, illustrated explainer of FalkorDB — the ultra-fast graph database that stores your graph as sparse matrices and turns every query into matrix multiplication, with native vector search for AI and RAG.",
+  "image": "https://omkamal.github.io/articles/falkordb-explained/demo_assets/hero.png",
+  "datePublished": "2026-07-09",
+  "dateModified": "2026-07-09",
+  "author": { "@type": "Person", "name": "Omar Kamal Hosney", "url": "https://omkamal.github.io/" },
+  "publisher": { "@type": "Person", "name": "Omar Kamal Hosney" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://omkamal.github.io/articles/falkordb-explained/falkordb-explained.html" },
+  "articleSection": "Databases",
+  "keywords": "FalkorDB, graph database, vector search, RAG, GraphBLAS, openCypher, sparse matrix, linear algebra, knowledge graph, embeddings",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omkamal.github.io/articles/" },
+      { "@type": "ListItem", "position": 3, "name": "FalkorDB, explained", "item": "https://omkamal.github.io/articles/falkordb-explained/falkordb-explained.html" }
+    ]
+  }
+}
+</script>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root {
+  --c-ink: #18181b;
+  --c-ink-soft: #27272a;
+  --c-prose: #3f3f46;
+  --c-muted: #71717a;
+  --c-mute-2: #a1a1aa;
+  --c-paper: #fafaf9;
+  --c-paper-2: #ffffff;
+  --c-line: #e7e5e4;
+  --c-line-soft: #f1f0ee;
+  --c-accent: #7c3aed;
+  --c-accent-2: #ec4899;
+  --c-accent-3: #f59e0b;
+  --c-accent-soft: #faf5ff;
+  --c-accent-line: #e9d5ff;
+  --c-blue: #2563eb;
+  --c-blue-soft: #eff6ff;
+  --c-blue-line: #bfdbfe;
+  --c-green: #16a34a;
+  --c-green-soft: #f0fdf4;
+  --c-green-line: #bbf7d0;
+  --c-warn: #b45309;
+  --c-warn-soft: #fffbeb;
+  --c-warn-line: #fde68a;
+  --c-red: #dc2626;
+  --c-red-soft: #fef2f2;
+  --c-red-line: #fecaca;
+  --c-code-bg: #0f172a;
+  --c-code-fg: #e2e8f0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 24px 56px -16px rgba(15, 23, 42, 0.18), 0 8px 20px -6px rgba(15, 23, 42, 0.08);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { font-family: 'Source Serif 4', Charter, Georgia, 'Times New Roman', serif; font-size: 18px; line-height: 1.75; color: var(--c-prose); background: var(--c-paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--c-accent); color: white; }
+
+.top-nav { position: sticky; top: 0; z-index: 50; background: rgba(250, 250, 249, 0.85); backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px); border-bottom: 1px solid var(--c-line); }
+.nav-inner { max-width: 1180px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 12px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--c-ink); text-decoration: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-accent) 100%); display: grid; place-items: center; font-weight: 800; font-size: 0.78rem; color: white; box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.4); }
+.nav-right { display: flex; gap: 4px; align-items: center; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+.nav-right a { color: var(--c-muted); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 500; transition: all 0.2s var(--ease); }
+.nav-right a:hover { color: var(--c-ink); background: rgba(0,0,0,0.04); }
+.nav-right a.active { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.hero { position: relative; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #4c1d95 100%); color: #e2e8f0; padding: 80px 0 100px; margin-bottom: -60px; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.35), transparent 50%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.30), transparent 50%), radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.10), transparent 60%); }
+.hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); pointer-events: none; }
+.hero-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 32px; }
+.crumbs { font-family: 'Inter', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; color: rgba(226, 232, 240, 0.65); margin-bottom: 22px; }
+.crumbs a { color: rgba(226, 232, 240, 0.85); text-decoration: none; border-bottom: 1px solid rgba(226, 232, 240, 0.3); transition: all 0.2s var(--ease); }
+.crumbs a:hover { color: white; border-bottom-color: white; }
+.crumbs .sep { margin: 0 0.5em; opacity: 0.4; }
+.article-header { margin: 0; padding: 0; border: 0; }
+.byline { display: inline-flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: #c4b5fd; padding: 5px 12px; background: rgba(168, 85, 247, 0.18); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50px; margin-bottom: 28px; }
+.byline span + span::before { content: "·"; opacity: 0.6; margin: 0 0.25rem; color: #c4b5fd; }
+h1 { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2.2rem, 4.8vw, 3.6rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.03em; color: #ffffff; margin: 0 0 22px; max-width: 880px; }
+.subtitle { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(1.05rem, 1.6vw, 1.28rem); line-height: 1.55; color: rgba(226, 232, 240, 0.82); font-style: italic; margin: 0; max-width: 720px; }
+.subtitle code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85em; font-style: normal; background: rgba(255, 255, 255, 0.12); padding: 2px 8px; border-radius: 5px; color: #fde68a; border: 1px solid rgba(255, 255, 255, 0.08); }
+
+.container { max-width: 980px; margin: 0 auto; padding: 100px 32px 80px; position: relative; z-index: 2; }
+
+.tldr { background: linear-gradient(135deg, #ffffff 0%, var(--c-accent-soft) 100%); border: 1px solid var(--c-accent-line); border-left: 4px solid var(--c-accent); padding: 26px 30px; border-radius: 0 16px 16px 0; margin: 0 0 60px; box-shadow: var(--shadow-md); }
+.tldr h3 { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-accent); margin: 0 0 12px; }
+.tldr p { font-size: 1.05rem; color: var(--c-ink-soft); margin: 0 0 0.8rem; text-align: justify; hyphens: auto; }
+.tldr p:last-child { margin-bottom: 0; }
+.tldr strong { color: var(--c-ink); font-weight: 700; }
+.tldr code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(255,255,255,0.7); border: 1px solid var(--c-accent-line); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); }
+
+.toc { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; color: var(--c-prose); padding: 22px 28px; margin: 0 0 80px; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 16px; line-height: 2.1; box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: center; }
+.toc strong { display: inline-flex; align-items: center; gap: 7px; color: var(--c-ink); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; padding-right: 14px; margin-right: 6px; border-right: 1px solid var(--c-line); }
+.toc strong::before { content: ''; width: 3px; height: 14px; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+.toc a { color: var(--c-prose); text-decoration: none; padding: 4px 11px; border-radius: 50px; transition: all 0.2s var(--ease); font-weight: 500; }
+.toc a:hover { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.article-section { margin-bottom: 80px; scroll-margin-top: 80px; }
+.section-title { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(1.65rem, 3vw, 2.15rem); font-weight: 700; color: var(--c-ink); margin: 0 0 28px; letter-spacing: -0.025em; line-height: 1.18; position: relative; padding-left: 18px; }
+.section-title::before { content: ''; position: absolute; left: 0; top: 0.18em; width: 5px; height: 0.85em; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 3px; }
+
+.prose { max-width: 100%; margin-bottom: 36px; font-size: 1.06rem; line-height: 1.78; text-align: justify; hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty; }
+.prose p { margin: 0 0 1.25rem; color: var(--c-prose); text-align: justify; hyphens: auto; }
+.prose h3 { text-align: left; hyphens: manual; }
+.prose ul, .prose ol { text-align: left; hyphens: manual; margin: 0 0 1.25rem 1.2rem; }
+.prose li { margin-bottom: 0.4rem; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--c-ink); font-weight: 600; }
+.prose em { color: var(--c-ink-soft); }
+.prose code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.86em; background: var(--c-accent-soft); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); border: 1px solid var(--c-accent-line); font-weight: 500; }
+.prose a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--c-accent-line); transition: all 0.2s var(--ease); }
+.prose a:hover { text-decoration-color: var(--c-accent); text-decoration-thickness: 2px; }
+.prose h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--c-ink); margin: 2.2rem 0 0.8rem; letter-spacing: -0.015em; display: flex; align-items: center; gap: 10px; }
+.prose h3::before { content: ''; width: 22px; height: 2px; background: linear-gradient(90deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+
+.prose pre { background: var(--c-code-bg); color: var(--c-code-fg); padding: 44px 26px 22px; border-radius: 12px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85rem; line-height: 1.65; overflow-x: auto; margin: 22px 0; border: 1px solid #1e293b; box-shadow: var(--shadow-lg); position: relative; }
+.prose pre::before { content: ''; position: absolute; top: 14px; left: 18px; width: 11px; height: 11px; border-radius: 50%; background: #ef4444; box-shadow: 18px 0 0 #f59e0b, 36px 0 0 #10b981; opacity: 0.7; }
+.prose pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; border: 0; font-weight: 400; }
+
+.callout { background: var(--c-warn-soft); border: 1px solid var(--c-warn-line); border-left: 4px solid var(--c-accent-3); padding: 16px 22px; border-radius: 0 12px 12px 0; margin: 22px 0; font-size: 0.98rem; line-height: 1.7; color: var(--c-ink-soft); position: relative; box-shadow: var(--shadow-sm); text-align: justify; hyphens: auto; }
+.callout.green { background: var(--c-green-soft); border-color: var(--c-green-line); border-left-color: var(--c-green); }
+.callout.red { background: var(--c-red-soft); border-color: var(--c-red-line); border-left-color: var(--c-red); }
+.callout.blue { background: var(--c-blue-soft); border-color: var(--c-blue-line); border-left-color: var(--c-blue); }
+.callout strong { color: var(--c-ink); }
+.callout code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--c-warn); padding: 1.5px 6px; border-radius: 4px; }
+.callout.green code { background: rgba(22, 163, 74, 0.12); border-color: rgba(22, 163, 74, 0.3); color: var(--c-green); }
+.callout.red code { background: rgba(220, 38, 38, 0.10); border-color: rgba(220, 38, 38, 0.3); color: var(--c-red); }
+.callout.blue code { background: rgba(37, 99, 235, 0.10); border-color: rgba(37,99,235,0.3); color: var(--c-blue); }
+
+.variant-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 22px 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.88rem; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); }
+.variant-table th, .variant-table td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--c-line-soft); vertical-align: top; }
+.variant-table th { background: linear-gradient(180deg, #fafafa, #f5f5f4); font-weight: 700; color: var(--c-ink); letter-spacing: 0.02em; font-size: 0.74rem; text-transform: uppercase; }
+.variant-table tbody tr:last-child td { border-bottom: 0; }
+.variant-table tbody tr:hover td { background: var(--c-accent-soft); }
+.variant-table td { color: var(--c-prose); }
+.variant-table td strong { color: var(--c-ink); }
+.variant-table td.num { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+.variant-table tr.hi td { background: var(--c-green-soft); }
+.variant-table tr.hi:hover td { background: var(--c-green-soft); }
+
+.figure { margin: 28px auto; text-align: center; display: block; }
+.figure img, .figure video { width: 100%; max-width: 100%; height: auto; border-radius: 14px; display: block; margin-left: auto; margin-right: auto; border: 1px solid var(--c-line); box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); background: var(--c-paper-2); }
+.figure video { background: #000; }
+.figure img:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); border-color: var(--c-accent-line); }
+.figure figcaption { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; color: var(--c-mute-2); margin: 10px auto 0; letter-spacing: 0.02em; text-align: center; max-width: 85%; }
+.figure.full img { background: white; }
+.figure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px auto; justify-items: center; align-items: start; }
+.figure-grid .figure { margin: 0; width: 100%; }
+
+.example { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 18px; padding: 28px 30px; margin: 26px 0 36px; box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); }
+.example:hover { box-shadow: var(--shadow-lg); border-color: var(--c-accent-line); }
+.example-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1px solid var(--c-line-soft); flex-wrap: wrap; }
+.example-head h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--c-ink); margin: 0; letter-spacing: -0.018em; }
+.tps-chip { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; font-weight: 700; padding: 6px 14px; border-radius: 50px; color: white; background: linear-gradient(135deg, var(--c-green) 0%, #15803d 100%); box-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.35); }
+.tps-chip.amber { background: linear-gradient(135deg, var(--c-accent-3) 0%, var(--c-warn) 100%); box-shadow: 0 4px 12px -2px rgba(180, 83, 9, 0.35); }
+.tps-chip.fire { background: linear-gradient(135deg, var(--c-accent-2) 0%, #be185d 100%); box-shadow: 0 4px 12px -2px rgba(190, 24, 93, 0.35); }
+.tps-chip.blue { background: linear-gradient(135deg, var(--c-blue) 0%, #1d4ed8 100%); box-shadow: 0 4px 12px -2px rgba(37,99,235,0.35); }
+.prompt-line { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: var(--c-paper); border: 1px solid var(--c-line); border-left: 3px solid var(--c-accent); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 0 0 18px; color: var(--c-ink-soft); line-height: 1.5; }
+
+.commentary { margin-top: 24px; padding: 20px 22px; background: var(--c-blue-soft); border: 1px solid var(--c-blue-line); border-left: 4px solid var(--c-blue); border-radius: 0 12px 12px 0; }
+.commentary h4 { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-blue); margin: 0 0 10px; display: inline-flex; align-items: center; gap: 7px; }
+.commentary h4::before { content: '💡'; font-size: 1.05em; }
+.commentary p { font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); margin: 0; text-align: justify; hyphens: auto; }
+.commentary code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: rgba(37, 99, 235, 0.1); padding: 1.5px 6px; border-radius: 4px; color: var(--c-blue); border: 1px solid var(--c-blue-line); font-weight: 500; }
+.commentary strong { color: var(--c-ink); }
+
+.links { padding-left: 20px; max-width: 100%; }
+.links li { margin-bottom: 10px; line-height: 1.6; }
+.links li code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: var(--c-paper); border: 1px solid var(--c-line); padding: 1px 6px; border-radius: 4px; color: var(--c-ink-soft); }
+
+.page-footer { border-top: 1px solid var(--c-line); padding: 60px 0 80px; text-align: center; background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.03)); }
+.page-footer .inner { max-width: 980px; margin: 0 auto; padding: 0 32px; font-family: 'Inter', sans-serif; }
+.back-to-blog { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-2) 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 24px -6px rgba(124, 58, 237, 0.5); transition: all 0.3s var(--ease); margin-bottom: 32px; }
+.back-to-blog:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(124, 58, 237, 0.65); }
+.back-to-blog .arrow { transition: transform 0.3s var(--ease); }
+.back-to-blog:hover .arrow { transform: translateX(-4px); }
+.page-footer p { color: var(--c-muted); font-size: 0.88rem; margin-bottom: 18px; }
+.social { display: flex; justify-content: center; gap: 12px; }
+.social a { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: var(--c-paper-2); border: 1px solid var(--c-line); color: var(--c-muted); text-decoration: none; transition: all 0.3s var(--ease); font-family: 'Inter', sans-serif; font-weight: 700; }
+.social a:hover { color: var(--c-accent); border-color: var(--c-accent-line); background: var(--c-accent-soft); transform: translateY(-2px); }
+
+@media (max-width: 900px) {
+  .hero { padding: 60px 0 80px; }
+  .hero-inner { padding: 0 20px; }
+  .container { padding: 80px 20px 60px; }
+  .nav-inner { padding: 12px 20px; }
+  h1 { font-size: 2rem; }
+  .section-title { font-size: 1.55rem; }
+  .figure-grid { grid-template-columns: 1fr; }
+  .example { padding: 22px 22px; border-radius: 14px; }
+  .toc { padding: 18px 20px; font-size: 0.8rem; gap: 6px; }
+  .toc strong { border-right: 0; margin-bottom: 4px; padding-right: 0; width: 100%; }
+  .nav-right a { padding: 6px 10px; font-size: 0.82rem; }
+}
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .prose { font-size: 1.02rem; }
+  .nav-right a:not(.active) { display: none; }
+}
+</style>
+<style>
+/* Article-specific: code blocks, pillar cards, book chips */
+.code { background: var(--c-code-bg); color: var(--c-code-fg); border-radius: 12px; padding: 18px 20px; margin: 22px 0; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.7; overflow-x: auto; border: 1px solid #1e293b; box-shadow: var(--shadow-md); }
+.code .c { color: #64748b; }           /* comment */
+.code .k { color: #c4b5fd; }           /* keyword */
+.code .s { color: #86efac; }           /* string */
+.code .fn { color: #7dd3fc; }          /* function/label */
+.code .o { color: #fca5a5; }           /* operator */
+.code-cap { font-family: 'Inter', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--c-muted); font-weight: 700; margin: 26px 0 -8px; }
+
+.pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 30px 0; }
+.pillar { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 14px; padding: 22px 22px; box-shadow: var(--shadow-sm); }
+.pillar .ico { font-size: 1.6rem; }
+.pillar h4 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; color: var(--c-ink); margin: 10px 0 6px; }
+.pillar p { font-size: 0.92rem; line-height: 1.6; color: var(--c-prose); margin: 0; font-family: 'Source Serif 4', Georgia, serif; }
+@media (max-width: 760px){ .pillars { grid-template-columns: 1fr; } }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 4px; }
+.chip { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--c-accent); background: var(--c-accent-soft); border: 1px solid var(--c-accent-line); border-radius: 50px; padding: 5px 14px; }
+</style>
+
+</head>
+
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">OK</span>
+      <span>Omar Kamal Hosney</span>
+    </a>
+    <div class="nav-right">
+      <a href="../../cheatsheets/index.html">Cheatsheets</a>
+      <a href="../index.html" class="active">Blog</a>
+      <a href="../../resume.html" target="_blank">Resume</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="crumbs">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="../index.html">Blog</a>
+      <span class="sep">/</span>
+      Databases
+    </p>
+    <div class="article-header">
+      <p class="byline"><span>FalkorDB</span><span>Explainer</span><span>July 2026</span></p>
+      <h1>FalkorDB, explained: the graph database that's secretly linear algebra</h1>
+      <p class="subtitle"><strong>FalkorDB</strong> is an ultra-fast graph database with one unusual idea at its core:
+      it stores your graph as <em>sparse matrices</em> and answers queries with <em>matrix multiplication</em>. The
+      payoff is a single engine that does graphs, graph algorithms, and <strong>vector search</strong> together — which
+      is exactly the shape modern AI, RAG and agent memory need. Here's the whole thing, jargon kept to a minimum.</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<figure class="figure full" style="margin: 0 0 60px;">
+  <img src="demo_assets/hero.png" alt="A glowing node graph on the left flows into a sparse matrix grid in the middle and then into a strip of embedding vectors with a magnifying glass on the right" loading="lazy" />
+  <figcaption>The whole story in one picture: a graph becomes a matrix, and the same store also holds the vectors you search over</figcaption>
+</figure>
+
+<div class="tldr">
+  <h3>TL;DR</h3>
+  <p>
+    <strong>A graph is really a matrix, and walking the graph is really multiplying by that matrix.</strong> FalkorDB
+    leans all the way into that: every relationship type is a <strong>sparse adjacency matrix</strong>, patterns compile
+    to chains of matrix multiplications, and the heavy lifting runs on <strong>GraphBLAS</strong> — a battle-tested
+    library for sparse linear algebra. That's where the speed comes from.
+  </p>
+  <p>
+    It ships as a <strong>Redis module</strong>, so you start it with <strong>one Docker command</strong>, query it in
+    <strong>openCypher</strong>, and get a visual browser for free. And because it also has a built-in
+    <strong>vector index</strong>, your embeddings live right next to your graph — search by meaning, then hop across
+    relationships for context. One engine instead of three.
+  </p>
+</div>
+
+<nav class="toc" aria-label="Table of contents">
+  <strong>Contents</strong>
+  <a href="#why">Why a graph database?</a>
+  <a href="#idea">The big idea: a graph is a matrix</a>
+  <a href="#sparse">Why sparse matrices make it fast</a>
+  <a href="#query">How a query actually runs</a>
+  <a href="#start">Getting started in one command</a>
+  <a href="#vectors">Vectors live in the same graph</a>
+  <a href="#verdict">Why it matters</a>
+  <a href="#refs">References</a>
+</nav>
+
+<section class="article-section" id="why">
+  <h2 class="section-title">Why a graph database?</h2>
+  <div class="prose">
+    <p>
+      Think about the data you actually work with. People know people. Customers buy products. Accounts send money to
+      accounts. The <em>connections</em> are the interesting part. In a relational database those connections live in
+      JOIN tables, and every extra hop — friends, then friends-of-friends, then friends-of-friends-of-friends — means
+      another expensive JOIN. Ask a deep question and the query balloons.
+    </p>
+    <p>
+      A graph database flips that around. It stores the connections <em>directly</em>, so following a relationship is
+      cheap no matter how deep you go. FalkorDB uses the standard <strong>property graph model</strong>, which has just
+      two building blocks:
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/property-graph.png" alt="Two labelled node circles carrying property tags, connected by one directed relationship arrow that also carries a property tag" loading="lazy" />
+      <figcaption>The whole data model: nodes (entities with labels + properties) joined by directed, typed relationships that can carry properties too</figcaption>
+    </figure>
+    <ul>
+      <li><strong>Nodes</strong> are entities. Each can have <em>labels</em> (like <code>User</code> or <code>Book</code>)
+      and <em>properties</em> (like a name or an email).</li>
+      <li><strong>Relationships</strong> are directed, typed edges between nodes (like <code>FRIENDS_WITH</code> or
+      <code>LOVES</code>) — and they can carry their own properties too.</li>
+    </ul>
+    <p>
+      There's no rigid schema to define up front: you invent new labels and relationship types the moment you use them.
+      That flexibility is why graphs are the natural fit for today's hottest workloads — <strong>knowledge graphs for
+      GenAI and RAG</strong>, <strong>agent memory</strong>, <strong>fraud detection</strong> (fraud rings are literally
+      loops in the graph), and classic <strong>recommendations</strong>.
+    </p>
+  </div>
+</section>
+
+<section class="article-section" id="idea">
+  <h2 class="section-title">The big idea: a graph is a matrix</h2>
+  <div class="prose">
+    <p>
+      Here's the insight that makes FalkorDB different. Take any graph and number its nodes 0, 1, 2, … Now draw a grid
+      with one row and one column per node, and put a <strong>1</strong> in row <em>i</em>, column <em>j</em> whenever
+      there's an edge from node <em>i</em> to node <em>j</em>. That grid is the <strong>adjacency matrix</strong>. In
+      FalkorDB, every relationship type gets its own.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/graph-is-matrix.png" alt="A small five-node directed graph above, and below it the matching square adjacency matrix with the corresponding cells filled in orange" loading="lazy" />
+      <figcaption>Number the nodes, and the graph becomes a grid: a filled cell means "there's an edge here"</figcaption>
+    </figure>
+    <p>
+      Why bother? Because once your graph is a matrix, <strong>graph operations turn into matrix operations</strong> —
+      and those have decades of fast, optimized math behind them. The classic example is a single hop. Make a vector
+      with a <code>1</code> for every node you're standing on (your "frontier"). Multiply it by the adjacency matrix,
+      and you land on <em>every neighbour at once</em> — for all starting points simultaneously, in one operation.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/traversal-math.png" alt="A four-node graph with its adjacency matrix, showing v prime equals A transpose times v for one hop, and A squared for two-hop reachability" loading="lazy" />
+      <figcaption>One hop is one multiplication (v′ = Aᵀv). Want friends-of-friends? Square the matrix — A² even counts how many 2-step paths exist</figcaption>
+    </figure>
+    <p>
+      Want to go two hops? <strong>Square the matrix.</strong> "Friends of friends" is literally
+      <code>A&nbsp;×&nbsp;A</code>, and the result even tells you how many different 2-step paths connect each pair. This
+      is how FalkorDB thinks about every traversal you write — not as pointer-chasing one edge at a time, but as algebra
+      over the whole frontier.
+    </p>
+  </div>
+</section>
+
+<section class="article-section" id="sparse">
+  <h2 class="section-title">Why sparse matrices make it fast</h2>
+  <div class="prose">
+    <p>
+      "One row and column per node" sounds alarming — a million users would be a matrix with a <em>trillion</em> cells.
+      The saving grace: real graphs are almost entirely empty. Each user knows a few hundred people, not a million, so
+      nearly every cell is a zero.
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/sparse-matrix.png" alt="A large mostly-empty grid where only a sparse scattering of cells is filled, those filled cells collected into a small compact list" loading="lazy" />
+      <figcaption>A <em>sparse</em> matrix stores only the non-zero cells — so memory grows with the number of edges, not with the square of the node count</figcaption>
+    </figure>
+    <p>
+      <strong>Sparse</strong> matrix formats store only the cells that aren't zero. Memory grows with the number of
+      <em>edges</em>, not with n². FalkorDB builds on <strong>GraphBLAS</strong>, the standard library for exactly this
+      kind of sparse linear algebra, and it's the first property-graph database to represent its whole graph this way.
+    </p>
+    <div class="callout blue">
+      <strong>What about fast writes?</strong> Editing a tightly-packed matrix is expensive, so FalkorDB keeps each one
+      as three parts: the big <em>main</em> matrix plus a small <em>plus</em> and <em>minus</em> for recent additions and
+      deletions. Writes only touch the tiny deltas, and a background process folds them in later. You get matrix speed
+      <em>and</em> quick inserts.
+    </div>
+  </div>
+</section>
+
+<section class="article-section" id="query">
+  <h2 class="section-title">How a query actually runs</h2>
+  <div class="prose">
+    <p>
+      You never see the matrices — you write <strong>openCypher</strong>, the most widely used graph query language.
+      FalkorDB takes it from there:
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/query-pipeline.png" alt="A six-stage pipeline: Cypher query, parser to AST, execution plan, algebraic expression, GraphBLAS multiply, and a result set table" loading="lazy" />
+      <figcaption>From text to algebra to answers: your Cypher pattern is compiled into a chain of matrix multiplications and run on GraphBLAS</figcaption>
+    </figure>
+    <p>
+      Your query is parsed and planned, then — this is the twist — each graph <em>pattern</em> is compiled into an
+      <strong>algebraic expression</strong>: a chain of matrix multiplications. GraphBLAS multiplies those sparse
+      matrices together, and the results stream back. Text in, algebra in the middle, rows out.
+    </p>
+  </div>
+</section>
+
+<section class="article-section" id="start">
+  <h2 class="section-title">Getting started in one command</h2>
+  <div class="prose">
+    <p>
+      None of this shows up in day-to-day use, which is the point. FalkorDB ships as a Redis module, so you start the
+      engine <em>and</em> a visual browser with a single Docker command:
+    </p>
+    <div class="code"><span class="c"># graph engine on :6379, visual browser on :3000</span><br>
+<span class="k">docker</span> run -p <span class="s">6379:6379</span> -p <span class="s">3000:3000</span> --rm falkordb/falkordb:latest</div>
+    <figure class="figure full">
+      <img src="demo_assets/getting-started.png" alt="A container ship carrying boxes with a graph blooming out of a terminal window, illustrating a one-command launch" loading="lazy" />
+      <figcaption>One command starts the database and a browser at <code>http://localhost:3000</code></figcaption>
+    </figure>
+    <p>Connect from your language of choice (Python, JavaScript, Rust, Java) — the pattern is always connect, select a graph, query:</p>
+    <div class="code"><span class="c"># pip install falkordb</span><br>
+<span class="k">from</span> falkordb <span class="k">import</span> FalkorDB<br>
+db = FalkorDB(host=<span class="s">"localhost"</span>, port=<span class="s">6379</span>)<br>
+g  = db.select_graph(<span class="s">"social"</span>)</div>
+    <p>Then it's just openCypher. You draw the shape you want with ASCII-art arrows; the engine finds every match. Creating data:</p>
+    <div class="code"><span class="k">CREATE</span> (a:<span class="fn">User</span> {name:<span class="s">'Alice'</span>})<span class="o">-[</span>:<span class="fn">FRIENDS_WITH</span> {since:<span class="s">2020</span>}<span class="o">]-></span>(b:<span class="fn">User</span> {name:<span class="s">'Bob'</span>})</div>
+    <p>And asking a question — "who are Alice's friends?" — is just describing the pattern:</p>
+    <div class="code"><span class="k">MATCH</span> (a:<span class="fn">User</span> {name:<span class="s">'Alice'</span>})<span class="o">-[</span>:<span class="fn">FRIENDS_WITH</span><span class="o">]-></span>(friend)<br>
+<span class="k">RETURN</span> friend.name</div>
+    <p>
+      No JOINs, no foreign keys — just the shape of the relationship you care about. Once you've internalized
+      <em>node → arrow → node</em>, you can read most Cypher you'll ever meet.
+    </p>
+  </div>
+</section>
+
+<section class="article-section" id="vectors">
+  <h2 class="section-title">Vectors live in the same graph</h2>
+  <div class="prose">
+    <p>
+      Here's where it gets genuinely useful for AI. FalkorDB has a <strong>native vector index</strong>, so an embedding
+      is just another property on a node. That means semantic search and graph structure live in <em>one</em> store —
+      no separate vector database to sync.
+    </p>
+    <div class="code"><span class="c">// 1) store an embedding on a node</span><br>
+<span class="k">CREATE</span> (:<span class="fn">Chunk</span> {text:<span class="s">"..."</span>, v: vecf32($embedding)})<br>
+<span class="c">// 2) index it (768-d, cosine)</span><br>
+<span class="k">CREATE VECTOR INDEX</span> <span class="k">FOR</span> (c:<span class="fn">Chunk</span>) <span class="k">ON</span> (c.v)<br>
+&nbsp;&nbsp;OPTIONS {dimension:<span class="s">768</span>, similarityFunction:<span class="s">'cosine'</span>}<br>
+<span class="c">// 3) k-nearest-neighbour search</span><br>
+<span class="k">CALL</span> db.idx.vector.queryNodes(<span class="s">'Chunk'</span>,<span class="s">'v'</span>, <span class="s">5</span>, vecf32($q)) <span class="k">YIELD</span> node, score</div>
+    <p>
+      To see it in action I built a small demo: three public-domain novels — <em>Wuthering Heights</em>, <em>The
+      Merchant of Venice</em> and <em>A Tale of Two Cities</em> — split into nearly 2,000 passages, each embedded and
+      stored as a graph node with a vector index. The screenshot below is a live search:
+    </p>
+    <figure class="figure full">
+      <img src="demo_assets/vector-atlas.png" alt="A search UI: a query maps to a red star in an embedding scatter plot, with nearest passages highlighted and ranked by similarity on the right" loading="lazy" />
+      <figcaption>Real semantic search over the novels: the query becomes a point in embedding space, and FalkorDB's vector index returns the nearest passages — ranked by meaning, not keywords</figcaption>
+    </figure>
+    <p>
+      Ask for <em>"a merciful judge weighing a pound of flesh"</em> and every top hit lands in Portia's courtroom in
+      <em>The Merchant of Venice</em> — with no keywords in common. But the real superpower is the combination: each
+      result is a <em>node</em>, so you can immediately hop across relationships to its book, its author, or its
+      neighbouring passages. <strong>Vectors find meaning; the graph provides context.</strong> That is precisely the
+      recipe behind GraphRAG.
+    </p>
+    <div class="pillars">
+      <div class="pillar"><div class="ico">🕸️</div><h4>Graph</h4><p>Property graph + openCypher, so relationships are first-class and cheap to traverse.</p></div>
+      <div class="pillar"><div class="ico">➗</div><h4>Linear algebra</h4><p>Sparse GraphBLAS matrices under the hood — traversal as multiplication, batched and fast.</p></div>
+      <div class="pillar"><div class="ico">🔎</div><h4>Vectors</h4><p>Native KNN index in the same store, so embeddings and structure never drift apart.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="article-section" id="verdict">
+  <h2 class="section-title">Why it matters</h2>
+  <div class="prose">
+    <p>
+      Most "AI databases" are really three systems taped together: a graph store, a vector store, and glue code keeping
+      them in sync. FalkorDB collapses that into one engine — and does it on an unusually elegant foundation. The theory
+      (a graph is a sparse matrix) buys the performance; the packaging (a Redis module, one Docker command, openCypher,
+      a built-in browser) buys the ease.
+    </p>
+    <div class="callout">
+      <strong>The one-sentence version.</strong> If your problem has both <em>relationships</em> and <em>meaning</em> in
+      it — knowledge graphs, RAG, recommendations, agent memory, fraud — FalkorDB lets you keep them together and query
+      them fast, because underneath, it's all just linear algebra.
+    </div>
+    <p>
+      The best way to get the intuition is to run it: one Docker command, then paste in a few <code>CREATE</code> and
+      <code>MATCH</code> lines and watch the browser draw your graph. From there, adding a vector index is three more
+      lines — and you've got a graph-plus-vector store on your own machine.
+    </p>
+  </div>
+</section>
+
+<section class="article-section" id="refs">
+  <h2 class="section-title">References</h2>
+  <div class="prose">
+    <ul class="links">
+      <li><strong>FalkorDB</strong> — <a href="https://www.falkordb.com" target="_blank">falkordb.com</a> · <a href="https://github.com/FalkorDB/FalkorDB" target="_blank">github.com/FalkorDB/FalkorDB</a></li>
+      <li><strong>Getting-started guide</strong> (the setup + Cypher examples here follow it) — <a href="https://docs.falkordb.com/getting-started" target="_blank">docs.falkordb.com/getting-started</a></li>
+      <li><strong>GraphBLAS</strong> (the sparse linear-algebra engine) — <a href="https://graphblas.org" target="_blank">graphblas.org</a></li>
+      <li><strong>openCypher</strong> (the query language) — <a href="https://opencypher.org" target="_blank">opencypher.org</a></li>
+      <li>Novels from <strong>Project Gutenberg</strong> · embeddings by <strong>Google Gemini</strong> · concept illustrations generated with <strong>Nano Banana</strong>. Getting-started content adapted, with thanks, from the FalkorDB docs.</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+
+<footer class="page-footer">
+  <div class="inner">
+    <a href="../index.html" class="back-to-blog"><span class="arrow">←</span> Back to all articles</a>
+    <p>Written from actually running FalkorDB — an explainer, not a press release.</p>
+    <div class="social">
+      <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn">in</a>
+      <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium">M</a>
+      <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub">GH</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
