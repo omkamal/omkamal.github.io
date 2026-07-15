@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenWiki: the AI agent that writes your docs — and turns your Gmail into a second brain</title>
+<meta name="description" content="A hands-on, illustrated walkthrough of OpenWiki — the open-source CLI from the LangChain team that auto-documents your codebase and builds a personal knowledge wiki from Gmail. Docs-only guardrails, a SHA-256 snapshot gate, real demos with 100 emails, and a repo documented with one command." />
+<meta name="keywords" content="OpenWiki, AI agent, documentation generator, auto documentation, LangChain, DeepAgents, second brain, personal knowledge base, Gmail agent, developer tools, docs as code, AI documentation, wiki generator, agent guardrails" />
+<meta name="author" content="Omar Kamal Hosney" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://omkamal.github.io/articles/openwiki-ai-docs-agent/openwiki-ai-docs-agent.html" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Omar Kamal Hosney" />
+<meta property="og:url" content="https://omkamal.github.io/articles/openwiki-ai-docs-agent/openwiki-ai-docs-agent.html" />
+<meta property="og:title" content="OpenWiki: the AI agent that writes your docs — and turns your Gmail into a second brain" />
+<meta property="og:description" content="One command documents your repo. Another turns a day of Gmail into a wiki you can chat with. A hands-on walkthrough of OpenWiki with real demos, guardrails and gotchas." />
+<meta property="og:image" content="https://omkamal.github.io/articles/openwiki-ai-docs-agent/demo_assets/video-thumb.png" />
+<meta property="article:author" content="Omar Kamal Hosney" />
+<meta property="article:published_time" content="2026-07-14" />
+<meta property="article:section" content="AI Agents" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="OpenWiki: the AI agent that writes your docs" />
+<meta name="twitter:description" content="One command documents your repo; another turns a day of Gmail into a second brain you can chat with. Hands-on walkthrough, real demos." />
+<meta name="twitter:image" content="https://omkamal.github.io/articles/openwiki-ai-docs-agent/demo_assets/video-thumb.png" />
+
+<link rel="icon" type="image/jpeg" href="../../omar.jpeg" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "OpenWiki: the AI agent that writes your docs — and turns your Gmail into a second brain",
+  "description": "A hands-on, illustrated walkthrough of OpenWiki — the open-source CLI from the LangChain team that auto-documents your codebase and builds a personal knowledge wiki from Gmail.",
+  "image": "https://omkamal.github.io/articles/openwiki-ai-docs-agent/demo_assets/video-thumb.png",
+  "datePublished": "2026-07-14",
+  "dateModified": "2026-07-14",
+  "author": { "@type": "Person", "name": "Omar Kamal Hosney", "url": "https://omkamal.github.io/" },
+  "publisher": { "@type": "Person", "name": "Omar Kamal Hosney" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://omkamal.github.io/articles/openwiki-ai-docs-agent/openwiki-ai-docs-agent.html" },
+  "articleSection": "AI Agents",
+  "keywords": "OpenWiki, AI agent, documentation generator, LangChain, DeepAgents, second brain, personal knowledge base, developer tools",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omkamal.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omkamal.github.io/articles/" },
+      { "@type": "ListItem", "position": 3, "name": "OpenWiki: the AI agent that writes your docs", "item": "https://omkamal.github.io/articles/openwiki-ai-docs-agent/openwiki-ai-docs-agent.html" }
+    ]
+  }
+}
+</script>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root {
+  --c-ink: #18181b;
+  --c-ink-soft: #27272a;
+  --c-prose: #3f3f46;
+  --c-muted: #71717a;
+  --c-mute-2: #a1a1aa;
+  --c-paper: #fafaf9;
+  --c-paper-2: #ffffff;
+  --c-line: #e7e5e4;
+  --c-line-soft: #f1f0ee;
+  --c-accent: #7c3aed;
+  --c-accent-2: #ec4899;
+  --c-accent-3: #f59e0b;
+  --c-accent-soft: #faf5ff;
+  --c-accent-line: #e9d5ff;
+  --c-blue: #2563eb;
+  --c-blue-soft: #eff6ff;
+  --c-blue-line: #bfdbfe;
+  --c-green: #16a34a;
+  --c-green-soft: #f0fdf4;
+  --c-green-line: #bbf7d0;
+  --c-warn: #b45309;
+  --c-warn-soft: #fffbeb;
+  --c-warn-line: #fde68a;
+  --c-red: #dc2626;
+  --c-red-soft: #fef2f2;
+  --c-red-line: #fecaca;
+  --c-code-bg: #0f172a;
+  --c-code-fg: #e2e8f0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 24px 56px -16px rgba(15, 23, 42, 0.18), 0 8px 20px -6px rgba(15, 23, 42, 0.08);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { font-family: 'Source Serif 4', Charter, Georgia, 'Times New Roman', serif; font-size: 18px; line-height: 1.75; color: var(--c-prose); background: var(--c-paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--c-accent); color: white; }
+
+.top-nav { position: sticky; top: 0; z-index: 50; background: rgba(250, 250, 249, 0.85); backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px); border-bottom: 1px solid var(--c-line); }
+.nav-inner { max-width: 1180px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 12px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--c-ink); text-decoration: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-accent) 100%); display: grid; place-items: center; font-weight: 800; font-size: 0.78rem; color: white; box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.4); }
+.nav-right { display: flex; gap: 4px; align-items: center; font-family: 'Inter', sans-serif; font-size: 0.85rem; }
+.nav-right a { color: var(--c-muted); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 500; transition: all 0.2s var(--ease); }
+.nav-right a:hover { color: var(--c-ink); background: rgba(0,0,0,0.04); }
+.nav-right a.active { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.hero { position: relative; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #4c1d95 100%); color: #e2e8f0; padding: 80px 0 100px; margin-bottom: -60px; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.35), transparent 50%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.30), transparent 50%), radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.10), transparent 60%); }
+.hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); pointer-events: none; }
+.hero-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 32px; }
+.crumbs { font-family: 'Inter', sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; color: rgba(226, 232, 240, 0.65); margin-bottom: 22px; }
+.crumbs a { color: rgba(226, 232, 240, 0.85); text-decoration: none; border-bottom: 1px solid rgba(226, 232, 240, 0.3); transition: all 0.2s var(--ease); }
+.crumbs a:hover { color: white; border-bottom-color: white; }
+.crumbs .sep { margin: 0 0.5em; opacity: 0.4; }
+.article-header { margin: 0; padding: 0; border: 0; }
+.byline { display: inline-flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: #c4b5fd; padding: 5px 12px; background: rgba(168, 85, 247, 0.18); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50px; margin-bottom: 28px; }
+.byline span + span::before { content: "·"; opacity: 0.6; margin: 0 0.25rem; color: #c4b5fd; }
+h1 { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2.2rem, 4.8vw, 3.6rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.03em; color: #ffffff; margin: 0 0 22px; max-width: 880px; }
+.subtitle { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(1.05rem, 1.6vw, 1.28rem); line-height: 1.55; color: rgba(226, 232, 240, 0.82); font-style: italic; margin: 0; max-width: 720px; }
+.subtitle code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85em; font-style: normal; background: rgba(255, 255, 255, 0.12); padding: 2px 8px; border-radius: 5px; color: #fde68a; border: 1px solid rgba(255, 255, 255, 0.08); }
+
+.container { max-width: 980px; margin: 0 auto; padding: 100px 32px 80px; position: relative; z-index: 2; }
+
+.tldr { background: linear-gradient(135deg, #ffffff 0%, var(--c-accent-soft) 100%); border: 1px solid var(--c-accent-line); border-left: 4px solid var(--c-accent); padding: 26px 30px; border-radius: 0 16px 16px 0; margin: 0 0 60px; box-shadow: var(--shadow-md); }
+.tldr h3 { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-accent); margin: 0 0 12px; }
+.tldr p { font-size: 1.05rem; color: var(--c-ink-soft); margin: 0 0 0.8rem; text-align: justify; hyphens: auto; }
+.tldr p:last-child { margin-bottom: 0; }
+.tldr strong { color: var(--c-ink); font-weight: 700; }
+.tldr code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(255,255,255,0.7); border: 1px solid var(--c-accent-line); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); }
+
+.toc { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; color: var(--c-prose); padding: 22px 28px; margin: 0 0 80px; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 16px; line-height: 2.1; box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: center; }
+.toc strong { display: inline-flex; align-items: center; gap: 7px; color: var(--c-ink); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; padding-right: 14px; margin-right: 6px; border-right: 1px solid var(--c-line); }
+.toc strong::before { content: ''; width: 3px; height: 14px; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+.toc a { color: var(--c-prose); text-decoration: none; padding: 4px 11px; border-radius: 50px; transition: all 0.2s var(--ease); font-weight: 500; }
+.toc a:hover { color: var(--c-accent); background: var(--c-accent-soft); }
+
+.article-section { margin-bottom: 80px; scroll-margin-top: 80px; }
+.section-title { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(1.65rem, 3vw, 2.15rem); font-weight: 700; color: var(--c-ink); margin: 0 0 28px; letter-spacing: -0.025em; line-height: 1.18; position: relative; padding-left: 18px; }
+.section-title::before { content: ''; position: absolute; left: 0; top: 0.18em; width: 5px; height: 0.85em; background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2)); border-radius: 3px; }
+
+.prose { max-width: 100%; margin-bottom: 36px; font-size: 1.06rem; line-height: 1.78; text-align: justify; hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty; }
+.prose p { margin: 0 0 1.25rem; color: var(--c-prose); text-align: justify; hyphens: auto; }
+.prose h3 { text-align: left; hyphens: manual; }
+.prose ul, .prose ol { text-align: left; hyphens: manual; margin: 0 0 1.25rem 1.2rem; }
+.prose li { margin-bottom: 0.4rem; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--c-ink); font-weight: 600; }
+.prose em { color: var(--c-ink-soft); }
+.prose code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.86em; background: var(--c-accent-soft); padding: 2px 7px; border-radius: 5px; color: var(--c-accent); border: 1px solid var(--c-accent-line); font-weight: 500; }
+.prose a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--c-accent-line); transition: all 0.2s var(--ease); }
+.prose a:hover { text-decoration-color: var(--c-accent); text-decoration-thickness: 2px; }
+.prose h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--c-ink); margin: 2.2rem 0 0.8rem; letter-spacing: -0.015em; display: flex; align-items: center; gap: 10px; }
+.prose h3::before { content: ''; width: 22px; height: 2px; background: linear-gradient(90deg, var(--c-accent), var(--c-accent-2)); border-radius: 2px; }
+
+.prose pre { background: var(--c-code-bg); color: var(--c-code-fg); padding: 44px 26px 22px; border-radius: 12px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.85rem; line-height: 1.65; overflow-x: auto; margin: 22px 0; border: 1px solid #1e293b; box-shadow: var(--shadow-lg); position: relative; }
+.prose pre::before { content: ''; position: absolute; top: 14px; left: 18px; width: 11px; height: 11px; border-radius: 50%; background: #ef4444; box-shadow: 18px 0 0 #f59e0b, 36px 0 0 #10b981; opacity: 0.7; }
+.prose pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; border: 0; font-weight: 400; }
+
+.callout { background: var(--c-warn-soft); border: 1px solid var(--c-warn-line); border-left: 4px solid var(--c-accent-3); padding: 16px 22px; border-radius: 0 12px 12px 0; margin: 22px 0; font-size: 0.98rem; line-height: 1.7; color: var(--c-ink-soft); position: relative; box-shadow: var(--shadow-sm); text-align: justify; hyphens: auto; }
+.callout.green { background: var(--c-green-soft); border-color: var(--c-green-line); border-left-color: var(--c-green); }
+.callout.red { background: var(--c-red-soft); border-color: var(--c-red-line); border-left-color: var(--c-red); }
+.callout.blue { background: var(--c-blue-soft); border-color: var(--c-blue-line); border-left-color: var(--c-blue); }
+.callout strong { color: var(--c-ink); }
+.callout code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--c-warn); padding: 1.5px 6px; border-radius: 4px; }
+.callout.green code { background: rgba(22, 163, 74, 0.12); border-color: rgba(22, 163, 74, 0.3); color: var(--c-green); }
+.callout.red code { background: rgba(220, 38, 38, 0.10); border-color: rgba(220, 38, 38, 0.3); color: var(--c-red); }
+.callout.blue code { background: rgba(37, 99, 235, 0.10); border-color: rgba(37,99,235,0.3); color: var(--c-blue); }
+
+.variant-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 22px 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.88rem; background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); }
+.variant-table th, .variant-table td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--c-line-soft); vertical-align: top; }
+.variant-table th { background: linear-gradient(180deg, #fafafa, #f5f5f4); font-weight: 700; color: var(--c-ink); letter-spacing: 0.02em; font-size: 0.74rem; text-transform: uppercase; }
+.variant-table tbody tr:last-child td { border-bottom: 0; }
+.variant-table tbody tr:hover td { background: var(--c-accent-soft); }
+.variant-table td { color: var(--c-prose); }
+.variant-table td strong { color: var(--c-ink); }
+.variant-table td.num { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+.variant-table tr.hi td { background: var(--c-green-soft); }
+.variant-table tr.hi:hover td { background: var(--c-green-soft); }
+
+.figure { margin: 28px auto; text-align: center; display: block; }
+.figure img, .figure video { width: 100%; max-width: 100%; height: auto; border-radius: 14px; display: block; margin-left: auto; margin-right: auto; border: 1px solid var(--c-line); box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); background: var(--c-paper-2); }
+.figure video { background: #000; }
+.figure img:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); border-color: var(--c-accent-line); }
+.figure figcaption { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; color: var(--c-mute-2); margin: 10px auto 0; letter-spacing: 0.02em; text-align: center; max-width: 85%; }
+.figure.full img { background: white; }
+.figure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px auto; justify-items: center; align-items: start; }
+.figure-grid .figure { margin: 0; width: 100%; }
+
+.example { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 18px; padding: 28px 30px; margin: 26px 0 36px; box-shadow: var(--shadow-md); transition: all 0.3s var(--ease); }
+.example:hover { box-shadow: var(--shadow-lg); border-color: var(--c-accent-line); }
+.example-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1px solid var(--c-line-soft); flex-wrap: wrap; }
+.example-head h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--c-ink); margin: 0; letter-spacing: -0.018em; }
+.tps-chip { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; font-weight: 700; padding: 6px 14px; border-radius: 50px; color: white; background: linear-gradient(135deg, var(--c-green) 0%, #15803d 100%); box-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.35); }
+.tps-chip.amber { background: linear-gradient(135deg, var(--c-accent-3) 0%, var(--c-warn) 100%); box-shadow: 0 4px 12px -2px rgba(180, 83, 9, 0.35); }
+.tps-chip.fire { background: linear-gradient(135deg, var(--c-accent-2) 0%, #be185d 100%); box-shadow: 0 4px 12px -2px rgba(190, 24, 93, 0.35); }
+.tps-chip.blue { background: linear-gradient(135deg, var(--c-blue) 0%, #1d4ed8 100%); box-shadow: 0 4px 12px -2px rgba(37,99,235,0.35); }
+.prompt-line { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: var(--c-paper); border: 1px solid var(--c-line); border-left: 3px solid var(--c-accent); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 0 0 18px; color: var(--c-ink-soft); line-height: 1.5; }
+
+.commentary { margin-top: 24px; padding: 20px 22px; background: var(--c-blue-soft); border: 1px solid var(--c-blue-line); border-left: 4px solid var(--c-blue); border-radius: 0 12px 12px 0; }
+.commentary h4 { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-blue); margin: 0 0 10px; display: inline-flex; align-items: center; gap: 7px; }
+.commentary h4::before { content: '💡'; font-size: 1.05em; }
+.commentary p { font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; line-height: 1.7; color: var(--c-ink-soft); margin: 0; text-align: justify; hyphens: auto; }
+.commentary code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: rgba(37, 99, 235, 0.1); padding: 1.5px 6px; border-radius: 4px; color: var(--c-blue); border: 1px solid var(--c-blue-line); font-weight: 500; }
+.commentary strong { color: var(--c-ink); }
+
+.links { padding-left: 20px; max-width: 100%; }
+.links li { margin-bottom: 10px; line-height: 1.6; }
+.links li code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: var(--c-paper); border: 1px solid var(--c-line); padding: 1px 6px; border-radius: 4px; color: var(--c-ink-soft); }
+
+.page-footer { border-top: 1px solid var(--c-line); padding: 60px 0 80px; text-align: center; background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.03)); }
+.page-footer .inner { max-width: 980px; margin: 0 auto; padding: 0 32px; font-family: 'Inter', sans-serif; }
+.back-to-blog { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-2) 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 8px 24px -6px rgba(124, 58, 237, 0.5); transition: all 0.3s var(--ease); margin-bottom: 32px; }
+.back-to-blog:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(124, 58, 237, 0.65); }
+.back-to-blog .arrow { transition: transform 0.3s var(--ease); }
+.back-to-blog:hover .arrow { transform: translateX(-4px); }
+.page-footer p { color: var(--c-muted); font-size: 0.88rem; margin-bottom: 18px; }
+.social { display: flex; justify-content: center; gap: 12px; }
+.social a { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: var(--c-paper-2); border: 1px solid var(--c-line); color: var(--c-muted); text-decoration: none; transition: all 0.3s var(--ease); font-family: 'Inter', sans-serif; font-weight: 700; }
+.social a:hover { color: var(--c-accent); border-color: var(--c-accent-line); background: var(--c-accent-soft); transform: translateY(-2px); }
+
+@media (max-width: 900px) {
+  .hero { padding: 60px 0 80px; }
+  .hero-inner { padding: 0 20px; }
+  .container { padding: 80px 20px 60px; }
+  .nav-inner { padding: 12px 20px; }
+  h1 { font-size: 2rem; }
+  .section-title { font-size: 1.55rem; }
+  .figure-grid { grid-template-columns: 1fr; }
+  .example { padding: 22px 22px; border-radius: 14px; }
+  .toc { padding: 18px 20px; font-size: 0.8rem; gap: 6px; }
+  .toc strong { border-right: 0; margin-bottom: 4px; padding-right: 0; width: 100%; }
+  .nav-right a { padding: 6px 10px; font-size: 0.82rem; }
+}
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .prose { font-size: 1.02rem; }
+  .nav-right a:not(.active) { display: none; }
+}
+</style>
+<style>
+/* Article-specific: code blocks, pillar cards, book chips */
+.code { background: var(--c-code-bg); color: var(--c-code-fg); border-radius: 12px; padding: 18px 20px; margin: 22px 0; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.7; overflow-x: auto; border: 1px solid #1e293b; box-shadow: var(--shadow-md); }
+.code .c { color: #64748b; }           /* comment */
+.code .k { color: #c4b5fd; }           /* keyword */
+.code .s { color: #86efac; }           /* string */
+.code .fn { color: #7dd3fc; }          /* function/label */
+.code .o { color: #fca5a5; }           /* operator */
+.code-cap { font-family: 'Inter', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--c-muted); font-weight: 700; margin: 26px 0 -8px; }
+
+.pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 30px 0; }
+.pillar { background: var(--c-paper-2); border: 1px solid var(--c-line); border-radius: 14px; padding: 22px 22px; box-shadow: var(--shadow-sm); }
+.pillar .ico { font-size: 1.6rem; }
+.pillar h4 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; color: var(--c-ink); margin: 10px 0 6px; }
+.pillar p { font-size: 0.92rem; line-height: 1.6; color: var(--c-prose); margin: 0; font-family: 'Source Serif 4', Georgia, serif; }
+@media (max-width: 760px){ .pillars { grid-template-columns: 1fr; } }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 4px; }
+.chip { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--c-accent); background: var(--c-accent-soft); border: 1px solid var(--c-accent-line); border-radius: 50px; padding: 5px 14px; }
+</style>
+
+</head>
+
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">OK</span>
+      <span>Omar Kamal Hosney</span>
+    </a>
+    <div class="nav-right">
+      <a href="../../cheatsheets/index.html">Cheatsheets</a>
+      <a href="../index.html" class="active">Blog</a>
+      <a href="../../resume.html" target="_blank">Resume</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="crumbs">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="../index.html">Blog</a>
+      <span class="sep">/</span>
+      AI Agents
+    </p>
+    <div class="article-header">
+      <p class="byline"><span>OpenWiki</span><span>Hands-on</span><span>July 2026</span></p>
+      <h1>OpenWiki: the AI agent that writes your docs — and turns your Gmail into a second brain</h1>
+      <p class="subtitle"><strong>Documentation rots the moment you write it.</strong> OpenWiki — an open-source CLI
+      from the LangChain team — attacks the problem with an agent: point it at a repository and it writes the wiki;
+      point it at your <em>Gmail</em> and it distills your inbox into a personal knowledge base you can chat with.
+      I ran both for real. Here's the whole thing — the architecture, the guardrails, and the demos, screenshots included.</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<figure class="figure full" style="margin: 0 0 60px;">
+  <img src="demo_assets/hero.png" alt="A friendly robot librarian writing on a large tabbed wiki book with a glowing pen, surrounded by a git branch icon, a terminal window and a gear" loading="lazy" />
+  <figcaption>The pitch in one picture: an agent that reads your world and maintains the wiki for you</figcaption>
+</figure>
+
+<div class="tldr">
+  <h3>TL;DR</h3>
+  <p>
+    <strong>OpenWiki is a documentation agent in a CLI.</strong> In <strong>code mode</strong>, one command
+    (<code>openwiki --update</code>) collects git evidence, explores your repo through a <strong>docs-only sandboxed
+    backend</strong>, and writes a structured wiki into <code>openwiki/</code> — then wires up a scheduled CI workflow so
+    the docs keep refreshing themselves. In <strong>personal mode</strong>, connectors (Gmail, Notion, Slack, X, web
+    search) feed the same agent, which distills your day into commitments, logistics and themes under
+    <code>~/.openwiki/wiki</code>.
+  </p>
+  <p>
+    I tested both against reality: <strong>100 real emails</strong> became a second brain I could query from the
+    terminal, and <strong>this very website</strong> got a four-page wiki from a single command. The design details —
+    write guards that make the agent physically unable to touch source code, and a SHA-256 snapshot gate that keeps
+    scheduled runs from looping — are the parts worth stealing.
+  </p>
+</div>
+
+<nav class="toc" aria-label="Table of contents">
+  <strong>Contents</strong>
+  <a href="#problem">The problem</a>
+  <a href="#meet">Meet OpenWiki</a>
+  <a href="#hood">Under the hood</a>
+  <a href="#brain">Demo: a second brain from Gmail</a>
+  <a href="#repo">Demo: documenting this site</a>
+  <a href="#video">Watch the full walkthrough</a>
+  <a href="#verdict">Why it matters</a>
+  <a href="#refs">References</a>
+</nav>
+
+<section class="article-section" id="problem">
+  <h2 class="section-title">The problem: docs rot, and now agents read them too</h2>
+  <div class="prose">
+    <p>
+      Every team knows the cycle. The code changes daily; the wiki doesn't. Onboarding takes weeks because the only
+      accurate documentation is the code itself, and nobody ever volunteers to update the wiki. What's new is
+      <em>who suffers</em>: it's no longer just humans. AI coding agents — Claude Code, Copilot, Cursor — are only as
+      good as the context they can find, and a stale wiki misleads them exactly as it misleads a new hire.
+    </p>
+    <p>
+      The obvious fix is also the honest one: if writing documentation is the chore nobody wants, give the chore to an
+      agent — but wrap it in guardrails so it can't do anything <em>except</em> documentation.
+    </p>
+  </div>
+</section>
+
+<section class="article-section" id="meet">
+  <h2 class="section-title">Meet OpenWiki: one agent, two brains</h2>
+  <div class="prose">
+    <p>
+      <a href="https://github.com/langchain-ai/openwiki">OpenWiki</a> is an MIT-licensed CLI from the LangChain team,
+      built on their <a href="https://www.npmjs.com/package/deepagents">DeepAgents</a> framework. Install is one line —
+      <code>npm install -g openwiki</code> — and the terminal UI is, delightfully, React: it's built with
+      <a href="https://github.com/vadimdemedes/ink">Ink</a>, so the interactive chat, streaming tool calls and setup
+      wizard all render in your console.
+    </p>
+    <p>The same agent serves two very different masters:</p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/two-modes.png" alt="Split diagram: code mode turns a git repository into an openwiki folder; personal mode feeds email, search, chat and social icons into a brain-shaped book at ~/.openwiki/wiki" loading="lazy" />
+    <figcaption>Code mode documents a repository into <code>openwiki/</code>; personal mode builds a private knowledge brain in <code>~/.openwiki/wiki</code></figcaption>
+  </figure>
+  <div class="prose">
+    <ul>
+      <li><strong>Code mode</strong> (<code>openwiki --update</code>) — documents the current repository: quickstart, architecture, workflows, source maps. Recurrence comes from a scheduled GitHub Actions workflow it writes for you.</li>
+      <li><strong>Personal mode</strong> (<code>openwiki personal</code>) — ingests configured connectors (Gmail, Notion, Slack, X, web search, Hacker News) and synthesizes a local wiki of commitments, logistics, themes and open questions.</li>
+    </ul>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/terminal.png" alt="OpenWiki's Ink terminal interface showing the version header, provider and model info, and a dry-run execution plan" loading="lazy" />
+    <figcaption>The CLI is React-in-the-terminal (Ink). A dev dry-run prints the execution plan without touching anything</figcaption>
+  </figure>
+</section>
+
+<section class="article-section" id="hood">
+  <h2 class="section-title">Under the hood: the two design decisions worth stealing</h2>
+  <div class="prose">
+    <p>
+      The architecture is small — a CLI, a credential store in <code>~/.openwiki/.env</code>, a provider-agnostic model
+      layer (OpenAI with an API key <em>or</em> your ChatGPT subscription, Anthropic, OpenRouter, Fireworks, Baseten,
+      NVIDIA NIM, or any OpenAI-compatible gateway), and a SQLite checkpointer so conversations survive restarts. But
+      two decisions elevate it from "neat demo" to "thing you can trust".
+    </p>
+    <h3>1. The agent physically cannot touch your code</h3>
+    <p>
+      OpenWiki extends DeepAgents' shell backend with explicit <strong>write guards</strong>: the agent may only write
+      documentation files. It sees the repo through virtual paths, its output is capped, its commands are time-boxed.
+      You don't have to trust the model's intentions — the backend enforces the contract.
+    </p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/guardrails.png" alt="A robot happily writing markdown documents on its side of a glass fence while source code files sit protected behind a shield labeled docs-only" loading="lazy" />
+    <figcaption>Guardrails, not vibes: a docs-only write policy enforced by the backend, not by the prompt</figcaption>
+  </figure>
+  <div class="prose">
+    <h3>2. A snapshot gate that keeps CI from looping</h3>
+    <p>
+      After every run, OpenWiki computes a <strong>SHA-256 snapshot of the whole wiki directory</strong> and writes its
+      update metadata <em>only if the content actually changed</em>. A no-op update stays a true no-op — which is what
+      stops a scheduled weekly run from committing metadata churn forever. It's a small idea that every "agent on a
+      cron job" system should copy.
+    </p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/snapshot-gate.png" alt="Flow diagram: a wiki folder goes through a SHA-256 snapshot machine into a changed? decision diamond, with yes leading to write metadata and no leading to skip" loading="lazy" />
+    <figcaption>The content-snapshot gate: metadata is written only when the docs really changed</figcaption>
+  </figure>
+</section>
+
+<section class="article-section" id="brain">
+  <h2 class="section-title">Demo: a second brain from 100 real emails</h2>
+  <div class="prose">
+    <p>
+      Theory is cheap, so I connected my actual Gmail. Authorization is a single command — <code>openwiki auth
+      gmail</code> — which opens a Google consent screen with a <strong>read-only</strong> scope: the agent can read
+      mail, never send or delete it. Tokens land in <code>~/.openwiki/.env</code>, and only the <em>variable names</em>
+      are ever printed, never the secrets.
+    </p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/auth-gmail.png" alt="Terminal output of openwiki auth gmail showing the browser consent step and the saved token variable names" loading="lazy" />
+    <figcaption><code>openwiki auth gmail</code>: browser consent in, read-only tokens out — printed by name only</figcaption>
+  </figure>
+  <div class="prose">
+    <p>Ingestion is a two-stage rocket, and the separation matters:</p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/two-stage.png" alt="A two-stage rocket: the booster stage is the deterministic API pull producing raw JSON, the upper stage is the LLM synthesis filtering many gray dots into a few golden documents" loading="lazy" />
+    <figcaption>Stage 1 is a deterministic API pull (reproducible, no model). Stage 2 is the LLM synthesis that filters signal from noise</figcaption>
+  </figure>
+  <div class="prose">
+    <p>
+      The pull fetched <strong>100 messages from the last 24 hours</strong> into raw JSON. Then the agent — treating raw
+      email as <em>untrusted evidence</em>, not instructions — classified every message by type, priority and
+      durability, and wrote six cross-linked pages: commitments, personal logistics, themes, open questions, a source
+      evidence table, and a quickstart. Receipts, promotions and newsletters didn't make the cut. That's the point.
+    </p>
+    <p>And then the fun part — you can just <em>ask</em> it things:</p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/chat-demo.png" alt="A terminal chat where openwiki personal is asked what bills and commitments are due this week and answers with a short grounded list, sensitive details blurred" loading="lazy" />
+    <figcaption>One question, answers grounded in the wiki: a bill due today, a coaching call, a delivery failure to chase. (Sensitive details blurred)</figcaption>
+  </figure>
+  <div class="prose">
+    <p>
+      Because the wiki is plain markdown, a tiny <a href="https://docsify.js.org">docsify</a> server also turns it into
+      a local website — sidebar, full-text search, and evidence-linked tables:
+    </p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/wiki-browser.png" alt="The personal wiki rendered as a website showing a Personal Logistics page with tables of items, due dates, status and evidence links, account numbers blurred" loading="lazy" />
+    <figcaption>The same markdown, browsed at <code>localhost:3054</code>: dates, statuses, and evidence links per row. (Account details blurred)</figcaption>
+  </figure>
+  <div class="commentary">
+    <h4>Field note</h4>
+    <p>
+      The classification policy is the underrated feature. Every item gets a priority <em>and a durability</em>
+      (ephemeral / durable / recurring), and only high-signal durable items reach the canonical pages. My inbox's
+      thirty-plus newsletters and receipts were read, weighed, and correctly ignored. A second brain that hoards
+      everything is just a second inbox.
+    </p>
+  </div>
+</section>
+
+<section class="article-section" id="repo">
+  <h2 class="section-title">Demo: documenting this very website with one command</h2>
+  <div class="prose">
+    <p>
+      For the finale I pointed OpenWiki at the repository you're reading right now — <code>omkamal.github.io</code>,
+      420 files of articles and cheatsheets with zero documentation — and ran code mode:
+    </p>
+    <pre><code>$ cd ~/omkamal.github.io
+$ openwiki --update --print
+
+Created the initial generated wiki entrypoint at openwiki/quickstart.md
+
+$ git status --short
+ M CLAUDE.md        # OPENWIKI block appended
+?? .github/         # scheduled openwiki-update.yml workflow
+?? AGENTS.md        # agent guidance, created
+?? openwiki/        # the generated wiki</code></pre>
+    <p>
+      One command produced the wiki <em>and</em> the recurrence machinery: an <code>AGENTS.md</code>, a
+      <code>CLAUDE.md</code> block that tells coding agents to read the wiki first, and a scheduled GitHub Actions
+      workflow that will keep refreshing it. A follow-up prompt expanded the wiki to four cross-linked pages —
+      quickstart, site architecture, publishing workflow, and a source map:
+    </p>
+  </div>
+  <figure class="figure full">
+    <img src="demo_assets/repo-wiki.png" alt="The generated repository wiki rendered in a browser: quickstart page describing the site, with sidebar entries for site architecture, publishing an article, and source map" loading="lazy" />
+    <figcaption>The wiki OpenWiki wrote for this site — quickstart, architecture, publishing workflow, source map — rendered with docsify</figcaption>
+  </figure>
+  <div class="callout green">
+    <strong>Full circle:</strong> the article you are reading was added to this site by following the
+    <em>publishing-workflow page that OpenWiki itself generated</em>. The agent documented how to publish an article;
+    the article about the agent was published by following its documentation.
+  </div>
+</section>
+
+<section class="article-section" id="video">
+  <h2 class="section-title">Watch the full walkthrough</h2>
+  <div class="prose">
+    <p>
+      The complete 13-minute video covers everything in motion — the animated pipeline, the install from a fresh
+      clone, the live Gmail demos, and the repo run — with every diagram synced to the narration:
+    </p>
+  </div>
+  <figure class="figure full">
+    <a href="https://youtu.be/YPrFph-ce5Q" target="_blank" rel="noopener">
+      <img src="demo_assets/video-thumb.png" alt="YouTube thumbnail: OpenWiki, the AI agent that writes your docs — full demo" loading="lazy" />
+    </a>
+    <figcaption>▶ <a href="https://youtu.be/YPrFph-ce5Q" target="_blank" rel="noopener">OpenWiki: AI Agent That Auto-Writes Your Docs &amp; Turns Gmail Into a Second Brain (Full Demo)</a> — 12:49</figcaption>
+  </figure>
+</section>
+
+<section class="article-section" id="verdict">
+  <h2 class="section-title">Why it matters</h2>
+  <div class="prose">
+    <p>Four takeaways survived contact with reality:</p>
+    <ul>
+      <li><strong>Agent-written documentation is practical today</strong> — not a research demo. The output above is real, and it was cheap.</li>
+      <li><strong>Guardrails are the product.</strong> A docs-only write policy enforced by the backend is what makes it safe to run an agent on a schedule, unattended.</li>
+      <li><strong>Recurrence beats heroics.</strong> The scheduled workflow plus the snapshot gate means the wiki stays fresh without anyone remembering to run anything.</li>
+      <li><strong>Your knowledge stays local.</strong> Both brains are plain markdown on your machine — chat with them, browse them, grep them, back them up.</li>
+    </ul>
+  </div>
+  <div class="callout">
+    <strong>Honest caveats:</strong> ingestion runs consume model quota (a ChatGPT subscription via the
+    <code>openai-chatgpt</code> provider avoids per-token billing); connector auth setup has a few sharp edges; and as
+    with any young project, expect the occasional rough patch — I hit a test-isolation bug and sent the fix upstream
+    (<a href="https://github.com/langchain-ai/openwiki/pull/334">PR #334</a>).
+  </div>
+</section>
+
+<section class="article-section" id="refs">
+  <h2 class="section-title">References</h2>
+  <div class="prose">
+    <ul class="links">
+      <li>OpenWiki on GitHub — <a href="https://github.com/langchain-ai/openwiki">github.com/langchain-ai/openwiki</a> (MIT)</li>
+      <li>OpenWiki on npm — <a href="https://www.npmjs.com/package/openwiki">npmjs.com/package/openwiki</a> · install with <code>npm install -g openwiki</code></li>
+      <li>DeepAgents, the agent framework underneath — <a href="https://www.npmjs.com/package/deepagents">npmjs.com/package/deepagents</a></li>
+      <li>LangChain — <a href="https://www.langchain.com">langchain.com</a></li>
+      <li>Ink (React for the terminal) — <a href="https://github.com/vadimdemedes/ink">github.com/vadimdemedes/ink</a></li>
+      <li>docsify, the zero-build markdown site viewer used in the demos — <a href="https://docsify.js.org">docsify.js.org</a></li>
+      <li>The full video walkthrough — <a href="https://youtu.be/YPrFph-ce5Q">youtu.be/YPrFph-ce5Q</a></li>
+    </ul>
+    <p style="margin-top: 1.2rem; font-size: 0.92rem; color: var(--c-muted);">
+      Illustrations generated with Google's Nano Banana image model; diagrams use Font Awesome Free icons
+      (CC BY 4.0, Fonticons, Inc.). Personal details in demo screenshots are blurred.
+    </p>
+  </div>
+</section>
+
+</div>
+
+<footer class="page-footer">
+  <div class="inner">
+    <a class="back-to-blog" href="../index.html"><span class="arrow">←</span> Back to the blog</a>
+    <p>Written by Omar Kamal Hosney · July 2026</p>
+    <div class="social">
+      <a href="https://github.com/omkamal" target="_blank" rel="noopener" aria-label="GitHub">GH</a>
+      <a href="https://www.linkedin.com/in/omarkamal/" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
