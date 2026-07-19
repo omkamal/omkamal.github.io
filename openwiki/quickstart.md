@@ -1,3 +1,10 @@
+---
+type: Overview
+title: OpenWiki Quickstart
+description: Entry point to the omkamal.github.io wiki — what this static GitHub Pages site is, how its cheatsheet and article libraries are organized, and where to go next.
+tags: [overview, quickstart, github-pages, static-site]
+---
+
 # omkamal.github.io — OpenWiki quickstart
 
 ## What this repository is

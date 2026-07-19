@@ -1,3 +1,10 @@
+---
+type: Playbook
+title: Publishing an article
+description: Step-by-step workflow for adding a new article or cheatsheet to the site, covering metadata, demo assets, index entries, and sitemap updates.
+tags: [workflow, publishing, articles, seo]
+---
+
 # Publishing an article
 
 [Quickstart](quickstart.md) · [Site architecture](architecture.md) · [Source map](source-map.md)

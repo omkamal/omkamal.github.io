@@ -1,3 +1,10 @@
+---
+type: Reference
+title: Source map
+description: Map of the repository's key files and directories and what each area is responsible for, for quickly locating where to make changes.
+tags: [source-map, reference, repository-layout]
+---
+
 # Source map
 
 [Quickstart](quickstart.md) · [Site architecture](architecture.md) · [Publishing workflow](publishing-workflow.md)

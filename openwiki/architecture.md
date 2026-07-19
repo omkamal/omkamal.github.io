@@ -1,3 +1,10 @@
+---
+type: Reference
+title: Site architecture
+description: How the static site is structured and served — directory layout, runtime model, and the HTML page templates for the landing page, cheatsheets, and articles.
+tags: [architecture, static-site, html, github-pages]
+---
+
 # Site architecture
 
 [Quickstart](quickstart.md) · [Publishing workflow](publishing-workflow.md) · [Source map](source-map.md)
