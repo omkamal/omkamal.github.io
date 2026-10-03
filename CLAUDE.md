@@ -25,6 +25,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 /courses/                          → Courses section (single page; intro + module links per course)
   /courses/index.html              → Lists each course with links to every module (YouTube playlists)
 
+/books/                            → Books page (covers, short blurbs, Amazon links)
+  /books/index.html                → Lists each book; covers in /books/img/
+
 /articles/                         → Blog section (second-level)
   /articles/index.html             → Blog landing / article listing
   /articles/<slug>/<slug>.html     → Individual articles in their own subfolder

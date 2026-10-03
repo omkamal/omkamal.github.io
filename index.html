@@ -441,7 +441,7 @@
 
     .explore-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 28px;
     }
 
@@ -479,6 +479,9 @@
     .explore-card.blog::before {
       background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(236, 72, 153, 0));
     }
+    .explore-card.books::before {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.4), rgba(245, 158, 11, 0));
+    }
     .explore-card.courses::before {
       background: linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(59, 130, 246, 0));
     }
@@ -491,6 +494,7 @@
 
     .explore-card.cheat:hover { box-shadow: var(--shadow-glow-blue), var(--shadow-deep); }
     .explore-card.blog:hover { box-shadow: var(--shadow-glow-purple), var(--shadow-deep); }
+    .explore-card.books:hover { box-shadow: 0 20px 60px -20px rgba(236, 72, 153, 0.45), var(--shadow-deep); }
     .explore-card.courses:hover { box-shadow: 0 20px 60px -20px rgba(16, 185, 129, 0.45), var(--shadow-deep); }
 
     .card-icon {
@@ -504,6 +508,10 @@
     .explore-card.cheat .card-icon {
       background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
       border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+    .explore-card.books .card-icon {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(245, 158, 11, 0.05));
+      border: 1px solid rgba(236, 72, 153, 0.25);
     }
     .explore-card.courses .card-icon {
       background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.05));
@@ -582,6 +590,11 @@
       box-shadow: 0 6px 18px -4px rgba(168, 85, 247, 0.5);
     }
 
+    .explore-card.books .card-cta {
+      background: linear-gradient(135deg, var(--c-pink) 0%, #be185d 100%);
+      color: white;
+      box-shadow: 0 6px 18px -4px rgba(236, 72, 153, 0.5);
+    }
     .explore-card.courses .card-cta {
       background: linear-gradient(135deg, var(--c-green) 0%, #059669 100%);
       color: white;
@@ -780,6 +793,7 @@
         <a href="cheatsheets/index.html">Cheatsheets</a>
         <a href="articles/index.html">Blog</a>
         <a href="courses/index.html">Courses</a>
+        <a href="books/index.html">Books</a>
         <a href="resume.html" target="_blank">Resume</a>
         <a href="https://www.linkedin.com/in/okhosney/" target="_blank" class="cta">
           <i class="fab fa-linkedin-in"></i> Connect
@@ -819,8 +833,8 @@
     <section class="explore" id="explore">
       <div class="section-head">
         <span class="section-label">What you'll find here</span>
-        <h2>Three libraries, one mission</h2>
-        <p>Quick references for fast lookup, long-form articles for deeper understanding, and video courses to learn step by step.</p>
+        <h2>Four libraries, one mission</h2>
+        <p>Quick references for fast lookup, long-form articles for deeper understanding, video courses to learn step by step, and books to go the whole way.</p>
       </div>
 
       <div class="explore-grid">
@@ -875,6 +889,23 @@
             <span>GraphRAG</span><span>Agent Memory</span><span>Microservices</span>
           </div>
           <span class="card-cta">Start learning <span class="arrow">→</span></span>
+        </a>
+
+        <a href="books/index.html" class="explore-card books">
+          <div class="card-icon">📖</div>
+          <div class="card-meta">
+            <span>Print &amp; Kindle</span>
+            <span class="card-count">3 books</span>
+          </div>
+          <h3>Books</h3>
+          <p class="desc">
+            Friendly, illustrated guides to microservices for Python developers,
+            graph-based RAG and knowledge agents, and diagrams as code. Find them on Amazon.
+          </p>
+          <div class="card-tags">
+            <span>Microservices</span><span>GraphRAG</span><span>Diagrams as Code</span>
+          </div>
+          <span class="card-cta">Browse the books <span class="arrow">→</span></span>
         </a>
       </div>
     </section>
