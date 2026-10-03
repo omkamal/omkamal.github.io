@@ -22,6 +22,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   /cheatsheets/index.html          → Cheatsheet listing page
   /cheatsheets/<topic>.html        → Individual cheatsheets (snake_case)
 
+/courses/                          → Courses section (single page; intro + module links per course)
+  /courses/index.html              → Lists each course with links to every module (YouTube playlists)
+
 /articles/                         → Blog section (second-level)
   /articles/index.html             → Blog landing / article listing
   /articles/<slug>/<slug>.html     → Individual articles in their own subfolder
