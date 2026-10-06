@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Books — Omar Kamal Hosney</title>
-  <meta name="description" content="Books by Omar Kamal Hosney: A Gentle Introduction to Microservices for Python Developers, Advanced GraphRAG &amp; Knowledge Agents, and Diagrams as Code." />
+  <meta name="description" content="Books by Omar Kamal Hosney: LLM Evaluation &amp; Reliability Engineering (under publishing), A Gentle Introduction to Microservices for Python Developers, Advanced GraphRAG &amp; Knowledge Agents, and Diagrams as Code." />
   <meta name="keywords" content="Omar Kamal Hosney books, microservices book, GraphRAG book, Diagrams as Code, Mermaid, PlantUML, D2, Python, Amazon" />
   <meta name="author" content="Omar Kamal Hosney" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -14,11 +14,11 @@
   <meta property="og:site_name" content="Omar Kamal Hosney" />
   <meta property="og:url" content="https://omkamal.github.io/books/" />
   <meta property="og:title" content="Books — Omar Kamal Hosney" />
-  <meta property="og:description" content="Books on microservices, GraphRAG and diagrams as code." />
+  <meta property="og:description" content="Books on microservices, GraphRAG, LLM reliability and diagrams as code." />
   <meta property="og:image" content="https://omkamal.github.io/omar.jpeg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Books — Omar Kamal Hosney" />
-  <meta name="twitter:description" content="Books on microservices, GraphRAG and diagrams as code." />
+  <meta name="twitter:description" content="Books on microservices, GraphRAG, LLM reliability and diagrams as code." />
   <meta name="twitter:image" content="https://omkamal.github.io/omar.jpeg" />
 
   <link rel="icon" type="image/jpeg" href="../omar.jpeg" />
@@ -30,7 +30,7 @@
   "@type": "CollectionPage",
   "name": "Books — Omar Kamal Hosney",
   "url": "https://omkamal.github.io/books/",
-  "description": "Books by Omar Kamal Hosney on microservices, GraphRAG and diagrams as code.",
+  "description": "Books by Omar Kamal Hosney on microservices, GraphRAG, LLM reliability and diagrams as code.",
   "author": {
     "@type": "Person",
     "name": "Omar Kamal Hosney",
@@ -61,6 +61,24 @@
         "position": 1,
         "item": {
           "@type": "Book",
+          "name": "LLM Evaluation & Reliability Engineering",
+          "alternativeHeadline": "A Gentle Guide to Evals, Observability, and AgentOps for Developers Running AI Agents in Production",
+          "author": {
+            "@type": "Person",
+            "name": "Omar Kamal Hosney"
+          },
+          "inLanguage": "en",
+          "url": "https://omkamal.github.io/books/#llm-reliability",
+          "image": "https://omkamal.github.io/books/img/llm-evaluation-reliability.jpg",
+          "bookEdition": "First edition, 2026",
+          "description": "A gentle guide for developers who already call LLM APIs and now own what happens in production: how to evaluate LLM systems, observe them once live, and run AI agents reliably (AgentOps). Currently under publishing."
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "item": {
+          "@type": "Book",
           "name": "A Gentle Introduction to Microservices for Python Developers",
           "alternativeHeadline": "Designing, Building and Deploying Large Applications on AWS and Google Cloud",
           "author": {
@@ -76,7 +94,7 @@
       },
       {
         "@type": "ListItem",
-        "position": 2,
+        "position": 3,
         "item": {
           "@type": "Book",
           "name": "Advanced GraphRAG & Knowledge Agents",
@@ -94,7 +112,7 @@
       },
       {
         "@type": "ListItem",
-        "position": 3,
+        "position": 4,
         "item": {
           "@type": "Book",
           "name": "Diagrams as Code",
@@ -299,6 +317,7 @@
     }
     .book.blue   { --a1: var(--c-primary); --a2: var(--c-primary-dark); --glow: rgba(59, 130, 246, 0.55); }
     .book.purple { --a1: var(--c-accent);  --a2: var(--c-accent-dark);  --glow: rgba(168, 85, 247, 0.55); }
+    .book.red    { --a1: #ef4444;           --a2: #b91c1c;               --glow: rgba(227, 6, 19, 0.5); }
     .book.pink   { --a1: var(--c-pink);    --a2: #be185d;               --glow: rgba(236, 72, 153, 0.55); }
     .book-cover { display: block; border-radius: 6px; overflow: hidden; box-shadow: 0 26px 50px -18px var(--glow), 0 10px 24px rgba(0,0,0,.45); transition: transform 0.35s var(--ease); }
     .book-cover:hover { transform: translateY(-6px) rotate(-1deg); }
@@ -309,6 +328,7 @@
     .book-points li::before { content: '✓'; color: var(--a1); font-weight: 800; margin-right: 10px; filter: brightness(1.25); }
     .book-actions { display: flex; gap: 12px; flex-wrap: wrap; }
     .btn-ghost { color: var(--c-text); background: rgba(148, 163, 184, 0.08); border: 1px solid var(--c-border); }
+    .btn-soon { color: var(--c-text-muted); background: rgba(148, 163, 184, 0.06); border: 1px dashed var(--c-border-hover); cursor: default; }
     .btn-ghost:hover { transform: translateY(-2px); border-color: var(--c-border-hover); }
     @media (max-width: 760px) {
       .book { grid-template-columns: 1fr; padding: 28px 22px; gap: 28px; }
@@ -354,16 +374,32 @@
       <div class="eyebrow">📚 Books</div>
       <h1>Ideas, <span class="gradient">written down</span>.</h1>
       <p class="tagline">
-        Three books on topics I teach and build with: designing systems as microservices, retrieving knowledge with graphs,
-        and treating diagrams as code. Each one is a friendly, illustrated, hands-on guide rather than a reference manual.
+        Four books on topics I teach and build with: designing systems as microservices, retrieving knowledge with graphs,
+        keeping LLM applications reliable in production, and treating diagrams as code. Each one is a friendly, illustrated, hands-on guide rather than a reference manual.
       </p>
-      <p class="tagline">Tap a cover to view the book on Amazon. Two of them have a free video course to go with them.</p>
-      <div class="stats"><span class="stat">3 books</span><span class="stat">Available on Amazon</span></div>
+      <p class="tagline">Tap a cover to view a book on Amazon. Two of them have a free video course to go with them, and one is still under publishing.</p>
+      <div class="stats"><span class="stat">4 books</span><span class="stat">3 on Amazon</span><span class="stat">1 under publishing</span></div>
     </header>
 
-    <div class="jump" aria-label="Jump to a book"><a href="#microservices">Microservices for Python Developers</a><a href="#graphrag">Advanced GraphRAG &amp; Knowledge Agents</a><a href="#diagrams">Diagrams as Code</a></div>
+    <div class="jump" aria-label="Jump to a book"><a href="#llm-reliability">LLM Evaluation &amp; Reliability Engineering</a><a href="#microservices">Microservices for Python Developers</a><a href="#graphrag">Advanced GraphRAG &amp; Knowledge Agents</a><a href="#diagrams">Diagrams as Code</a></div>
 
     <section class="books">
+    <article class="book red" id="llm-reliability">
+      <div class="book-cover">
+        <img src="img/llm-evaluation-reliability.jpg" alt="Cover of LLM Evaluation &amp; Reliability Engineering" width="320" height="457" loading="lazy" />
+      </div>
+      <div class="book-body">
+        <div class="course-meta"><span class="chip level">Under publishing</span><span class="chip">About 460 pages</span><span class="chip">First edition, 2026</span></div>
+        <h2>LLM Evaluation &amp; Reliability Engineering</h2>
+        <p class="book-sub">A Gentle Guide to Evals, Observability, and AgentOps for Developers Running AI Agents in Production</p>
+        <p class="course-intro">A gentle guide for developers who already call LLM APIs and now own what happens in production. Each chapter opens with a real incident, then explains the idea in plain English, shows the mechanism, and finishes with a small piece of Python. It covers how to evaluate LLM systems, how to observe them once they are live, and how to run AI agents reliably (AgentOps).</p>
+        <ul class="book-points"><li>20 chapters, each opening with a real production incident</li><li>Check-your-understanding questions and a hands-on deliverable in every chapter</li><li>Companion code on GitHub</li></ul>
+        <div class="book-actions">
+          <span class="btn btn-soon"><i class="fas fa-hourglass-half"></i> Under publishing</span>
+          <a class="btn btn-ghost" href="https://github.com/omkamal/llm-evaluation-reliability-engineering" target="_blank" rel="noopener"><i class="fab fa-github"></i> Companion code on GitHub</a>
+        </div>
+      </div>
+    </article>
     <article class="book blue" id="microservices">
       <a class="book-cover" href="https://a.co/d/0aF04Dnv" target="_blank" rel="noopener" aria-label="View A Gentle Introduction to Microservices for Python Developers on Amazon">
         <img src="img/microservices-python.jpg" alt="Cover of A Gentle Introduction to Microservices for Python Developers" width="320" height="480" loading="lazy" />
