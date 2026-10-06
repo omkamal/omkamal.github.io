@@ -103,6 +103,8 @@ Every top-level / index / article page includes:
 
 Maintain `sitemap.xml` and `robots.txt` at the root. Add new URLs to `sitemap.xml` when adding pages.
 
+**Analytics:** every HTML page carries the Google tag (`G-RT1G8VP79X`, gtag.js) as the first thing inside `<head>`, exactly once. Copy it from any existing page (e.g. `index.html`) when creating a new page.
+
 ## External Resources
 
 - **Google Fonts**: Inter, Poppins (landing/cheatsheets), Source Serif 4 (articles)
