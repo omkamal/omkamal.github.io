@@ -315,6 +315,12 @@
     .mini-card p { color: var(--c-text-muted); font-size: 0.9rem; margin-top: 6px; }
     .pub-link { color: inherit; text-decoration: none; background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; transition: -webkit-text-fill-color 0.25s; }
     .pub-link:hover { -webkit-text-fill-color: transparent; }
+    .pub { display: flex; gap: 16px; align-items: flex-start; }
+    .pub-body { min-width: 0; }
+    .pub-cover { flex: 0 0 auto; width: 46px; display: block; border-radius: 4px; overflow: hidden; line-height: 0; box-shadow: 0 6px 16px -6px rgba(0,0,0,0.6); transition: transform 0.3s var(--ease); }
+    .pub-cover:hover { transform: translateY(-2px) rotate(-2deg); }
+    .pub-cover img { width: 100%; height: auto; display: block; }
+    .pub-cover.pub-icon { display: grid; place-items: center; height: 46px; line-height: 1; font-size: 1.35rem; color: var(--c-text-muted); background: rgba(148,163,184,0.1); border: 1px solid var(--c-border); box-shadow: none; }
 
     .lang-row { display: flex; flex-wrap: wrap; gap: 14px; }
     .lang { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: var(--radius-md); background: var(--c-card); border: 1px solid var(--c-border); }
@@ -672,9 +678,11 @@
         <div><div class="sec-title" data-scramble>Publications</div><div class="sec-sub">// writing</div></div>
       </div>
       <div class="two-col">
-        <div class="mini-card reveal"><h4><a href="https://www.amazon.com/dp/B0H9H1RV1P" target="_blank" rel="noopener" class="pub-link">Advanced GraphRAG &amp; Knowledge Agents: A Friendly, Illustrated Guide to Graph-Based Retrieval</a></h4><div class="meta">Amazon · Kindle Edition</div><p>A friendly, illustrated guide to graph-based retrieval, GraphRAG, and knowledge agents.</p></div>
-        <div class="mini-card reveal"><h4>Diagrams as Code: Mermaid, PlantUML, D2 &amp; AI-Generated Diagrams</h4><div class="meta">Amazon · 2023-09-15</div><p>Book exploring diagram-as-code tools and LLM-driven diagram generation.</p></div>
-        <div class="mini-card reveal"><h4>Technical Blog on Medium</h4><div class="meta">2024</div><p>Active technical writer publishing tutorials on AI technologies.</p></div>
+        <div class="mini-card reveal pub"><a class="pub-cover" href="https://a.co/d/06kUqfCL" target="_blank" rel="noopener" aria-label="LLM Evaluation &amp; Reliability Engineering on Amazon"><img src="books/img/icons/llm-reliability.jpg" alt="Cover of LLM Evaluation &amp; Reliability Engineering" width="46" loading="lazy" /></a><div class="pub-body"><h4><a href="https://a.co/d/06kUqfCL" target="_blank" rel="noopener" class="pub-link">LLM Evaluation &amp; Reliability Engineering: A Gentle Guide to Evals, Observability, and AgentOps</a></h4><div class="meta">Amazon · Paperback · 2026-10-06</div><p>A gentle, hands-on guide to evaluating, observing and running LLM applications and AI agents in production.</p></div></div>
+        <div class="mini-card reveal pub"><a class="pub-cover" href="https://a.co/d/0aF04Dnv" target="_blank" rel="noopener" aria-label="A Gentle Introduction to Microservices for Python Developers on Amazon"><img src="books/img/icons/microservices.jpg" alt="Cover of A Gentle Introduction to Microservices for Python Developers" width="46" loading="lazy" /></a><div class="pub-body"><h4><a href="https://a.co/d/0aF04Dnv" target="_blank" rel="noopener" class="pub-link">A Gentle Introduction to Microservices for Python Developers</a></h4><div class="meta">Amazon · Paperback · 2026-09-26</div><p>Designing, building and deploying large applications on AWS and Google Cloud, with a companion video course.</p></div></div>
+        <div class="mini-card reveal pub"><a class="pub-cover" href="https://www.amazon.com/dp/B0H9H1RV1P" target="_blank" rel="noopener" aria-label="Advanced GraphRAG &amp; Knowledge Agents on Amazon"><img src="books/img/icons/graphrag.jpg" alt="Cover of Advanced GraphRAG &amp; Knowledge Agents" width="46" loading="lazy" /></a><div class="pub-body"><h4><a href="https://www.amazon.com/dp/B0H9H1RV1P" target="_blank" rel="noopener" class="pub-link">Advanced GraphRAG &amp; Knowledge Agents: A Friendly, Illustrated Guide to Graph-Based Retrieval</a></h4><div class="meta">Amazon · Kindle Edition</div><p>A friendly, illustrated guide to graph-based retrieval, GraphRAG, and knowledge agents.</p></div></div>
+        <div class="mini-card reveal pub"><a class="pub-cover" href="https://a.co/d/03sg6EWh" target="_blank" rel="noopener" aria-label="Diagrams as Code on Amazon"><img src="books/img/icons/diagrams.jpg" alt="Cover of Diagrams as Code" width="46" loading="lazy" /></a><div class="pub-body"><h4><a href="https://a.co/d/03sg6EWh" target="_blank" rel="noopener" class="pub-link">Diagrams as Code: Mermaid, PlantUML, D2 &amp; AI-Generated Diagrams</a></h4><div class="meta">Amazon · 2023-09-15</div><p>Book exploring diagram-as-code tools and LLM-driven diagram generation.</p></div></div>
+        <div class="mini-card reveal pub"><span class="pub-cover pub-icon" aria-hidden="true"><i class="fab fa-medium"></i></span><div class="pub-body"><h4>Technical Blog on Medium</h4><div class="meta">2024</div><p>Active technical writer publishing tutorials on AI technologies.</p></div></div>
       </div>
     </section>
 
