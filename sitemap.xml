@@ -26,6 +26,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://omkamal.github.io/book/camera-composition-playbook.html</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://omkamal.github.io/book/llm-evaluation-reliability-engineering.html</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
