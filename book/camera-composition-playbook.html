@@ -30,7 +30,7 @@
       window.oaiq = window.oaiq || function () { (window.oaiq.q = window.oaiq.q || []).push(arguments); };
       var s = document.createElement('script'); s.async = true; s.src = 'https://bzrcdn.openai.com/sdk/oaiq.min.js'; document.head.appendChild(s);
       oaiq('init', { pixelId: ids.OPENAI_PIXEL_ID });
-      oaiq('measure', 'page_viewed', { type: 'page' });
+      oaiq('measure', 'page_viewed', { type: 'contents' });
     }
     gtag('event', 'view_item', { currency: 'USD', value: 7.99, items: [{ item_id: 'camera-composition-playbook', item_name: 'The Camera Composition Playbook', price: 7.99, quantity: 1 }] });
   })();
