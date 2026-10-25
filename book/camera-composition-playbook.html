@@ -704,7 +704,7 @@ footer a{color:var(--paper)}
     var name = kind === 'sample' ? 'sample_click' : 'buy_click';
     try { gtag('event', name, { link_location: where, currency: 'USD', value: 7.99 }); } catch (e) {}
     try { if (ids().META_PIXEL_ID && window.fbq) fbq('trackCustom', kind === 'sample' ? 'SampleClick' : 'BuyClick', { location: where, value: 7.99, currency: 'USD' }); } catch (e) {}
-    try { if (ids().OPENAI_PIXEL_ID && window.oaiq) oaiq('measure', 'custom', { type: 'custom' }, { custom_event_name: name + '_' + where }); } catch (e) {}
+    try { if (ids().OPENAI_PIXEL_ID && window.oaiq) oaiq('measure', 'custom', { type: 'custom' }, { custom_event_name: name }); } catch (e) {}
   }
   document.querySelectorAll('a.buy').forEach(function (a) { a.href = href; a.addEventListener('click', function () { track('buy', a.getAttribute('data-where') || 'page'); }); });
   document.querySelectorAll('a.sample').forEach(function (a) { a.addEventListener('click', function () { track('sample', a.getAttribute('data-where') || 'page'); }); });
