@@ -13,7 +13,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Courses — Omar Kamal Hosney</title>
-  <meta name="description" content="Free video courses by Omar Kamal Hosney: Advanced GraphRAG &amp; Knowledge Agents (Parts 1 and 2), Context Management &amp; Agent Memory in LLMs, and a gentle introduction to microservices for Python developers." />
+  <meta name="description" content="Free video courses by Omar Kamal Hosney: Reinforcement Learning for Python Developers with Stable-Baselines3 (English and Egyptian Arabic), Advanced GraphRAG &amp; Knowledge Agents (Parts 1 and 2), Context Management &amp; Agent Memory in LLMs, and a gentle introduction to microservices for Python developers." />
   <meta name="keywords" content="Omar Kamal Hosney courses, GraphRAG course, knowledge graph course, agent memory, LightRAG, HippoRAG, microservices course, Python microservices, free video course" />
   <meta name="author" content="Omar Kamal Hosney" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -39,7 +39,7 @@
   "@type": "CollectionPage",
   "name": "Free Video Courses — Omar Kamal Hosney",
   "url": "https://omkamal.github.io/courses/",
-  "description": "Free video courses on GraphRAG, knowledge agents, context management and agent memory, and microservices by Omar Kamal Hosney.",
+  "description": "Free video courses on reinforcement learning, GraphRAG, knowledge agents, context management and agent memory, and microservices by Omar Kamal Hosney.",
   "author": {
     "@type": "Person",
     "name": "Omar Kamal Hosney",
@@ -68,6 +68,27 @@
       {
         "@type": "ListItem",
         "position": 1,
+        "item": {
+          "@type": "Course",
+          "name": "Reinforcement Learning for Python Developers with Stable-Baselines3",
+          "url": "https://omkamal.github.io/courses/#rl-python",
+          "description": "Train agents that learn by trial and error, with no heavy math: PPO, A2C, DQN, SAC, TD3 and DDPG with Stable-Baselines3, taught with analogies and runnable Python code, and a CoffeeShop project that grows through five modules. Available in English and in Egyptian Arabic. Videos coming soon; code on GitHub.",
+          "inLanguage": [
+            "en",
+            "ar-EG"
+          ],
+          "educationalLevel": "Beginner",
+          "provider": {
+            "@type": "Person",
+            "name": "Omar Kamal Hosney",
+            "url": "https://omkamal.github.io/"
+          },
+          "sameAs": "https://github.com/omkamal/reinforcement-learning-using-stable-baslines3-arabic-course"
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
         "item": {
           "@type": "Course",
           "name": "A Gentle Introduction to Microservices for Python Developers",
@@ -107,7 +128,7 @@
       },
       {
         "@type": "ListItem",
-        "position": 2,
+        "position": 3,
         "item": {
           "@type": "Course",
           "name": "Advanced GraphRAG & Knowledge Agents",
@@ -167,7 +188,7 @@
       },
       {
         "@type": "ListItem",
-        "position": 3,
+        "position": 4,
         "item": {
           "@type": "Course",
           "name": "Advanced GraphRAG & Knowledge Agents — Part 2",
@@ -242,7 +263,7 @@
       },
       {
         "@type": "ListItem",
-        "position": 4,
+        "position": 5,
         "item": {
           "@type": "Course",
           "name": "Context Management & Agent Memory in LLMs",
@@ -438,6 +459,7 @@
     .course.blue   { --a1: var(--c-primary); --a2: var(--c-primary-dark); --glow: rgba(59, 130, 246, 0.55); }
     .course.purple { --a1: var(--c-accent);  --a2: var(--c-accent-dark);  --glow: rgba(168, 85, 247, 0.55); }
     .course.green  { --a1: var(--c-green);   --a2: #059669;               --glow: rgba(16, 185, 129, 0.55); }
+    .course.amber  { --a1: #f59e0b; --a2: #b45309; --glow: rgba(245, 158, 11, 0.55); }
     .course.pink   { --a1: var(--c-pink);    --a2: #be185d;               --glow: rgba(236, 72, 153, 0.55); }
 
     .course-head { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 20px; }
@@ -486,6 +508,7 @@
       text-decoration: none; color: var(--c-text); background: rgba(15, 23, 42, 0.45); border: 1px solid var(--c-border);
       transition: all 0.25s var(--ease);
     }
+    .mod-static:hover { transform: none; background: rgba(15, 23, 42, 0.45); border-color: var(--c-border); }
     .mod:hover { transform: translateX(4px); background: var(--c-card-hover); border-color: var(--a1); }
     .mod:focus-visible, .jump a:focus-visible, .btn:focus-visible { outline: 2px solid var(--a1); outline-offset: 3px; }
     .mod-thumb { position: relative; flex: 0 0 auto; width: 128px; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; border: 1px solid var(--c-border); }
@@ -555,23 +578,72 @@
       <div class="eyebrow">🎓 Free video courses</div>
       <h1>Learn it <span class="gradient">step by step</span>.</h1>
       <p class="tagline">
-        Structured, module-by-module video courses on topics I work with every day: graph-based retrieval,
+        Structured, module-by-module video courses on topics I work with every day: reinforcement learning, graph-based retrieval,
         context management, agent memory and distributed system design. Each module is a self-contained video of roughly 15 to 35 minutes,
-        and every course is a public YouTube playlist you can follow in order.
+        and most courses are public YouTube playlists you can follow in order (the reinforcement learning videos are coming soon; its code is on GitHub).
       </p>
       <p class="tagline">
-        Start with the one that matches where you are. Pick the microservices course for architecture fundamentals,
+        Start with the one that matches where you are. Pick the reinforcement learning course to train your first agents with plain Python, the microservices course for architecture fundamentals,
         begin the context and agent-memory course if you want a gentle start with LLM agents, or the GraphRAG series if you already know basic RAG.
       </p>
       <div class="stats">
-        <span class="stat">4 courses</span>
-        <span class="stat">39 modules</span>
-        <span class="stat">Free on YouTube</span>
+        <span class="stat">5 courses</span>
+        <span class="stat">44 modules</span>
+        <span class="stat">Free · YouTube and GitHub</span>
       </div>
     </header>
 
-    <div class="jump" aria-label="Jump to a course"><a href="#microservices">🧩 Microservices for Python Developers</a><a href="#graphrag-1">🕸️ Advanced GraphRAG (Part 1)</a><a href="#graphrag-2">🧠 Advanced GraphRAG (Part 2)</a><a href="#context-memory">🧠 Context &amp; Agent Memory in LLMs</a></div>
+    <div class="jump" aria-label="Jump to a course"><a href="#rl-python">🤖 Reinforcement Learning (SB3)</a><a href="#microservices">🧩 Microservices for Python Developers</a><a href="#graphrag-1">🕸️ Advanced GraphRAG (Part 1)</a><a href="#graphrag-2">🧠 Advanced GraphRAG (Part 2)</a><a href="#context-memory">🧠 Context &amp; Agent Memory in LLMs</a></div>
 
+    <section class="course amber" id="rl-python">
+      <div class="course-top">
+       <div class="course-main">
+      <div class="course-head">
+        <div class="course-icon">🤖</div>
+        <div class="course-meta">
+          <span class="chip level">Beginner → Intermediate</span>
+          <span class="chip">5 modules</span>
+          <span class="chip">~2.6 hours</span>
+          <span class="chip">English + Egyptian Arabic</span>
+          <span class="chip">October 2026</span>
+        </div>
+      </div>
+      <h2>Reinforcement Learning for Python Developers with Stable-Baselines3</h2>
+       </div>
+       <a class="course-cover" href="https://github.com/omkamal/reinforcement-learning-using-stable-baslines3-arabic-course" target="_blank" rel="noopener" aria-label="Open the Reinforcement Learning course code on GitHub">
+         <img src="img/rl-cover.jpg" alt="Reinforcement Learning for Python Developers using Stable-Baselines3, course cover with the course robot" width="480" height="270" />
+       </a>
+      </div>
+      <p class="course-intro">Train agents that learn by trial and error, with no heavy math. Each module teaches one idea with a memorable analogy, then runs short, real Stable-Baselines3 code and shows the measured result: a dog trainer for PPO, a restaurant critic's notebook for DQN, a steady hand for SAC and TD3. One project, a CoffeeShop that orders beans, grows through all five modules, and the last module ships it. 34 runnable examples, every number on screen comes from a real run.</p>
+      <p class="course-who"><strong>Who it's for:</strong> Python developers who know classes and pip and want to <em>use</em> reinforcement learning. No calculus, no statistics. The course is available in English and in Egyptian Arabic (Arabic narration, English terms, code and on-screen text).</p>
+      <p class="course-who" lang="ar" dir="rtl"><strong>بالعربي:</strong> الكورس متاح بنسخة بالعربي المصري: شرح بالمصري، والـ code والمصطلحات بالإنجليزي، في خمس أجزاء.</p>
+      <div class="card-tags"><span>Python</span><span>Reinforcement Learning</span><span>Stable-Baselines3</span><span>PPO</span><span>DQN</span><span>SAC</span><span>Gymnasium</span><span>PyTorch</span></div>
+      <a class="btn btn-primary" href="https://github.com/omkamal/reinforcement-learning-using-stable-baslines3-arabic-course" target="_blank" rel="noopener"><i class="fab fa-github"></i> Get the code on GitHub</a>
+      <p class="course-who" style="margin-top:18px"><strong>Videos:</strong> coming soon to YouTube. The code, notes and examples are public now; run times below are the English videos (the Arabic videos run about 10% shorter).</p>
+      <h3 class="mods-label">Course modules</h3>
+      <ol class="mods">
+          <li><div class="mod mod-static">
+            <span class="mod-thumb"><img src="img/rl-m1.jpg" alt="" width="180" height="101" loading="lazy" /></span>
+            <span class="mod-body"><span class="mod-label">Module 1</span><span class="mod-title">The Game Loop</span><span class="mod-blurb">Agent, environment and reward as plain Python objects, the reset() / step() contract, spaces, a first trained player in one line, and your own CoffeeShop environment.</span></span>
+            <span class="mod-dur">24:54</span></div></li>
+          <li><div class="mod mod-static">
+            <span class="mod-thumb"><img src="img/rl-m2.jpg" alt="" width="180" height="101" loading="lazy" /></span>
+            <span class="mod-body"><span class="mod-label">Module 2</span><span class="mod-title">The Dog Trainer (PPO and A2C)</span><span class="mod-blurb">Why PPO is the safe default, the trainer knobs (n_steps, gamma, clip_range), parallel environments, TensorBoard, and a fair PPO vs A2C race.</span></span>
+            <span class="mod-dur">32:22</span></div></li>
+          <li><div class="mod mod-static">
+            <span class="mod-thumb"><img src="img/rl-m3.jpg" alt="" width="180" height="101" loading="lazy" /></span>
+            <span class="mod-body"><span class="mod-label">Module 3</span><span class="mod-title">The Notebook of Experience (DQN)</span><span class="mod-blurb">Q-values as a notebook, the replay buffer, epsilon-greedy exploration, the frozen target network, and why DQN needs buttons, not dials.</span></span>
+            <span class="mod-dur">29:55</span></div></li>
+          <li><div class="mod mod-static">
+            <span class="mod-thumb"><img src="img/rl-m4.jpg" alt="" width="180" height="101" loading="lazy" /></span>
+            <span class="mod-body"><span class="mod-label">Module 4</span><span class="mod-title">The Steady Hand (SAC, TD3, DDPG)</span><span class="mod-blurb">Continuous actions, entropy as curiosity, twin critics and exploration noise: a three-way race on the Pendulum, then CoffeeShop with a dial.</span></span>
+            <span class="mod-dur">31:59</span></div></li>
+          <li><div class="mod mod-static">
+            <span class="mod-thumb"><img src="img/rl-m5.jpg" alt="" width="180" height="101" loading="lazy" /></span>
+            <span class="mod-body"><span class="mod-label">Module 5</span><span class="mod-title">The Workshop (shipping it)</span><span class="mod-blurb">Reward hacking, callbacks, save and load, VecNormalize, CPU vs GPU, Atari pixels, the algorithm chooser, and shipping your own bot.</span></span>
+            <span class="mod-dur">36:55</span></div></li>
+      </ol>
+    </section>
     <section class="course blue" id="microservices">
       <div class="course-top">
        <div class="course-main">
