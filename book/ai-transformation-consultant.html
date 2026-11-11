@@ -528,7 +528,7 @@
         <a class="btn btn-blue buy" href="https://a.co/d/06fh92Ud" target="_blank" rel="noopener" data-format="paperback" data-where="hero">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 4h4l2.4 11h8.8L21 8H7"/><circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
           Paperback on Amazon</a>
-        <a class="btn btn-ink buy" href="https://a.co/d/08b79ptV" target="_blank" rel="noopener" data-format="kindle" data-where="hero">
+        <a class="btn btn-ink buy" href="https://a.co/d/0bJzanKW" target="_blank" rel="noopener" data-format="kindle" data-where="hero">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="5" y="2.5" width="14" height="19" rx="1.5"/><path d="M9 18h6"/></svg>
           Kindle edition</a>
       </div>
@@ -802,7 +802,7 @@
       <p>The language of AI, the evidence on why programs stall, and a toolkit for leading the engagement, in 203 cited pages.</p>
       <div class="cta-row">
         <a class="btn btn-yellow buy" href="https://a.co/d/06fh92Ud" target="_blank" rel="noopener" data-format="paperback" data-where="final">Get the paperback</a>
-        <a class="btn btn-white buy" href="https://a.co/d/08b79ptV" target="_blank" rel="noopener" data-format="kindle" data-where="final">Get the Kindle edition</a>
+        <a class="btn btn-white buy" href="https://a.co/d/0bJzanKW" target="_blank" rel="noopener" data-format="kindle" data-where="final">Get the Kindle edition</a>
       </div>
     </div>
   </div>
@@ -946,9 +946,21 @@
     new IntersectionObserver(function (es) { finIn = es[0].isIntersecting; upd(); }).observe(fin);
   }
 
-  // outbound tracking
+  // outbound tracking: every Amazon button fires 'amazon_click', the GA4 key event that Google Ads imports as the
+  // 'Outbound clicks' conversion (the same event name the other books' campaigns use), plus the older 'buy_click'.
+  // Amazon Attribution (optional, for SALES in Amazon's own report): generate one tag per format in the Amazon
+  // Attribution console and paste its full amazon.com URL below; the button then points at the tagged URL.
+  var AMZ_ATTRIBUTION = { paperback: '', kindle: '' };
   document.querySelectorAll('a.buy').forEach(function (a) {
-    a.addEventListener('click', function () { ev('buy_click', { link_location: a.getAttribute('data-where') || 'page', book_format: a.getAttribute('data-format') || 'paperback' }); });
+    var fmt = a.getAttribute('data-format') || 'paperback';
+    if (AMZ_ATTRIBUTION[fmt]) a.setAttribute('href', AMZ_ATTRIBUTION[fmt]);
+    a.addEventListener('click', function () {
+      var p = { link_location: a.getAttribute('data-where') || 'page', book_format: fmt, link_url: a.href,
+                item_id: 'ai-transformation-consultant', item_name: 'The AI Transformation Consultant',
+                attribution_tag: AMZ_ATTRIBUTION[fmt] ? 'yes' : 'no', transport_type: 'beacon' };
+      ev('amazon_click', p);
+      ev('buy_click', { link_location: p.link_location, book_format: fmt });
+    });
   });
   document.querySelectorAll('a.course-link').forEach(function (a) {
     a.addEventListener('click', function () { ev('course_click', { link_location: a.getAttribute('data-where') || 'page' }); });
