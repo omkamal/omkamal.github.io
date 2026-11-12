@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-root="../..">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RT1G8VP79X"></script>
@@ -270,6 +270,8 @@ h1 { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2.2rem, 4.8vw
 .score-chip.mid { background: linear-gradient(135deg, var(--c-accent-3), #b45309); }
 .score-chip.low { background: linear-gradient(135deg, var(--c-red), #b91c1c); }
 </style>
+  <script>try{const t=localStorage.getItem('omar-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="stylesheet" href="../../assets/article-enhance.css" />
 </head>
 <body>
 
@@ -1062,5 +1064,8 @@ PRESETS = {
   </div>
 </footer>
 
+  <script src="../../assets/catalog.js" defer></script>
+  <script src="../../assets/site.js" defer></script>
+  <script src="../../assets/article-enhance.js" defer></script>
 </body>
 </html>

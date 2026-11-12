@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-root=".">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RT1G8VP79X"></script>
@@ -12,41 +12,37 @@
 </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Omar Kamal Hosney — Data Science, AI &amp; Machine Learning Cheatsheets &amp; Blog</title>
-  <meta name="description" content="Personal site of Omar Kamal Hosney — data scientist and ML engineer with 26+ years of experience. Browse 30+ free cheatsheets on Python, PyTorch, Scikit-learn, Docker, PostgreSQL, LangChain, LLMs and AI agents, plus in-depth field-note articles on emerging AI models." />
-  <meta name="keywords" content="Omar Kamal Hosney, omkamal, data science cheatsheets, machine learning cheatsheets, AI cheatsheets, LLM cheatsheets, Python cheatsheets, PyTorch, Scikit-learn, NumPy, Docker, PostgreSQL, LangChain, OpenAI Agents SDK, Hugging Face, XGBoost, CatBoost, PCA, fine-tuning, PEFT, LoRA, Fabric AI, Aider, GitHub CLI, bupaR, HiDream, AI blog, data science blog" />
+  <title>Omar Kamal Hosney — Books, AI Courses, GPU Field Notes &amp; Engineering Cheatsheets</title>
+  <meta name="description" content="Personal monograph and engineering library of Omar Kamal Hosney — Senior Enterprise AI Architect &amp; Data Scientist with 26+ years of experience. Explore 6 published books, 6 free video courses (49 modules), 14 empirical GPU field notes, and 30+ ML/AI reference cheatsheets." />
+  <meta name="keywords" content="Omar Kamal Hosney, omkamal, AI books, GraphRAG, LLM reliability, AI Transformation Consultant, data science cheatsheets, machine learning cheatsheets, Python, PyTorch, Scikit-learn, Docker, PostgreSQL, LangChain, OpenAI Agents SDK, RTX 4090, AI courses" />
   <meta name="author" content="Omar Kamal Hosney" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="googlebot" content="index, follow" />
   <link rel="canonical" href="https://omkamal.github.io/" />
-
-  <!-- Google Search Console site verification: replace REPLACE_WITH_GSC_CODE
-       with the content value Google gives you under
-       Search Console → Add property → HTML tag verification.
-       (Leaving the placeholder is harmless; verification just won't pass until replaced.) -->
   <meta name="google-site-verification" content="REPLACE_WITH_GSC_CODE" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Omar Kamal Hosney" />
   <meta property="og:url" content="https://omkamal.github.io/" />
-  <meta property="og:title" content="Omar Kamal Hosney — Data Science, AI &amp; ML Cheatsheets &amp; Blog" />
-  <meta property="og:description" content="30+ free cheatsheets and in-depth articles on machine learning, LLMs, AI agents and the tools used daily by a data scientist with 26+ years of experience." />
+  <meta property="og:title" content="Omar Kamal Hosney — Books, Courses, Field Notes &amp; AI Cheatsheets" />
+  <meta property="og:description" content="6 published books, 49 free video course modules, 14 hands-on GPU field notes, and 30+ engineering cheatsheets on ML, LLMs, GraphRAG, and production AI." />
   <meta property="og:image" content="https://omkamal.github.io/omar.jpeg" />
   <meta property="og:image:alt" content="Omar Kamal Hosney" />
   <meta property="og:locale" content="en_US" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Omar Kamal Hosney — Data Science, AI &amp; ML Cheatsheets &amp; Blog" />
-  <meta name="twitter:description" content="30+ free cheatsheets and in-depth articles on machine learning, LLMs, AI agents and tooling." />
+  <meta name="twitter:title" content="Omar Kamal Hosney — Books, Courses, Field Notes &amp; AI Cheatsheets" />
+  <meta name="twitter:description" content="6 books, 6 free video courses, 14 empirical GPU field notes, and 30+ cheatsheets on ML, LLMs, and AI agents." />
   <meta name="twitter:image" content="https://omkamal.github.io/omar.jpeg" />
 
-  <!-- Favicon -->
   <link rel="icon" type="image/jpeg" href="omar.jpeg" />
   <link rel="apple-touch-icon" href="omar.jpeg" />
 
-  <!-- JSON-LD Structured Data: Person + Website -->
+  <script>try{const t=localStorage.getItem('omar-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+
+  <!-- JSON-LD Structured Data: Person + Website + Collections -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -58,8 +54,8 @@
         "alternateName": "omkamal",
         "url": "https://omkamal.github.io/",
         "image": "https://omkamal.github.io/omar.jpeg",
-        "jobTitle": "Data Scientist & Machine Learning Engineer",
-        "description": "Data scientist and ML engineer with 26+ years of experience across AI-driven underwriting, algorithm development, data analytics and software testing leadership.",
+        "jobTitle": "Senior Enterprise AI Architect & Data Scientist",
+        "description": "Enterprise AI architect, data scientist, author of six technical books, and ML engineer with 26+ years of experience across AI-driven underwriting, algorithm development, data analytics and distributed software systems.",
         "sameAs": [
           "https://www.linkedin.com/in/okhosney/",
           "https://medium.com/@omkamal",
@@ -69,6 +65,7 @@
           "Artificial Intelligence",
           "Machine Learning",
           "Large Language Models",
+          "GraphRAG",
           "Data Science",
           "Python",
           "PyTorch",
@@ -80,7 +77,7 @@
         "@id": "https://omkamal.github.io/#website",
         "url": "https://omkamal.github.io/",
         "name": "Omar Kamal Hosney",
-        "description": "Data Science, AI & Machine Learning cheatsheets and blog articles.",
+        "description": "Books, video courses, GPU field notes, and engineering cheatsheets on AI, GraphRAG, and Machine Learning.",
         "publisher": { "@id": "https://omkamal.github.io/#person" },
         "inLanguage": "en-US"
       },
@@ -96,7 +93,7 @@
         "@type": "Blog",
         "@id": "https://omkamal.github.io/articles/",
         "url": "https://omkamal.github.io/articles/",
-        "name": "Blog & Articles",
+        "name": "Blog & Field Notes",
         "description": "In-depth articles, field notes and capability tours on AI models, ML tools, and emerging technologies.",
         "author": { "@id": "https://omkamal.github.io/#person" },
         "publisher": { "@id": "https://omkamal.github.io/#person" }
@@ -104,930 +101,1333 @@
     ]
   }
   </script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
-    :root {
-      --c-bg-1: #0f172a;
-      --c-bg-2: #1e293b;
-      --c-bg-3: #312e81;
-      --c-primary: #3b82f6;
-      --c-primary-dark: #2563eb;
-      --c-accent: #a855f7;
-      --c-accent-dark: #7c3aed;
-      --c-pink: #ec4899;
-      --c-green: #10b981;
-      --c-text: #e2e8f0;
-      --c-text-muted: #94a3b8;
-      --c-text-dim: #64748b;
-      --c-card: rgba(30, 41, 59, 0.5);
-      --c-card-hover: rgba(30, 41, 59, 0.8);
-      --c-border: rgba(148, 163, 184, 0.15);
-      --c-border-hover: rgba(148, 163, 184, 0.3);
-      --radius-md: 14px;
-      --radius-lg: 22px;
-      --radius-xl: 32px;
-      --shadow-glow-blue: 0 20px 60px -20px rgba(59, 130, 246, 0.45);
-      --shadow-glow-purple: 0 20px 60px -20px rgba(168, 85, 247, 0.45);
-      --shadow-deep: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
-      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="assets/site.css" />
+
+  <style>
+    /* ---------- Homepage Bespoke Styles ---------- */
+    .home-hero {
+      position: relative;
+      padding: clamp(52px, 7vw, 96px) 0 clamp(64px, 8vw, 108px);
+      overflow: hidden;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    #meridian-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.9;
+    }
 
-    html { scroll-behavior: smooth; }
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.32fr) minmax(0, 0.92fr);
+      gap: clamp(36px, 5vw, 72px);
+      align-items: center;
+    }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: var(--c-text);
-      background: var(--c-bg-1);
-      min-height: 100vh;
-      overflow-x: hidden;
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
+    .hero-copy .display-xl {
+      margin: 22px 0 24px;
+    }
+
+    .hero-copy .lede {
+      margin-bottom: 34px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .hero-pedigree {
+      margin-top: 38px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 22px;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .hero-pedigree strong {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* Right Hero Dossier Card */
+    .dossier-card {
+      padding: 26px;
+      border-radius: var(--radius-xl);
+      background: var(--surface-2);
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow-lg);
       position: relative;
     }
 
-    /* Animated gradient background */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(59, 130, 246, 0.25), transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 100%, rgba(168, 85, 247, 0.22), transparent 60%),
-        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(236, 72, 153, 0.10), transparent 60%),
-        linear-gradient(180deg, var(--c-bg-1) 0%, var(--c-bg-2) 50%, var(--c-bg-1) 100%);
-      z-index: -2;
+    .dossier-top {
+      display: grid;
+      grid-template-columns: 124px 1fr;
+      gap: 20px;
+      align-items: center;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
     }
 
-    /* Subtle noise/grid overlay */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-      z-index: -1;
-      pointer-events: none;
+    .portrait-frame {
+      position: relative;
+      width: 124px;
+      height: 142px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow-md);
+      background: var(--bg-2);
+    }
+    .portrait-frame img {
+      width: 108%;
+      height: 108%;
+      max-width: none;
+      object-fit: cover;
+      object-position: 48% 22%;
+    }
+    .portrait-frame::after {
+      content: 'CAIRO · US';
+      position: absolute;
+      left: 8px;
+      bottom: 8px;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      background: rgba(7, 9, 14, 0.78);
+      color: #f4f3ee;
+      border: 1px solid rgba(255, 255, 255, 0.16);
     }
 
-    .container {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 0 32px;
+    .dossier-id .mono-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .dossier-id h2 {
+      font-family: var(--font-display);
+      font-size: 1.38rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .dossier-id p {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.5;
     }
 
-    /* === NAV === */
-    nav {
-      padding: 28px 0;
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .telemetry-cell {
+      display: flex;
+      flex-direction: column;
+      padding: 15px 16px;
+      border-radius: var(--radius-md);
+      background: var(--bg-0);
+      border: 1px solid var(--line);
+      text-decoration: none;
+      transition: border-color 0.25s, transform 0.25s var(--ease-spring);
+    }
+    .telemetry-cell:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+    .telemetry-num {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.85rem;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+    .telemetry-label {
+      margin-top: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      color: var(--muted);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      font-weight: 700;
-      font-size: 1.05em;
-      letter-spacing: -0.01em;
-      color: var(--c-text);
-      text-decoration: none;
-    }
-
-    .brand-mark {
-      width: 38px; height: 38px;
-      border-radius: 11px;
-      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-accent) 100%);
-      display: grid; place-items: center;
-      font-weight: 800; font-size: 1em; color: white;
-      box-shadow: 0 6px 20px -5px rgba(59, 130, 246, 0.55);
-    }
-
-    .nav-links {
-      display: flex; gap: 8px; align-items: center;
-    }
-
-    .nav-links a {
-      color: var(--c-text-muted);
-      text-decoration: none;
-      font-size: 0.9em;
-      font-weight: 500;
-      padding: 8px 16px;
-      border-radius: 10px;
-      transition: all 0.2s var(--ease);
-    }
-
-    .nav-links a:hover {
-      color: var(--c-text);
-      background: rgba(148, 163, 184, 0.08);
-    }
-
-    .nav-links a.cta {
-      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
-      color: white;
-      box-shadow: 0 4px 14px -2px rgba(59, 130, 246, 0.5);
-    }
-
-    .nav-links a.cta:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px -4px rgba(59, 130, 246, 0.6);
-    }
-
-    /* === HERO === */
-    .hero {
-      padding: 80px 0 100px;
+    /* ---------- Section 01: 3D Bookshelf ---------- */
+    .bookshelf-grid {
       display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 64px;
-      align-items: center;
-    }
-
-    .hero-content { max-width: 640px; }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      background: rgba(59, 130, 246, 0.12);
-      border: 1px solid rgba(59, 130, 246, 0.25);
-      border-radius: 50px;
-      font-size: 0.8em;
-      font-weight: 500;
-      color: #93c5fd;
-      letter-spacing: 0.04em;
-      margin-bottom: 24px;
-    }
-
-    .eyebrow::before {
-      content: '';
-      width: 6px; height: 6px;
-      background: var(--c-green);
-      border-radius: 50%;
-      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    .hero h1 {
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(2.4rem, 5vw, 3.8rem);
-      line-height: 1.05;
-      font-weight: 800;
-      letter-spacing: -0.035em;
-      margin-bottom: 20px;
-      color: var(--c-text);
-    }
-
-    .hero h1 .gradient {
-      background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero .tagline {
-      font-size: 1.18em;
-      color: var(--c-text-muted);
-      margin-bottom: 36px;
-      max-width: 540px;
-      line-height: 1.65;
-    }
-
-    .hero-actions {
-      display: flex; gap: 14px; flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 14px 26px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 0.97em;
-      text-decoration: none;
-      transition: all 0.3s var(--ease);
-      border: 1px solid transparent;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-accent-dark) 100%);
-      color: white;
-      box-shadow: 0 8px 24px -6px rgba(59, 130, 246, 0.55);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 36px -8px rgba(59, 130, 246, 0.7);
-    }
-
-    .btn-ghost {
-      background: rgba(148, 163, 184, 0.08);
-      color: var(--c-text);
-      border-color: var(--c-border);
-    }
-
-    .btn-ghost:hover {
-      background: rgba(148, 163, 184, 0.14);
-      border-color: var(--c-border-hover);
-      transform: translateY(-2px);
-    }
-
-    .btn .arrow { transition: transform 0.3s var(--ease); }
-    .btn:hover .arrow { transform: translateX(4px); }
-
-    /* Hero avatar/visual */
-    .hero-visual {
-      position: relative;
-      display: grid;
-      place-items: center;
-    }
-
-    .avatar-wrap {
-      position: relative;
-      width: 320px;
-      height: 320px;
-      border-radius: 50%;
-      padding: 6px;
-      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-accent) 50%, var(--c-pink) 100%);
-      box-shadow: var(--shadow-glow-purple), var(--shadow-deep);
-    }
-
-    .avatar-wrap::before {
-      content: '';
-      position: absolute;
-      inset: -20px;
-      border-radius: 50%;
-      background: conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.4), transparent 30%);
-      animation: rotate 8s linear infinite;
-      z-index: -1;
-      filter: blur(20px);
-    }
-
-    @keyframes rotate {
-      to { transform: rotate(360deg); }
-    }
-
-    .avatar-wrap img {
-      width: 100%; height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid var(--c-bg-1);
-    }
-
-    .floating-tag {
-      position: absolute;
-      padding: 10px 16px;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--c-border-hover);
-      border-radius: 12px;
-      font-size: 0.83em;
-      font-weight: 600;
-      color: var(--c-text);
-      display: flex; align-items: center; gap: 8px;
-      box-shadow: var(--shadow-deep);
-    }
-
-    .floating-tag.t1 { top: 12%; left: -10%; animation: float1 6s ease-in-out infinite; }
-    .floating-tag.t2 { bottom: 18%; right: -8%; animation: float2 7s ease-in-out infinite; }
-    .floating-tag.t3 { bottom: 5%; left: -2%; animation: float1 8s ease-in-out infinite reverse; }
-
-    @keyframes float1 {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-    }
-    @keyframes float2 {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(10px); }
-    }
-
-    /* === SECTIONS === */
-    .section-head {
-      text-align: center;
-      max-width: 680px;
-      margin: 0 auto 56px;
-    }
-
-    .section-label {
-      display: inline-block;
-      font-size: 0.78em;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--c-primary);
-      margin-bottom: 14px;
-    }
-
-    .section-head h2 {
-      font-size: clamp(1.9rem, 3.5vw, 2.6rem);
-      font-weight: 700;
-      letter-spacing: -0.025em;
-      line-height: 1.15;
-      color: var(--c-text);
-      margin-bottom: 14px;
-    }
-
-    .section-head p {
-      color: var(--c-text-muted);
-      font-size: 1.05em;
-    }
-
-    /* === EXPLORE CARDS (Cheatsheets vs Blog) === */
-    .explore {
-      padding: 40px 0 100px;
-    }
-
-    .explore-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 28px;
-    }
-
-    .explore-card {
-      position: relative;
-      padding: 44px 40px 40px;
-      background: var(--c-card);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--c-border);
-      border-radius: var(--radius-xl);
-      text-decoration: none;
-      color: var(--c-text);
-      transition: all 0.4s var(--ease);
-      overflow: hidden;
-      display: flex; flex-direction: column;
-    }
-
-    .explore-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: var(--radius-xl);
-      padding: 1px;
-      background: linear-gradient(135deg, transparent, transparent);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      transition: background 0.4s var(--ease);
-      pointer-events: none;
-    }
-
-    .explore-card.cheat::before {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(59, 130, 246, 0));
-    }
-    .explore-card.blog::before {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(236, 72, 153, 0));
-    }
-    .explore-card.books::before {
-      background: linear-gradient(135deg, rgba(236, 72, 153, 0.4), rgba(245, 158, 11, 0));
-    }
-    .explore-card.courses::before {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(59, 130, 246, 0));
-    }
-
-    .explore-card:hover {
-      transform: translateY(-6px);
-      background: var(--c-card-hover);
-      border-color: transparent;
-    }
-
-    .explore-card.cheat:hover { box-shadow: var(--shadow-glow-blue), var(--shadow-deep); }
-    .explore-card.blog:hover { box-shadow: var(--shadow-glow-purple), var(--shadow-deep); }
-    .explore-card.books:hover { box-shadow: 0 20px 60px -20px rgba(236, 72, 153, 0.45), var(--shadow-deep); }
-    .explore-card.courses:hover { box-shadow: 0 20px 60px -20px rgba(16, 185, 129, 0.45), var(--shadow-deep); }
-
-    .card-icon {
-      width: 58px; height: 58px;
-      border-radius: 16px;
-      display: grid; place-items: center;
-      font-size: 1.6em;
-      margin-bottom: 26px;
-    }
-
-    .explore-card.cheat .card-icon {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
-      border: 1px solid rgba(59, 130, 246, 0.25);
-    }
-    .explore-card.books .card-icon {
-      background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(245, 158, 11, 0.05));
-      border: 1px solid rgba(236, 72, 153, 0.25);
-    }
-    .explore-card.courses .card-icon {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.05));
-      border: 1px solid rgba(16, 185, 129, 0.25);
-    }
-    .explore-card.blog .card-icon {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.05));
-      border: 1px solid rgba(168, 85, 247, 0.25);
-    }
-
-    .card-meta {
-      display: flex; gap: 14px; align-items: center;
-      font-size: 0.8em;
-      color: var(--c-text-dim);
-      margin-bottom: 12px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-weight: 500;
-    }
-
-    .card-count {
-      padding: 3px 10px;
-      background: rgba(148, 163, 184, 0.1);
-      border-radius: 50px;
-      color: var(--c-text-muted);
-    }
-
-    .explore-card h3 {
-      font-size: 1.7em;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 12px;
-      color: var(--c-text);
-    }
-
-    .explore-card .desc {
-      color: var(--c-text-muted);
-      line-height: 1.7;
-      margin-bottom: 28px;
-      flex: 1;
-    }
-
-    .card-tags {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      margin-bottom: 30px;
-    }
-
-    .card-tags span {
-      padding: 5px 12px;
-      font-size: 0.78em;
-      font-weight: 500;
-      background: rgba(148, 163, 184, 0.08);
-      border: 1px solid var(--c-border);
-      border-radius: 50px;
-      color: var(--c-text-muted);
-    }
-
-    .card-cta {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-weight: 600;
-      font-size: 0.97em;
-      padding: 11px 22px;
-      border-radius: 11px;
-      align-self: flex-start;
-      transition: all 0.3s var(--ease);
-    }
-
-    .explore-card.cheat .card-cta {
-      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
-      color: white;
-      box-shadow: 0 6px 18px -4px rgba(59, 130, 246, 0.5);
-    }
-    .explore-card.blog .card-cta {
-      background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-pink) 100%);
-      color: white;
-      box-shadow: 0 6px 18px -4px rgba(168, 85, 247, 0.5);
-    }
-
-    .explore-card.books .card-cta {
-      background: linear-gradient(135deg, var(--c-pink) 0%, #be185d 100%);
-      color: white;
-      box-shadow: 0 6px 18px -4px rgba(236, 72, 153, 0.5);
-    }
-    .explore-card.courses .card-cta {
-      background: linear-gradient(135deg, var(--c-green) 0%, #059669 100%);
-      color: white;
-      box-shadow: 0 6px 18px -4px rgba(16, 185, 129, 0.5);
-    }
-
-    .explore-card:hover .card-cta .arrow { transform: translateX(5px); }
-    .card-cta .arrow { transition: transform 0.3s var(--ease); }
-
-    /* === FEATURED / LATEST === */
-    .latest {
-      padding: 40px 0 100px;
-    }
-
-    .latest-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 24px;
     }
 
-    .latest-item {
-      padding: 28px 28px 26px;
-      background: var(--c-card);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--c-border);
+    .shelf-card {
+      padding: 28px 26px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .shelf-visual {
+      height: 238px;
+      display: grid;
+      place-items: center;
+      padding: 16px;
       border-radius: var(--radius-lg);
-      text-decoration: none;
-      transition: all 0.3s var(--ease);
-      display: flex; flex-direction: column;
+      background:
+        radial-gradient(circle at 50% 45%, var(--shelf-glow, rgba(232,168,56,0.16)), transparent 70%),
+        var(--bg-0);
+      border: 1px solid var(--line);
     }
 
-    .latest-item:hover {
-      transform: translateY(-4px);
-      border-color: var(--c-border-hover);
-      background: var(--c-card-hover);
-      box-shadow: var(--shadow-deep);
+    .shelf-visual .book-stage {
+      width: 132px;
     }
 
-    .latest-tag {
-      display: inline-block;
-      font-size: 0.72em;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 50px;
-      margin-bottom: 14px;
-      align-self: flex-start;
+    .shelf-body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
     }
 
-    .latest-tag.cheat { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
-    .latest-tag.article { background: rgba(168, 85, 247, 0.15); color: #c4b5fd; }
+    .shelf-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
 
-    .latest-item h4 {
-      font-size: 1.15em;
-      font-weight: 600;
-      color: var(--c-text);
-      letter-spacing: -0.015em;
-      line-height: 1.35;
+    .shelf-body h3 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.24rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
       margin-bottom: 8px;
     }
 
-    .latest-item p {
-      color: var(--c-text-muted);
-      font-size: 0.92em;
+    .shelf-body p {
+      color: var(--muted);
+      font-size: 0.9rem;
       line-height: 1.6;
-    }
-
-    /* === ABOUT === */
-    .about {
-      padding: 60px 0 100px;
-    }
-
-    .about-card {
-      padding: 56px;
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.7));
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--c-border);
-      border-radius: var(--radius-xl);
-      display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 56px;
-      align-items: center;
-      box-shadow: var(--shadow-deep);
-    }
-
-    .about-text h2 {
-      font-size: 2.1em;
-      font-weight: 700;
-      letter-spacing: -0.025em;
       margin-bottom: 18px;
-      color: var(--c-text);
+      flex: 1;
     }
 
-    .about-text > p {
-      color: var(--c-text-muted);
-      line-height: 1.75;
-      margin-bottom: 16px;
-      font-size: 1.02em;
+    .shelf-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
     }
 
-    .interest-tags {
-      display: flex; gap: 10px; flex-wrap: wrap;
-      margin: 22px 0 28px;
+    /* ---------- Section 02: Asymmetric Four Pillars Bento ---------- */
+    .pillars-bento {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 22px;
     }
 
-    .interest-tags span {
-      padding: 6px 14px;
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.25);
-      color: #93c5fd;
-      border-radius: 50px;
-      font-size: 0.85em;
-      font-weight: 500;
-    }
-
-    .about-actions {
-      display: flex; gap: 12px; flex-wrap: wrap;
-    }
-
-    .about-img {
-      width: 100%;
-      aspect-ratio: 1;
-      border-radius: 24px;
-      object-fit: cover;
-      box-shadow: var(--shadow-glow-blue), var(--shadow-deep);
-    }
-
-    /* === FOOTER === */
-    footer {
-      padding: 50px 0 70px;
-      border-top: 1px solid var(--c-border);
-      text-align: center;
-    }
-
-    footer p {
-      color: var(--c-text-dim);
-      font-size: 0.9em;
-      margin-bottom: 16px;
-    }
-
-    .social {
-      display: flex; justify-content: center; gap: 14px;
-    }
-
-    .social a {
-      width: 42px; height: 42px;
-      display: grid; place-items: center;
-      border-radius: 11px;
-      background: rgba(148, 163, 184, 0.06);
-      border: 1px solid var(--c-border);
-      color: var(--c-text-muted);
+    .pillar-card {
+      padding: 34px;
       text-decoration: none;
-      transition: all 0.3s var(--ease);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .pillar-card.span-7 { grid-column: span 7; }
+    .pillar-card.span-5 { grid-column: span 5; }
+    .pillar-card.span-6 { grid-column: span 6; }
+
+    .pillar-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
     }
 
-    .social a:hover {
-      color: var(--c-text);
-      border-color: var(--c-primary);
-      background: rgba(59, 130, 246, 0.1);
-      transform: translateY(-2px);
+    .pillar-index {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
     }
 
-    /* === RESPONSIVE === */
-    @media (max-width: 920px) {
-      .hero { grid-template-columns: 1fr; gap: 56px; padding: 50px 0 80px; }
-      .hero-visual { order: -1; }
-      .avatar-wrap { width: 220px; height: 220px; }
-      .explore-grid, .latest-grid { grid-template-columns: 1fr; }
-      .about-card { grid-template-columns: 1fr; padding: 36px; gap: 36px; text-align: center; }
-      .about-img { max-width: 280px; margin: 0 auto; }
-      .interest-tags, .about-actions { justify-content: center; }
-      nav { padding: 20px 0; }
-      .nav-links a:not(.cta) { display: none; }
+    .pillar-card h3 {
+      font-family: var(--font-display);
+      font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      margin-bottom: 10px;
     }
 
-    @media (max-width: 520px) {
-      .container { padding: 0 20px; }
-      .explore-card, .latest-item { padding: 30px 24px; }
-      .floating-tag { font-size: 0.75em; padding: 8px 12px; }
+    .pillar-card p {
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.65;
     }
 
-    ::selection { background: var(--c-primary); color: white; }
+    /* Terminal snippet preview inside Cheatsheets bento */
+    .mini-terminal {
+      border-radius: var(--radius-md);
+      background: #090d16;
+      border: 1px solid rgba(226, 232, 240, 0.12);
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      line-height: 1.65;
+      color: #cbd5e1;
+      overflow-x: auto;
+    }
+    .mini-terminal .t-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.08);
+      color: #64748b;
+      font-size: 0.68rem;
+    }
+    .mini-terminal .t-dot { width: 8px; height: 8px; border-radius: 50%; background: #334155; }
+    .mini-terminal .kw { color: #f6c467; }
+    .mini-terminal .fn { color: #68a3ff; }
+    .mini-terminal .cm { color: #64748b; }
+
+    .pillar-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .pillar-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .pillar-card:hover .pillar-foot .arr {
+      transform: translateX(5px);
+      color: var(--gold);
+    }
+    .pillar-foot .arr {
+      transition: transform 0.25s var(--ease-spring), color 0.2s;
+    }
+
+    /* ---------- Section 03: Visual Field Notes Magazine Grid ---------- */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .note-card {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .note-card[hidden] {
+      display: none !important;
+    }
+
+    .note-thumb {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--line);
+    }
+    .note-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.55s var(--ease-spring);
+    }
+    .note-card:hover .note-thumb img {
+      transform: scale(1.045);
+    }
+
+    /* Typographic blueprint thumb for cheatsheets in the feed */
+    .note-thumb.code-blueprint {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 85% 20%, var(--cobalt-soft), transparent 60%),
+        linear-gradient(135deg, #0b101b 0%, #131c2e 100%);
+      color: #f4f3ee;
+    }
+    .note-thumb.code-blueprint .bp-code {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: #93c5fd;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      line-height: 1.5;
+    }
+
+    .note-badge-float {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(7, 9, 14, 0.82);
+      color: #f4f3ee;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .note-body {
+      padding: 22px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .note-meta {
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      color: var(--dim);
+      margin-bottom: 9px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .note-body h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.12rem;
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+      margin-bottom: 10px;
+    }
+
+    .note-body p {
+      color: var(--muted);
+      font-size: 0.89rem;
+      line-height: 1.62;
+      flex: 1;
+    }
+
+    /* ---------- Section 04: Courses Preview Strip ---------- */
+    .academy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .academy-card {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .academy-cover {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+      background: var(--bg-2);
+    }
+    .academy-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s var(--ease-spring);
+    }
+    .academy-card:hover .academy-cover img {
+      transform: scale(1.04);
+    }
+    .academy-play {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--gold);
+      color: #07090e;
+      font-size: 0.82rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .academy-body {
+      padding: 20px 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .academy-body h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+    }
+    .academy-body p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.58;
+      flex: 1;
+    }
+
+    /* ---------- Section 05: Executive Author Dossier ---------- */
+    .author-band {
+      padding: clamp(32px, 5vw, 56px);
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: clamp(28px, 5vw, 56px);
+      align-items: center;
+    }
+
+    .credential-matrix {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .cred-box {
+      padding: 18px 20px;
+      border-radius: var(--radius-md);
+      background: var(--bg-0);
+      border: 1px solid var(--line);
+    }
+    .cred-box .k {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .cred-box .v {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.98rem;
+      line-height: 1.35;
+    }
+
+    @media (max-width: 1020px) {
+      .hero-grid,
+      .author-band {
+        grid-template-columns: 1fr;
+      }
+      .bookshelf-grid,
+      .notes-grid,
+      .academy-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .pillar-card.span-7,
+      .pillar-card.span-5,
+      .pillar-card.span-6 {
+        grid-column: span 12;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .dossier-top {
+        grid-template-columns: 1fr;
+      }
+      .bookshelf-grid,
+      .notes-grid,
+      .academy-grid,
+      .credential-matrix {
+        grid-template-columns: 1fr;
+      }
+      .pillar-card {
+        padding: 24px;
+      }
+    }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div class="ambient-bg" aria-hidden="true"></div>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="ambient-grain" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"></div>
 
-  <div class="container">
-    <nav>
-      <a href="#" class="brand">
-        <span class="brand-mark">OK</span>
-        <span>Omar Kamal Hosney</span>
+  <!-- Sticky Precision Masthead -->
+  <header class="site-header">
+    <div class="shell nav-bar">
+      <a href="index.html" class="brand-link" aria-label="Omar Kamal Hosney Home">
+        <span class="ok-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span class="brand-text">
+          <span class="brand-name">Omar Kamal Hosney</span>
+          <span class="brand-role">AI Architect · Author</span>
+        </span>
       </a>
-      <div class="nav-links">
-        <a href="cheatsheets/index.html">Cheatsheets</a>
-        <a href="articles/index.html">Blog</a>
-        <a href="courses/index.html">Courses</a>
+
+      <nav class="nav-center" aria-label="Primary">
+        <a href="index.html" class="active">Home</a>
         <a href="books/index.html">Books</a>
-        <a href="resume.html" target="_blank">Resume</a>
-        <a href="https://www.linkedin.com/in/okhosney/" target="_blank" class="cta">
-          <i class="fab fa-linkedin-in"></i> Connect
+        <a href="courses/index.html">Courses</a>
+        <a href="articles/index.html">Articles</a>
+        <a href="cheatsheets/index.html">Cheatsheets</a>
+        <a href="resume.html">Resume</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="cmdk-trigger" data-cmdk-open aria-label="Search entire site">
+          <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+          <span class="label-txt">Search</span>
+          <kbd>⌘K</kbd>
+        </button>
+        <button type="button" class="icon-btn" data-theme-toggle aria-label="Toggle theme">
+          <i class="fas fa-sun" aria-hidden="true"></i>
+        </button>
+        <a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener" class="nav-cta hide-sm">
+          <i class="fab fa-linkedin-in" aria-hidden="true"></i> Connect
         </a>
+        <button type="button" class="icon-btn mobile-toggle" data-mobile-open aria-label="Open navigation menu">
+          <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
       </div>
-    </nav>
+    </div>
+  </header>
 
-    <section class="hero">
-      <div class="hero-content">
-        <div class="eyebrow">Open for collaboration · Cairo, Egypt</div>
-        <h1>
-          Data, models &amp; <span class="gradient">applied AI</span>, distilled into useful references.
-        </h1>
-        <p class="tagline">
-          I'm Omar — a data scientist and ML engineer with 26+ years across credit, telecom and EDA.
-          This site is where I keep my cheatsheets and field notes on machine learning, LLMs, agents and the tools I actually use.
-        </p>
-        <div class="hero-actions">
-          <a href="cheatsheets/index.html" class="btn btn-primary">
-            Browse Cheatsheets <span class="arrow">→</span>
-          </a>
-          <a href="articles/index.html" class="btn btn-ghost">
-            Read the Blog <span class="arrow">→</span>
-          </a>
-        </div>
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+    <div class="mobile-panel">
+      <div class="mobile-panel-head">
+        <span class="brand-name">Navigation</span>
+        <button type="button" class="icon-btn" data-mobile-close aria-label="Close menu">
+          <i class="fas fa-xmark"></i>
+        </button>
       </div>
-      <div class="hero-visual">
-        <div class="avatar-wrap">
-          <img src="omar.jpeg" alt="Omar Kamal Hosney" />
-        </div>
-        <div class="floating-tag t1">🧠 Machine Learning</div>
-        <div class="floating-tag t2">🤖 LLMs &amp; Agents</div>
-        <div class="floating-tag t3">📊 Data Science</div>
-      </div>
-    </section>
-
-    <section class="explore" id="explore">
-      <div class="section-head">
-        <span class="section-label">What you'll find here</span>
-        <h2>Four libraries, one mission</h2>
-        <p>Quick references for fast lookup, long-form articles for deeper understanding, video courses to learn step by step, and books to go the whole way.</p>
-      </div>
-
-      <div class="explore-grid">
-        <a href="cheatsheets/index.html" class="explore-card cheat">
-          <div class="card-icon">📚</div>
-          <div class="card-meta">
-            <span>Reference</span>
-            <span class="card-count">30+ cheatsheets</span>
-          </div>
-          <h3>Cheatsheets</h3>
-          <p class="desc">
-            Concise reference guides for the tools and libraries that show up in real data-science and ML work.
-            Skim them, bookmark them, print them.
-          </p>
-          <div class="card-tags">
-            <span>Scikit-learn</span><span>PyTorch</span><span>XGBoost</span>
-            <span>Docker</span><span>PostgreSQL</span><span>LangChain</span>
-          </div>
-          <span class="card-cta">Browse cheatsheets <span class="arrow">→</span></span>
-        </a>
-
-        <a href="articles/index.html" class="explore-card blog">
-          <div class="card-icon">✍️</div>
-          <div class="card-meta">
-            <span>Long-form</span>
-            <span class="card-count">Field notes</span>
-          </div>
-          <h3>Blog &amp; Articles</h3>
-          <p class="desc">
-            In-depth articles, capability tours and field notes on emerging AI models and tooling —
-            things I learned from actually running them, not just reading about them.
-          </p>
-          <div class="card-tags">
-            <span>AI Models</span><span>Open Weights</span><span>GPU</span>
-            <span>Image Gen</span><span>Tools</span>
-          </div>
-          <span class="card-cta">Read the blog <span class="arrow">→</span></span>
-        </a>
-
-        <a href="courses/index.html" class="explore-card courses">
-          <div class="card-icon">🎓</div>
-          <div class="card-meta">
-            <span>Video</span>
-            <span class="card-count">6 courses · 49 modules</span>
-          </div>
-          <h3>Courses</h3>
-          <p class="desc">
-            Module-by-module courses on AI for consultants, reinforcement learning, graph-based RAG, agent memory
-            and microservices for Python developers, with a direct link to every module.
-          </p>
-          <div class="card-tags">
-            <span>AI for Consultants</span><span>Reinforcement Learning</span><span>GraphRAG</span><span>Agent Memory</span><span>Microservices</span>
-          </div>
-          <span class="card-cta">Start learning <span class="arrow">→</span></span>
-        </a>
-
-        <a href="books/index.html" class="explore-card books">
-          <div class="card-icon">📖</div>
-          <div class="card-meta">
-            <span>Print &amp; Kindle</span>
-            <span class="card-count">6 books</span>
-          </div>
-          <h3>Books</h3>
-          <p class="desc">
-            Friendly, illustrated guides to leading AI transformations, microservices for Python developers,
-            graph-based RAG and knowledge agents, LLM reliability engineering, and diagrams as code.
-          </p>
-          <div class="card-tags">
-            <span>AI Transformation</span><span>LLM Reliability</span><span>Microservices</span><span>GraphRAG</span><span>Diagrams as Code</span>
-          </div>
-          <span class="card-cta">Browse the books <span class="arrow">→</span></span>
-        </a>
-      </div>
-    </section>
-
-    <section class="latest">
-      <div class="section-head">
-        <span class="section-label">Recently added</span>
-        <h2>Latest from the site</h2>
-        <p>A few of the newest entries from both libraries.</p>
-      </div>
-
-      <div class="latest-grid">
-        <a href="articles/openwiki-ai-docs-agent/openwiki-ai-docs-agent.html" class="latest-item">
-          <span class="latest-tag article">Article · New · July 2026</span>
-          <h4>🤖 OpenWiki — the AI agent that writes your docs (and turns Gmail into a second brain)</h4>
-          <p>A hands-on walkthrough of the LangChain team's open-source docs agent: one command documents a repository through a docs-only sandboxed backend, another distills 100 real Gmail messages into a personal wiki you can chat with from the terminal. Guardrails, the SHA-256 snapshot gate, real screenshots, and the full 13-minute video walkthrough.</p>
-        </a>
-        <a href="articles/falkordb-explained/falkordb-explained.html" class="latest-item">
-          <span class="latest-tag article">Article · July 2026</span>
-          <h4>🕸️ FalkorDB, explained — the graph database that's secretly linear algebra</h4>
-          <p>An illustrated, jargon-light explainer of FalkorDB: it stores your graph as sparse matrices and turns every query into matrix multiplication (GraphBLAS), ships as a one-Docker-command Redis module you query in openCypher, and has a native vector index — so embeddings and graph structure live in one engine for AI, RAG and agent memory.</p>
-        </a>
-        <a href="articles/kera2-illustration-styles/kera2-illustration-styles.html" class="latest-item">
-          <span class="latest-tag article">Article · July 2026</span>
-          <h4>🎨 12 Illustration Styles Worth Generating in Krea 2</h4>
-          <p>A visual field guide to twelve illustrator and artist styles — Axel Scheffler, Ludwig Bemelmans, Alexander Jansson, William Kentridge, Bruce Timm, Robert McGinnis, Alessandro Gottardo and more — reproduced entirely local in Krea 2 Turbo on one 24 GB RTX 4090. Each with the style described, a short artist bio, the reference look, and a same-seed triptych with its prompt recipe.</p>
-        </a>
-        <a href="articles/kera2-rtx4090/kera2-rtx4090.html" class="latest-item">
-          <span class="latest-tag article">Article · July 2026</span>
-          <h4>🖼️ Krea 2 on a single RTX 4090 — quantizing a 12B image model with GGUF</h4>
-          <p>A 12-billion-parameter diffusion transformer, quantized to a Q6_K GGUF (~10.6 GB) and run entirely local on one 24 GB 4090 under Pop!_OS: the install path (isolated ComfyUI, torch cu130, the krea2 encoder gotcha), a 16-style quality gallery with honest per-image verdicts, and where diffusion text still breaks.</p>
-        </a>
-        <a href="articles/unlimited-ocr/unlimited-ocr.html" class="latest-item">
-          <span class="latest-tag article">Article · June 2026</span>
-          <h4>📄 Unlimited-OCR, hands-on — long-horizon document parsing on a 4090</h4>
-          <p>Baidu's DeepSeek-OCR-based parsing VLM, served with SGLang: near-perfect on clean English with exact table extraction, much harder on 1890s Arabic. Install steps, full-page → rendered-Markdown comparisons, English &amp; Arabic examples, table extraction, and the runaway loop that image_mode=base fixes.</p>
-        </a>
-        <a href="articles/lightrag/lightrag.html" class="latest-item">
-          <span class="latest-tag article">Article · June 2026</span>
-          <h4>🕸️ LightRAG — fast graph-RAG with GPT-5 + Qdrant, hands-on</h4>
-          <p>Graph-RAG without GraphRAG's bill: knowledge-graph indexing plus a dual-level retrieval paradigm, run end-to-end on OpenAI gpt-5-mini / gpt-5.5 and a Qdrant vector store — the seven core ideas, the knowledge graph it builds, and the real setup issues and fixes.</p>
-        </a>
-        <a href="articles/linearrag/linearrag.html" class="latest-item">
-          <span class="latest-tag article">Article · June 2026</span>
-          <h4>🕸️ LinearRAG — relation-free GraphRAG, hands-on a 4090</h4>
-          <p>GraphRAG without relation extraction: a Tri-Graph built with zero LLM tokens, single-pass multi-hop retrieval via semantic bridging and Personalized PageRank, animated walkthroughs, and an end-to-end 4090 run where gpt-5-mini scored a perfect 12/12.</p>
-        </a>
-        <a href="articles/boogu-image/boogu-image.html" class="latest-item">
-          <span class="latest-tag article">Article · June 2026</span>
-          <h4>🎨 Boogu-Image — the Edit and Turbo models, hands-on a 4090</h4>
-          <p>The Apache-2.0 10B unified image model on a 24 GB 4090: instruction-based photo editing and a 4-step Turbo text-to-image — install, prompt/config galleries, and the honest blur / OOM / group-offload / identity-CFG story.</p>
-        </a>
-        <a href="articles/lens/lens.html" class="latest-item">
-          <span class="latest-tag article">Article · June 2026</span>
-          <h4>🔭 Lens — quantizing the DiT to run 1440 without offload on a 4090</h4>
-          <p>Microsoft's 3.8B text-to-image model with a 4-bit GPT-OSS encoder: the no-offload OOM wall and the FP8 DiT fix that unlocks 1440, with a category gallery and honest quality notes.</p>
-        </a>
-        <a href="articles/qwopus-mtp-2x/qwopus-mtp-2x.html" class="latest-item">
-          <span class="latest-tag article">Article · May 2026</span>
-          <h4>⚡ Doubling Qwopus 3.6 on a single RTX 4090 — Multi-Token Prediction with llama.cpp</h4>
-          <p>~1.98× average speedup (peak 2.21×) on Qwopus 3.6-27B-MTP. Why Ollama refused to load it, and the working llama.cpp install path end-to-end.</p>
-        </a>
-        <a href="cheatsheets/bupar_cheatsheet.html" class="latest-item">
-          <span class="latest-tag cheat">Cheatsheet · New</span>
-          <h4>📊 bupaR — Business Process Analytics in R</h4>
-          <p>Event logs, process maps, performance metrics, filtering, and the bupaverse ecosystem in one quick reference.</p>
-        </a>
-        <a href="cheatsheets/openai_agents_sdk.html" class="latest-item">
-          <span class="latest-tag cheat">Cheatsheet</span>
-          <h4>🤖 OpenAI Agents SDK</h4>
-          <p>Core concepts, agent creation, tools, guardrails, handoffs, and tracing for building AI agent applications.</p>
-        </a>
-      </div>
-    </section>
-
-    <section class="about" id="about">
-      <div class="about-card">
-        <div class="about-text">
-          <h2>About me</h2>
-          <p>
-            I'm a seasoned data scientist and ML engineer with 26+ years of experience.
-            I've contributed to Tribal Credit, Reveel, TA Telecom, Mentor Graphics and IBM —
-            across AI-driven underwriting, algorithm development, analytics and software-testing leadership.
-          </p>
-          <p>I write and build around:</p>
-          <div class="interest-tags">
-            <span>Artificial Intelligence</span>
-            <span>Data Science</span>
-            <span>Large Language Models</span>
-            <span>Agentic Systems</span>
-          </div>
-          <div class="about-actions">
-            <a href="https://medium.com/@omkamal" target="_blank" class="btn btn-primary">
-              <i class="fab fa-medium"></i> Medium
-            </a>
-            <a href="resume.html" target="_blank" class="btn btn-ghost">
-              <i class="fas fa-file-alt"></i> Resume
-            </a>
-          </div>
-        </div>
-        <img src="omar.jpeg" alt="Omar Kamal Hosney" class="about-img" />
-      </div>
-    </section>
-
-    <footer>
-      <p>© 2026 Omar Kamal Hosney · Built with care on GitHub Pages</p>
-      <div class="social">
-        <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-        <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium"><i class="fab fa-medium-m"></i></a>
-        <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-      </div>
-    </footer>
+      <nav class="mobile-links" aria-label="Mobile">
+        <a href="index.html" class="active"><span>Home</span><span class="sub">Overview</span></a>
+        <a href="books/index.html"><span>Books</span><span class="sub">6 Monographs</span></a>
+        <a href="courses/index.html"><span>Courses</span><span class="sub">6 Courses · 49 Modules</span></a>
+        <a href="articles/index.html"><span>Blog &amp; Field Notes</span><span class="sub">14 Deep Reads</span></a>
+        <a href="cheatsheets/index.html"><span>Cheatsheets</span><span class="sub">30+ References</span></a>
+        <a href="resume.html"><span>Resume / CV</span><span class="sub">30+ Yrs Experience</span></a>
+        <a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener"><span>LinkedIn</span><span class="sub">/in/okhosney ↗</span></a>
+      </nav>
+    </div>
   </div>
 
+  <main id="main">
+    <!-- ==================== HERO ==================== -->
+    <section class="home-hero">
+      <canvas id="meridian-canvas" aria-hidden="true"></canvas>
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow-tag">
+            <span class="dot" aria-hidden="true"></span>
+            <span>Open for Advisory &amp; Collaboration · Cairo &amp; California</span>
+          </div>
+          <h1 class="display-xl">
+            Applied AI, graph retrieval &amp; <span class="serif-em">production ML</span>, distilled from first principles.
+          </h1>
+          <p class="lede">
+            I'm Omar — a data scientist and enterprise AI architect with 26+ years across fintech underwriting, telecom, EDA and distributed software. This site is my working library: six illustrated books, six free video courses, empirical GPU field notes, and 30+ engineering cheatsheets.
+          </p>
+          <div class="hero-ctas">
+            <a href="books/index.html" class="btn btn-gold">
+              Explore the Books <span class="arr">→</span>
+            </a>
+            <a href="courses/index.html" class="btn btn-surface">
+              Watch Free Courses <span class="arr">→</span>
+            </a>
+            <a href="cheatsheets/index.html" class="btn btn-surface">
+              30+ Cheatsheets <span class="arr">→</span>
+            </a>
+          </div>
+
+          <div class="hero-pedigree">
+            <span>Career Pedigree //</span>
+            <strong>HCLTech</strong>
+            <strong>CaaStle</strong>
+            <strong>Tribal Credit</strong>
+            <strong>Mentor Graphics</strong>
+            <strong>IBM</strong>
+            <strong>Lucent</strong>
+          </div>
+        </div>
+
+        <aside class="dossier-card spot-card" aria-label="Author overview and library telemetry">
+          <div class="dossier-top">
+            <div class="portrait-frame">
+              <img src="omar.jpeg" alt="Portrait of Omar Kamal Hosney" width="248" height="284" />
+            </div>
+            <div class="dossier-id">
+              <div class="mono-kicker">Author &amp; Practitioner</div>
+              <h2>Omar Kamal Hosney</h2>
+              <p>Senior Enterprise AI Architect, Chief Data Scientist alum, and author of illustrated guides on AI systems that hold up in production.</p>
+            </div>
+          </div>
+
+          <div class="telemetry-grid">
+            <a href="books/index.html" class="telemetry-cell">
+              <span class="telemetry-num" data-count="6">6</span>
+              <span class="telemetry-label"><span>Published Books</span><span>→</span></span>
+            </a>
+            <a href="courses/index.html" class="telemetry-cell">
+              <span class="telemetry-num" data-count="49">49</span>
+              <span class="telemetry-label"><span>Video Modules</span><span>→</span></span>
+            </a>
+            <a href="articles/index.html" class="telemetry-cell">
+              <span class="telemetry-num" data-count="14">14</span>
+              <span class="telemetry-label"><span>GPU Field Notes</span><span>→</span></span>
+            </a>
+            <a href="cheatsheets/index.html" class="telemetry-cell">
+              <span class="telemetry-num" data-count="30" data-suffix="+">30+</span>
+              <span class="telemetry-label"><span>Cheatsheets</span><span>→</span></span>
+            </a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ==================== 01 // PUBLISHED BOOKS ==================== -->
+    <section class="section-block section-divider" id="books">
+      <div class="shell">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="sec-kicker">01 // Published Monographs</div>
+            <h2 class="display-lg">Six books, <span class="serif-em">illustrated &amp; hands-on</span>.</h2>
+          </div>
+          <a href="books/index.html" class="btn btn-surface btn-sm">
+            Full Catalog &amp; Editions <span class="arr">→</span>
+          </a>
+        </div>
+
+        <div class="bookshelf-grid">
+          <article class="spot-card shelf-card reveal" style="--shelf-glow: rgba(59, 130, 246, 0.22);">
+            <a href="book/ai-transformation-consultant.html" class="shelf-visual" aria-label="Explore The AI Transformation Consultant">
+              <span class="book-stage">
+                <span class="book-3d">
+                  <img src="books/img/ai-transformation-consultant.jpg" alt="Cover of The AI Transformation Consultant" width="320" height="480" loading="lazy" />
+                </span>
+              </span>
+            </a>
+            <div class="shelf-body">
+              <div class="shelf-chips">
+                <span class="meta-chip gold">New · Nov 2026</span>
+                <span class="meta-chip">203 pp</span>
+                <span class="meta-chip teal">Free Course</span>
+              </div>
+              <h3>The AI Transformation Consultant</h3>
+              <p>What works, what fails, and how to lead the engagement — 10 cited chapters from LLM fundamentals to boardroom strategy and an interview toolkit.</p>
+              <div class="shelf-links">
+                <a href="book/ai-transformation-consultant.html" class="btn btn-gold btn-sm">Explore Book <span class="arr">→</span></a>
+                <a href="https://a.co/d/06fh92Ud" target="_blank" rel="noopener" class="btn btn-surface btn-sm"><i class="fab fa-amazon"></i> Amazon</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="spot-card shelf-card reveal" style="--shelf-glow: rgba(229, 72, 77, 0.22);">
+            <a href="book/llm-evaluation-reliability-engineering.html" class="shelf-visual" aria-label="Explore LLM Evaluation and Reliability Engineering">
+              <span class="book-stage">
+                <span class="book-3d">
+                  <img src="books/img/llm-evaluation-reliability.jpg" alt="Cover of LLM Evaluation &amp; Reliability Engineering" width="320" height="457" loading="lazy" />
+                </span>
+              </span>
+            </a>
+            <div class="shelf-body">
+              <div class="shelf-chips">
+                <span class="meta-chip crimson">New · Oct 2026</span>
+                <span class="meta-chip">460 pp</span>
+                <span class="meta-chip">20 Chapters</span>
+              </div>
+              <h3>LLM Evaluation &amp; Reliability Engineering</h3>
+              <p>Evals, observability, and AgentOps for developers who own what happens in production — every chapter opens with a real incident and ships runnable Python.</p>
+              <div class="shelf-links">
+                <a href="book/llm-evaluation-reliability-engineering.html" class="btn btn-gold btn-sm">Explore Book <span class="arr">→</span></a>
+                <a href="https://a.co/d/06kUqfCL" target="_blank" rel="noopener" class="btn btn-surface btn-sm"><i class="fab fa-amazon"></i> Amazon</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="spot-card shelf-card reveal" style="--shelf-glow: rgba(232, 168, 56, 0.22);">
+            <a href="book/camera-composition-playbook.html" class="shelf-visual" aria-label="Explore The Camera Composition Playbook">
+              <span class="book-stage">
+                <span class="book-3d">
+                  <img src="books/img/camera-composition-playbook.jpg" alt="Cover of The Camera Composition Playbook" width="320" height="477" loading="lazy" />
+                </span>
+              </span>
+            </a>
+            <div class="shelf-body">
+              <div class="shelf-chips">
+                <span class="meta-chip gold">Visual Workbook</span>
+                <span class="meta-chip">325 pp · 60 Rules</span>
+              </div>
+              <h3>The Camera Composition Playbook</h3>
+              <p>Photography composition in 60 visual rules: weaker-vs-stronger frame comparisons, 10-minute field exercises, and when to deliberately break the rule.</p>
+              <div class="shelf-links">
+                <a href="book/camera-composition-playbook.html" class="btn btn-gold btn-sm">Explore Book <span class="arr">→</span></a>
+                <a href="https://payhip.com/b/16Tai" target="_blank" rel="noopener" class="btn btn-surface btn-sm">Payhip PDF</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="spot-card shelf-card reveal" style="--shelf-glow: rgba(59, 130, 246, 0.20);">
+            <a href="books/index.html#microservices" class="shelf-visual" aria-label="Microservices for Python Developers">
+              <span class="book-stage">
+                <span class="book-3d">
+                  <img src="books/img/microservices-python.jpg" alt="Cover of A Gentle Introduction to Microservices for Python Developers" width="320" height="480" loading="lazy" />
+                </span>
+              </span>
+            </a>
+            <div class="shelf-body">
+              <div class="shelf-chips">
+                <span class="meta-chip cobalt">Sep 2026</span>
+                <span class="meta-chip">379 pp · 72 Diagrams</span>
+              </div>
+              <h3>Microservices for Python Developers</h3>
+              <p>Follow ShopFlow from a single Django monolith to FastAPI microservices deployed across AWS and Google Cloud, paired with a free 4-module video course.</p>
+              <div class="shelf-links">
+                <a href="https://a.co/d/0aF04Dnv" target="_blank" rel="noopener" class="btn btn-gold btn-sm"><i class="fab fa-amazon"></i> Amazon</a>
+                <a href="courses/index.html#microservices" class="btn btn-surface btn-sm">Watch Course</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="spot-card shelf-card reveal" style="--shelf-glow: rgba(139, 92, 246, 0.24);">
+            <a href="books/index.html#graphrag" class="shelf-visual" aria-label="Advanced GraphRAG and Knowledge Agents">
+              <span class="book-stage">
+                <span class="book-3d">
+                  <img src="books/img/advanced-graphrag.jpg" alt="Cover of Advanced GraphRAG &amp; Knowledge Agents" width="320" height="480" loading="lazy" />
+                </span>
+              </span>
+            </a>
+            <div class="shelf-body">
+              <div class="shelf-chips">
+                <span class="meta-chip violet">Jul 2026</span>
+                <span class="meta-chip">Paperback &amp; Kindle</span>
+              </div>
+              <h3>Advanced GraphRAG &amp; Knowledge Agents</h3>
+              <p>Beyond flat vector search: ontology construction, Microsoft GraphRAG &amp; DRIFT, LightRAG, HippoRAG, and multi-hop knowledge agents across eight modules.</p>
+              <div class="shelf-links">
+                <a href="https://a.co/d/05WNyWFa" target="_blank" rel="noopener" class="btn btn-gold btn-sm"><i class="fab fa-amazon"></i> Amazon</a>
+                <a href="courses/index.html#graphrag-1" class="btn btn-surface btn-sm">Watch Course</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="spot-card shelf-card reveal" style="--shelf-glow: rgba(20, 184, 166, 0.20);">
+            <a href="books/index.html#diagrams" class="shelf-visual" aria-label="Diagrams as Code">
+              <span class="book-stage">
+                <span class="book-3d">
+                  <img src="books/img/diagrams-as-code.jpg" alt="Cover of Diagrams as Code" width="320" height="480" loading="lazy" />
+                </span>
+              </span>
+            </a>
+            <div class="shelf-body">
+              <div class="shelf-chips">
+                <span class="meta-chip teal">195 pp</span>
+                <span class="meta-chip">Mermaid · PlantUML · D2</span>
+              </div>
+              <h3>Diagrams as Code</h3>
+              <p>Version-controlled architecture diagrams and dynamic documentation with Mermaid, PlantUML, D2, AsciiDoc, Marpit, and generative LLM pipelines.</p>
+              <div class="shelf-links">
+                <a href="https://a.co/d/03sg6EWh" target="_blank" rel="noopener" class="btn btn-gold btn-sm"><i class="fab fa-amazon"></i> Amazon</a>
+                <a href="books/index.html#diagrams" class="btn btn-surface btn-sm">Details</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 02 // FOUR PILLARS BENTO ==================== -->
+    <section class="section-block section-divider" id="explore">
+      <div class="shell">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="sec-kicker">02 // Architecture of the Site</div>
+            <h2 class="display-lg">Four libraries, <span class="serif-em">one engineering standard</span>.</h2>
+          </div>
+          <p class="lede" style="max-width:44ch;font-size:0.98rem;">
+            Quick-lookup syntax sheets for daily coding, empirical benchmarks from a local 24&nbsp;GB GPU rig, structured video courses, and full-length books.
+          </p>
+        </div>
+
+        <div class="pillars-bento">
+          <a href="cheatsheets/index.html" class="spot-card pillar-card span-7 reveal">
+            <div>
+              <div class="pillar-top">
+                <span class="pillar-index">Library A · Reference</span>
+                <span class="meta-chip cobalt">30+ Cheatsheets</span>
+              </div>
+              <h3 style="margin-top:14px;">Engineering &amp; ML Cheatsheets</h3>
+              <p>Dense, printable multi-column command &amp; API references with live command filtering, one-click copy, and A4 print layout — covering Scikit-learn, PyTorch, SQL, Docker, LangChain, PEFT, and AI agents.</p>
+            </div>
+            <div class="mini-terminal" aria-hidden="true">
+              <div class="t-bar"><span class="t-dot"></span><span class="t-dot"></span><span class="t-dot"></span><span>cheatsheets // live-filter &amp; print-ready</span></div>
+              <div><span class="cm"># Parameter-efficient LoRA + PostgreSQL + Docker + Agents</span></div>
+              <div><span class="kw">from</span> peft <span class="kw">import</span> LoraConfig, <span class="fn">get_peft_model</span>  <span class="cm"># r=16, alpha=32</span></div>
+              <div><span class="fn">gh</span> pr create --fill &amp;&amp; <span class="fn">docker</span> compose up -d --build</div>
+            </div>
+            <div class="pillar-foot">
+              <span>Browse all 30+ reference sheets</span>
+              <span class="arr">→</span>
+            </div>
+          </a>
+
+          <a href="articles/index.html" class="spot-card pillar-card span-5 reveal">
+            <div>
+              <div class="pillar-top">
+                <span class="pillar-index">Library B · Long-Form</span>
+                <span class="meta-chip violet">14 Field Notes</span>
+              </div>
+              <h3 style="margin-top:14px;">GPU Field Notes &amp; Blog</h3>
+              <p>Empirical capability tours and architecture explainers written from actually running, quantizing, and benchmarking open-weight models on a single 24&nbsp;GB RTX&nbsp;4090.</p>
+            </div>
+            <div class="pillar-tags">
+              <span class="meta-chip">GraphBLAS</span>
+              <span class="meta-chip">LightRAG &amp; LinearRAG</span>
+              <span class="meta-chip">GGUF / FP8 / 1.58-bit</span>
+              <span class="meta-chip">Diffusion &amp; VLMs</span>
+              <span class="meta-chip">OpenWiki</span>
+            </div>
+            <div class="pillar-foot">
+              <span>Read the technical journal</span>
+              <span class="arr">→</span>
+            </div>
+          </a>
+
+          <a href="courses/index.html" class="spot-card pillar-card span-6 reveal">
+            <div>
+              <div class="pillar-top">
+                <span class="pillar-index">Library C · Video Curriculum</span>
+                <span class="meta-chip emerald">6 Courses · 49 Modules</span>
+              </div>
+              <h3 style="margin-top:14px;">Free Structured Video Courses</h3>
+              <p>Self-contained 15–35 minute modules on AI strategy for consultants, reinforcement learning with Stable-Baselines3, GraphRAG Parts 1 &amp; 2, LLM context &amp; agent memory, and Python microservices.</p>
+            </div>
+            <div class="pillar-tags">
+              <span class="meta-chip">AI for Consultants</span>
+              <span class="meta-chip">Reinforcement Learning</span>
+              <span class="meta-chip">GraphRAG I &amp; II</span>
+              <span class="meta-chip">Agent Memory</span>
+            </div>
+            <div class="pillar-foot">
+              <span>Open the course syllabus</span>
+              <span class="arr">→</span>
+            </div>
+          </a>
+
+          <a href="books/index.html" class="spot-card pillar-card span-6 reveal">
+            <div>
+              <div class="pillar-top">
+                <span class="pillar-index">Library D · Print &amp; Digital</span>
+                <span class="meta-chip gold">6 Books · Amazon &amp; Payhip</span>
+              </div>
+              <h3 style="margin-top:14px;">Illustrated Technical Books</h3>
+              <p>Friendly, visual, rigorously cited guides that pair plain-English mental models with runnable code, architecture diagrams, and companion YouTube courses.</p>
+            </div>
+            <div class="pillar-tags">
+              <span class="meta-chip">AI Transformation</span>
+              <span class="meta-chip">LLM Evals &amp; AgentOps</span>
+              <span class="meta-chip">Microservices</span>
+              <span class="meta-chip">Camera Composition</span>
+            </div>
+            <div class="pillar-foot">
+              <span>Explore all six editions</span>
+              <span class="arr">→</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 03 // LATEST FIELD NOTES & CHEATSHEETS ==================== -->
+    <section class="section-block section-divider" id="latest">
+      <div class="shell">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="sec-kicker">03 // Recently Published</div>
+            <h2 class="display-lg">Field notes &amp; <span class="serif-em">benchmarks</span>.</h2>
+          </div>
+          <div class="filter-pills" role="tablist" aria-label="Filter recent entries">
+            <button type="button" class="pill-btn active" data-home-filter="all">All <span class="count">12</span></button>
+            <button type="button" class="pill-btn" data-home-filter="graph">GraphRAG &amp; Agents</button>
+            <button type="button" class="pill-btn" data-home-filter="vision">Local Image &amp; VLM</button>
+            <button type="button" class="pill-btn" data-home-filter="cheat">Cheatsheets</button>
+          </div>
+        </div>
+
+        <div class="notes-grid" id="home-notes-grid">
+          <a href="articles/openwiki-ai-docs-agent/openwiki-ai-docs-agent.html" class="spot-card note-card reveal" data-cat="graph">
+            <div class="note-thumb">
+              <img src="articles/openwiki-ai-docs-agent/demo_assets/hero.png" alt="OpenWiki AI documentation agent illustration" loading="lazy" />
+              <span class="note-badge-float">AI Agents · New</span>
+            </div>
+            <div class="note-body">
+              <div class="note-meta"><span>July 2026</span><span>·</span><span>LangChain · DeepAgents</span></div>
+              <h3>OpenWiki — the AI agent that writes your docs (and turns Gmail into a second brain)</h3>
+              <p>Sandboxed docs-only repo documentation plus 100 real Gmail threads distilled into a terminal-queryable personal wiki, with SHA-256 snapshot guardrails.</p>
+            </div>
+          </a>
+
+          <a href="articles/falkordb-explained/falkordb-explained.html" class="spot-card note-card reveal" data-cat="graph">
+            <div class="note-thumb">
+              <img src="articles/falkordb-explained/demo_assets/hero.png" alt="FalkorDB sparse matrix graph illustration" loading="lazy" />
+              <span class="note-badge-float">Graph Databases</span>
+            </div>
+            <div class="note-body">
+              <div class="note-meta"><span>July 2026</span><span>·</span><span>GraphBLAS · openCypher</span></div>
+              <h3>FalkorDB, explained — the graph database that's secretly linear algebra</h3>
+              <p>How storing graphs as sparse matrices turns traversal into matrix multiplication, paired with native vector search for RAG and agent memory.</p>
+            </div>
+          </a>
+
+          <a href="articles/kera2-illustration-styles/kera2-illustration-styles.html" class="spot-card note-card reveal" data-cat="vision">
+            <div class="note-thumb">
+              <img src="articles/kera2-illustration-styles/demo_assets/hero.jpg" alt="12 Illustration Styles in Krea 2" loading="lazy" />
+              <span class="note-badge-float">Style Atlas</span>
+            </div>
+            <div class="note-body">
+              <div class="note-meta"><span>July 2026</span><span>·</span><span>Krea 2 Turbo · RTX 4090</span></div>
+              <h3>12 Illustration Styles Worth Generating in Krea 2</h3>
+              <p>Twelve master illustrator aesthetics reproduced locally on one 24&nbsp;GB 4090 using pure visual-language cues rather than artist names.</p>
+            </div>
+          </a>
+
+          <a href="articles/kera2-rtx4090/kera2-rtx4090.html" class="spot-card note-card reveal" data-cat="vision">
+            <div class="note-thumb">
+              <img src="articles/kera2-rtx4090/demo_assets/hero.jpg" alt="Krea 2 quantized GGUF on RTX 4090" loading="lazy" />
+              <span class="note-badge-float">Quantization</span>
+            </div>
+            <div class="note-body">
+              <div class="note-meta"><span>July 2026</span><span>·</span><span>12B DiT · Q6_K GGUF</span></div>
+              <h3>Krea 2 on a single RTX 4090 — quantizing a 12B image model with GGUF</h3>
+              <p>Fitting a 12B diffusion transformer into ~10.6&nbsp;GB under Pop!_OS: ComfyUI isolation, encoder gotchas, and a 16-style quality audit.</p>
+            </div>
+          </a>
+
+          <a href="articles/unlimited-ocr/unlimited-ocr.html" class="spot-card note-card reveal" data-cat="vision">
+            <div class="note-thumb">
+              <img src="articles/unlimited-ocr/demo_assets/hero.png" alt="Unlimited-OCR document parsing benchmark" loading="lazy" />
+              <span class="note-badge-float">Document VLM</span>
+            </div>
+            <div class="note-body">
+              <div class="note-meta"><span>June 2026</span><span>·</span><span>SGLang · English &amp; Arabic</span></div>
+              <h3>Unlimited-OCR, hands-on — long-horizon document parsing on a 4090</h3>
+              <p>Near-exact English Markdown &amp; tables vs 1890s historical Arabic pages, plus fixing runaway generation loops with <code>image_mode=base</code>.</p>
+            </div>
+          </a>
+
+          <a href="articles/lightrag/lightrag.html" class="spot-card note-card reveal" data-cat="graph">
+            <div class="note-thumb">
+              <img src="articles/lightrag/demo_assets/hero.png" alt="LightRAG dual-level graph retrieval" loading="lazy" />
+              <span class="note-badge-float">GraphRAG</span>
+            </div>
+            <div class="note-body">
+              <div class="note-meta"><span>June 2026</span><span>·</span><span>GPT-5 · Qdrant</span></div>
+              <h3>LightRAG — fast graph-RAG with GPT-5 + Qdrant, hands-on</h3>
+              <p>Knowledge-graph indexing and dual-level retrieval without community-traversal bills, plus incremental updates and real setup fixes.</p>
+            </div>
+          </a>
+
+          <a href="articles/linearrag/linearrag.html" class="spot-card note-card reveal" data-cat="graph">
+            <div class="note-thumb">
+              <img src="articles/linearrag/demo_assets/hero.png" alt="LinearRAG Tri-Graph architecture" loading="lazy" />
+              <span class="note-badge-float">ICLR 2026</span>
+            </div>
+            <div class="note-body">
+              <div class="note-meta"><span>June 2026</span><span>·</span><span>Zero-Token Indexing · PPR</span></div>
+              <h3>LinearRAG — relation-free GraphRAG, hands-on a 4090</h3>
+              <p>Building a Tri-Graph with zero LLM tokens via NER &amp; embeddings, then single-pass multi-hop retrieval with Personalized PageRank (12/12 accuracy).</p>
+            </div>
+          </a>
+
+          <a href="articles/boogu-image/boogu-image.html" class="spot-card note-card reveal" data-cat="vision">
+            <div class="note-thumb">
+              <img src="articles/boogu-image/demo_assets/illus_hero.png" alt="Boogu-Image 10B Edit and Turbo" loading="lazy" />
+              <span class="note-badge-float">Unified 10B</span>
+            </div>
+            <div class="note-body">
+              <div class="note-meta"><span>June 2026</span><span>·</span><span>Apache-2.0 · Diffusers</span></div>
+              <h3>Boogu-Image — the Edit and Turbo models, hands-on a 4090</h3>
+              <p>Instruction photo editing and 4-step Turbo generation on 24&nbsp;GB VRAM: group offload, OOM walls, and identity-CFG experiments.</p>
+            </div>
+          </a>
+
+          <a href="articles/lens/lens.html" class="spot-card note-card reveal" data-cat="vision">
+            <div class="note-thumb">
+              <img src="articles/lens/demo_assets/hero.png" alt="Microsoft Lens FP8 DiT 1440px" loading="lazy" />
+              <span class="note-badge-float">FP8 DiT</span>
+            </div>
+            <div class="note-body">
+              <div class="note-meta"><span>June 2026</span><span>·</span><span>torchao · 1440px Native</span></div>
+              <h3>Lens — quantizing the DiT to run 1440 without offload on a 4090</h3>
+              <p>Breaking past the 1024px bf16 OOM ceiling on Microsoft's 3.8B model + 4-bit GPT-OSS-20B encoder using on-GPU FP8 quantization.</p>
+            </div>
+          </a>
+
+          <a href="articles/qwopus-mtp-2x/qwopus-mtp-2x.html" class="spot-card note-card reveal" data-cat="graph">
+            <div class="note-thumb">
+              <img src="articles/qwopus-mtp-2x/demo_assets/00_hero.png" alt="Qwopus 3.6 Multi-Token Prediction speedup" loading="lazy" />
+              <span class="note-badge-float">1.98× Speedup</span>
+            </div>
+            <div class="note-body">
+              <div class="note-meta"><span>May 2026</span><span>·</span><span>llama.cpp · MTP GGUF</span></div>
+              <h3>Doubling Qwopus 3.6 on a single RTX 4090 — Multi-Token Prediction</h3>
+              <p>1.98× average throughput (2.21× peak on math) on a 27B GGUF model — why Ollama rejected it and the exact production <code>llama-server</code> recipe.</p>
+            </div>
+          </a>
+
+          <a href="cheatsheets/bupar_cheatsheet.html" class="spot-card note-card reveal" data-cat="cheat">
+            <div class="note-thumb code-blueprint">
+              <span class="meta-chip gold" style="align-self:flex-start;">Cheatsheet · Process Mining</span>
+              <div class="bp-code">patients %&gt;%<br/>&nbsp;&nbsp;filter_activity_frequency(percentage = 0.8) %&gt;%<br/>&nbsp;&nbsp;process_map(performance(median, "days"))</div>
+            </div>
+            <div class="note-body">
+              <div class="note-meta"><span>Reference Card</span><span>·</span><span>R · bupaverse</span></div>
+              <h3>bupaR — Business Process Analytics &amp; Process Mining</h3>
+              <p>Event logs, frequency &amp; performance process maps, trace filtering, dotted charts, and conformance workflows on one sheet.</p>
+            </div>
+          </a>
+
+          <a href="cheatsheets/openai_agents_sdk.html" class="spot-card note-card reveal" data-cat="cheat">
+            <div class="note-thumb code-blueprint">
+              <span class="meta-chip cobalt" style="align-self:flex-start;">Cheatsheet · Agentic AI</span>
+              <div class="bp-code">agent = Agent(name="Triage",<br/>&nbsp;&nbsp;handoffs=[billing_agent, tech_agent],<br/>&nbsp;&nbsp;input_guardrails=[safety_check])</div>
+            </div>
+            <div class="note-body">
+              <div class="note-meta"><span>Reference Card</span><span>·</span><span>Python · Agents SDK</span></div>
+              <h3>OpenAI Agents SDK — Tools, Handoffs, Guardrails &amp; Tracing</h3>
+              <p>Complete multi-agent orchestration reference: Runner loops, structured outputs, function tools, handoffs, and trace instrumentation.</p>
+            </div>
+          </a>
+        </div>
+
+        <div style="margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;" class="reveal">
+          <a href="articles/index.html" class="btn btn-surface">All 14 Field-Note Articles <span class="arr">→</span></a>
+          <a href="cheatsheets/index.html" class="btn btn-surface">All 30+ Cheatsheets <span class="arr">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 04 // VIDEO COURSES STRIP ==================== -->
+    <section class="section-block section-divider" id="courses-preview">
+      <div class="shell">
+        <div class="section-header-row reveal">
+          <div>
+            <div class="sec-kicker">04 // Free Video Curriculum</div>
+            <h2 class="display-lg">Learn step by step — <span class="serif-em">49 modules</span>.</h2>
+          </div>
+          <a href="courses/index.html" class="btn btn-gold btn-sm">
+            Explore Full Curriculum <span class="arr">→</span>
+          </a>
+        </div>
+
+        <div class="academy-grid">
+          <a href="courses/index.html#ai-consultants" class="spot-card academy-card reveal">
+            <div class="academy-cover">
+              <img src="courses/img/ai-consultants-cover.jpg" alt="AI for Business Consultants course cover" loading="lazy" />
+              <span class="academy-play"><i class="fas fa-play"></i></span>
+            </div>
+            <div class="academy-body">
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <span class="meta-chip teal">5 Modules · 1.5h</span>
+                <span class="meta-chip">Orientation</span>
+              </div>
+              <h3>AI for Business Consultants</h3>
+              <p>Classical ML to LLMs, MCP, hyperscalers, EU AI Act, transformation failure modes, and a 15-question interview toolkit.</p>
+            </div>
+          </a>
+
+          <a href="courses/index.html#context-memory" class="spot-card academy-card reveal">
+            <div class="academy-cover">
+              <img src="courses/img/context-cover.jpg" alt="Context Management and Agent Memory in LLMs course cover" loading="lazy" />
+              <span class="academy-play"><i class="fas fa-play"></i></span>
+            </div>
+            <div class="academy-body">
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <span class="meta-chip emerald">16 Modules · 4.0h</span>
+                <span class="meta-chip">Beginner → Adv</span>
+              </div>
+              <h3>Context Management &amp; Agent Memory in LLMs</h3>
+              <p>Why models forget, SWE-Pruner, Context-Folding, Memory-as-Action, ACE playbooks, EverMemOS, MAGMA graphs, and CommitKV.</p>
+            </div>
+          </a>
+
+          <a href="courses/index.html#graphrag-1" class="spot-card academy-card reveal">
+            <div class="academy-cover">
+              <img src="courses/img/graphrag-1-cover.jpg" alt="Advanced GraphRAG Part 1 course cover" loading="lazy" />
+              <span class="academy-play"><i class="fas fa-play"></i></span>
+            </div>
+            <div class="academy-body">
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <span class="meta-chip violet">19 Modules (Pt 1 &amp; 2)</span>
+                <span class="meta-chip">Advanced</span>
+              </div>
+              <h3>Advanced GraphRAG &amp; Knowledge Agents (I &amp; II)</h3>
+              <p>From Microsoft GraphRAG, LightRAG &amp; HippoRAG to LazyGraphRAG, temporal validity clocks, Graphiti/Zep, GNN-RAG &amp; hypergraphs.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 05 // EXECUTIVE DOSSIER ==================== -->
+    <section class="section-block section-divider" id="about">
+      <div class="shell">
+        <div class="spot-card author-band reveal">
+          <div>
+            <div class="sec-kicker">05 // About the Author</div>
+            <h2 class="display-lg" style="margin-bottom:18px;">Three decades shipping <span class="serif-em">software &amp; intelligence</span>.</h2>
+            <p class="lede" style="margin-bottom:18px;font-size:1.02rem;">
+              I'm a Senior Enterprise AI Architect and Chief Data Scientist alum with 30+ years in technology and 9+ years leading machine learning, fintech credit underwriting, recommendation architectures, and production LLM agents.
+            </p>
+            <p class="lede" style="margin-bottom:28px;font-size:0.98rem;">
+              Across roles at <strong>HCLTech, CaaStle, Tribal Credit, Reveel, TA Telecom, Mentor Graphics, IBM, and Lucent</strong>, my work has centered on turning complex math and model architectures into reliable, auditable systems — and writing the field guides I wished existed.
+            </p>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;">
+              <a href="resume.html" class="btn btn-gold"><i class="fas fa-id-card"></i> Interactive Resume &amp; CV</a>
+              <a href="https://medium.com/@omkamal" target="_blank" rel="noopener" class="btn btn-surface"><i class="fab fa-medium"></i> Read on Medium</a>
+              <a href="https://github.com/omkamal" target="_blank" rel="noopener" class="btn btn-surface"><i class="fab fa-github"></i> GitHub</a>
+            </div>
+          </div>
+
+          <div class="credential-matrix">
+            <div class="cred-box">
+              <div class="k">Current Focus</div>
+              <div class="v">Enterprise Multi-Agent Systems, Evals, GraphRAG &amp; Local GPU Inference</div>
+            </div>
+            <div class="cred-box">
+              <div class="k">Credentials</div>
+              <div class="v">Anthropic Claude Certified Architect · Six Sigma Black Belt · MBA</div>
+            </div>
+            <div class="cred-box">
+              <div class="k">Intellectual Property</div>
+              <div class="v">US Patent App. 20160189178 — Predictive Recurring-Revenue Churn</div>
+            </div>
+            <div class="cred-box">
+              <div class="k">Languages</div>
+              <div class="v">English (Fluent) &amp; Arabic (Native — Bilingual Courses)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Architectural Colophon Footer -->
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-bio">
+          <a href="index.html" class="brand-link">
+            <span class="ok-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+            <span class="brand-text">
+              <span class="brand-name">Omar Kamal Hosney</span>
+              <span class="brand-role">omkamal.github.io</span>
+            </span>
+          </a>
+          <p>Books, structured video courses, empirical GPU field notes, and dense reference cheatsheets for practitioners building real ML and AI systems.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Libraries</h4>
+          <ul>
+            <li><a href="books/index.html">Published Books (6)</a></li>
+            <li><a href="courses/index.html">Video Courses (49 Modules)</a></li>
+            <li><a href="articles/index.html">GPU Field Notes (14)</a></li>
+            <li><a href="cheatsheets/index.html">Cheatsheets (30+)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Featured Monographs</h4>
+          <ul>
+            <li><a href="book/ai-transformation-consultant.html">The AI Transformation Consultant</a></li>
+            <li><a href="book/llm-evaluation-reliability-engineering.html">LLM Evaluation &amp; Reliability</a></li>
+            <li><a href="book/camera-composition-playbook.html">Camera Composition Playbook</a></li>
+            <li><a href="books/index.html#graphrag">Advanced GraphRAG</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Author &amp; Info</h4>
+          <ul>
+            <li><a href="resume.html">Executive Resume / CV</a></li>
+            <li><a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener">LinkedIn</a></li>
+            <li><a href="https://medium.com/@omkamal" target="_blank" rel="noopener">Medium (@omkamal)</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Omar Kamal Hosney · Crafted natively for GitHub Pages · Press <kbd style="font-family:var(--font-mono);padding:2px 6px;border:1px solid var(--line);border-radius:4px;">⌘K</kbd> anywhere to search</span>
+        <div class="social-row">
+          <a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://medium.com/@omkamal" target="_blank" rel="noopener" aria-label="Medium"><i class="fab fa-medium-m"></i></a>
+          <a href="https://github.com/omkamal" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="https://www.youtube.com/channel/UCTLyZbX-h91QEkgz3_Tspwg" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/catalog.js" defer></script>
+  <script src="assets/site.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const buttons = document.querySelectorAll('[data-home-filter]');
+      const cards = document.querySelectorAll('#home-notes-grid .note-card');
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          buttons.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          const cat = btn.getAttribute('data-home-filter');
+          cards.forEach((c) => {
+            c.hidden = cat !== 'all' && c.getAttribute('data-cat') !== cat;
+          });
+        });
+      });
+    });
+  </script>
 </body>
 </html>

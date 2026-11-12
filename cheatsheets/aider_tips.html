@@ -1,1 +1,132 @@
-<a href="https://omkamal.github.io/" target="_blank">Home</a>
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-root="..">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RT1G8VP79X"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RT1G8VP79X');
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aider Visual Usage Tips &amp; Workflow Cheatsheet — Omar Kamal Hosney</title>
+  <meta name="description" content="Seven illustrated workflow rules for AI pair programming with Aider: minimal context curation, incremental steps, /ask planning, unstuck commands, /run error loops, docs injection, and multi-line input." />
+  <link rel="canonical" href="https://omkamal.github.io/cheatsheets/aider_tips.html" />
+  <script>try{const t=localStorage.getItem('omar-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/cheatsheet.css" />
+</head>
+<body>
+  <h1>Aider Visual Usage Tips &amp; Pair-Programming Workflows</h1>
+
+  <div class="container">
+    <div class="section">
+      <h2>1. Curate Minimal Chat Context</h2>
+      <p>Only add files that actually need edits or direct signatures. Stuffing unrelated modules into chat dilutes attention and increases token cost.</p>
+      <svg class="diagram" viewBox="0 0 320 96" style="width:100%;margin:12px 0;">
+        <rect x="10" y="16" width="116" height="64" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+        <text x="68" y="45" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#0f172a">Target Files</text>
+        <text x="68" y="63" text-anchor="middle" font-family="monospace" font-size="10" fill="#0369a1">/add auth.py</text>
+        <path d="M134 48 L192 48" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4 3"/>
+        <polygon points="192,43 202,48 192,53" fill="#0284c7"/>
+        <rect x="208" y="16" width="100" height="64" rx="8" fill="#0f172a" stroke="#eab308" stroke-width="2"/>
+        <text x="258" y="46" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#f8fafc">Aider LLM</text>
+        <text x="258" y="63" text-anchor="middle" font-family="monospace" font-size="10" fill="#facc15">High Signal</text>
+      </svg>
+      <ul>
+        <li><strong>/add &lt;file&gt;</strong> — Add only files being actively edited</li>
+        <li><strong>/read-only &lt;file&gt;</strong> — Expose reference types/interfaces safely</li>
+        <li><strong>/tokens</strong> — Audit exact context window usage per file</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>2. Decompose Goals into Atomic Steps</h2>
+      <p>Ship one vertical slice at a time so every Git auto-commit stays reviewable, testable, and trivial to <code>/undo</code>.</p>
+      <svg class="diagram" viewBox="0 0 320 84" style="width:100%;margin:12px 0;">
+        <rect x="8" y="18" width="68" height="48" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+        <text x="42" y="46" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#14532d">1. Schema</text>
+        <rect x="86" y="18" width="68" height="48" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+        <text x="120" y="46" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#14532d">2. Route</text>
+        <rect x="164" y="18" width="68" height="48" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+        <text x="198" y="46" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#14532d">3. UI Hook</text>
+        <rect x="242" y="18" width="68" height="48" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+        <text x="276" y="46" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#78350f">4. Pytest</text>
+      </svg>
+      <ul>
+        <li><strong>/drop</strong> completed files before starting the next subsystem</li>
+        <li><strong>/diff</strong> — Inspect the exact Git diff Aider just committed</li>
+        <li><strong>/undo</strong> — Instantly revert the last AI commit if needed</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>3. Plan Complex Refactors First</h2>
+      <p>Separate architectural design from code edits so you agree on data flow before touching source files.</p>
+      <ul>
+        <li><strong>/ask &lt;question&gt;</strong> — Discuss architecture &amp; edge cases without editing any files</li>
+        <li><strong>/architect</strong> — Use a frontier reasoning model to plan and a fast coder model to apply diffs</li>
+        <li><strong>/code &lt;instruction&gt;</strong> — Execute the agreed plan right after <code>/ask</code></li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>4. Unsticking Loops &amp; Hallucinations</h2>
+      <p>When an edit misses the mark twice, avoid arguing in a polluted thread — reset context cleanly:</p>
+      <ul>
+        <li><strong>/clear</strong> — Wipe stale conversation history while keeping added files</li>
+        <li><strong>/drop &lt;file&gt;</strong> — Prune noisy or distracting files from context</li>
+        <li><strong>/model &lt;name&gt;</strong> — Switch to a stronger reasoning model mid-session</li>
+        <li><strong>Manual + AI turns</strong> — Sketch the function signature yourself, let Aider fill in implementation</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>5. Close the Loop with /run &amp; /test</h2>
+      <p>Feed real stack traces and compiler diagnostics straight back into Aider instead of summarizing errors manually.</p>
+      <svg class="diagram" viewBox="0 0 320 88" style="width:100%;margin:12px 0;">
+        <rect x="10" y="16" width="112" height="56" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+        <text x="66" y="42" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#7f1d1d">Stack Trace</text>
+        <text x="66" y="58" text-anchor="middle" font-family="monospace" font-size="10" fill="#b91c1c">/test pytest -q</text>
+        <path d="M130 44 L192 44" stroke="#dc2626" stroke-width="2.5"/>
+        <polygon points="192,39 202,44 192,49" fill="#dc2626"/>
+        <rect x="208" y="16" width="102" height="56" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+        <text x="259" y="42" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#1e3a8a">Auto-Fix Diff</text>
+        <text x="259" y="58" text-anchor="middle" font-family="monospace" font-size="10" fill="#1d4ed8">Verified Green</text>
+      </svg>
+      <ul>
+        <li><strong>/test &lt;cmd&gt;</strong> — Run test suite and share output automatically on failure</li>
+        <li><strong>/run &lt;cmd&gt;</strong> — Execute any shell command and optionally share stdout/stderr</li>
+        <li><strong>--auto-test</strong> — Run your test command automatically after every AI edit</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>6. Ground Unfamiliar APIs with Docs</h2>
+      <p>Prevent deprecated SDK hallucinations on newly released libraries by injecting authoritative docs:</p>
+      <ul>
+        <li><strong>/web &lt;url&gt;</strong> — Scrape and include live documentation pages directly in chat</li>
+        <li><strong>/read-only CONVENTIONS.md</strong> — Enforce project coding rules across every prompt</li>
+        <li><strong>Paste minimal working examples</strong> from official release notes</li>
+      </ul>
+    </div>
+
+    <div class="section section-span-3">
+      <h2>7. Fast Multi-Line Input &amp; Interrupt Controls</h2>
+      <ul>
+        <li><strong>Ctrl+C</strong> — Safely interrupt a streaming response mid-generation without losing your session</li>
+        <li><strong>{ ... }</strong> — Wrap prompts in curly braces on their own lines for clean multi-line instructions</li>
+        <li><strong>/paste</strong> — Paste multi-line code or clipboard images (UI screenshots / mockups) directly into chat</li>
+        <li><strong>/editor</strong> — Open your system <code>$EDITOR</code> (Vim / VS Code / Nano) to compose complex specifications</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="../assets/catalog.js" defer></script>
+  <script src="../assets/site.js" defer></script>
+  <script src="../assets/cheatsheet.js" defer></script>
+</body>
+</html>

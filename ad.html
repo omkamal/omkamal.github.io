@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-root=".">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RT1G8VP79X"></script>
@@ -10,144 +10,142 @@
 
   gtag('config', 'G-RT1G8VP79X');
 </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagrams as Code - Book Ad</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .ad-container {
-            background: linear-gradient(135deg, #e0f7fa, #80deea);
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            overflow: hidden;
-            width: 100%;
-            max-width: 1684.8px;
-            display: flex;
-            flex-direction: column;
-        }
-        .header {
-            background-color: #4a90e2;
-            color: #ffffff;
-            padding: 20px;
-            text-align: center;
-        }
-        .content {
-            display: flex;
-            padding: 20px;
-        }
-        .book-image {
-            flex: 1;
-            margin-right: 20px;
-        }
-        .book-image img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        .book-info {
-            flex: 2;
-        }
-        h1 {
-            margin-top: 0;
-        }
-        .rating {
-            color: #ffa500;
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-        .features {
-            list-style-type: none;
-            padding: 0;
-        }
-        .features li {
-            margin-bottom: 10px;
-            padding-left: 20px;
-            position: relative;
-        }
-        .features li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: #4a90e2;
-        }
-        .cta-button {
-            background-color: #4a90e2;
-            color: #ffffff;
-            font-weight: bold;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1.1em;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .cta-button:hover {
-            background-color: #3a7bc8;
-        }
-        #feature-highlight {
-            font-weight: bold;
-            color: #4a90e2;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diagrams as Code — Book Spotlight | Omar Kamal Hosney</title>
+  <meta name="description" content="Diagrams as Code: Exploring Mermaid, PlantUML, D2 and Generating Diagrams using AI LLMs by Omar Kamal Hosney." />
+  <link rel="canonical" href="https://omkamal.github.io/books/#diagrams-as-code" />
+  <link rel="icon" type="image/jpeg" href="omar.jpeg" />
+  <script>try{const t=localStorage.getItem('omar-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="assets/site.css" />
+  <style>
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1fr);
+      gap: clamp(32px, 5vw, 64px);
+      padding: clamp(32px, 5vw, 56px);
+      align-items: center;
+      margin: 48px 0;
+    }
+    .showcase-pedestal {
+      min-height: 400px;
+      border-radius: var(--radius-lg);
+      display: grid;
+      place-items: center;
+      padding: 36px 28px;
+      background: radial-gradient(circle at 50% 45%, rgba(20, 184, 166, 0.22), transparent 68%), var(--bg-0);
+      border: 1px solid var(--line);
+    }
+    .showcase-pedestal .book-stage { width: min(100%, 225px); }
+    .feature-ticker {
+      margin: 20px 0 28px;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      background: var(--bg-0);
+      border: 1px solid var(--line-strong);
+      border-left: 3px solid var(--gold);
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      color: var(--gold-hi);
+    }
+    [data-theme="light"] .feature-ticker { color: var(--cobalt); }
+    @media (max-width: 860px) {
+      .showcase-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <a href="https://omkamal.github.io/" target="_blank">Home</a>
-    <div class="ad-container">
-        <div class="header">
-            <h1>Diagrams as Code</h1>
-            <p>Revolutionize Your Technical Documentation</p>
-        </div>
-        <div class="content">
-            <div class="book-image">
-                <a href="https://a.co/d/6IewmwC" target="_blank">
-                    <img src="https://c.media-amazon.com/images/I/61g+sogJ2KL._SL1294_.jpg" alt="Diagrams as Code Book Cover" style="width: 659.88px; height: auto;">
-                </a>
-            </div>
-            <div class="book-info">
-                <h2>Diagrams as Code: Exploring Mermaid, PlantUML, D2 and Generating Diagrams using AI LLMs</h2>
-                <p>By Omar Kamal Hosney</p>
-                <div class="rating">★★★★★ 4.8 out of 5 stars (6 ratings)</div>
-                <p>Step into the future of technical content creation where documentation isn't just written; it's coded.</p>
-                <ul class="features">
-                    <li>Master ASCIIdoc for effortless document creation</li>
-                    <li>Bring presentations to life with Marpit Slides</li>
-                    <li>Create stunning diagrams with Mermaid, PlantUML, and D2</li>
-                    <li>Harness the power of AI for content generation</li>
-                </ul>
-                <p>Current feature: <span id="feature-highlight">Learn document creation with ASCIIdoc</span></p>
-                <a href="https://a.co/d/6IewmwC" target="_blank" class="cta-button">Get Your Copy Now</a>
-            </div>
-        </div>
+  <div class="ambient-bg" aria-hidden="true"></div>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="ambient-grain" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="shell nav-bar">
+      <a href="index.html" class="brand-link">
+        <span class="ok-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span class="brand-text">
+          <span class="brand-name">Omar Kamal Hosney</span>
+          <span class="brand-role">AI Architect · Author</span>
+        </span>
+      </a>
+      <nav class="nav-center" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="books/index.html" class="active">Books</a>
+        <a href="courses/index.html">Courses</a>
+        <a href="articles/index.html">Articles</a>
+        <a href="cheatsheets/index.html">Cheatsheets</a>
+        <a href="resume.html">Resume</a>
+      </nav>
+      <div class="nav-actions">
+        <button type="button" class="cmdk-trigger" data-cmdk-open aria-label="Search site">
+          <i class="fas fa-magnifying-glass"></i><span class="label-txt">Search</span><kbd>⌘K</kbd>
+        </button>
+        <button type="button" class="icon-btn" data-theme-toggle aria-label="Toggle theme"><i class="fas fa-sun"></i></button>
+      </div>
     </div>
+  </header>
 
-    <script>
-        const features = [
-            "Learn document creation with ASCIIdoc",
-            "Decode the world of Different Software Charts",
-            "Bring your presentations to life with Marpit Slides",
-            "Dive underwater with Mermaid charts and graphics",
-            "Understand the magic of Declarative Diagram (D2)",
-            "Watch your designs grow with PlantUML Markdown Language",
-            "Step into the future with our Generative AI Pipeline chapter"
-        ];
-        let currentFeatureIndex = 0;
+  <main class="shell">
+    <article class="spot-card showcase-grid">
+      <div class="showcase-pedestal">
+        <a href="https://a.co/d/03sg6EWh" target="_blank" rel="noopener" class="book-stage">
+          <span class="book-3d"><img src="books/img/diagrams-as-code.jpg" alt="Diagrams as Code Book Cover" /></span>
+        </a>
+      </div>
 
-        function changeFeature() {
-            const featureHighlight = document.getElementById('feature-highlight');
-            featureHighlight.textContent = features[currentFeatureIndex];
-            currentFeatureIndex = (currentFeatureIndex + 1) % features.length;
-        }
+      <div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+          <span class="meta-chip gold">★★★★★ 4.8 / 5 on Amazon</span>
+          <span class="meta-chip teal">195 Pages</span>
+          <span class="meta-chip emerald">Free Companion Video Course</span>
+        </div>
+        <h1 class="display-lg" style="margin-bottom:10px;">Diagrams as Code</h1>
+        <p style="font-family:var(--font-serif);font-style:italic;font-size:1.35rem;color:var(--muted);margin-bottom:16px;">
+          Exploring Mermaid, PlantUML, D2 and Generating Diagrams using AI LLMs
+        </p>
+        <p style="color:var(--ink-2);margin-bottom:16px;">
+          Step into version-controlled technical documentation where software architecture diagrams, AsciiDoc manuals, and Marpit slide decks evolve alongside your source code — supercharged by generative AI pipelines.
+        </p>
 
-        setInterval(changeFeature, 3000);
-    </script>
+        <ul style="list-style:none;display:grid;gap:8px;color:var(--muted);font-size:0.93rem;">
+          <li>✦ Author effortless technical documentation with AsciiDoc</li>
+          <li>✦ Build version-controlled slide decks with Marpit</li>
+          <li>✦ Master Mermaid, PlantUML, and declarative D2 diagrams</li>
+          <li>✦ Automate diagram synthesis with Large Language Models</li>
+        </ul>
+
+        <div class="feature-ticker">
+          Inside the book: <span id="feature-highlight">Learn document creation with AsciiDoc</span>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="https://a.co/d/03sg6EWh" target="_blank" rel="noopener" class="btn btn-gold"><i class="fab fa-amazon"></i> Get Your Copy on Amazon</a>
+          <a href="courses/index.html#diagrams-as-code" class="btn btn-surface"><i class="fas fa-play"></i> Free Companion Course</a>
+          <a href="books/index.html" class="btn btn-surface">All 6 Books</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <script src="assets/catalog.js" defer></script>
+  <script src="assets/site.js" defer></script>
+  <script>
+    const features = [
+      "Learn document creation with AsciiDoc",
+      "Decode the world of Software Architecture Charts",
+      "Bring your presentations to life with Marpit Slides",
+      "Master Mermaid flowcharts, sequence & C4 diagrams",
+      "Understand declarative layout control with D2",
+      "Model complex systems with PlantUML",
+      "Automate diagram generation with Generative AI LLMs"
+    ];
+    let idx = 0;
+    setInterval(() => {
+      idx = (idx + 1) % features.length;
+      const el = document.getElementById('feature-highlight');
+      if (el) el.textContent = features[idx];
+    }, 3000);
+  </script>
 </body>
 </html>

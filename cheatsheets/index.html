@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-root="..">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RT1G8VP79X"></script>
@@ -12,9 +12,9 @@
 </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Science &amp; Machine Learning Cheatsheets — Omar Kamal Hosney</title>
-  <meta name="description" content="Free, concise reference cheatsheets covering Scikit-learn, NumPy, PyTorch, XGBoost, CatBoost, PCA, dimensionality reduction, Hugging Face, LangChain (LCEL), PEFT/LoRA, Fabric, OpenAI Agents SDK, Docker, GitHub CLI, SQLite, PostgreSQL, bupaR and more." />
-  <meta name="keywords" content="data science cheatsheets, machine learning cheatsheets, scikit-learn cheatsheet, numpy cheatsheet, pytorch cheatsheet, xgboost cheatsheet, catboost cheatsheet, pca cheatsheet, dimensionality reduction, huggingface cheatsheet, langchain cheatsheet, lcel cheatsheet, peft cheatsheet, fabric cheatsheet, openai agents sdk, docker cheatsheet, github cli cheatsheet, sqlite cheatsheet, postgresql cheatsheet, bupaR cheatsheet, AI cheatsheets" />
+  <title>Data Science, LLM &amp; Engineering Cheatsheets — Omar Kamal Hosney</title>
+  <meta name="description" content="29 free interactive reference cheatsheets, tutorials, and slide decks covering Scikit-learn, NumPy, PyTorch, XGBoost, CatBoost, PCA, UMAP/t-SNE, Hugging Face, LCEL, PEFT/LoRA, Fabric, OpenAI Agents SDK, GitHub Copilot, Aider, Docker, GitHub CLI, SQLite, PostgreSQL, and bupaR." />
+  <meta name="keywords" content="data science cheatsheets, machine learning cheatsheets, scikit-learn cheatsheet, numpy cheatsheet, pytorch cheatsheet, xgboost cheatsheet, catboost cheatsheet, pca cheatsheet, dimensionality reduction, huggingface cheatsheet, langchain lcel cheatsheet, peft cheatsheet, fabric cheatsheet, openai agents sdk, github copilot cheatsheet, aider cheatsheet, docker cheatsheet, github cli cheatsheet, sqlite cheatsheet, postgresql cheatsheet, bupaR cheatsheet" />
   <meta name="author" content="Omar Kamal Hosney" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://omkamal.github.io/cheatsheets/" />
@@ -22,24 +22,27 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Omar Kamal Hosney" />
   <meta property="og:url" content="https://omkamal.github.io/cheatsheets/" />
-  <meta property="og:title" content="Data Science &amp; ML Cheatsheets — Omar Kamal Hosney" />
-  <meta property="og:description" content="30+ free reference cheatsheets for data science, machine learning, LLMs, agents, DevOps and databases." />
+  <meta property="og:title" content="Data Science, LLM &amp; Engineering Cheatsheets — Omar Kamal Hosney" />
+  <meta property="og:description" content="29 free, searchable, print-ready reference guides for Python ML, LLMs, AI agents, SQL databases, and DevOps." />
   <meta property="og:image" content="https://omkamal.github.io/omar.jpeg" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Data Science &amp; ML Cheatsheets — Omar Kamal Hosney" />
-  <meta name="twitter:description" content="30+ free reference cheatsheets for data science, ML, LLMs, agents, DevOps and databases." />
+  <meta name="twitter:title" content="Data Science, LLM &amp; Engineering Cheatsheets — Omar Kamal Hosney" />
+  <meta name="twitter:description" content="29 free, searchable, print-ready reference guides for Python ML, LLMs, AI agents, SQL databases, and DevOps." />
   <meta name="twitter:image" content="https://omkamal.github.io/omar.jpeg" />
 
   <link rel="icon" type="image/jpeg" href="../omar.jpeg" />
+  <link rel="apple-touch-icon" href="../omar.jpeg" />
+
+  <script>try{const t=localStorage.getItem('omar-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "Data Science & Machine Learning Cheatsheets",
+    "name": "Data Science, LLM & Engineering Cheatsheets — Omar Kamal Hosney",
     "url": "https://omkamal.github.io/cheatsheets/",
-    "description": "30+ concise reference guides for data science, ML, LLMs, agents, DevOps and databases.",
+    "description": "29 concise, print-ready reference guides, tutorials, and slide decks for machine learning, LLMs, AI agents, DevOps, and databases.",
     "author": {
       "@type": "Person",
       "name": "Omar Kamal Hosney",
@@ -54,844 +57,781 @@
     }
   }
   </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/site.css" />
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-    :root {
-      --primary-color: #3498db;
-      --primary-dark: #2980b9;
-      --primary-light: #5dade2;
-      --secondary-color: #2ecc71;
-      --secondary-dark: #27ae60;
-      --accent-color: #9b59b6;
-      --accent-light: #a569bd;
-      --warning-color: #f39c12;
-      --danger-color: #e74c3c;
-      --background-color: #f8fafc;
-      --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e8f4f8 50%, #f0f9ff 100%);
-      --text-color: #2c3e50;
-      --text-muted: #64748b;
-      --card-background: #ffffff;
-      --border-color: #e2e8f0;
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-      --shadow-colored: 0 10px 40px -10px rgba(52, 152, 219, 0.3);
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
-      --transition-fast: 0.15s ease;
-      --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    .vault-hero {
+      padding: clamp(48px, 6vw, 84px) 0 40px;
+      border-bottom: 1px solid var(--line);
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    .ad-container {
-      flex: 1;
-      margin-left: 20px;
-      padding: 24px;
-      background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #80deea 100%);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      backdrop-filter: blur(10px);
-    }
-
-    .payhip-container {
-      flex: 1;
-      margin-left: 20px;
-      padding: 24px;
-      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    body {
-      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.8;
-      color: var(--text-color);
-      background: var(--background-gradient);
-      background-attachment: fixed;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-    }
-
-    body > a:first-of-type {
-      display: inline-block;
-      margin: 20px;
-      padding: 8px 20px;
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-      color: white !important;
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: 500;
-      font-size: 0.9em;
-      box-shadow: var(--shadow-md);
-      transition: var(--transition-normal);
-    }
-
-    body > a:first-of-type:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg), 0 4px 20px rgba(52, 152, 219, 0.4);
-    }
-
-    .container {
-      max-width: 960px;
-      margin: 20px auto 40px;
-      padding: 48px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl), 0 0 0 1px rgba(255, 255, 255, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      transition: var(--transition-normal);
-    }
-
-    .container:hover {
-      box-shadow: var(--shadow-xl), var(--shadow-colored);
-    }
-
-    h1, h2, h3 {
-      color: var(--text-color);
-      margin-top: 0;
-      letter-spacing: -0.02em;
-    }
-
-    h1 {
-      font-size: 2.5em;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 30px;
-      position: relative;
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    h1::after {
-      content: '';
-      display: block;
-      width: 60px;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-      margin: 20px auto 0;
-      border-radius: 2px;
-    }
-
-    h2 {
-      font-size: 1.5em;
-      font-weight: 600;
-      color: var(--text-color);
-      margin-bottom: 16px;
-      position: relative;
-      display: inline-block;
-    }
-
-    h2::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 40px;
-      height: 3px;
-      background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-      border-radius: 2px;
-    }
-
-    h3 {
-      font-size: 1.25em;
-      font-weight: 600;
-      margin-top: 32px;
-      margin-bottom: 20px;
-      color: var(--primary-dark);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    h3::before {
-      content: '';
-      width: 4px;
-      height: 24px;
-      background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
-      border-radius: 2px;
-    }
-
-    p {
-      margin-bottom: 20px;
-      color: var(--text-muted);
-      line-height: 1.9;
-    }
-
-    .cheatsheet-list {
-      list-style-type: none;
-      padding: 0;
+    .vault-hero-grid {
       display: grid;
-      gap: 16px;
+      grid-template-columns: 1.4fr 1fr;
+      gap: clamp(28px, 4vw, 56px);
+      align-items: end;
     }
 
-    .cheatsheet-list li {
-      padding: 20px 24px;
-      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    .vault-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .v-stat {
+      padding: 16px 18px;
       border-radius: var(--radius-md);
-      border: 1px solid var(--border-color);
-      transition: var(--transition-normal);
-      position: relative;
-      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--line);
+    }
+    .v-stat strong {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.55rem;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      color: var(--ink);
+    }
+    .v-stat span {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
     }
 
-    .cheatsheet-list li::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: linear-gradient(180deg, var(--primary-color), var(--primary-light));
-      opacity: 0;
-      transition: var(--transition-normal);
-    }
-
-    .cheatsheet-list li:hover {
-      transform: translateX(8px);
-      box-shadow: var(--shadow-lg);
-      border-color: var(--primary-light);
-    }
-
-    .cheatsheet-list li:hover::before {
-      opacity: 1;
-    }
-
-    .cheatsheet-list a {
-      color: var(--primary-dark);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1.1em;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
-      transition: var(--transition-fast);
-    }
-
-    .cheatsheet-list a:hover {
-      color: var(--primary-color);
-    }
-
-    .cheatsheet-list a::after {
-      content: '\2192';
-      font-size: 1em;
-      opacity: 0;
-      transform: translateX(-8px);
-      transition: var(--transition-normal);
-    }
-
-    .cheatsheet-list li:hover a::after {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .cheatsheet-list p {
-      margin: 0;
-      color: var(--text-muted);
-      font-size: 0.9em;
-      line-height: 1.6;
-    }
-
-    .about {
-      margin-top: 50px;
-      padding-top: 30px;
-      border-top: 2px solid var(--border-color);
-      display: flex;
-      align-items: flex-start;
-    }
-
-    .about-content {
-      flex: 1;
-    }
-
-    .about-image {
-      width: 280px;
-      height: 280px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin-left: 20px;
-      box-shadow: var(--shadow-xl);
-      border: 4px solid white;
-    }
-
-    .about-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: var(--transition-slow);
-    }
-
-    .about-image:hover img {
-      transform: scale(1.05);
-    }
-
-    .about h2 {
-      color: var(--secondary-dark);
-    }
-
-    .about h2::after {
-      background: linear-gradient(90deg, var(--secondary-color), var(--secondary-dark));
-    }
-
-    .about ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    .about ul li {
-      margin-bottom: 12px;
-      padding-left: 28px;
-      position: relative;
-      color: var(--text-muted);
-      transition: var(--transition-fast);
-    }
-
-    .about ul li:hover {
-      color: var(--text-color);
-      transform: translateX(4px);
-    }
-
-    .about ul li::before {
-      content: '';
-      width: 8px;
-      height: 8px;
-      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-      border-radius: 50%;
-      position: absolute;
-      left: 0;
-      top: 8px;
-    }
-
-    .blog-link, .resume-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 20px;
-      padding: 12px 28px;
-      font-weight: 600;
-      font-size: 0.95em;
-      text-decoration: none;
-      border-radius: 50px;
-      transition: var(--transition-normal);
-      border: none;
-      cursor: pointer;
-    }
-
-    .blog-link {
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-      color: #ffffff !important;
-      box-shadow: var(--shadow-md), 0 4px 15px rgba(52, 152, 219, 0.3);
-    }
-
-    .blog-link:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-lg), 0 8px 25px rgba(52, 152, 219, 0.4);
-    }
-
-    .resume-link {
-      margin-left: 12px;
-      background: linear-gradient(135deg, var(--danger-color) 0%, #c0392b 100%);
-      color: #ffffff !important;
-      box-shadow: var(--shadow-md), 0 4px 15px rgba(231, 76, 60, 0.3);
-    }
-
-    .resume-link:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-lg), 0 8px 25px rgba(231, 76, 60, 0.4);
-    }
-
-    .resume-link i {
-      margin-right: 4px;
-    }
-
-    /* Header Styles */
-    .header-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 24px;
-      flex-wrap: wrap;
-      margin-bottom: 40px;
-      padding: 20px;
-    }
-
-    .header-img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: var(--shadow-lg);
-      border: 3px solid white;
-      transition: var(--transition-normal);
-    }
-
-    .header-img:hover {
-      transform: scale(1.05);
-      box-shadow: var(--shadow-xl), 0 0 0 4px rgba(52, 152, 219, 0.2);
-    }
-
-    .header-text {
-      text-align: center;
-    }
-
-    .header-text .main-heading {
-      font-size: 2.2em;
-      font-weight: 700;
-      margin: 0;
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .header-text .main-heading::after {
-      display: none;
-    }
-
-    .header-text .libutton {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 12px;
-      padding: 8px 20px;
-      background: linear-gradient(135deg, #0077b5 0%, #005582 100%);
-      color: white !important;
-      text-decoration: none;
-      border-radius: 50px;
-      font-size: 0.85em;
-      font-weight: 500;
-      transition: var(--transition-normal);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .header-text .libutton:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md), 0 4px 15px rgba(0, 119, 181, 0.3);
-    }
-
-    .books-container {
-      display: flex;
-      margin-bottom: 30px;
-      width: 100%;
+    .ref-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 20px;
     }
 
-    .about-section {
-      margin-top: 40px;
-      border-top: 2px solid var(--border-color);
-      padding-top: 32px;
-      background: linear-gradient(180deg, transparent 0%, rgba(248, 250, 252, 0.5) 100%);
-      margin-left: -48px;
-      margin-right: -48px;
-      padding-left: 48px;
-      padding-right: 48px;
-      padding-bottom: 20px;
-      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    .ref-card {
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      gap: 14px;
+      height: 100%;
+    }
+    .ref-card[hidden] {
+      display: none !important;
     }
 
-    @media (max-width: 768px) {
-      .container {
-        padding: 24px;
-        margin: 16px;
-        border-radius: var(--radius-lg);
-      }
+    .ref-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
 
-      .about {
-        flex-direction: column;
-        align-items: center;
-      }
+    .ref-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 1.05rem;
+      border: 1px solid var(--line-strong);
+      background: var(--bg-0);
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    .ref-card[data-cat="ml"] .ref-icon { color: var(--cobalt-hi); background: var(--cobalt-soft); border-color: rgba(59, 130, 246, 0.28); }
+    .ref-card[data-cat="llm"] .ref-icon { color: var(--gold); background: var(--gold-soft); border-color: rgba(232, 168, 56, 0.28); }
+    .ref-card[data-cat="agents"] .ref-icon { color: var(--emerald); background: var(--emerald-soft); border-color: rgba(16, 185, 129, 0.28); }
+    .ref-card[data-cat="infra"] .ref-icon { color: var(--violet); background: var(--violet-soft); border-color: rgba(139, 92, 246, 0.28); }
+    [data-theme="light"] .ref-card[data-cat="ml"] .ref-icon { color: var(--cobalt); }
 
-      .about-image {
-        margin-left: 0;
-        margin-top: 24px;
-        width: 200px;
-        height: 200px;
-      }
+    .ref-card h2 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.14rem;
+      line-height: 1.26;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      transition: color 0.2s;
+    }
+    .ref-card:hover h2 {
+      color: var(--gold);
+    }
+    [data-theme="light"] .ref-card:hover h2 {
+      color: var(--cobalt);
+    }
 
-      .books-container {
-        flex-direction: column;
-      }
+    .ref-card p {
+      font-size: 0.89rem;
+      color: var(--muted);
+      line-height: 1.62;
+      flex: 1;
+    }
 
-      .ad-container, .payhip-container {
-        margin-left: 0;
-      }
+    .ref-tokens {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .ref-tokens code {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 5px;
+      background: var(--bg-0);
+      border: 1px solid var(--line);
+      color: var(--ink-2);
+    }
 
-      .about-section {
-        margin-left: -24px;
-        margin-right: -24px;
-        padding-left: 24px;
-        padding-right: 24px;
-      }
+    .ref-foot {
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--dim);
+    }
+    .ref-foot .open-lbl {
+      color: var(--ink-2);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.2s var(--ease-spring), color 0.2s;
+    }
+    .ref-card:hover .ref-foot .open-lbl {
+      color: var(--gold);
+      transform: translateX(3px);
+    }
+    [data-theme="light"] .ref-card:hover .ref-foot .open-lbl {
+      color: var(--cobalt);
+    }
 
-      .blog-link, .resume-link {
-        display: flex;
-        justify-content: center;
-        margin-left: 0;
-        width: 100%;
-      }
+    /* Companion Books Duo */
+    .vault-books {
+      margin-top: 64px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+    .vault-book-card {
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      gap: 24px;
+      align-items: center;
+    }
 
-      h3::before {
-        display: none;
+    @media (max-width: 1024px) {
+      .ref-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .vault-hero-grid,
+      .vault-books {
+        grid-template-columns: 1fr;
       }
     }
 
-    /* Smooth scroll */
-    html {
-      scroll-behavior: smooth;
-    }
-
-    /* Selection styling */
-    ::selection {
-      background: var(--primary-light);
-      color: white;
+    @media (max-width: 640px) {
+      .ref-grid {
+        grid-template-columns: 1fr;
+      }
+      .vault-book-card {
+        grid-template-columns: 1fr;
+      }
+      .vault-book-card .book-stage {
+        max-width: 120px;
+      }
     }
   </style>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-  />
 </head>
 <body>
-  <a href="../index.html">← Home</a>
-  <div class="container">
-    <!-- Revised Header -->
-    <header class="header-container">
-      <img src="../omar.jpeg" alt="Omar Kamal Hosney" class="header-img" />
-      <div class="header-text">
-        <h1 class="main-heading">Data Science Cheatsheets</h1>
-        <a
-          class="libutton"
-          href="https://www.linkedin.com/in/okhosney/"
-          target="_blank"
-          >Follow on LinkedIn</a
-        >
+  <a href="#main" class="skip-link">Skip to cheatsheets</a>
+  <div class="ambient-bg" aria-hidden="true"></div>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="ambient-grain" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="shell nav-bar">
+      <a href="../index.html" class="brand-link">
+        <span class="ok-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span class="brand-text">
+          <span class="brand-name">Omar Kamal Hosney</span>
+          <span class="brand-role">AI Architect · Author</span>
+        </span>
+      </a>
+
+      <nav class="nav-center" aria-label="Primary">
+        <a href="../index.html">Home</a>
+        <a href="../books/index.html">Books</a>
+        <a href="../courses/index.html">Courses</a>
+        <a href="../articles/index.html">Articles</a>
+        <a href="index.html" class="active">Cheatsheets</a>
+        <a href="../resume.html">Resume</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="cmdk-trigger" data-cmdk-open aria-label="Search entire site">
+          <i class="fas fa-magnifying-glass"></i>
+          <span class="label-txt">Search</span>
+          <kbd>⌘K</kbd>
+        </button>
+        <button type="button" class="icon-btn" data-theme-toggle aria-label="Toggle theme">
+          <i class="fas fa-sun"></i>
+        </button>
+        <a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener" class="nav-cta hide-sm">
+          <i class="fab fa-linkedin-in"></i> Connect
+        </a>
+        <button type="button" class="icon-btn mobile-toggle" data-mobile-open aria-label="Open menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+    <div class="mobile-panel">
+      <div class="mobile-panel-head">
+        <span class="brand-name">Navigation</span>
+        <button type="button" class="icon-btn" data-mobile-close aria-label="Close menu"><i class="fas fa-xmark"></i></button>
+      </div>
+      <nav class="mobile-links">
+        <a href="../index.html"><span>Home</span><span class="sub">Overview</span></a>
+        <a href="../books/index.html"><span>Books</span><span class="sub">6 Monographs</span></a>
+        <a href="../courses/index.html"><span>Courses</span><span class="sub">49 Modules</span></a>
+        <a href="../articles/index.html"><span>Blog &amp; Field Notes</span><span class="sub">14 Deep Reads</span></a>
+        <a href="index.html" class="active"><span>Cheatsheets</span><span class="sub">29 References</span></a>
+        <a href="../resume.html"><span>Resume / CV</span><span class="sub">30+ Yrs</span></a>
+      </nav>
+    </div>
+  </div>
+
+  <main id="main" class="shell">
+    <header class="vault-hero">
+      <div class="vault-hero-grid">
+        <div>
+          <div class="sec-kicker">Engineering Reference Vault // 29 Guides</div>
+          <h1 class="display-xl" style="margin-bottom:18px;">
+            Zero-fluff references <span class="serif-em">built</span> for open terminals.
+          </h1>
+          <p class="lede">
+            Concise, high-density reference sheets, mathematical walkthroughs, and keyboard-navigable decks across Python ML, PyTorch, LoRA/PEFT, AI Agents, SQL, Docker, and GitHub CLI — each upgraded with live command filtering, click-to-copy snippets, dark/light themes, and clean PDF print layouts.
+          </p>
+        </div>
+
+        <div class="vault-stats">
+          <div class="v-stat">
+            <strong data-count="29">29</strong>
+            <span>Reference Sheets &amp; Decks</span>
+          </div>
+          <div class="v-stat">
+            <strong>Live Filter</strong>
+            <span>In-Sheet Command Search</span>
+          </div>
+          <div class="v-stat">
+            <strong>1-Click</strong>
+            <span>Copy Commands &amp; Flags</span>
+          </div>
+          <div class="v-stat">
+            <strong>A4 / PDF</strong>
+            <span>Print-Optimized Grids</span>
+          </div>
+        </div>
       </div>
     </header>
-    <!-- End Revised Header -->
 
-    <h2>What are Cheatsheets?</h2>
-    <p>
-      Cheatsheets are concise reference guides that provide quick access to essential
-      information, commands, or concepts. They are especially useful in data science
-      and programming, where remembering numerous functions, parameters, and best
-      practices can be challenging.
-    </p>
-
-    <h3>Machine Learning Cheatsheets</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="scikitlearn.html">Scikit-learn Cheatsheet</a>
-        <p>
-          Quick reference for Scikit-learn, a Python library that provides simple and
-          efficient tools for data analysis and machine learning, including classification,
-          regression, clustering, and dimensionality reduction.
-        </p>
-      </li>
-
-      <li>
-        <a href="numpy_cheatsheet.html">NumPy Cheatsheet</a>
-        <p>
-          Quick reference for Numpy, a powerful library for numerical computing in Python,
-          providing support for large, multi-dimensional arrays and matrices, along with a
-          vast collection of mathematical functions.
-        </p>
-      </li>
-
-      <li>
-        <a href="statistical_tests_python.html">
-          Statistical tests in Python cheatsheet
-        </a>
-        <p>
-          Quick reference for Python statistical analysis guide covering t-tests, ANOVA,
-          chi-square, correlation, regression, and non-parametric tests with code examples.
-        </p>
-      </li>
-      <li>
-        <a href="machine_learning_algorithms.html">
-          Machine Learning Algorithms Cheatsheet</a
-        >
-        <p>
-          Quick reference for Linear Regression, Logistic Regression, Decision Trees,
-          Random Forest, SVM, KNN, K-Means Clustering, DBScan, and Hierarchical Clustering.
-        </p>
-      </li>
-
-      <li>
-        <a href="pycaret.html">PyCaret Cheatsheet</a>
-        <p>
-          A comprehensive guide to PyCaret, covering setup, data preprocessing, model training,
-          evaluation, deployment, and advanced features for streamlined machine learning workflows.
-        </p>
-      </li>
-      <li>
-        <a href="xgboost.html">XGBoost Cheatsheet</a>
-        <p>Quick reference for XGBoost, a popular gradient boosting library</p>
-      </li>
-      <li>
-        <a href="catboost.html">CatBoost Cheatsheet</a>
-        <p>
-          Essential information about CatBoost, a gradient boosting library with built-in
-          categorical feature support
-        </p>
-      </li>
-      <li>
-        <a href="dimensionalityreduction.html">
-          Dimensionality Reduction Cheatsheet
-        </a>
-        <p>
-          Dimensionality reduction using UMAP (Uniform Manifold Approximation and Projection)
-          and t-SNE (t-Distributed Stochastic Neighbor Embedding) transforms high-dimensional
-          data into lower dimensions, facilitating visualization and revealing underlying
-          patterns by preserving local and global data structures, respectively
-        </p>
-      </li>
-      <li>
-        <a href="pca.html">Principal Component Analysis Cheatsheet</a>
-        <p>
-          PCA is a dimensionality reduction technique that finds the directions of maximum
-          variance in high-dimensional data and projects it onto a lower-dimensional subspace.
-        </p>
-      </li>
-      <li>
-        <a href="pytorch.html">Pytorch Cheatsheet</a>
-        <p>
-          Quick reference for Pytorch, one of the top deep learning libraries written in Python
-        </p>
-      </li>
-      <li>
-        <a href="bupar_cheatsheet.html">📊 bupaR Cheatsheet</a>
-        <p>
-          Quick reference for bupaR, an R package for Business Process Analytics covering event logs,
-          process maps, performance metrics, filtering, and the bupaverse ecosystem.
-        </p>
-      </li>
-    </ul>
-
-    <h3>Large Language Models</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="huggingface.html">
-          🤗 Hugging Face Hub Client Library Cheatsheet
-        </a>
-        <p>
-          Quick reference for the Hugging Face Hub Client Library, a central place to discover
-          and share ML models, datasets, and Spaces.
-        </p>
-      </li>
-      <li>
-        <a href="finetuning_gradiant.html">
-          Fine-Tuning LLMs using Gradient Package
-        </a>
-        <p>
-          Comprehensive guide on fine-tuning large language models using the Gradient package,
-          covering setup, data preparation, and fine-tuning process.
-        </p>
-      </li>
-      <li>
-        <a href="peft.html">PEFT (Parameter-Efficient Fine-Tuning) Cheatsheet</a>
-        <p>
-          Quick reference for PEFT methodologies, including LoRA, IA3, and adapter methods for
-          efficient model fine-tuning.
-        </p>
-      </li>
-      <li>
-        <a href="fabric.html">Fabric Cheatsheet</a>
-        <p>
-          Fabric is an excellent open-source framework designed to seamlessly integrate AI into
-          your everyday life and work. It empowers you to leverage the power of large language
-          models (LLMs) by providing a user-friendly interface and a vast library of reusable AI
-          prompts called Patterns.
-        </p>
-      </li>
-      <li>
-        <a href="fabric_patterns.html">Fabric Patterns Cheatsheet</a>
-        <p>
-          Quick reference for Fabric Patterns, providing a comprehensive guide to various patterns
-          used in the Fabric framework for efficient AI integration.
-        </p>
-      </li>
-      <li>
-        <a href="LangChainExpressionLanguage.html">
-          LangChain Expression Language (LCEL) Cheatsheet
-        </a>
-        <p>
-          A comprehensive guide to LCEL, covering composition primitives, patterns, and best practices
-          for building efficient LangChain applications.
-        </p>
-      </li>
-    </ul>
-
-    <h3>Generative AI Agents</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="openai_agents_sdk.html">OpenAI Agents SDK Cheatsheet</a>
-        <p>
-          A comprehensive guide to the OpenAI Agents SDK, covering core concepts, agent creation, tools, 
-          guardrails, handoffs, and tracing for building powerful AI agent applications.
-        </p>
-      </li>
-    </ul>
-
-    <h3>DevOps</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="docker.html">Docker Cheatsheet</a>
-        <p>
-          A comprehensive guide to Docker essentials, covering image management, container lifecycle,
-          information retrieval, networking, data persistence, and Docker Compose for efficient
-          containerization workflows.
-        </p>
-      </li>
-    </ul>
-
-    <h3>GitHub Tools</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="gh_cli.html">GitHub CLI (gh) Cheatsheet</a>
-        <p>
-          A comprehensive guide to GitHub CLI covering repositories, pull requests, issues,
-          GitHub Actions, releases, codespaces, and powerful automation features for streamlined
-          GitHub workflows from the command line.
-        </p>
-      </li>
-      <li>
-        <a href="gh_gist.html">GitHub Gist (gh gist) Cheatsheet</a>
-        <p>
-          Quick reference for GitHub Gist commands including creating, viewing, editing, and
-          managing code snippets, configuration files, and notes with full version control support.
-        </p>
-      </li>
-    </ul>
-
-    <h3>Databases</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="sqlite.html">SQLite Cheatsheet</a>
-        <p>
-          Quick reference for SQLite database operations, including table management, data manipulation,
-          queries, indexes, transactions, and importing/exporting data.
-        </p>
-      </li>
-      <li>
-        <a href="postgres_sql.html">PostgreSQL SQL Cheatsheet</a>
-        <p>
-          A detailed PostgreSQL reference covering schema/meta commands, data operations, joins (with SVG illustrations),
-          functions, permissions, data types, importing/exporting, JSON, views, nested queries, and more.
-        </p>
-      </li>
-    </ul>
-
-    <h3>Aider Cheatsheet</h3>
-    <ul class="cheatsheet-list">
-      <li>
-        <a href="aider.html">Aider Cheatsheet</a>
-        <p>
-          Quick reference for Aider, an AI-powered coding assistant that helps you write, refactor, and
-          debug code.
-        </p>
-      </li>
-    </ul>
-    
-    <div class="books-container">
-      <div class="ad-container">
-        <div class="header">
-          <h1>Diagrams as Code</h1>
-          <p>Revolutionize Your Technical Documentation</p>
+    <section class="section-block" style="padding-top:36px;">
+      <div class="toolbar-row">
+        <div class="filter-pills" role="tablist" aria-label="Filter cheatsheets by category">
+          <button type="button" class="pill-btn active" data-cs-filter="all">All References <span class="count">29</span></button>
+          <button type="button" class="pill-btn" data-cs-filter="ml">ML &amp; Statistics <span class="count">11</span></button>
+          <button type="button" class="pill-btn" data-cs-filter="llm">LLMs &amp; Fine-Tuning <span class="count">6</span></button>
+          <button type="button" class="pill-btn" data-cs-filter="agents">AI Agents &amp; Coding <span class="count">7</span></button>
+          <button type="button" class="pill-btn" data-cs-filter="infra">SQL, Docker &amp; CLI <span class="count">5</span></button>
         </div>
-        <div class="content">
-          <div class="book-info">
-            <h2>
-              Diagrams as Code: Exploring Mermaid, PlantUML, D2 and Generating Diagrams using AI LLMs
-            </h2>
-            <p>By Omar Kamal Hosney</p>
-            <div class="rating">
-              ★★★★★ 4.8 out of 5 stars (7 ratings)
+
+        <div class="search-box">
+          <i class="fas fa-magnifying-glass s-icon" aria-hidden="true"></i>
+          <input type="search" id="cs-search" data-local-search placeholder="Search 29 references (e.g. LoRA, Joins, ANOVA, Compose)…" aria-label="Search cheatsheets" />
+        </div>
+      </div>
+
+      <div class="ref-grid" id="ref-grid">
+
+        <!-- ==================== AI AGENTS & CODING (7) ==================== -->
+        <a href="openai_agents_sdk.html" class="spot-card ref-card reveal" data-cat="agents" data-kw="openai agents sdk handoffs guardrails tools runner tracing python">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-robot"></i></span>
+            <span class="meta-chip emerald">AI Agents · Python</span>
+          </div>
+          <h2>OpenAI Agents SDK Cheatsheet</h2>
+          <p>Agent definitions, function tools, structured outputs, input/output guardrails, multi-agent handoffs, and execution tracing.</p>
+          <div class="ref-tokens"><code>Agent()</code><code>Runner.run</code><code>@function_tool</code><code>Handoff</code></div>
+          <div class="ref-foot"><span>Multi-Col Reference</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="generative_ai_agents.html" class="spot-card ref-card reveal" data-cat="agents" data-kw="generative ai agents comprehensive tutorial react planning memory katex math python">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-brain"></i></span>
+            <span class="meta-chip gold">Deep Tutorial · Math</span>
+          </div>
+          <h2>Generative AI Agents: Comprehensive Tutorial</h2>
+          <p>Foundational to intermediate guide covering perception-action loops, ReAct reasoning, memory architectures, tool calling, and mathematical formulations.</p>
+          <div class="ref-tokens"><code>ReAct</code><code>Memory</code><code>Tool Use</code><code>KaTeX</code></div>
+          <div class="ref-foot"><span>Illustrated Tutorial</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="github_copilot.html" class="spot-card ref-card reveal" data-cat="agents" data-kw="github copilot vs code shortcuts inline chat slash commands @workspace">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-terminal"></i></span>
+            <span class="meta-chip emerald">VS Code · IDE</span>
+          </div>
+          <h2>GitHub Copilot in VS Code Cheatsheet</h2>
+          <p>Keyboard shortcuts across macOS/Windows/Linux, inline chat triggers, context participants, slash commands, and prompt patterns.</p>
+          <div class="ref-tokens"><code>@workspace</code><code>/explain</code><code>/fix</code><code>/tests</code></div>
+          <div class="ref-foot"><span>IDE Reference</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="aider.html" class="spot-card ref-card reveal" data-cat="agents" data-kw="aider cli ai pair programming git diff architect mode repo map">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-code-branch"></i></span>
+            <span class="meta-chip emerald">CLI Pair Programmer</span>
+          </div>
+          <h2>Aider AI Coding CLI Cheatsheet</h2>
+          <p>Complete reference for Aider CLI flags, in-chat slash commands, repository map tuning, auto-commits, linting, and multi-model architect workflows.</p>
+          <div class="ref-tokens"><code>/architect</code><code>/tokens</code><code>--watch-files</code><code>git</code></div>
+          <div class="ref-foot"><span>CLI Reference</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="aider_tips.html" class="spot-card ref-card reveal" data-cat="agents" data-kw="aider usage tips best practices context hygiene /ask /drop /run workflow diagrams">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-compass-drafting"></i></span>
+            <span class="meta-chip gold">Visual Field Guide</span>
+          </div>
+          <h2>Aider Visual Usage Tips &amp; Workflows</h2>
+          <p>Seven illustrated habits for high-signal AI pair programming: minimal context selection, incremental step decomposition, planning with <code>/ask</code>, and error loops.</p>
+          <div class="ref-tokens"><code>/ask</code><code>/drop</code><code>/run</code><code>SVG Diagrams</code></div>
+          <div class="ref-foot"><span>7 Visual Rules</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="aider-presentation.html" class="spot-card ref-card reveal" data-cat="agents" data-kw="aider presentation slide deck intro ai assistant">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-display"></i></span>
+            <span class="meta-chip cobalt">Interactive Deck</span>
+          </div>
+          <h2>Aider.ai Overview — Slide Deck</h2>
+          <p>Concise keyboard-navigable executive slide deck introducing AI-assisted developer workflows, core capabilities, and productivity gains.</p>
+          <div class="ref-tokens"><code>← / → Keys</code><code>Slides</code><code>Overview</code></div>
+          <div class="ref-foot"><span>Slide Deck</span><span class="open-lbl">Present <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="curser-presentation.html" class="spot-card ref-card reveal" data-cat="agents" data-kw="cursor curser ai presentation slide deck ide features adoption">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-chalkboard-user"></i></span>
+            <span class="meta-chip cobalt">9-Slide Deck</span>
+          </div>
+          <h2>Cursor AI Adoption — 9-Slide Deck</h2>
+          <p>Nine-slide briefing covering AI-native IDE capabilities, enterprise applications, privacy &amp; governance challenges, and pilot rollout steps.</p>
+          <div class="ref-tokens"><code>9 Slides</code><code>Enterprise AI</code><code>← / → Keys</code></div>
+          <div class="ref-foot"><span>Slide Deck</span><span class="open-lbl">Present <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <!-- ==================== LLMS & FINE-TUNING (6) ==================== -->
+        <a href="huggingface.html" class="spot-card ref-card reveal" data-cat="llm" data-kw="hugging face hub huggingface_hub hf_hub_download snapshot_download inferenceclient datasets spaces">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-cubes"></i></span>
+            <span class="meta-chip gold">Hugging Face · Python</span>
+          </div>
+          <h2>Hugging Face Hub Client Library Cheatsheet</h2>
+          <p>Downloading weights &amp; snapshots, managing repositories, Model Cards, Datasets, Spaces deployment, caching, and <code>InferenceClient</code> APIs.</p>
+          <div class="ref-tokens"><code>hf_hub_download</code><code>HfApi</code><code>InferenceClient</code></div>
+          <div class="ref-foot"><span>Comprehensive Guide</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="peft.html" class="spot-card ref-card reveal" data-cat="llm" data-kw="peft parameter-efficient fine-tuning lora qlora ia3 prefix tuning adapters huggingface">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-sliders"></i></span>
+            <span class="meta-chip gold">LoRA / QLoRA</span>
+          </div>
+          <h2>PEFT (Parameter-Efficient Fine-Tuning) Cheatsheet</h2>
+          <p>Configuring LoRA, IA3, Prefix Tuning, and Prompt Tuning adapters; merging weights; 4-bit/8-bit quantization hooks; and saving lightweight checkpoints.</p>
+          <div class="ref-tokens"><code>LoraConfig</code><code>get_peft_model</code><code>merge_and_unload</code></div>
+          <div class="ref-foot"><span>Fine-Tuning Reference</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="LangChainExpressionLanguage.html" class="spot-card ref-card reveal" data-cat="llm" data-kw="langchain expression language lcel pipe runnableparallel runnablepassthrough streaming">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-link"></i></span>
+            <span class="meta-chip gold">LangChain · LCEL</span>
+          </div>
+          <h2>LangChain Expression Language (LCEL) Cheatsheet</h2>
+          <p>Declarative pipe (<code>|</code>) composition, <code>RunnableParallel</code>, <code>RunnablePassthrough</code>, fallbacks, async batching, and token streaming.</p>
+          <div class="ref-tokens"><code>prompt | llm</code><code>RunnableParallel</code><code>.astream()</code></div>
+          <div class="ref-foot"><span>Pipeline Reference</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="finetuning_gradiant.html" class="spot-card ref-card reveal" data-cat="llm" data-kw="fine-tuning llms gradientai sdk python dataset formatting training">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-wand-magic-sparkles"></i></span>
+            <span class="meta-chip gold">LLM Training</span>
+          </div>
+          <h2>Fine-Tuning LLMs with Gradient Cheatsheet</h2>
+          <p>End-to-end cloud adapter fine-tuning workflow: workspace auth, JSONL instruction formatting, hyperparameter selection, and iterative training loops.</p>
+          <div class="ref-tokens"><code>Gradient()</code><code>fine_tune()</code><code>complete()</code></div>
+          <div class="ref-foot"><span>SDK Reference</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="fabric.html" class="spot-card ref-card reveal" data-cat="llm" data-kw="fabric ai cli installation setup youtube transcript piping patterns">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-bolt"></i></span>
+            <span class="meta-chip gold">Unix AI Piping</span>
+          </div>
+          <h2>Fabric Framework &amp; CLI Setup Cheatsheet</h2>
+          <p>Installing and configuring Daniel Miessler's open-source Fabric CLI to pipe transcripts, articles, and diffs through modular LLM workflows.</p>
+          <div class="ref-tokens"><code>fabric --setup</code><code>yt --transcript</code><code>| fabric -p</code></div>
+          <div class="ref-foot"><span>CLI Setup Guide</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="fabric_patterns.html" class="spot-card ref-card reveal" data-cat="llm" data-kw="fabric patterns extract_wisdom analyze_claims create_mermaid_visualization summarize">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-layer-group"></i></span>
+            <span class="meta-chip gold">Prompt Library</span>
+          </div>
+          <h2>Fabric Prompt Patterns Catalog Cheatsheet</h2>
+          <p>Categorized index of high-leverage Fabric patterns for research synthesis, threat modeling, code review, writing, and Mermaid diagram generation.</p>
+          <div class="ref-tokens"><code>extract_wisdom</code><code>analyze_paper</code><code>create_mermaid</code></div>
+          <div class="ref-foot"><span>Patterns Reference</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <!-- ==================== ML & STATISTICS (11) ==================== -->
+        <a href="pytorch.html" class="spot-card ref-card reveal" data-cat="ml" data-kw="pytorch deep learning tensors autograd nn.module dataloader AdamW cuda amp">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-fire"></i></span>
+            <span class="meta-chip cobalt">Deep Learning · Python</span>
+          </div>
+          <h2>Comprehensive PyTorch Cheatsheet</h2>
+          <p>Tensor creation &amp; indexing, autograd mechanics, <code>nn.Module</code> layers, custom <code>Dataset</code>/<code>DataLoader</code>, optimizers, schedulers, and CUDA mixed precision.</p>
+          <div class="ref-tokens"><code>torch.tensor</code><code>nn.Module</code><code>DataLoader</code><code>GradScaler</code></div>
+          <div class="ref-foot"><span>Deep Learning Core</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="scikitlearn.html" class="spot-card ref-card reveal" data-cat="ml" data-kw="scikit-learn sklearn pipeline gridsearchcv preprocessing classification regression clustering metrics">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-gears"></i></span>
+            <span class="meta-chip cobalt">Classical ML · Python</span>
+          </div>
+          <h2>Scikit-learn Cheatsheet</h2>
+          <p>Train/test splitting, scalers &amp; encoders, supervised estimators, clustering, <code>Pipeline</code> assembly, cross-validation, and evaluation metrics.</p>
+          <div class="ref-tokens"><code>Pipeline</code><code>GridSearchCV</code><code>StandardScaler</code><code>f1_score</code></div>
+          <div class="ref-foot"><span>Python ML Standard</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="numpy_cheatsheet.html" class="spot-card ref-card reveal" data-cat="ml" data-kw="numpy ndarray broadcasting vectorization linalg slicing reshape random">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-border-all"></i></span>
+            <span class="meta-chip cobalt">Numerical Python</span>
+          </div>
+          <h2>NumPy Array &amp; Linear Algebra Cheatsheet</h2>
+          <p>Array creation, boolean &amp; fancy indexing, shape manipulation, broadcasting rules, universal functions, aggregations, and <code>np.linalg</code> operations.</p>
+          <div class="ref-tokens"><code>np.ndarray</code><code>reshape</code><code>einsum / dot</code><code>broadcasting</code></div>
+          <div class="ref-foot"><span>Scientific Computing</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="statistical_tests_python.html" class="spot-card ref-card reveal" data-cat="ml" data-kw="statistical tests python scipy statsmodels t-test anova chi-square mann-whitney wilcoxon shapiro">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-square-root-variable"></i></span>
+            <span class="meta-chip cobalt">SciPy · Statsmodels</span>
+          </div>
+          <h2>Statistical Tests in Python Cheatsheet</h2>
+          <p>Choosing and running parametric &amp; non-parametric hypothesis tests: t-tests, ANOVA, Chi-Square, Mann-Whitney U, normality checks, and correlation.</p>
+          <div class="ref-tokens"><code>ttest_ind</code><code>f_oneway</code><code>chi2_contingency</code><code>shapiro</code></div>
+          <div class="ref-foot"><span>Hypothesis Testing</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="machine_learning_algorithms.html" class="spot-card ref-card reveal" data-cat="ml" data-kw="machine learning algorithms linear logistic regression svm random forest knn kmeans dbscan">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-sitemap"></i></span>
+            <span class="meta-chip cobalt">Algorithms Guide</span>
+          </div>
+          <h2>Machine Learning Algorithms Cheatsheet</h2>
+          <p>Side-by-side intuition, assumptions, pros/cons, and hyperparameter trade-offs across Linear/Logistic Regression, Trees, Random Forest, SVM, KNN, K-Means, and DBSCAN.</p>
+          <div class="ref-tokens"><code>SVM</code><code>Random Forest</code><code>DBSCAN</code><code>Trade-offs</code></div>
+          <div class="ref-foot"><span>Algorithm Selection</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="xgboost.html" class="spot-card ref-card reveal" data-cat="ml" data-kw="xgboost gradient boosting dmatrix early stopping tree_method shap feature importance">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-gauge-high"></i></span>
+            <span class="meta-chip cobalt">Gradient Boosting</span>
+          </div>
+          <h2>XGBoost Cheatsheet</h2>
+          <p><code>DMatrix</code> data structures, booster hyperparameters, regularization (<code>reg_alpha</code>/<code>reg_lambda</code>), early stopping, cross-validation, and feature importance.</p>
+          <div class="ref-tokens"><code>XGBClassifier</code><code>max_depth</code><code>learning_rate</code><code>xgb.cv</code></div>
+          <div class="ref-foot"><span>Tabular ML</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="catboost.html" class="spot-card ref-card reveal" data-cat="ml" data-kw="catboost categorical features ordered boosting pool gpu shap python">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-chart-column"></i></span>
+            <span class="meta-chip cobalt">Categorical Boosting</span>
+          </div>
+          <h2>CatBoost Python Library Cheatsheet</h2>
+          <p>Native categorical &amp; text feature handling without target leakage, <code>Pool</code> objects, symmetric trees, GPU acceleration, and built-in SHAP analysis.</p>
+          <div class="ref-tokens"><code>CatBoostClassifier</code><code>Pool</code><code>cat_features</code></div>
+          <div class="ref-foot"><span>Tabular ML</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="pca.html" class="spot-card ref-card reveal" data-cat="ml" data-kw="principal component analysis pca eigenvalues covariance explained variance scree plot incrementalpca">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-compress"></i></span>
+            <span class="meta-chip cobalt">Linear Projection</span>
+          </div>
+          <h2>Principal Component Analysis (PCA) Cheatsheet</h2>
+          <p>Standardization prerequisites, covariance eigendecomposition, explained-variance scree thresholds, loadings interpretation, and Kernel/Incremental PCA.</p>
+          <div class="ref-tokens"><code>PCA(n_components)</code><code>explained_variance_ratio_</code></div>
+          <div class="ref-foot"><span>Dimensionality</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="dimensionalityreduction.html" class="spot-card ref-card reveal" data-cat="ml" data-kw="dimensionality reduction umap t-sne manifold learning perplexity n_neighbors min_dist">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-bezier-curve"></i></span>
+            <span class="meta-chip cobalt">Manifold Learning</span>
+          </div>
+          <h2>t-SNE &amp; UMAP Dimensionality Reduction Cheatsheet</h2>
+          <p>Local vs. global structure preservation, tuning <code>perplexity</code> vs. <code>n_neighbors</code>/<code>min_dist</code>, runtime scaling, and embedding pitfalls.</p>
+          <div class="ref-tokens"><code>UMAP()</code><code>TSNE()</code><code>perplexity</code><code>min_dist</code></div>
+          <div class="ref-foot"><span>High-Dim Visualization</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="pycaret.html" class="spot-card ref-card reveal" data-cat="ml" data-kw="pycaret automl compare_models tune_model blend_models stack_models deploy">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-bolt-lightning"></i></span>
+            <span class="meta-chip cobalt">Low-Code AutoML</span>
+          </div>
+          <h2>PyCaret AutoML Workflow Cheatsheet</h2>
+          <p>Rapid experiment setup, automated preprocessing, multi-model leaderboard benchmarking, hyperparameter tuning, ensembling, and pipeline serialization.</p>
+          <div class="ref-tokens"><code>setup()</code><code>compare_models()</code><code>tune_model()</code></div>
+          <div class="ref-foot"><span>AutoML Pipeline</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="bupar_cheatsheet.html" class="spot-card ref-card reveal" data-cat="ml" data-kw="bupar process mining eventlog process_map throughput_time trace_explorer r bupaverse">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-diagram-project"></i></span>
+            <span class="meta-chip teal">Process Mining · R</span>
+          </div>
+          <h2>bupaR Process Mining Cheatsheet</h2>
+          <p>Constructing event logs in R, frequency &amp; performance process maps, trace coverage filtering, resource social networks, and throughput analytics.</p>
+          <div class="ref-tokens"><code>eventlog()</code><code>process_map()</code><code>throughput_time()</code></div>
+          <div class="ref-foot"><span>bupaverse Ecosystem</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <!-- ==================== SQL, DOCKER & CLI (5) ==================== -->
+        <a href="postgres_sql.html" class="spot-card ref-card reveal" data-cat="infra" data-kw="postgresql sql joins svg venn diagrams jsonb window functions cte psql indexes">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-database"></i></span>
+            <span class="meta-chip violet">PostgreSQL · Visual</span>
+          </div>
+          <h2>PostgreSQL SQL &amp; Visual Joins Cheatsheet</h2>
+          <p><code>psql</code> meta-commands, visual SVG join Venn diagrams, window functions, CTEs, <code>JSONB</code> operators, permissions, indexing, and <code>COPY</code> I/O.</p>
+          <div class="ref-tokens"><code>JSONB @&gt;</code><code>OVER (PARTITION BY)</code><code>SVG Joins</code></div>
+          <div class="ref-foot"><span>Visual SQL Reference</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="sqlite.html" class="spot-card ref-card reveal" data-cat="infra" data-kw="sqlite3 cli dot commands pragma schema backup csv export">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-feather-pointed"></i></span>
+            <span class="meta-chip violet">Embedded SQL</span>
+          </div>
+          <h2>SQLite Command &amp; Query Cheatsheet</h2>
+          <p>Dot-commands (<code>.tables</code>, <code>.schema</code>, <code>.mode</code>), <code>PRAGMA</code> tuning, transactions, indexes, CSV import/export, and file backups.</p>
+          <div class="ref-tokens"><code>sqlite3</code><code>.schema</code><code>PRAGMA</code><code>.backup</code></div>
+          <div class="ref-foot"><span>CLI &amp; SQL Reference</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="docker.html" class="spot-card ref-card reveal" data-cat="infra" data-kw="docker dockerfile compose containers volumes networks buildx logs exec">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fab fa-docker"></i></span>
+            <span class="meta-chip violet">Containers · DevOps</span>
+          </div>
+          <h2>Docker &amp; Docker Compose Cheatsheet</h2>
+          <p>Image builds, container lifecycle management, port/volume mounts, bridge networking, log inspection, cleanup pruning, and multi-service Compose commands.</p>
+          <div class="ref-tokens"><code>docker run</code><code>compose up -d</code><code>exec -it</code><code>prune</code></div>
+          <div class="ref-foot"><span>Container Reference</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="gh_cli.html" class="spot-card ref-card reveal" data-cat="infra" data-kw="github cli gh pr issue repo workflow run release codespace api">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fab fa-github"></i></span>
+            <span class="meta-chip violet">GitHub CLI</span>
+          </div>
+          <h2>GitHub CLI (<code>gh</code>) Cheatsheet</h2>
+          <p>Managing pull requests, issues, Actions workflow runs, releases, Codespaces, and authenticated GraphQL/REST <code>gh api</code> queries from your shell.</p>
+          <div class="ref-tokens"><code>gh pr create</code><code>gh run watch</code><code>gh api</code></div>
+          <div class="ref-foot"><span>Terminal Workflow</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+        <a href="gh_gist.html" class="spot-card ref-card reveal" data-cat="infra" data-kw="github gist gh gist create edit clone list secret snippets">
+          <div class="ref-top">
+            <span class="ref-icon"><i class="fas fa-file-code"></i></span>
+            <span class="meta-chip violet">Snippets · CLI</span>
+          </div>
+          <h2>GitHub Gist (<code>gh gist</code>) Cheatsheet</h2>
+          <p>Creating public/secret multi-file gists from stdin or files, live editing in <code>$EDITOR</code>, cloning gists as full Git repos, and shell automation.</p>
+          <div class="ref-tokens"><code>gh gist create</code><code>gh gist edit</code><code>gh gist clone</code></div>
+          <div class="ref-foot"><span>Snippet Automation</span><span class="open-lbl">Open <i class="fas fa-arrow-right"></i></span></div>
+        </a>
+
+      </div>
+
+      <div id="cs-empty" style="padding:56px 24px;text-align:center;border-radius:var(--radius-lg);border:1px dashed var(--line-strong);background:var(--surface);margin-top:24px;" hidden>
+        <h3 style="font-family:var(--font-display);font-size:1.25rem;margin-bottom:8px;">No matching cheatsheets</h3>
+        <p style="color:var(--muted);font-size:0.92rem;margin-bottom:18px;">Try another keyword or reset the category filter.</p>
+        <button type="button" class="btn btn-surface btn-sm" id="cs-reset"><i class="fas fa-rotate-left"></i> Show all 29 references</button>
+      </div>
+
+      <!-- Featured Books Pairing -->
+      <div class="vault-books">
+        <div class="spot-card vault-book-card reveal">
+          <a href="../books/index.html#diagrams-as-code" class="book-stage" aria-label="Diagrams as Code book">
+            <span class="book-3d"><img src="../books/img/diagrams-as-code.jpg" alt="Diagrams as Code cover" loading="lazy" /></span>
+          </a>
+          <div>
+            <span class="meta-chip gold" style="margin-bottom:10px;">Book · 195 Pages</span>
+            <h3 style="font-family:var(--font-display);font-size:1.25rem;margin-bottom:6px;">Diagrams as Code</h3>
+            <p style="font-size:0.89rem;color:var(--muted);margin-bottom:14px;">Version-controlled architecture diagrams with Mermaid, PlantUML, D2, AsciiDoc, Marpit, and generative AI pipelines.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <a href="https://a.co/d/03sg6EWh" target="_blank" rel="noopener" class="btn btn-gold btn-sm">Amazon</a>
+              <a href="../courses/index.html#diagrams-as-code" class="btn btn-surface btn-sm">Free Video Course</a>
             </div>
-            <p>
-              In today's age of rapid technological advancement, the boundaries between the written word and code are becoming increasingly blurred. Dive into a revolutionary approach to content generation, where traditional documentation meets the principles of 'code'.            </p>
-            <p>
-              Unravel the transformative strategies of "document as a code" and "diagram as a code". Discover how lightweight markup languages have ushered in a new era where documents evolve from mere static pages to dynamic, version-controlled entities.
-            </p>
-            <h3 style="font-size: 14px; margin-top: 15px; color: #27ae60;">Survey Our Introductory Guide!</h3>
-            <ul class="features">
-              <li>Master ASCIIdoc for effortless document creation</li>
-              <li>Decode the world of Different Software Charts</li>
-              <li>Bring presentations to life with Marpit Slides</li>
-              <li>Dive underwater with Mermaid charts and graphics</li>
-              <li>Understand the magic of Declarative Diagram (D2)</li>
-              <li>Watch your designs grow with PlantUML Markdown Language</li>
-              <li>Step into the future with our Generative AI Pipeline chapter</li>
-            </ul>
-            <p>
-              Current feature:
-              <span id="feature-highlight">Learn document creation with ASCIIdoc</span>
-            </p>
-            <a href="https://a.co/d/6IewmwC" target="_blank" class="cta-button">
-              Get Your Copy Now</a
-            >
           </div>
-          <div class="book-image">
-            <a href="https://a.co/d/6IewmwC" target="_blank">
-              <img
-                src="https://c.media-amazon.com/images/I/61g+sogJ2KL._SL1294_.jpg"
-                alt="Diagrams as Code Book Cover"
-                style="width: 187.2px; height: auto;"
-              />
-            </a>
+        </div>
+
+        <div class="spot-card vault-book-card reveal">
+          <a href="../book/llm-evaluation-reliability-engineering.html" class="book-stage" aria-label="LLM Evaluation & Reliability Engineering book">
+            <span class="book-3d"><img src="../books/img/llm-evaluation-reliability.jpg" alt="LLM Evaluation & Reliability Engineering cover" loading="lazy" /></span>
+          </a>
+          <div>
+            <span class="meta-chip cobalt" style="margin-bottom:10px;">Book · 460 Pages</span>
+            <h3 style="font-family:var(--font-display);font-size:1.25rem;margin-bottom:6px;">LLM Evaluation &amp; Reliability Engineering</h3>
+            <p style="font-size:0.89rem;color:var(--muted);margin-bottom:14px;">A gentle, practical guide to evals, production observability, guardrails, and AgentOps for developers shipping AI agents.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <a href="../book/llm-evaluation-reliability-engineering.html" class="btn btn-gold btn-sm">Explore Book</a>
+              <a href="../books/index.html" class="btn btn-surface btn-sm">All 6 Books</a>
+            </div>
           </div>
         </div>
       </div>
-      <div class="payhip-container">
-        <div class="payhip-embed-page" data-key="ve3Ib"></div>
-        <script type="text/javascript" src="https://payhip.com/embed-page.js?v=24u68984"></script>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-bio">
+          <a href="../index.html" class="brand-link">
+            <span class="ok-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+            <span class="brand-text">
+              <span class="brand-name">Omar Kamal Hosney</span>
+              <span class="brand-role">omkamal.github.io</span>
+            </span>
+          </a>
+          <p>Illustrated books, structured video courses, GPU field notes, and engineering cheatsheets on AI, ML, and software architecture.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Libraries</h4>
+          <ul>
+            <li><a href="../books/index.html">Published Books (6)</a></li>
+            <li><a href="../courses/index.html">Video Courses (49 Modules)</a></li>
+            <li><a href="../articles/index.html">GPU Field Notes (14)</a></li>
+            <li><a href="index.html">Cheatsheets (29)</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Book Showcases</h4>
+          <ul>
+            <li><a href="../book/ai-transformation-consultant.html">AI Transformation Consultant</a></li>
+            <li><a href="../book/llm-evaluation-reliability-engineering.html">LLM Evaluation &amp; Reliability</a></li>
+            <li><a href="../book/camera-composition-playbook.html">Camera Composition Playbook</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="../resume.html">Executive Resume / CV</a></li>
+            <li><a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener">LinkedIn</a></li>
+            <li><a href="https://github.com/omkamal" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="../privacy.html">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Omar Kamal Hosney · Built natively on GitHub Pages</span>
+        <div class="social-row">
+          <a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://medium.com/@omkamal" target="_blank" rel="noopener" aria-label="Medium"><i class="fab fa-medium-m"></i></a>
+          <a href="https://github.com/omkamal" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
       </div>
     </div>
-    
-    <div class="about-section">
-      <h2>About Me</h2>
-      <h3>Omar Kamal Hosney</h3>
-      <p>
-        I am a seasoned data scientist and machine learning software engineer with over 26 years of
-        experience. I have contributed my expertise to several renowned companies, including Tribal
-        Credit, Reveel, TA Telecom, Mentor Graphics, and IBM. My career has encompassed various roles
-        in AI-driven underwriting, algorithm development, data analytics integration, and software testing
-        leadership.
-      </p>
-      <p>My interests include:</p>
-      <ul>
-        <li>Artificial Intelligence</li>
-        <li>Data Science</li>
-        <li>Large Language Models</li>
-      </ul>
-      <p>
-        I'm passionate about sharing knowledge and regularly write articles on various topics in data
-        science and AI.
-      </p>
-      <a href="https://medium.com/@omkamal" target="_blank" class="blog-link">
-        Read My Blog on Medium</a
-      >
-      <a href="../resume.html" target="_blank" class="resume-link">
-        <i class="fas fa-file-alt"></i> View My Resume</a
-      >
-    </div>
-    
-  </div>
+  </footer>
+
+  <script src="../assets/catalog.js" defer></script>
+  <script src="../assets/site.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const pills = document.querySelectorAll('[data-cs-filter]');
+      const searchInput = document.getElementById('cs-search');
+      const cards = document.querySelectorAll('.ref-card');
+      const emptyEl = document.getElementById('cs-empty');
+      const resetBtn = document.getElementById('cs-reset');
+      let activeCat = 'all';
+
+      function filterCards() {
+        const q = (searchInput.value || '').trim().toLowerCase();
+        const tokens = q ? q.split(/\s+/) : [];
+        let shown = 0;
+
+        cards.forEach((c) => {
+          const catOk = activeCat === 'all' || c.getAttribute('data-cat') === activeCat;
+          let txtOk = true;
+          if (tokens.length) {
+            const hay = `${c.textContent} ${c.getAttribute('data-kw') || ''}`.toLowerCase();
+            txtOk = tokens.every((t) => hay.includes(t));
+          }
+          const visible = catOk && txtOk;
+          c.hidden = !visible;
+          if (visible) shown++;
+        });
+
+        if (emptyEl) emptyEl.hidden = shown > 0;
+      }
+
+      pills.forEach((p) => {
+        p.addEventListener('click', () => {
+          pills.forEach((b) => b.classList.remove('active'));
+          p.classList.add('active');
+          activeCat = p.getAttribute('data-cs-filter');
+          filterCards();
+        });
+      });
+
+      if (searchInput) searchInput.addEventListener('input', filterCards);
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          activeCat = 'all';
+          pills.forEach((b) => b.classList.toggle('active', b.getAttribute('data-cs-filter') === 'all'));
+          filterCards();
+        });
+      }
+    });
+  </script>
 </body>
 </html>

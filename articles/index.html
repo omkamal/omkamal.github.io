@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-root="..">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RT1G8VP79X"></script>
@@ -12,9 +12,9 @@
 </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blog &amp; Articles — Omar Kamal Hosney</title>
-  <meta name="description" content="In-depth articles, capability tours and field notes on AI models, ML tools, LLMs, image-generation and emerging technologies in machine learning and data science by Omar Kamal Hosney." />
-  <meta name="keywords" content="Omar Kamal Hosney blog, AI blog, machine learning blog, AI model field notes, HiDream-O1-Image, image generation, open weights AI, data science articles, LLM articles" />
+  <title>Blog &amp; GPU Field Notes — Omar Kamal Hosney</title>
+  <meta name="description" content="In-depth articles, capability tours and GPU field notes on AI models, GraphRAG, local diffusion, quantization, LLMs and developer agents by Omar Kamal Hosney." />
+  <meta name="keywords" content="Omar Kamal Hosney blog, AI blog, machine learning blog, GPU field notes, RTX 4090, GraphRAG, FalkorDB, OpenWiki, Krea 2, LightRAG, LinearRAG, Unlimited-OCR, HiDream-O1-Image, GGUF quantization" />
   <meta name="author" content="Omar Kamal Hosney" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://omkamal.github.io/articles/" />
@@ -22,16 +22,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Omar Kamal Hosney" />
   <meta property="og:url" content="https://omkamal.github.io/articles/" />
-  <meta property="og:title" content="Blog &amp; Articles — Omar Kamal Hosney" />
-  <meta property="og:description" content="In-depth articles and field notes on AI models, ML tools and emerging technologies." />
-  <meta property="og:image" content="https://omkamal.github.io/omar.jpeg" />
+  <meta property="og:title" content="Blog &amp; GPU Field Notes — Omar Kamal Hosney" />
+  <meta property="og:description" content="Hands-on capability tours, quantization recipes, GraphRAG architectures, and GPU field notes measured on real hardware." />
+  <meta property="og:image" content="https://omkamal.github.io/articles/openwiki-ai-docs-agent/demo_assets/hero.png" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Blog &amp; Articles — Omar Kamal Hosney" />
-  <meta name="twitter:description" content="In-depth articles and field notes on AI models, ML tools and emerging technologies." />
-  <meta name="twitter:image" content="https://omkamal.github.io/omar.jpeg" />
+  <meta name="twitter:title" content="Blog &amp; GPU Field Notes — Omar Kamal Hosney" />
+  <meta name="twitter:description" content="Hands-on capability tours, quantization recipes, GraphRAG architectures, and GPU field notes measured on real hardware." />
+  <meta name="twitter:image" content="https://omkamal.github.io/articles/openwiki-ai-docs-agent/demo_assets/hero.png" />
 
   <link rel="icon" type="image/jpeg" href="../omar.jpeg" />
+  <link rel="apple-touch-icon" href="../omar.jpeg" />
+
+  <script>try{const t=localStorage.getItem('omar-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 
   <script type="application/ld+json">
   {
@@ -214,791 +217,961 @@
     ]
   }
   </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/site.css" />
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
-    :root {
-      --c-bg-1: #0f172a;
-      --c-bg-2: #1e293b;
-      --c-primary: #3b82f6;
-      --c-primary-dark: #2563eb;
-      --c-accent: #a855f7;
-      --c-accent-dark: #7c3aed;
-      --c-pink: #ec4899;
-      --c-green: #10b981;
-      --c-text: #e2e8f0;
-      --c-text-muted: #94a3b8;
-      --c-text-dim: #64748b;
-      --c-card: rgba(30, 41, 59, 0.5);
-      --c-card-hover: rgba(30, 41, 59, 0.8);
-      --c-border: rgba(148, 163, 184, 0.15);
-      --c-border-hover: rgba(148, 163, 184, 0.3);
-      --radius-md: 14px;
-      --radius-lg: 22px;
-      --radius-xl: 32px;
-      --shadow-deep: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
-      --shadow-glow-purple: 0 20px 60px -20px rgba(168, 85, 247, 0.45);
-      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    .journal-hero {
+      padding: clamp(48px, 6vw, 84px) 0 40px;
+      border-bottom: 1px solid var(--line);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: var(--c-text);
-      background: var(--c-bg-1);
-      min-height: 100vh;
-      overflow-x: hidden;
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-      position: relative;
+    .journal-hero-grid {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: clamp(28px, 4vw, 56px);
+      align-items: end;
     }
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 70% 50% at 80% 0%, rgba(168, 85, 247, 0.22), transparent 60%),
-        radial-gradient(ellipse 50% 40% at 20% 100%, rgba(236, 72, 153, 0.16), transparent 60%),
-        radial-gradient(ellipse 60% 40% at 50% 50%, rgba(59, 130, 246, 0.10), transparent 60%),
-        linear-gradient(180deg, var(--c-bg-1) 0%, var(--c-bg-2) 50%, var(--c-bg-1) 100%);
-      z-index: -2;
+    .journal-telemetry {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
     }
 
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-      z-index: -1;
-      pointer-events: none;
+    .j-stat {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      border: 1px solid var(--line);
+    }
+    .j-stat strong {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.55rem;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      color: var(--ink);
+    }
+    .j-stat span {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
     }
 
-    .container { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
-
-    /* === NAV === */
-    nav.top {
-      padding: 28px 0;
-      display: flex; align-items: center; justify-content: space-between;
+    /* Lead Cover Story */
+    .lead-story {
+      margin: 40px 0 48px;
     }
-
-    .brand {
-      display: flex; align-items: center; gap: 14px;
-      font-weight: 700; font-size: 1.05em;
-      letter-spacing: -0.01em; color: var(--c-text);
+    .lead-card {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
       text-decoration: none;
+      color: inherit;
+      align-items: stretch;
+    }
+    .lead-card[hidden],
+    .j-card[hidden] {
+      display: none !important;
     }
 
-    .brand-mark {
-      width: 38px; height: 38px;
-      border-radius: 11px;
-      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-accent) 100%);
-      display: grid; place-items: center;
-      font-weight: 800; font-size: 1em; color: white;
-      box-shadow: 0 6px 20px -5px rgba(59, 130, 246, 0.55);
-    }
-
-    .nav-links {
-      display: flex; gap: 8px; align-items: center;
-    }
-
-    .nav-links a {
-      color: var(--c-text-muted);
-      text-decoration: none;
-      font-size: 0.9em;
-      font-weight: 500;
-      padding: 8px 16px;
-      border-radius: 10px;
-      transition: all 0.2s var(--ease);
-    }
-
-    .nav-links a:hover, .nav-links a.active {
-      color: var(--c-text);
-      background: rgba(148, 163, 184, 0.08);
-    }
-
-    .nav-links a.active { background: rgba(168, 85, 247, 0.15); color: #c4b5fd; }
-
-    /* === HERO === */
-    .hero {
-      padding: 80px 0 60px;
-      text-align: center;
+    .lead-media {
       position: relative;
+      min-height: 360px;
+      background: var(--bg-2);
+      overflow: hidden;
+      border-right: 1px solid var(--line);
     }
-
-    .eyebrow {
+    .lead-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.65s var(--ease-spring);
+    }
+    .lead-card:hover .lead-media img {
+      transform: scale(1.04);
+    }
+    .lead-badge {
+      position: absolute;
+      top: 18px;
+      left: 18px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 14px;
-      background: rgba(168, 85, 247, 0.12);
-      border: 1px solid rgba(168, 85, 247, 0.25);
-      border-radius: 50px;
-      font-size: 0.8em;
-      font-weight: 500;
-      color: #c4b5fd;
-      letter-spacing: 0.04em;
-      margin-bottom: 26px;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.4rem, 5.5vw, 4rem);
-      line-height: 1.05;
-      font-weight: 800;
-      letter-spacing: -0.035em;
-      margin-bottom: 20px;
-      color: var(--c-text);
-    }
-
-    .hero h1 .gradient {
-      background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #f59e0b 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero .tagline {
-      font-size: 1.15em;
-      color: var(--c-text-muted);
-      max-width: 660px;
-      margin: 0 auto;
-      line-height: 1.65;
-    }
-
-    /* === FILTER BAR === */
-    .filter-bar {
-      display: flex; justify-content: center; gap: 10px;
-      flex-wrap: wrap;
-      margin: 36px 0 56px;
-    }
-
-    .filter-bar button {
-      padding: 8px 18px;
-      background: rgba(148, 163, 184, 0.06);
-      border: 1px solid var(--c-border);
-      border-radius: 50px;
-      font-size: 0.88em;
-      font-weight: 500;
-      color: var(--c-text-muted);
-      cursor: pointer;
-      transition: all 0.2s var(--ease);
-      font-family: inherit;
-    }
-
-    .filter-bar button:hover {
-      color: var(--c-text);
-      border-color: var(--c-border-hover);
-      background: rgba(148, 163, 184, 0.1);
-    }
-
-    .filter-bar button.active {
-      background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-pink) 100%);
-      color: white;
-      border-color: transparent;
-      box-shadow: 0 6px 18px -4px rgba(168, 85, 247, 0.5);
-    }
-
-    /* === FEATURED ARTICLE === */
-    .featured {
-      margin-bottom: 56px;
-    }
-
-    .featured-card {
-      display: grid;
-      grid-template-columns: 1.1fr 1fr;
-      gap: 0;
-      background: var(--c-card);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--c-border);
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      text-decoration: none;
-      transition: all 0.4s var(--ease);
-      position: relative;
-    }
-
-    .featured-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: var(--radius-xl);
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(236, 72, 153, 0));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-
-    .featured-card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-glow-purple), var(--shadow-deep);
-    }
-
-    .featured-visual {
-      position: relative;
-      background: linear-gradient(135deg, #1e293b 0%, #312e81 50%, #4c1d95 100%);
-      min-height: 360px;
-      display: grid; place-items: center;
-      overflow: hidden;
-    }
-
-    .featured-visual::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(168, 85, 247, 0.4), transparent 50%),
-        radial-gradient(circle at 70% 70%, rgba(236, 72, 153, 0.4), transparent 50%);
-    }
-
-    .featured-visual img {
-      position: relative;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      mix-blend-mode: luminosity;
-      opacity: 0.55;
-    }
-
-    .featured-visual .overlay-emoji {
-      position: absolute;
-      font-size: 7rem;
-      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
-      animation: floatGentle 6s ease-in-out infinite;
-    }
-
-    @keyframes floatGentle {
-      0%, 100% { transform: translateY(0) rotate(-3deg); }
-      50% { transform: translateY(-10px) rotate(3deg); }
-    }
-
-    .featured-body {
-      padding: 48px 44px;
-      display: flex; flex-direction: column;
-      justify-content: center;
-    }
-
-    .featured-tag {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 5px 12px;
-      background: rgba(168, 85, 247, 0.15);
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      border-radius: 50px;
-      font-size: 0.72em;
-      font-weight: 600;
-      color: #c4b5fd;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      align-self: flex-start;
-      margin-bottom: 18px;
-    }
-
-    .featured-meta {
-      font-size: 0.82em;
-      color: var(--c-text-dim);
-      margin-bottom: 12px;
-      letter-spacing: 0.04em;
-    }
-
-    .featured-meta span + span::before { content: " · "; opacity: 0.5; margin: 0 0.3em; }
-
-    .featured-card h2 {
-      font-size: 1.85em;
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
       font-weight: 700;
-      letter-spacing: -0.025em;
-      line-height: 1.2;
-      color: var(--c-text);
-      margin-bottom: 16px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(7, 9, 14, 0.84);
+      backdrop-filter: blur(10px);
+      color: #f6c467;
+      border: 1px solid rgba(246, 196, 103, 0.42);
     }
 
-    .featured-card p {
-      color: var(--c-text-muted);
+    .lead-body {
+      padding: clamp(28px, 4vw, 44px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .lead-body h2 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.55rem, 2.5vw, 2.15rem);
+      line-height: 1.13;
+      letter-spacing: -0.03em;
+      transition: color 0.2s;
+    }
+    .lead-card:hover .lead-body h2 {
+      color: var(--gold);
+    }
+    [data-theme="light"] .lead-card:hover .lead-body h2 {
+      color: var(--cobalt);
+    }
+
+    .lead-body p {
+      color: var(--ink-2);
+      font-size: 0.97rem;
       line-height: 1.7;
-      font-size: 1em;
-      margin-bottom: 24px;
     }
 
-    .featured-cta {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-weight: 600;
-      color: #c4b5fd;
-      font-size: 0.95em;
+    .lead-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--gold);
+      margin-top: 6px;
+    }
+    [data-theme="light"] .lead-cta {
+      color: var(--cobalt);
+    }
+    .lead-cta i {
+      transition: transform 0.25s var(--ease-spring);
+    }
+    .lead-card:hover .lead-cta i {
+      transform: translateX(5px);
     }
 
-    .featured-cta .arrow { transition: transform 0.3s var(--ease); }
-    .featured-card:hover .featured-cta .arrow { transform: translateX(5px); }
-
-    /* === ARTICLE GRID === */
-    .section-label {
-      display: flex; align-items: center; gap: 16px;
-      font-size: 0.78em;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--c-text-muted);
-      margin-bottom: 28px;
-    }
-
-    .section-label::before, .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--c-border);
-    }
-
-    .article-grid {
+    /* Editorial Issue Grid */
+    .journal-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 24px;
-      margin-bottom: 80px;
     }
 
-    .article-card {
-      background: var(--c-card);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--c-border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
+    .j-card {
+      display: flex;
+      flex-direction: column;
       text-decoration: none;
-      transition: all 0.3s var(--ease);
-      display: flex; flex-direction: column;
+      color: inherit;
+      height: 100%;
     }
 
-    .article-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--c-border-hover);
-      background: var(--c-card-hover);
-      box-shadow: var(--shadow-deep);
-    }
-
-    .article-thumb {
-      aspect-ratio: 16 / 9;
-      background: linear-gradient(135deg, #1e293b 0%, #312e81 100%);
+    .j-thumb {
       position: relative;
+      aspect-ratio: 16 / 10;
+      background: var(--bg-2);
       overflow: hidden;
-      display: grid; place-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .j-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.55s var(--ease-spring);
+    }
+    .j-card:hover .j-thumb img {
+      transform: scale(1.055);
     }
 
-    .article-thumb::after {
-      content: '';
+    .j-issue {
       position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(168, 85, 247, 0.35), transparent 50%),
-        radial-gradient(circle at 70% 70%, rgba(59, 130, 246, 0.3), transparent 50%);
-    }
-
-    .article-thumb .emoji {
-      font-size: 3.5rem;
-      position: relative;
-      z-index: 1;
-      filter: drop-shadow(0 10px 24px rgba(0,0,0,0.4));
-    }
-
-    .article-body {
-      padding: 24px 26px 28px;
-      display: flex; flex-direction: column;
-      flex: 1;
-    }
-
-    .article-tag {
-      display: inline-block;
-      font-size: 0.72em;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      top: 12px;
+      left: 12px;
       padding: 4px 10px;
-      border-radius: 50px;
-      align-self: flex-start;
-      margin-bottom: 12px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      background: rgba(7, 9, 14, 0.78);
+      backdrop-filter: blur(8px);
+      color: #f4f3ee;
+      border: 1px solid rgba(255, 255, 255, 0.16);
     }
 
-    .article-tag.ai-models { background: rgba(168, 85, 247, 0.15); color: #c4b5fd; }
-    .article-tag.tools { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
-    .article-tag.devops { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; }
-
-    .article-card h3 {
-      font-size: 1.12em;
+    .j-date-pill {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.67rem;
       font-weight: 600;
-      color: var(--c-text);
-      letter-spacing: -0.015em;
-      line-height: 1.35;
-      margin-bottom: 10px;
+      background: rgba(7, 9, 14, 0.78);
+      backdrop-filter: blur(8px);
+      color: #cfd5e2;
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    .article-card p {
-      color: var(--c-text-muted);
-      font-size: 0.92em;
+    .j-body {
+      padding: 22px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 12px;
+    }
+
+    .j-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .j-body h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.16rem;
+      line-height: 1.28;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      transition: color 0.2s;
+    }
+    .j-card:hover .j-body h3 {
+      color: var(--gold);
+    }
+    [data-theme="light"] .j-card:hover .j-body h3 {
+      color: var(--cobalt);
+    }
+
+    .j-body p {
+      font-size: 0.9rem;
+      color: var(--muted);
       line-height: 1.65;
       flex: 1;
-      margin-bottom: 16px;
     }
 
-    .article-meta {
-      display: flex; align-items: center; gap: 12px;
-      font-size: 0.8em;
-      color: var(--c-text-dim);
+    .j-foot {
       padding-top: 14px;
-      border-top: 1px solid var(--c-border);
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      color: var(--dim);
     }
-
-    .article-meta .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--c-text-dim); }
-
-    /* === EMPTY STATE / COMING SOON === */
-    .coming-soon {
-      padding: 48px 32px;
-      text-align: center;
-      background: var(--c-card);
-      border: 1px dashed var(--c-border-hover);
-      border-radius: var(--radius-lg);
-      color: var(--c-text-muted);
-    }
-
-    .coming-soon h3 {
-      color: var(--c-text);
-      font-size: 1.2em;
+    .j-foot .read-arr {
+      color: var(--ink-2);
       font-weight: 600;
-      margin-bottom: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.2s var(--ease-spring), color 0.2s;
+    }
+    .j-card:hover .j-foot .read-arr {
+      color: var(--gold);
+      transform: translateX(3px);
+    }
+    [data-theme="light"] .j-card:hover .j-foot .read-arr {
+      color: var(--cobalt);
     }
 
-    /* === FOOTER === */
-    footer {
-      padding: 50px 0 70px;
-      border-top: 1px solid var(--c-border);
+    .empty-state {
+      padding: 56px 24px;
       text-align: center;
+      border-radius: var(--radius-lg);
+      border: 1px dashed var(--line-strong);
+      background: var(--surface);
+      margin-top: 24px;
     }
 
-    footer p {
-      color: var(--c-text-dim);
-      font-size: 0.9em;
-      margin-bottom: 16px;
+    /* Companion Monograph Callout */
+    .companion-strip {
+      margin-top: 64px;
+      padding: clamp(28px, 4vw, 42px);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: center;
     }
 
-    .social {
-      display: flex; justify-content: center; gap: 14px;
+    @media (max-width: 1024px) {
+      .journal-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .journal-hero-grid,
+      .lead-card {
+        grid-template-columns: 1fr;
+      }
+      .lead-media {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        min-height: 280px;
+      }
     }
 
-    .social a {
-      width: 42px; height: 42px;
-      display: grid; place-items: center;
-      border-radius: 11px;
-      background: rgba(148, 163, 184, 0.06);
-      border: 1px solid var(--c-border);
-      color: var(--c-text-muted);
-      text-decoration: none;
-      transition: all 0.3s var(--ease);
+    @media (max-width: 680px) {
+      .journal-grid {
+        grid-template-columns: 1fr;
+      }
+      .companion-strip {
+        grid-template-columns: 1fr;
+      }
     }
-
-    .social a:hover {
-      color: var(--c-text);
-      border-color: var(--c-accent);
-      background: rgba(168, 85, 247, 0.1);
-      transform: translateY(-2px);
-    }
-
-    /* === RESPONSIVE === */
-    @media (max-width: 820px) {
-      .featured-card { grid-template-columns: 1fr; }
-      .featured-visual { min-height: 240px; }
-      .featured-body { padding: 32px 28px; }
-      .featured-card h2 { font-size: 1.5em; }
-      nav.top { padding: 20px 0; }
-      .nav-links a:not(.active):not(.cta) { display: none; }
-    }
-
-    @media (max-width: 520px) {
-      .container { padding: 0 20px; }
-      .hero { padding: 50px 0 40px; }
-    }
-
-    ::selection { background: var(--c-accent); color: white; }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
-  <div class="container">
-    <nav class="top">
-      <a href="../index.html" class="brand">
-        <span class="brand-mark">OK</span>
-        <span>Omar Kamal Hosney</span>
+  <a href="#main" class="skip-link">Skip to articles</a>
+  <div class="ambient-bg" aria-hidden="true"></div>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="ambient-grain" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="shell nav-bar">
+      <a href="../index.html" class="brand-link">
+        <span class="ok-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span class="brand-text">
+          <span class="brand-name">Omar Kamal Hosney</span>
+          <span class="brand-role">AI Architect · Author</span>
+        </span>
       </a>
-      <div class="nav-links">
-        <a href="../cheatsheets/index.html">Cheatsheets</a>
-        <a href="index.html" class="active">Blog</a>
-        <a href="../courses/index.html">Courses</a>
+
+      <nav class="nav-center" aria-label="Primary">
+        <a href="../index.html">Home</a>
         <a href="../books/index.html">Books</a>
-        <a href="../resume.html" target="_blank">Resume</a>
+        <a href="../courses/index.html">Courses</a>
+        <a href="index.html" class="active">Articles</a>
+        <a href="../cheatsheets/index.html">Cheatsheets</a>
+        <a href="../resume.html">Resume</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="cmdk-trigger" data-cmdk-open aria-label="Search entire site">
+          <i class="fas fa-magnifying-glass"></i>
+          <span class="label-txt">Search</span>
+          <kbd>⌘K</kbd>
+        </button>
+        <button type="button" class="icon-btn" data-theme-toggle aria-label="Toggle theme">
+          <i class="fas fa-sun"></i>
+        </button>
+        <a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener" class="nav-cta hide-sm">
+          <i class="fab fa-linkedin-in"></i> Connect
+        </a>
+        <button type="button" class="icon-btn mobile-toggle" data-mobile-open aria-label="Open menu">
+          <i class="fas fa-bars"></i>
+        </button>
       </div>
-    </nav>
-
-    <section class="hero">
-      <div class="eyebrow">✍️ Field notes &amp; long reads</div>
-      <h1>The <span class="gradient">blog</span>.</h1>
-      <p class="tagline">
-        In-depth articles, capability tours and field notes — written from
-        actually running the models, tools and pipelines they're about.
-      </p>
-    </section>
-
-    <div class="filter-bar">
-      <button class="active" data-filter="all">All</button>
-      <button data-filter="ai-models">AI Models</button>
-      <button data-filter="tools">Tools</button>
-      <button data-filter="devops">DevOps</button>
     </div>
+  </header>
 
-    <section class="featured" aria-label="Featured article">
-      <a href="openwiki-ai-docs-agent/openwiki-ai-docs-agent.html" class="featured-card">
-        <div class="featured-visual">
-          <img src="openwiki-ai-docs-agent/demo_assets/hero.png" alt="A friendly robot librarian writing on a large tabbed wiki book with a glowing pen, surrounded by a git branch icon, a terminal window and a gear" loading="lazy" />
-          <span class="overlay-emoji">🤖</span>
-        </div>
-        <div class="featured-body">
-          <span class="featured-tag">⭐ Featured · Latest</span>
-          <p class="featured-meta"><span>AI Agents</span><span>Hands-on</span><span>July 2026</span><span>Docs · Gmail · LangChain</span></p>
-          <h2>OpenWiki: the AI agent that writes your docs — and turns your Gmail into a second brain</h2>
-          <p>
-            A hands-on walkthrough of <strong>OpenWiki</strong>, the open-source CLI from the LangChain team: one
-            command documents a repository with a <strong>docs-only sandboxed agent</strong>, another distills
-            <strong>100 real Gmail messages</strong> into a personal wiki you can chat with from the terminal.
-            Guardrails, the SHA-256 snapshot gate, live demos with screenshots — and the full video walkthrough.
-          </p>
-          <span class="featured-cta">Read the article <span class="arrow">→</span></span>
-        </div>
-      </a>
-    </section>
-
-    <p class="section-label">More articles</p>
-    <div class="article-grid">
-      <a href="falkordb-explained/falkordb-explained.html" class="article-card" data-category="tools">
-        <div class="article-thumb">
-          <span class="emoji">🕸️</span>
-        </div>
-        <div class="article-body">
-          <h3>FalkorDB, explained: the graph database that's secretly linear algebra</h3>
-          <p>
-            An illustrated, jargon-light tour of <strong>FalkorDB</strong> — the graph database that stores your graph
-            as <strong>sparse matrices</strong> and answers queries with <strong>matrix multiplication</strong>, with a
-            native <strong>vector index</strong> for AI and RAG.
-          </p>
-          <div class="article-meta">
-            <span>Databases</span><span class="dot"></span><span>Explainer</span><span class="dot"></span><span>July 2026</span>
-          </div>
-        </div>
-      </a>
-      <a href="kera2-illustration-styles/kera2-illustration-styles.html" class="article-card" data-category="ai-models">
-        <div class="article-thumb">
-          <span class="emoji">🎨</span>
-        </div>
-        <div class="article-body">
-          <h3>12 Illustration Styles Worth Generating in Krea 2</h3>
-          <p>
-            A visual field guide to <strong>twelve</strong> illustrator and artist styles, reproduced entirely local in
-            <strong>Krea&nbsp;2 Turbo</strong> on one 24&nbsp;GB RTX&nbsp;4090 — each with the style described, a short
-            artist bio, and a <strong>same-seed triptych</strong> with its prompt recipe.
-          </p>
-          <div class="article-meta">
-            <span>AI Models</span><span class="dot"></span><span>Style Gallery</span><span class="dot"></span><span>July 2026</span>
-          </div>
-        </div>
-      </a>
-      <a href="kera2-rtx4090/kera2-rtx4090.html" class="article-card" data-category="ai-models">
-        <div class="article-thumb">
-          <span class="emoji">🖼️</span>
-        </div>
-        <div class="article-body">
-          <h3>Krea 2 on a single RTX 4090 — quantizing a 12B image model with GGUF</h3>
-          <p>
-            A <strong>12-billion-parameter</strong> diffusion transformer, quantized to a <strong>Q6_K GGUF</strong>
-            (~10.6&nbsp;GB) and run entirely local on one 24&nbsp;GB 4090 under <strong>Pop!_OS</strong>. Install path,
-            a <strong>16-style</strong> quality gallery with honest per-image verdicts, and where diffusion
-            <strong>text</strong> still breaks.
-          </p>
-          <div class="article-meta">
-            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>July 2026</span>
-          </div>
-        </div>
-      </a>
-      <a href="unlimited-ocr/unlimited-ocr.html" class="article-card" data-category="ai-models">
-        <div class="article-thumb">
-          <span class="emoji">📄</span>
-        </div>
-        <div class="article-body">
-          <h3>Unlimited-OCR — long-horizon document parsing on a 4090</h3>
-          <p>
-            Baidu's <strong>DeepSeek-OCR</strong>-based parsing VLM, served with <code>SGLang</code> on one
-            24&nbsp;GB 4090. <strong>Near-perfect on clean English</strong> — including exact table extraction — and
-            much harder on 1890s Arabic. Install steps, full-page → <strong>rendered-Markdown</strong> comparisons,
-            and the runaway loop <code>image_mode=base</code> fixes.
-          </p>
-          <div class="article-meta">
-            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>June 2026</span>
-          </div>
-        </div>
-      </a>
-      <a href="lightrag/lightrag.html" class="article-card" data-category="ai-models">
-        <div class="article-thumb">
-          <span class="emoji">🕸️</span>
-        </div>
-        <div class="article-body">
-          <h3>LightRAG — fast graph-RAG with GPT-5 + Qdrant, hands-on</h3>
-          <p>
-            <strong>Graph-RAG without GraphRAG's bill.</strong> LightRAG (HKUDS) turns your documents into a
-            <strong>knowledge graph</strong> and answers with a <strong>dual-level retrieval</strong> paradigm —
-            a single API call instead of community traversal, and incremental updates instead of rebuilds — run
-            end-to-end on OpenAI <code>gpt-5-mini</code> / <code>gpt-5.5</code> and a <code>Qdrant</code> store.
-          </p>
-          <div class="article-meta">
-            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>June 2026</span>
-          </div>
-        </div>
-      </a>
-      <a href="linearrag/linearrag.html" class="article-card" data-category="ai-models">
-        <div class="article-thumb">
-          <span class="emoji">🕸️</span>
-        </div>
-        <div class="article-body">
-          <h3>LinearRAG — relation-free GraphRAG, hands-on a 4090</h3>
-          <p>
-            <strong>GraphRAG without relation extraction.</strong> LinearRAG (ICLR 2026) builds its
-            <strong>Tri-Graph</strong> with <strong>zero LLM tokens</strong> — just NER and embeddings — then does
-            single-pass multi-hop retrieval via <strong>semantic bridging</strong> and <strong>Personalized
-            PageRank</strong>, run end-to-end on a 24 GB 4090 with <code>gpt-5-mini</code>.
-          </p>
-          <div class="article-meta">
-            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>June 2026</span>
-          </div>
-        </div>
-      </a>
-      <a href="boogu-image/boogu-image.html" class="article-card" data-category="ai-models">
-        <div class="article-thumb">
-          <span class="emoji">🎨</span>
-        </div>
-        <div class="article-body">
-          <h3>Boogu-Image — the Edit and Turbo models, hands-on a 4090</h3>
-          <p>
-            The Apache-2.0 <strong>10B unified</strong> image model on a 24 GB 4090: instruction-based
-            <strong>photo editing</strong> and a <strong>4-step Turbo</strong> text-to-image — install with
-            screenshots, prompt/config galleries, and the honest blur/OOM/<strong>group offload</strong> and
-            steps/CFG/identity story.
-          </p>
-          <div class="article-meta">
-            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>June 2026</span>
-          </div>
-        </div>
-      </a>
-      <a href="lens/lens.html" class="article-card" data-category="ai-models">
-        <div class="article-thumb">
-          <span class="emoji">🔭</span>
-        </div>
-        <div class="article-body">
-          <h3>Lens — quantizing the DiT to run 1440 without offload on a 4090</h3>
-          <p>
-            Microsoft's 3.8B text-to-image model with a <strong>4-bit GPT-OSS-20B encoder</strong>: why
-            no-offload bf16 OOMs above 1024, two eviction dead-ends, and the <strong>FP8 DiT
-            quantization</strong> that unlocks 1440 fully on the GPU — with a multi-category gallery and honest
-            per-image quality notes.
-          </p>
-          <div class="article-meta">
-            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>June 2026</span>
-          </div>
-        </div>
-      </a>
-      <a href="ideogram4/ideogram4.html" class="article-card" data-category="ai-models">
-        <div class="article-thumb">
-          <span class="emoji">🎨</span>
-        </div>
-        <div class="article-body">
-          <h3>Ideogram 4 — structured JSON prompting on a single RTX 4090</h3>
-          <p>
-            The 9.3B open-weight design model: <strong>JSON captions with bounding-box layout</strong>,
-            LLM magic prompts, a 14-image quality-scored style gallery (Arabic included) and a 21-run
-            speed benchmark — measured locally in <code>nf4</code> on a 24 GB 4090.
-          </p>
-          <div class="article-meta">
-            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>June 2026</span>
-          </div>
-        </div>
-      </a>
-      <a href="bonsai-image/bonsai-image.html" class="article-card" data-category="ai-models">
-        <div class="article-thumb">
-          <span class="emoji">🌳</span>
-        </div>
-        <div class="article-body">
-          <h3>Bonsai-Image-4B — a 1.58-bit text-to-image model on a single RTX 4090</h3>
-          <p>
-            PrismML's 4B image generator quantized to <strong>ternary (1.58-bit)</strong> and distilled to
-            <strong>4 steps</strong> — ~5 GB VRAM, sub-second warm renders, ten <code>--style</code> presets,
-            and the measured throughput numbers.
-          </p>
-          <div class="article-meta">
-            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>May 2026</span>
-          </div>
-        </div>
-      </a>
-      <a href="lance/lance.html" class="article-card" data-category="ai-models">
-        <div class="article-thumb">
-          <span class="emoji">🎬</span>
-        </div>
-        <div class="article-body">
-          <h3>Lance 3B — a unified image &amp; video model on a single RTX 4090</h3>
-          <p>
-            ByteDance's <strong>Lance</strong> does image/video understanding, generation and editing
-            in one 3B transformer — all seven modes, the official benchmarks, and the two code fixes
-            needed to fit 24 GB.
-          </p>
-          <div class="article-meta">
-            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>May 2026</span>
-          </div>
-        </div>
-      </a>
-      <a href="qwopus-mtp-2x/qwopus-mtp-2x.html" class="article-card" data-category="ai-models">
-        <div class="article-thumb">
-          <span class="emoji">⚡</span>
-        </div>
-        <div class="article-body">
-          <h3>Doubling Qwopus 3.6 on a single RTX 4090 — Multi-Token Prediction with llama.cpp</h3>
-          <p>
-            ~1.98× average speedup (peak 2.21× on math) via MTP on Jackrong/Qwopus3.6-27B-v2-MTP-GGUF —
-            with the failed Ollama detour and the production <code>llama-server</code> recipe.
-          </p>
-          <div class="article-meta">
-            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>May 2026</span>
-          </div>
-        </div>
-      </a>
-      <a href="images-models/hidream-o1-image.html" class="article-card" data-category="ai-models">
-        <div class="article-thumb">
-          <span class="emoji">🎨</span>
-        </div>
-        <div class="article-body">
-          <h3>HiDream-O1-Image — Five generation modes &amp; nine diagram styles on a single GPU</h3>
-          <p>
-            A capability tour of the open 8B Pixel-DiT model: text-to-image, instruction editing,
-            IP reference, bbox layout, openpose — end-to-end on an RTX 4090.
-          </p>
-          <div class="article-meta">
-            <span>AI Models</span><span class="dot"></span><span>Field Notes</span><span class="dot"></span><span>May 2026</span>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <footer>
-      <p>© 2026 Omar Kamal Hosney · Built with care on GitHub Pages</p>
-      <div class="social">
-        <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-        <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium"><i class="fab fa-medium-m"></i></a>
-        <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+    <div class="mobile-panel">
+      <div class="mobile-panel-head">
+        <span class="brand-name">Navigation</span>
+        <button type="button" class="icon-btn" data-mobile-close aria-label="Close menu"><i class="fas fa-xmark"></i></button>
       </div>
-    </footer>
+      <nav class="mobile-links">
+        <a href="../index.html"><span>Home</span><span class="sub">Overview</span></a>
+        <a href="../books/index.html"><span>Books</span><span class="sub">6 Monographs</span></a>
+        <a href="../courses/index.html"><span>Courses</span><span class="sub">49 Modules</span></a>
+        <a href="index.html" class="active"><span>Blog &amp; Field Notes</span><span class="sub">14 Deep Reads</span></a>
+        <a href="../cheatsheets/index.html"><span>Cheatsheets</span><span class="sub">30+ References</span></a>
+        <a href="../resume.html"><span>Resume / CV</span><span class="sub">30+ Yrs</span></a>
+      </nav>
+    </div>
   </div>
+
+  <main id="main" class="shell">
+    <header class="journal-hero">
+      <div class="journal-hero-grid">
+        <div>
+          <div class="sec-kicker">Technical Journal // GPU Field Notes</div>
+          <h1 class="display-xl" style="margin-bottom:18px;">
+            Measured on real silicon, <span class="serif-em">not</span> press releases.
+          </h1>
+          <p class="lede">
+            Long-form capability tours, quantization recipes, and GraphRAG deep dives written from actually running the weights, CLI agents, and vector/graph engines on a 24&nbsp;GB RTX&nbsp;4090 — complete with OOM postmortems, quality galleries, and reproducible setups.
+          </p>
+        </div>
+        <div class="journal-telemetry">
+          <div class="j-stat">
+            <strong data-count="14">14</strong>
+            <span>Illustrated Field Notes</span>
+          </div>
+          <div class="j-stat">
+            <strong>24 GB</strong>
+            <span>Single RTX 4090 Testbed</span>
+          </div>
+          <div class="j-stat">
+            <strong>GraphRAG</strong>
+            <span>Sparse Matrices &amp; Agents</span>
+          </div>
+          <div class="j-stat">
+            <strong>GGUF / FP8</strong>
+            <span>Quantization &amp; Throughput</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="section-block" style="padding-top:36px;">
+      <div class="toolbar-row">
+        <div class="filter-pills" role="tablist" aria-label="Filter articles by topic">
+          <button type="button" class="pill-btn active" data-art-filter="all">All Dispatches <span class="count">14</span></button>
+          <button type="button" class="pill-btn" data-art-filter="graph-agents">GraphRAG &amp; Agents <span class="count">4</span></button>
+          <button type="button" class="pill-btn" data-art-filter="image-video">Local Image &amp; Video <span class="count">8</span></button>
+          <button type="button" class="pill-btn" data-art-filter="quant">Quantization &amp; Speed <span class="count">5</span></button>
+          <button type="button" class="pill-btn" data-art-filter="ocr">OCR &amp; Document AI <span class="count">1</span></button>
+        </div>
+
+        <div class="search-box">
+          <i class="fas fa-magnifying-glass s-icon" aria-hidden="true"></i>
+          <input type="search" id="article-search" data-local-search placeholder="Filter articles (e.g. GGUF, FalkorDB, 1.58-bit, Arabic)…" aria-label="Filter articles" />
+        </div>
+      </div>
+
+      <!-- Featured Cover Story (Issue #14) -->
+      <div class="lead-story" id="lead-wrapper">
+        <a href="openwiki-ai-docs-agent/openwiki-ai-docs-agent.html"
+           class="spot-card lead-card reveal"
+           data-article-item
+           data-cats="graph-agents"
+           data-keywords="openwiki ai agent documentation generator langchain deepagents second brain gmail cli sha-256 video walkthrough">
+          <div class="lead-media">
+            <img src="openwiki-ai-docs-agent/demo_assets/hero.png" alt="OpenWiki AI documentation and Gmail second-brain agent illustration" />
+            <span class="lead-badge"><i class="fas fa-star"></i> Issue #14 · Cover Story</span>
+          </div>
+          <div class="lead-body">
+            <div class="j-chips">
+              <span class="meta-chip gold">AI Agents</span>
+              <span class="meta-chip cobalt">LangChain DeepAgents</span>
+              <span class="meta-chip emerald">Video + Live Demos</span>
+              <span class="meta-chip">Jul 14, 2026</span>
+            </div>
+            <h2>OpenWiki: the AI agent that writes your docs — and turns your Gmail into a second brain</h2>
+            <p>
+              A hands-on, illustrated walkthrough of <strong>OpenWiki</strong>, the open-source CLI from the LangChain team: one command documents an entire repository inside a <strong>docs-only sandboxed agent</strong> with SHA-256 snapshot guardrails; another distills <strong>100 real Gmail messages</strong> into a personal wiki you can query from your terminal.
+            </p>
+            <span class="lead-cta">Read the full walkthrough &amp; watch demo <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+
+      <!-- 13 Visual Issue Cards -->
+      <div class="journal-grid" id="journal-grid">
+
+        <!-- #13 FalkorDB -->
+        <a href="falkordb-explained/falkordb-explained.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="graph-agents"
+           data-keywords="falkordb graph database linear algebra sparse matrices graphblas opencypher vector search rag graphrag redis">
+          <div class="j-thumb">
+            <img src="falkordb-explained/demo_assets/hero.png" alt="FalkorDB sparse matrix graph database illustration" loading="lazy" />
+            <span class="j-issue">ISSUE #13</span>
+            <span class="j-date-pill">Jul 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip cobalt">GraphBLAS</span>
+              <span class="meta-chip emerald">GraphRAG</span>
+              <span class="meta-chip">Sparse Matrices</span>
+            </div>
+            <h3>FalkorDB, explained: the graph database that's secretly linear algebra</h3>
+            <p>
+              An illustrated, jargon-light tour of FalkorDB — how storing property graphs as sparse matrices turns openCypher traversals into matrix multiplication, paired with native vector indexing for AI agents.
+            </p>
+            <div class="j-foot">
+              <span>Architecture Explainer</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- #12 Krea 2 Illustration Styles -->
+        <a href="kera2-illustration-styles/kera2-illustration-styles.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="image-video"
+           data-keywords="krea 2 kera2 12 illustration styles rtx 4090 axel scheffler ludwig bemelmans william kentridge bruce timm robert mcginnis prompt recipe triptych">
+          <div class="j-thumb">
+            <img src="kera2-illustration-styles/demo_assets/hero.jpg" alt="12 Illustration Styles Worth Generating in Krea 2" loading="lazy" />
+            <span class="j-issue">ISSUE #12</span>
+            <span class="j-date-pill">Jul 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip gold">Style Atlas</span>
+              <span class="meta-chip violet">Krea 2 Turbo</span>
+              <span class="meta-chip">RTX 4090</span>
+            </div>
+            <h3>12 Illustration Styles Worth Generating in Krea 2</h3>
+            <p>
+              A visual field guide to twelve master illustrator styles reproduced locally on one 24&nbsp;GB RTX&nbsp;4090 — each with visual analysis, artist context, and a same-seed triptych with its exact prompt recipe.
+            </p>
+            <div class="j-foot">
+              <span>36-Image Style Gallery</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- #11 Krea 2 RTX 4090 GGUF -->
+        <a href="kera2-rtx4090/kera2-rtx4090.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="image-video quant"
+           data-keywords="krea 2 turbo rtx 4090 quantizing 12b image model gguf q6_k comfyui qwen3-vl lora pop_os linux diffusion transformer">
+          <div class="j-thumb">
+            <img src="kera2-rtx4090/demo_assets/hero.jpg" alt="Krea 2 quantized to Q6_K GGUF on a single RTX 4090" loading="lazy" />
+            <span class="j-issue">ISSUE #11</span>
+            <span class="j-date-pill">Jul 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip crimson">Q6_K GGUF</span>
+              <span class="meta-chip violet">12B DiT</span>
+              <span class="meta-chip">Pop!_OS</span>
+            </div>
+            <h3>Krea 2 on a single RTX 4090 — quantizing a 12B image model with GGUF</h3>
+            <p>
+              Fitting a 12-billion-parameter diffusion transformer into ~10.6&nbsp;GB via Q6_K GGUF on Linux: full install path, a 16-style quality gallery with candid verdicts, and where rendered typography still breaks.
+            </p>
+            <div class="j-foot">
+              <span>Quantization Field Notes</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- #10 Unlimited-OCR -->
+        <a href="unlimited-ocr/unlimited-ocr.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="ocr"
+           data-keywords="unlimited-ocr baidu deepseek-ocr arabic ocr document parsing layout analysis sglang rtx 4090 vlm table extraction markdown 1890s">
+          <div class="j-thumb">
+            <img src="unlimited-ocr/demo_assets/hero.png" alt="Unlimited-OCR document parsing on RTX 4090" loading="lazy" />
+            <span class="j-issue">ISSUE #10</span>
+            <span class="j-date-pill">Jun 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip teal">Document VLM</span>
+              <span class="meta-chip gold">English + 1890s Arabic</span>
+              <span class="meta-chip">SGLang</span>
+            </div>
+            <h3>Unlimited-OCR — long-horizon document parsing on a single RTX 4090</h3>
+            <p>
+              Baidu's DeepSeek-OCR-based parsing VLM tested on clean English tables and 39 scanned 1890s Arabic pages: layout precision, CJK hallucinations, and the runaway loop fixed by <code>image_mode=base</code>.
+            </p>
+            <div class="j-foot">
+              <span>OCR Benchmark</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- #09 LightRAG -->
+        <a href="lightrag/lightrag.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="graph-agents"
+           data-keywords="lightrag graphrag rag knowledge graph dual-level retrieval gpt-5 gpt-5-mini qdrant hkuds incremental update">
+          <div class="j-thumb">
+            <img src="lightrag/demo_assets/hero.png" alt="LightRAG dual-level knowledge graph retrieval" loading="lazy" />
+            <span class="j-issue">ISSUE #09</span>
+            <span class="j-date-pill">Jun 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip emerald">GraphRAG</span>
+              <span class="meta-chip cobalt">GPT-5 + Qdrant</span>
+              <span class="meta-chip">Dual-Level</span>
+            </div>
+            <h3>LightRAG, hands-on: fast graph-RAG with GPT-5 and Qdrant</h3>
+            <p>
+              Graph-RAG without Microsoft GraphRAG's token bill: dual-level entity/theme retrieval and incremental graph updates wired end-to-end with OpenAI GPT-5 models and Qdrant, including real setup fixes.
+            </p>
+            <div class="j-foot">
+              <span>GraphRAG Lab</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- #08 LinearRAG -->
+        <a href="linearrag/linearrag.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="graph-agents"
+           data-keywords="linearrag iclr 2026 relation-free graphrag tri-graph semantic bridging personalized pagerank spacy ner embeddings rtx 4090">
+          <div class="j-thumb">
+            <img src="linearrag/demo_assets/hero.png" alt="LinearRAG Tri-Graph and Personalized PageRank" loading="lazy" />
+            <span class="j-issue">ISSUE #08</span>
+            <span class="j-date-pill">Jun 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip emerald">ICLR 2026</span>
+              <span class="meta-chip gold">Zero-LLM Indexing</span>
+              <span class="meta-chip">PageRank</span>
+            </div>
+            <h3>LinearRAG on a single RTX 4090 — relation-free GraphRAG, hands-on</h3>
+            <p>
+              Building a Tri-Graph with zero LLM indexing tokens using NER + dense embeddings, then executing multi-hop retrieval via semantic bridging and Personalized PageRank on one 24&nbsp;GB GPU.
+            </p>
+            <div class="j-foot">
+              <span>Paper Reproduction</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- #07 Boogu-Image -->
+        <a href="boogu-image/boogu-image.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="image-video"
+           data-keywords="boogu-image omnigen2 apache-2.0 10b edit turbo text-to-image photo editing group offload qwen3-vl rtx 4090">
+          <div class="j-thumb">
+            <img src="boogu-image/demo_assets/illus_hero.png" alt="Boogu-Image 10B Edit and Turbo models on RTX 4090" loading="lazy" />
+            <span class="j-issue">ISSUE #07</span>
+            <span class="j-date-pill">Jun 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip violet">Apache-2.0 · 10B</span>
+              <span class="meta-chip cobalt">Edit + 4-Step Turbo</span>
+            </div>
+            <h3>Boogu-Image on a single RTX 4090 — the Edit and Turbo models, hands-on</h3>
+            <p>
+              Testing the unified 10B Boogu-Image-0.1 family: instruction photo editing, 4-step Turbo generation, group-offload VRAM survival, and systematic CFG/steps identity preservation sweeps.
+            </p>
+            <div class="j-foot">
+              <span>Multimodal Lab</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- #06 Lens FP8 -->
+        <a href="lens/lens.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="image-video quant"
+           data-keywords="lens microsoft 3.8b gpt-oss-20b mxfp4 torchao fp8 quantization dit 1440 no offload rtx 4090">
+          <div class="j-thumb">
+            <img src="lens/demo_assets/hero.png" alt="Microsoft Lens FP8 DiT quantization for 1440px on RTX 4090" loading="lazy" />
+            <span class="j-issue">ISSUE #06</span>
+            <span class="j-date-pill">Jun 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip crimson">FP8 torchao</span>
+              <span class="meta-chip violet">1440px No-Offload</span>
+              <span class="meta-chip">GPT-OSS-20B</span>
+            </div>
+            <h3>Lens — quantizing the DiT to run 1440 without offload on a single RTX 4090</h3>
+            <p>
+              Why Microsoft's 3.8B DiT + 4-bit GPT-OSS-20B encoder OOMs above 1024px in bf16, two encoder-eviction dead-ends, and the FP8 DiT quantization recipe that unlocks native 1440px on-GPU.
+            </p>
+            <div class="j-foot">
+              <span>VRAM Engineering</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- #05 Ideogram 4 -->
+        <a href="ideogram4/ideogram4.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="image-video quant"
+           data-keywords="ideogram 4 9.3b structured json prompting bounding box layout nf4 quantization arabic typography speed benchmark rtx 4090">
+          <div class="j-thumb">
+            <img src="ideogram4/demo_assets/hero.jpg" alt="Ideogram 4 structured JSON prompting and bounding box layout" loading="lazy" />
+            <span class="j-issue">ISSUE #05</span>
+            <span class="j-date-pill">Jun 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip gold">JSON BBox Layout</span>
+              <span class="meta-chip crimson">NF4 · 9.3B</span>
+              <span class="meta-chip">Typography</span>
+            </div>
+            <h3>Ideogram 4 — structured JSON prompting on a single RTX 4090</h3>
+            <p>
+              Running the 9.3B open-weight design model locally in NF4: structured JSON captions with explicit hex palettes and bounding boxes, a 14-image quality gallery, and a 21-run latency benchmark.
+            </p>
+            <div class="j-foot">
+              <span>21-Run Speed Benchmark</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- #04 Bonsai-Image-4B -->
+        <a href="bonsai-image/bonsai-image.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="image-video quant"
+           data-keywords="bonsai-image-4b prismml 1.58-bit ternary quantization gemlite hqq 4 steps sub-second 5gb vram rtx 4090">
+          <div class="j-thumb">
+            <img src="bonsai-image/demo_assets/hero.png" alt="Bonsai-Image-4B 1.58-bit ternary image model" loading="lazy" />
+            <span class="j-issue">ISSUE #04</span>
+            <span class="j-date-pill">May 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip crimson">1.58-Bit Ternary</span>
+              <span class="meta-chip emerald">~5 GB VRAM</span>
+              <span class="meta-chip">Sub-Second</span>
+            </div>
+            <h3>Bonsai-Image-4B — a 1.58-bit text-to-image model on a single RTX 4090</h3>
+            <p>
+              PrismML's 4B image generator quantized to ternary weights (1.58-bit) and step-distilled to 4 steps: ~5&nbsp;GB VRAM footprint, sub-second warm renders, ten style presets, and throughput numbers.
+            </p>
+            <div class="j-foot">
+              <span>Extreme Quantization</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- #03 Lance 3B -->
+        <a href="lance/lance.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="image-video"
+           data-keywords="lance 3b bytedance unified image video understanding generation editing vqa t2v i2v rtx 4090">
+          <div class="j-thumb">
+            <img src="lance/demo_assets/hero.png" alt="ByteDance Lance 3B unified image and video transformer" loading="lazy" />
+            <span class="j-issue">ISSUE #03</span>
+            <span class="j-date-pill">May 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip violet">Unified Image + Video</span>
+              <span class="meta-chip cobalt">7 Modes · 3B</span>
+            </div>
+            <h3>Lance 3B — a unified image &amp; video model on a single RTX 4090</h3>
+            <p>
+              ByteDance's single 3B transformer handles image/video VQA, generation, and instruction editing across seven modes — plus the two surgical code patches needed to stay inside 24&nbsp;GB VRAM.
+            </p>
+            <div class="j-foot">
+              <span>7-Mode Capability Tour</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- #02 Qwopus 3.6 MTP -->
+        <a href="qwopus-mtp-2x/qwopus-mtp-2x.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="quant"
+           data-keywords="qwopus 3.6 27b multi-token prediction mtp llama.cpp gguf speculative decoding 1.98x speedup ollama llama-server rtx 4090">
+          <div class="j-thumb">
+            <img src="qwopus-mtp-2x/demo_assets/00_hero.png" alt="Doubling Qwopus 3.6 throughput with Multi-Token Prediction in llama.cpp" loading="lazy" />
+            <span class="j-issue">ISSUE #02</span>
+            <span class="j-date-pill">May 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip emerald">1.98× Avg Speedup</span>
+              <span class="meta-chip crimson">MTP · llama.cpp</span>
+              <span class="meta-chip">27B GGUF</span>
+            </div>
+            <h3>Doubling Qwopus 3.6 on a single RTX 4090 — Multi-Token Prediction with llama.cpp</h3>
+            <p>
+              Achieving a 1.98× average token/s speedup (2.21× peak on math reasoning) via native Multi-Token Prediction in <code>llama.cpp</code> — including the failed Ollama detour and production server flags.
+            </p>
+            <div class="j-foot">
+              <span>LLM Inference Speedup</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- #01 HiDream-O1-Image -->
+        <a href="images-models/hidream-o1-image.html"
+           class="spot-card j-card reveal"
+           data-article-item
+           data-cats="image-video"
+           data-keywords="hidream-o1-image 8b pixel-dit five generation modes text-to-image instruction editing ip reference bbox layout openpose diagram styles rtx 4090">
+          <div class="j-thumb">
+            <img src="images-models/demo_assets/01_t2i.png" alt="HiDream-O1-Image 5 generation modes on RTX 4090" loading="lazy" />
+            <span class="j-issue">ISSUE #01</span>
+            <span class="j-date-pill">May 2026</span>
+          </div>
+          <div class="j-body">
+            <div class="j-chips">
+              <span class="meta-chip violet">8B Pixel-DiT</span>
+              <span class="meta-chip gold">5 Control Modes</span>
+              <span class="meta-chip">OpenPose + BBox</span>
+            </div>
+            <h3>HiDream-O1-Image — Five generation modes &amp; nine diagram styles on a single GPU</h3>
+            <p>
+              End-to-end capability tour of the open 8B Pixel-DiT model: text-to-image, instruction editing, IP subject reference, bounding-box layout, and OpenPose conditioning on one RTX&nbsp;4090.
+            </p>
+            <div class="j-foot">
+              <span>Capability Tour</span>
+              <span class="read-arr">Read <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+      <div class="empty-state" id="articles-empty" hidden>
+        <h3 style="font-family:var(--font-display);font-size:1.25rem;margin-bottom:8px;">No matching dispatches</h3>
+        <p style="color:var(--muted);font-size:0.92rem;margin-bottom:18px;">Try clearing the search filter or exploring all 14 field notes.</p>
+        <button type="button" class="btn btn-surface btn-sm" id="reset-articles"><i class="fas fa-rotate-left"></i> Show all 14 articles</button>
+      </div>
+
+      <!-- Companion Books Banner -->
+      <aside class="spot-card companion-strip reveal" aria-label="Related books">
+        <div>
+          <div class="sec-kicker" style="margin-bottom:8px;">Go Deeper // Companion Monographs</div>
+          <h2 class="display-lg" style="font-size:clamp(1.4rem,2.4vw,1.95rem);margin-bottom:8px;">
+            Enjoying the GraphRAG &amp; Agent engineering dispatches?
+          </h2>
+          <p style="color:var(--muted);font-size:0.95rem;max-width:64ch;">
+            Explore Omar's full-length illustrated books — including <em>Advanced GraphRAG &amp; Knowledge Agents</em> and <em>LLM Evaluation &amp; Reliability Engineering</em> — paired with 49 free companion video modules.
+          </p>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="../books/index.html" class="btn btn-gold"><i class="fas fa-book-open"></i> Browse 6 Books</a>
+          <a href="../courses/index.html" class="btn btn-surface"><i class="fas fa-play"></i> Free Video Courses</a>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-bio">
+          <a href="../index.html" class="brand-link">
+            <span class="ok-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+            <span class="brand-text">
+              <span class="brand-name">Omar Kamal Hosney</span>
+              <span class="brand-role">omkamal.github.io</span>
+            </span>
+          </a>
+          <p>Illustrated books, structured video courses, GPU field notes, and engineering cheatsheets on AI, ML, and software architecture.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Libraries</h4>
+          <ul>
+            <li><a href="../books/index.html">Published Books (6)</a></li>
+            <li><a href="../courses/index.html">Video Courses (49 Modules)</a></li>
+            <li><a href="index.html">GPU Field Notes (14)</a></li>
+            <li><a href="../cheatsheets/index.html">Cheatsheets (30+)</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Book Showcases</h4>
+          <ul>
+            <li><a href="../book/ai-transformation-consultant.html">AI Transformation Consultant</a></li>
+            <li><a href="../book/llm-evaluation-reliability-engineering.html">LLM Evaluation &amp; Reliability</a></li>
+            <li><a href="../book/camera-composition-playbook.html">Camera Composition Playbook</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="../resume.html">Executive Resume / CV</a></li>
+            <li><a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener">LinkedIn</a></li>
+            <li><a href="https://github.com/omkamal" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="../privacy.html">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Omar Kamal Hosney · Built natively on GitHub Pages</span>
+        <div class="social-row">
+          <a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://medium.com/@omkamal" target="_blank" rel="noopener" aria-label="Medium"><i class="fab fa-medium-m"></i></a>
+          <a href="https://github.com/omkamal" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/catalog.js" defer></script>
+  <script src="../assets/site.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const pills = document.querySelectorAll('[data-art-filter]');
+      const searchInput = document.getElementById('article-search');
+      const items = document.querySelectorAll('[data-article-item]');
+      const leadWrapper = document.getElementById('lead-wrapper');
+      const emptyEl = document.getElementById('articles-empty');
+      const resetBtn = document.getElementById('reset-articles');
+      let activeCat = 'all';
+
+      function applyFilter() {
+        const q = (searchInput.value || '').trim().toLowerCase();
+        const tokens = q ? q.split(/\s+/) : [];
+        let visibleCount = 0;
+
+        items.forEach((el) => {
+          const cats = (el.getAttribute('data-cats') || '').split(/\s+/);
+          const catMatch = activeCat === 'all' || cats.includes(activeCat);
+          let textMatch = true;
+          if (tokens.length) {
+            const hay = `${el.textContent} ${el.getAttribute('data-keywords') || ''}`.toLowerCase();
+            textMatch = tokens.every((t) => hay.includes(t));
+          }
+          const show = catMatch && textMatch;
+          el.hidden = !show;
+          if (show) visibleCount++;
+        });
+
+        if (leadWrapper) {
+          const leadCard = leadWrapper.querySelector('.lead-card');
+          leadWrapper.style.display = leadCard && !leadCard.hidden ? '' : 'none';
+        }
+        if (emptyEl) emptyEl.hidden = visibleCount > 0;
+      }
+
+      pills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+          pills.forEach((p) => p.classList.remove('active'));
+          pill.classList.add('active');
+          activeCat = pill.getAttribute('data-art-filter');
+          applyFilter();
+        });
+      });
+
+      if (searchInput) searchInput.addEventListener('input', applyFilter);
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          activeCat = 'all';
+          pills.forEach((p) => p.classList.toggle('active', p.getAttribute('data-art-filter') === 'all'));
+          applyFilter();
+        });
+      }
+    });
+  </script>
 </body>
 </html>

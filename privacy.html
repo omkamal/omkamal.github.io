@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-root=".">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RT1G8VP79X"></script>
@@ -15,73 +15,156 @@
   <title>Privacy Policy — Omar Kamal Hosney</title>
   <meta name="description" content="Privacy policy for omkamal.github.io and the personal tool omkamal-reel-tools: what data is read, how it is used, stored and deleted." />
   <link rel="canonical" href="https://omkamal.github.io/privacy.html" />
+  <link rel="icon" type="image/jpeg" href="omar.jpeg" />
+  <script>try{const t=localStorage.getItem('omar-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="assets/site.css" />
   <style>
-    :root { --bg:#0b1020; --card:#131a30; --text:#e6e9f2; --muted:#9aa4c0; --accent:#6ea8ff; --line:#222b47; }
-    * { box-sizing: border-box; }
-    body { margin:0; background:var(--bg); color:var(--text); font:16px/1.65 Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
-    main { max-width: 760px; margin: 0 auto; padding: 40px 20px 64px; }
-    h1 { font-size: 2rem; margin: 0 0 4px; }
-    h2 { font-size: 1.2rem; margin: 32px 0 8px; padding-top: 16px; border-top: 1px solid var(--line); }
-    p, li { color: var(--text); }
-    .muted { color: var(--muted); }
-    a { color: var(--accent); }
-    ul { padding-left: 22px; }
-    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
-    nav a { text-decoration: none; }
+    .policy-wrap {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: clamp(44px, 6vw, 76px) clamp(20px, 4vw, 32px) 48px;
+    }
+    .policy-card {
+      padding: clamp(28px, 4vw, 44px);
+    }
+    .policy-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 30px 0 10px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      color: var(--ink);
+    }
+    .policy-card p, .policy-card li {
+      color: var(--ink-2);
+      font-size: 0.96rem;
+      line-height: 1.72;
+    }
+    .policy-card ul {
+      padding-left: 22px;
+      margin: 10px 0;
+      display: grid;
+      gap: 8px;
+    }
+    .policy-card a {
+      color: var(--gold);
+      font-weight: 600;
+    }
+    [data-theme="light"] .policy-card a {
+      color: var(--cobalt);
+    }
+    .policy-card code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: var(--bg-0);
+      border: 1px solid var(--line-strong);
+    }
   </style>
 </head>
 <body>
-<main>
-  <nav><a href="/">&larr; omkamal.github.io</a></nav>
-  <h1>Privacy Policy</h1>
-  <p class="muted">Last updated: 12 October 2026</p>
+  <div class="ambient-bg" aria-hidden="true"></div>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="ambient-grain" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"></div>
 
-  <div class="card">
-    <strong>In short:</strong> the app <em>omkamal-reel-tools</em> is a personal tool used only by its owner, Omar Kamal Hosney.
-    It reads the owner's own Instagram reels, keeps the files on the owner's own computer, and does not share, sell or publish any data.
-  </div>
+  <header class="site-header">
+    <div class="shell nav-bar">
+      <a href="index.html" class="brand-link">
+        <span class="ok-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span class="brand-text">
+          <span class="brand-name">Omar Kamal Hosney</span>
+          <span class="brand-role">AI Architect · Author</span>
+        </span>
+      </a>
+      <nav class="nav-center" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="books/index.html">Books</a>
+        <a href="courses/index.html">Courses</a>
+        <a href="articles/index.html">Articles</a>
+        <a href="cheatsheets/index.html">Cheatsheets</a>
+        <a href="resume.html">Resume</a>
+      </nav>
+      <div class="nav-actions">
+        <button type="button" class="cmdk-trigger" data-cmdk-open aria-label="Search site">
+          <i class="fas fa-magnifying-glass"></i><span class="label-txt">Search</span><kbd>⌘K</kbd>
+        </button>
+        <button type="button" class="icon-btn" data-theme-toggle aria-label="Toggle theme"><i class="fas fa-sun"></i></button>
+      </div>
+    </div>
+  </header>
 
-  <h2>1. Who is responsible</h2>
-  <p>Omar Kamal Hosney (Instagram <a href="https://www.instagram.com/omkamal/">@omkamal</a>) runs this website and the tool described below.
-  Contact: <a href="mailto:omkamal@gmail.com">omkamal@gmail.com</a>.</p>
+  <main class="policy-wrap">
+    <div class="sec-kicker">Legal &amp; Governance</div>
+    <h1 class="display-lg" style="margin-bottom:8px;">Privacy Policy</h1>
+    <p style="font-family:var(--font-mono);font-size:0.78rem;color:var(--muted);margin-bottom:28px;">Last updated: 12 October 2026</p>
 
-  <h2>2. The app "omkamal-reel-tools"</h2>
-  <p>This is a Meta developer app in development mode. It is a personal, single-user tool, and it is not offered to the public or to other Instagram accounts.</p>
-  <ul>
-    <li><strong>What it reads:</strong> through the Instagram API with Instagram Login and the permission <code>instagram_business_basic</code>, it reads the owner's own profile basics (username, account type) and the owner's own media list and media files (reels), including their audio.</li>
-    <li><strong>What it does with it:</strong> it takes the audio of one of the owner's own reels and uses it as the soundtrack for a new video that is created and saved locally.</li>
-    <li><strong>What it never does:</strong> it does not read other people's accounts through the API, does not read or send messages, does not post, comment or publish, and does not collect data about followers or other users.</li>
-  </ul>
+    <div class="spot-card policy-card">
+      <div style="padding:18px 20px;border-radius:var(--radius-md);background:var(--gold-soft);border:1px solid rgba(232,168,56,0.3);color:var(--ink);">
+        <strong>In short:</strong> the app <em>omkamal-reel-tools</em> is a personal tool used only by its owner, Omar Kamal Hosney.
+        It reads the owner's own Instagram reels, keeps the files on the owner's own computer, and does not share, sell or publish any data.
+      </div>
 
-  <h2>3. Storage, sharing and retention</h2>
-  <ul>
-    <li>Downloaded audio, analysis files and generated videos are stored only on the owner's own computer.</li>
-    <li>The access token is stored in a private local configuration file and is never published or shared.</li>
-    <li>No Platform Data is sold, shared with third parties, used for advertising, or used to train AI models.</li>
-    <li>Files are kept only as long as the owner needs them and can be deleted at any time.</li>
-  </ul>
+      <h2>1. Who is responsible</h2>
+      <p>Omar Kamal Hosney (Instagram <a href="https://www.instagram.com/omkamal/" target="_blank" rel="noopener">@omkamal</a>) runs this website and the tool described below.
+      Contact: <a href="mailto:omkamal@gmail.com">omkamal@gmail.com</a>.</p>
 
-  <h2>4. Data deletion</h2>
-  <p>Because the tool is used only by its owner, there is no data held about other people. To remove the app's access to an Instagram account:</p>
-  <ul>
-    <li>In Instagram, go to <em>Settings &rarr; Apps and websites</em>, open the <em>Tester invites</em> or <em>Active</em> tab, and remove <em>omkamal-reel-tools</em>.</li>
-    <li>Or email <a href="mailto:omkamal@gmail.com">omkamal@gmail.com</a> and any data tied to your account will be deleted within 30 days.</li>
-  </ul>
+      <h2>2. The app "omkamal-reel-tools"</h2>
+      <p>This is a Meta developer app in development mode. It is a personal, single-user tool, and it is not offered to the public or to other Instagram accounts.</p>
+      <ul>
+        <li><strong>What it reads:</strong> through the Instagram API with Instagram Login and the permission <code>instagram_business_basic</code>, it reads the owner's own profile basics (username, account type) and the owner's own media list and media files (reels), including their audio.</li>
+        <li><strong>What it does with it:</strong> it takes the audio of one of the owner's own reels and uses it as the soundtrack for a new video that is created and saved locally.</li>
+        <li><strong>What it never does:</strong> it does not read other people's accounts through the API, does not read or send messages, does not post, comment or publish, and does not collect data about followers or other users.</li>
+      </ul>
 
-  <h2>5. This website</h2>
-  <p>This site is a static GitHub Pages site. It uses Google Analytics (Google tag) to count visits and see which pages are read. This may set cookies and send anonymous usage data (such as pages viewed, approximate location and device type) to Google.
-  You can block this with your browser's privacy settings or an extension, or opt out with Google's
-  <a href="https://tools.google.com/dlpage/gaoptout">browser add-on</a>. The site does not ask for or store accounts, passwords or payment details.
-  GitHub, which hosts the site, may also process technical logs as described in its own privacy statement.</p>
+      <h2>3. Storage, sharing and retention</h2>
+      <ul>
+        <li>Downloaded audio, analysis files and generated videos are stored only on the owner's own computer.</li>
+        <li>The access token is stored in a private local configuration file and is never published or shared.</li>
+        <li>No Platform Data is sold, shared with third parties, used for advertising, or used to train AI models.</li>
+        <li>Files are kept only as long as the owner needs them and can be deleted at any time.</li>
+      </ul>
 
-  <h2>6. Children</h2>
-  <p>The site and the tool are not directed at children under 13.</p>
+      <h2>4. Data deletion</h2>
+      <p>Because the tool is used only by its owner, there is no data held about other people. To remove the app's access to an Instagram account:</p>
+      <ul>
+        <li>In Instagram, go to <em>Settings &rarr; Apps and websites</em>, open the <em>Tester invites</em> or <em>Active</em> tab, and remove <em>omkamal-reel-tools</em>.</li>
+        <li>Or email <a href="mailto:omkamal@gmail.com">omkamal@gmail.com</a> and any data tied to your account will be deleted within 30 days.</li>
+      </ul>
 
-  <h2>7. Changes</h2>
-  <p>If this policy changes, the new version will be posted on this page with an updated date.</p>
+      <h2>5. This website</h2>
+      <p>This site is a static GitHub Pages site. It uses Google Analytics (Google tag) to count visits and see which pages are read. This may set cookies and send anonymous usage data (such as pages viewed, approximate location and device type) to Google.
+      You can block this with your browser's privacy settings or an extension, or opt out with Google's
+      <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">browser add-on</a>. The site does not ask for or store accounts, passwords or payment details.
+      GitHub, which hosts the site, may also process technical logs as described in its own privacy statement.</p>
 
-  <h2>8. Contact</h2>
-  <p>Questions or requests: <a href="mailto:omkamal@gmail.com">omkamal@gmail.com</a>.</p>
-</main>
+      <h2>6. Children</h2>
+      <p>The site and the tool are not directed at children under 13.</p>
+
+      <h2>7. Changes</h2>
+      <p>If this policy changes, the new version will be posted on this page with an updated date.</p>
+
+      <h2>8. Contact</h2>
+      <p>Questions or requests: <a href="mailto:omkamal@gmail.com">omkamal@gmail.com</a>.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-bottom" style="padding-top:0;">
+        <span>© 2026 Omar Kamal Hosney · <a href="index.html" style="color:var(--gold);text-decoration:none;">Return to Home</a></span>
+        <div class="social-row">
+          <a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://github.com/omkamal" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/catalog.js" defer></script>
+  <script src="assets/site.js" defer></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-root="..">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RT1G8VP79X"></script>
@@ -10,102 +10,210 @@
 
   gtag('config', 'G-RT1G8VP79X');
 </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aider.ai Presentation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .slide {
-            display: none;
-            padding: 50px;
-            text-align: center;
-        }
-        .slide.active-slide {
-            display: block;
-        }
-        .controls {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-        }
-        .control-button {
-            background-color: #333;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            margin-right: 5px;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aider.ai Overview Deck — Omar Kamal Hosney</title>
+  <meta name="description" content="Interactive slide presentation introducing Aider AI pair programming in the terminal." />
+  <link rel="canonical" href="https://omkamal.github.io/cheatsheets/aider-presentation.html" />
+  <link rel="icon" type="image/jpeg" href="../omar.jpeg" />
+  <script>try{const t=localStorage.getItem('omar-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/site.css" />
+  <style>
+    .deck-shell {
+      min-height: calc(100vh - 72px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 36px 0 64px;
+    }
+    .deck-stage {
+      min-height: 440px;
+      padding: clamp(32px, 5vw, 64px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .slide { display: none; animation: fadeSlide 0.35s var(--ease-out); }
+    .slide.active-slide { display: block; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .slide-num {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .slide h1, .slide h2 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(2rem, 4.2vw, 3.3rem);
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      margin-bottom: 20px;
+    }
+    .slide p {
+      font-size: clamp(1.08rem, 1.6vw, 1.35rem);
+      color: var(--ink-2);
+      max-width: 58ch;
+      line-height: 1.65;
+    }
+    .slide ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .slide li {
+      padding: 20px;
+      border-radius: var(--radius-md);
+      background: var(--bg-0);
+      border: 1px solid var(--line-strong);
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .slide li span {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .deck-controls {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .deck-dots {
+      display: flex;
+      gap: 8px;
+    }
+    .deck-dot {
+      width: 28px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--line-strong);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, width 0.2s;
+    }
+    .deck-dot.active {
+      width: 44px;
+      background: var(--gold);
+    }
+  </style>
 </head>
 <body>
-    <a href="https://omkamal.github.io/" target="_blank">Home</a>
+  <div class="ambient-bg" aria-hidden="true"></div>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="ambient-grain" aria-hidden="true"></div>
 
-<div class="slide active-slide">
-    <h1>Welcome to Aider.ai</h1>
-    <p>Discover the power of AI in your daily tasks.</p>
-</div>
+  <header class="site-header">
+    <div class="shell nav-bar">
+      <a href="index.html" class="brand-link">
+        <span class="ok-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span class="brand-text">
+          <span class="brand-name">← All Cheatsheets</span>
+          <span class="brand-role">Interactive Briefing Deck</span>
+        </span>
+      </a>
+      <div class="nav-actions">
+        <a href="aider.html" class="btn btn-surface btn-sm">Aider CLI Sheet</a>
+        <a href="aider_tips.html" class="btn btn-surface btn-sm">7 Visual Tips</a>
+        <button type="button" class="cmdk-trigger" data-cmdk-open aria-label="Search site">
+          <i class="fas fa-magnifying-glass"></i><kbd>⌘K</kbd>
+        </button>
+        <button type="button" class="icon-btn" data-theme-toggle aria-label="Toggle theme"><i class="fas fa-sun"></i></button>
+      </div>
+    </div>
+  </header>
 
-<div class="slide">
-    <h2>What is Aider.ai?</h2>
-    <p>Aider.ai is an AI-powered assistant designed to help you with various tasks.</p>
-</div>
+  <main class="shell deck-shell">
+    <div class="spot-card deck-stage">
+      <div class="slide active-slide">
+        <div class="slide-num">Slide 01 / 04 · Executive Overview</div>
+        <h1>Welcome to <span class="serif-em">Aider</span> AI Pair Programming</h1>
+        <p>Ship clean, Git-native multi-file features and refactors straight from your terminal by pairing with frontier LLMs against a live repository map.</p>
+      </div>
 
-<div class="slide">
-    <h2>Features</h2>
-    <ul>
-        <li>Task automation</li>
-        <li>Data analysis</li>
-        <li>Time management</li>
-    </ul>
-</div>
+      <div class="slide">
+        <div class="slide-num">Slide 02 / 04 · Core Architecture</div>
+        <h2>What makes Aider different?</h2>
+        <p>Unlike copy-paste chat windows, Aider understands your full repository symbol graph via tree-sitter, edits multiple files atomically, and commits every change with sensible Git messages.</p>
+      </div>
 
-<div class="slide">
-    <h2>Benefits</h2>
-    <p>Aider.ai can save you time, reduce errors, and increase productivity.</p>
-</div>
+      <div class="slide">
+        <div class="slide-num">Slide 03 / 04 · Key Capabilities</div>
+        <h2>Core Developer Capabilities</h2>
+        <ul>
+          <li>Repository Map<span>Tree-sitter AST graph surfaces relevant symbols across large codebases automatically.</span></li>
+          <li>Architect + Editor Mode<span>Pair a deep reasoning model for planning with a fast coding model for surgical diffs.</span></li>
+          <li>Git &amp; Test Guardrails<span>Automatic commits, <code>/undo</code> rollbacks, linter checks, and <code>/test</code> error loops.</span></li>
+        </ul>
+      </div>
 
-<div class="controls">
-    <button class="control-button" onclick="prevSlide()">Prev</button>
-    <button class="control-button" onclick="nextSlide()">Next</button>
-    <button class="control-button" onclick="homeSlide()">Home</button>
-</div>
+      <div class="slide">
+        <div class="slide-num">Slide 04 / 04 · Engineering Impact</div>
+        <h2>Measurable Workflow Benefits</h2>
+        <p>Eliminate boilerplate context switching, keep every AI edit auditable inside Git history, and iterate faster with automated test-and-fix feedback loops.</p>
+        <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="aider.html" class="btn btn-gold">Open Full Aider CLI Cheatsheet →</a>
+          <a href="aider_tips.html" class="btn btn-surface">Read the 7 Visual Workflow Rules</a>
+        </div>
+      </div>
+    </div>
 
-<script>
+    <div class="deck-controls">
+      <div style="display:flex;gap:10px;">
+        <button type="button" class="btn btn-surface btn-sm" onclick="prevSlide()"><i class="fas fa-arrow-left"></i> Prev</button>
+        <button type="button" class="btn btn-gold btn-sm" onclick="nextSlide()">Next <i class="fas fa-arrow-right"></i></button>
+        <button type="button" class="btn btn-surface btn-sm" onclick="homeSlide()">Restart</button>
+      </div>
+      <div class="deck-dots" id="deck-dots"></div>
+      <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);">Use <kbd>←</kbd> <kbd>→</kbd> or <kbd>Space</kbd></span>
+    </div>
+  </main>
+
+  <script src="../assets/catalog.js" defer></script>
+  <script src="../assets/site.js" defer></script>
+  <script>
     let currentSlide = 0;
     const slides = document.querySelectorAll('.slide');
+    const dotsWrap = document.getElementById('deck-dots');
+
+    slides.forEach((_, idx) => {
+      const d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'deck-dot' + (idx === 0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Go to slide ' + (idx + 1));
+      d.onclick = () => showSlide(idx);
+      dotsWrap.appendChild(d);
+    });
 
     function showSlide(index) {
-        slides.forEach(slide => slide.classList.remove('active-slide'));
-        slides[index].classList.add('active-slide');
-        currentSlide = index;
+      slides.forEach((s, i) => s.classList.toggle('active-slide', i === index));
+      dotsWrap.querySelectorAll('.deck-dot').forEach((d, i) => d.classList.toggle('active', i === index));
+      currentSlide = index;
     }
+    function nextSlide() { showSlide((currentSlide + 1) % slides.length); }
+    function prevSlide() { showSlide((currentSlide - 1 + slides.length) % slides.length); }
+    function homeSlide() { showSlide(0); }
 
-    function nextSlide() {
-        if (currentSlide < slides.length - 1) {
-            showSlide(currentSlide + 1);
-        }
-    }
-
-    function prevSlide() {
-        if (currentSlide > 0) {
-            showSlide(currentSlide - 1);
-        }
-    }
-
-    function homeSlide() {
-        showSlide(0);
-    }
-
-    // Initialize the first slide
-    showSlide(currentSlide);
-</script>
-
+    window.addEventListener('keydown', (e) => {
+      if (document.querySelector('.cmdk-backdrop.open')) return;
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'Home') { e.preventDefault(); homeSlide(); }
+    });
+  </script>
 </body>
 </html>

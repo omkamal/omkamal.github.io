@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-root="../..">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RT1G8VP79X"></script>
@@ -117,6 +117,8 @@ footer a{color:var(--accent);text-decoration:none}
   .gallery{grid-template-columns:repeat(2,1fr)}
 }
 </style>
+  <script>try{const t=localStorage.getItem('omar-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="stylesheet" href="../../assets/article-enhance.css" />
 </head>
 <body>
 <nav class="nav"><div class="nav-inner">
@@ -326,5 +328,8 @@ document.querySelectorAll('a.lb').forEach(a=>a.addEventListener('click',e=>{e.pr
 lb.addEventListener('click',()=>lb.classList.remove('on'));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('on');});
 </script>
+  <script src="../../assets/catalog.js" defer></script>
+  <script src="../../assets/site.js" defer></script>
+  <script src="../../assets/article-enhance.js" defer></script>
 </body>
 </html>

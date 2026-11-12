@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-root="..">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RT1G8VP79X"></script>
@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Courses — Omar Kamal Hosney</title>
   <meta name="description" content="Free video courses by Omar Kamal Hosney: AI for Business Consultants (a technical orientation), Reinforcement Learning for Python Developers with Stable-Baselines3 (English and Egyptian Arabic), Advanced GraphRAG &amp; Knowledge Agents (Parts 1 and 2), Context Management &amp; Agent Memory in LLMs, and a gentle introduction to microservices for Python developers." />
-  <meta name="keywords" content="Omar Kamal Hosney courses, GraphRAG course, knowledge graph course, agent memory, LightRAG, HippoRAG, microservices course, Python microservices, free video course" />
+  <meta name="keywords" content="Omar Kamal Hosney courses, GraphRAG course, knowledge graph course, agent memory, LightRAG, HippoRAG, reinforcement learning Python, AI for business consultants, microservices course, Python microservices, free video course" />
   <meta name="author" content="Omar Kamal Hosney" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://omkamal.github.io/courses/" />
@@ -23,15 +23,17 @@
   <meta property="og:site_name" content="Omar Kamal Hosney" />
   <meta property="og:url" content="https://omkamal.github.io/courses/" />
   <meta property="og:title" content="Courses — Omar Kamal Hosney" />
-  <meta property="og:description" content="Free video courses on GraphRAG, knowledge agents, context management and agent memory, and microservices for Python developers." />
+  <meta property="og:description" content="Six structured free video courses (49 modules) on AI consulting, reinforcement learning, GraphRAG, agent memory, and Python microservices." />
   <meta property="og:image" content="https://omkamal.github.io/omar.jpeg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Courses — Omar Kamal Hosney" />
-  <meta name="twitter:description" content="Free video courses on GraphRAG, knowledge agents, context management and agent memory, and microservices for Python developers." />
+  <meta name="twitter:description" content="Six structured free video courses (49 modules) on AI consulting, reinforcement learning, GraphRAG, agent memory, and Python microservices." />
   <meta name="twitter:image" content="https://omkamal.github.io/omar.jpeg" />
 
   <link rel="icon" type="image/jpeg" href="../omar.jpeg" />
   <link rel="apple-touch-icon" href="../omar.jpeg" />
+
+  <script>try{const t=localStorage.getItem('omar-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 
   <script type="application/ld+json">
 {
@@ -384,241 +386,526 @@
 }
   </script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/site.css" />
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    .academy-hero {
+      padding: clamp(48px, 6vw, 84px) 0 40px;
+      border-bottom: 1px solid var(--line);
+    }
 
-    :root {
-      --c-bg-1: #0f172a; --c-bg-2: #1e293b;
-      --c-primary: #3b82f6; --c-primary-dark: #2563eb;
-      --c-accent: #a855f7; --c-accent-dark: #7c3aed; --c-pink: #ec4899; --c-green: #10b981;
-      --c-text: #e2e8f0; --c-text-muted: #94a3b8; --c-text-dim: #64748b;
-      --c-card: rgba(30, 41, 59, 0.5); --c-card-hover: rgba(30, 41, 59, 0.85);
-      --c-border: rgba(148, 163, 184, 0.15); --c-border-hover: rgba(148, 163, 184, 0.3);
-      --radius-md: 14px; --radius-xl: 32px;
-      --ease: cubic-bezier(0.22, 1, 0.36, 1);
-      --a1: var(--c-primary); --a2: var(--c-primary-dark); --glow: rgba(59, 130, 246, 0.45);
+    .academy-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 34px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: var(--c-text); background: var(--c-bg-1); min-height: 100vh;
-      overflow-x: hidden; line-height: 1.65; -webkit-font-smoothing: antialiased; position: relative;
+    .a-stat {
+      padding: 18px 20px;
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      border: 1px solid var(--line);
     }
-    body::before {
-      content: ''; position: fixed; inset: 0; z-index: -2;
-      background:
-        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(59, 130, 246, 0.25), transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 100%, rgba(168, 85, 247, 0.22), transparent 60%),
-        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(236, 72, 153, 0.10), transparent 60%),
-        linear-gradient(180deg, var(--c-bg-1) 0%, var(--c-bg-2) 50%, var(--c-bg-1) 100%);
+    .a-stat strong {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.65rem;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
     }
-    body::after {
-      content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background-image:
-        linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    .a-stat span {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
-    .container { max-width: 1000px; margin: 0 auto; padding: 0 32px; }
 
-    nav { padding: 28px 0; display: flex; align-items: center; justify-content: space-between; }
-    .brand { display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 1.05em; color: var(--c-text); text-decoration: none; }
-    .brand-mark {
-      width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
-      background: linear-gradient(135deg, var(--c-primary), var(--c-accent));
-      font-weight: 800; color: #fff; box-shadow: 0 6px 20px -5px rgba(59, 130, 246, 0.55);
+    .jump-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 24px 0 18px;
     }
-    .nav-links { display: flex; gap: 8px; align-items: center; }
-    .nav-links a {
-      color: var(--c-text-muted); text-decoration: none; font-size: 0.9em; font-weight: 500;
-      padding: 8px 16px; border-radius: 10px; transition: all 0.2s var(--ease);
+    .jump-chips a {
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 0.81rem;
+      font-weight: 600;
+      text-decoration: none;
+      background: var(--line-subtle);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      transition: all 0.2s;
     }
-    .nav-links a:hover, .nav-links a.active { color: var(--c-text); background: rgba(148, 163, 184, 0.08); }
+    .jump-chips a:hover {
+      color: var(--ink);
+      border-color: var(--gold);
+      background: var(--gold-soft);
+    }
 
-    .hero { padding: 56px 0 28px; max-width: 760px; }
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; margin-bottom: 24px;
-      background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.25);
-      border-radius: 50px; font-size: 0.8em; font-weight: 500; color: #93c5fd; letter-spacing: 0.04em;
+    .course-panel {
+      --accent-c: var(--cobalt);
+      --accent-soft-c: var(--cobalt-soft);
+      padding: clamp(26px, 4vw, 44px);
+      margin-bottom: 32px;
+      scroll-margin-top: 94px;
     }
-    .hero h1 { font-size: clamp(2.3rem, 5vw, 3.4rem); line-height: 1.07; font-weight: 800; letter-spacing: -0.035em; margin-bottom: 18px; }
-    .gradient {
-      background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .tagline { font-size: 1.12em; color: var(--c-text-muted); margin-bottom: 14px; }
-    .stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
-    .stat {
-      padding: 8px 16px; border-radius: 50px; font-size: 0.85em; font-weight: 600;
-      background: var(--c-card); border: 1px solid var(--c-border); color: var(--c-text);
-    }
-    .jump { display: flex; gap: 10px; flex-wrap: wrap; margin: 30px 0 44px; }
-    .jump a {
-      padding: 10px 18px; border-radius: 12px; font-size: 0.9em; font-weight: 600; text-decoration: none;
-      color: var(--c-text); background: rgba(148, 163, 184, 0.08); border: 1px solid var(--c-border);
-      transition: all 0.25s var(--ease);
-    }
-    .jump a:hover { border-color: var(--c-primary); background: rgba(59, 130, 246, 0.12); transform: translateY(-2px); }
+    .course-panel[hidden] { display: none !important; }
+    .course-panel.teal   { --accent-c: var(--teal);    --accent-soft-c: var(--teal-soft); }
+    .course-panel.amber  { --accent-c: var(--gold);    --accent-soft-c: var(--gold-soft); }
+    .course-panel.blue   { --accent-c: var(--cobalt);  --accent-soft-c: var(--cobalt-soft); }
+    .course-panel.purple { --accent-c: var(--violet);  --accent-soft-c: var(--violet-soft); }
+    .course-panel.pink   { --accent-c: var(--crimson); --accent-soft-c: var(--crimson-soft); }
+    .course-panel.green  { --accent-c: var(--emerald); --accent-soft-c: var(--emerald-soft); }
 
-    .course {
-      position: relative; margin-bottom: 36px; padding: 44px 44px 36px;
-      background: var(--c-card); border: 1px solid var(--c-border); border-radius: var(--radius-xl);
-      backdrop-filter: blur(8px); scroll-margin-top: 20px;
+    .course-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 32px;
+      align-items: center;
+      margin-bottom: 22px;
     }
-    .course::before {
-      content: ''; position: absolute; inset: 0; border-radius: var(--radius-xl); padding: 1px; pointer-events: none;
-      background: linear-gradient(135deg, var(--glow), transparent 55%);
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor; mask-composite: exclude;
-    }
-    .course.blue   { --a1: var(--c-primary); --a2: var(--c-primary-dark); --glow: rgba(59, 130, 246, 0.55); }
-    .course.purple { --a1: var(--c-accent);  --a2: var(--c-accent-dark);  --glow: rgba(168, 85, 247, 0.55); }
-    .course.green  { --a1: var(--c-green);   --a2: #059669;               --glow: rgba(16, 185, 129, 0.55); }
-    .course.amber  { --a1: #f59e0b; --a2: #b45309; --glow: rgba(245, 158, 11, 0.55); }
-    .course.teal   { --a1: #14b8a6; --a2: #0f766e; --glow: rgba(20, 184, 166, 0.55); }
-    .course.pink   { --a1: var(--c-pink);    --a2: #be185d;               --glow: rgba(236, 72, 153, 0.55); }
 
-    .course-head { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 20px; }
-    .course-icon {
-      width: 58px; height: 58px; border-radius: 16px; display: grid; place-items: center; font-size: 1.6em;
-      background: linear-gradient(135deg, var(--glow), rgba(255,255,255,0.03)); border: 1px solid var(--c-border-hover);
+    .course-head {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
     }
-    .course-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .course-index-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-c);
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--accent-soft-c);
+      border: 1px solid var(--line);
+    }
+
+    .course-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
     .chip {
-      padding: 4px 12px; border-radius: 50px; font-size: 0.78em; font-weight: 600; color: var(--c-text-muted);
-      background: rgba(148, 163, 184, 0.08); border: 1px solid var(--c-border);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: var(--line-subtle);
+      border: 1px solid var(--line);
+      color: var(--muted);
     }
-    .chip.level { color: #fff; background: var(--a1); border-color: transparent; }
-    .course h2 { font-size: clamp(1.5rem, 3vw, 2.05rem); line-height: 1.2; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 14px; }
-    .course-intro { color: var(--c-text); opacity: 0.92; margin-bottom: 12px; }
-    .course-who { color: var(--c-text-muted); font-size: 0.95em; margin-bottom: 18px; }
-    .course-who strong { color: var(--c-text); }
-    .card-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
-    .card-tags span {
-      font-size: 0.78em; padding: 4px 12px; border-radius: 50px; color: var(--c-text-muted);
-      background: rgba(148, 163, 184, 0.06); border: 1px solid var(--c-border);
+    .chip.level {
+      background: var(--accent-soft-c);
+      color: var(--accent-c);
+      border-color: var(--accent-c);
     }
-    .btn {
-      display: inline-flex; align-items: center; gap: 10px; padding: 13px 24px; border-radius: 12px;
-      font-weight: 600; font-size: 0.95em; text-decoration: none; transition: all 0.3s var(--ease);
-    }
-    .btn-primary { color: #fff; background: linear-gradient(135deg, var(--a1), var(--a2)); box-shadow: 0 8px 24px -6px var(--glow); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 34px -8px var(--glow); }
 
-    .course-top { display: grid; grid-template-columns: 1fr 360px; gap: 32px; align-items: center; margin-bottom: 18px; }
+    .course-panel h2 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.5rem, 2.8vw, 2.15rem);
+      line-height: 1.14;
+      letter-spacing: -0.028em;
+    }
+
     .course-cover {
-      position: relative; display: block; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 9;
-      border: 1px solid var(--c-border-hover); box-shadow: 0 20px 50px -20px var(--glow); transition: transform 0.3s var(--ease);
+      position: relative;
+      display: block;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow-md);
+      background: var(--bg-2);
     }
-    .course-cover:hover { transform: translateY(-3px) scale(1.01); }
-    .course-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .course-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s var(--ease-spring);
+    }
+    .course-cover:hover img {
+      transform: scale(1.035);
+    }
     .course-cover .play {
-      position: absolute; right: 12px; bottom: 12px; width: 44px; height: 44px; border-radius: 50%;
-      display: grid; place-items: center; color: #fff; font-size: 0.95em; padding-left: 3px;
-      background: linear-gradient(135deg, var(--a1), var(--a2)); box-shadow: 0 6px 18px -4px var(--glow);
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--gold);
+      color: #07090e;
+      font-size: 0.9rem;
+      padding-left: 2px;
+      box-shadow: var(--shadow-md);
     }
-    .mods-label { margin: 34px 0 14px; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.12em; color: var(--c-text-dim); font-weight: 700; }
-    .mods { list-style: none; display: grid; gap: 10px; }
+
+    .course-intro {
+      color: var(--ink-2);
+      font-size: 0.98rem;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+    .course-who {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+    .course-who strong { color: var(--ink); }
+    .course-who a { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 16px 0 22px;
+    }
+    .card-tags span {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: var(--bg-0);
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .course-actions-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .course-prog-pill {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--muted);
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: var(--bg-0);
+      border: 1px solid var(--line);
+    }
+
+    .mods-label {
+      margin: 28px 0 14px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .mods {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .mod-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+    }
+    .mod-row[hidden] {
+      display: none !important;
+    }
+
     .mod {
-      display: flex; align-items: center; gap: 16px; padding: 14px 18px; border-radius: var(--radius-md);
-      text-decoration: none; color: var(--c-text); background: rgba(15, 23, 42, 0.45); border: 1px solid var(--c-border);
-      transition: all 0.25s var(--ease);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 13px 16px;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: var(--ink);
+      background: var(--bg-0);
+      border: 1px solid var(--line);
+      transition: transform 0.22s var(--ease-spring), border-color 0.22s, background 0.22s;
+      min-width: 0;
     }
-    .mod-static:hover { transform: none; background: rgba(15, 23, 42, 0.45); border-color: var(--c-border); }
-    .mod:hover { transform: translateX(4px); background: var(--c-card-hover); border-color: var(--a1); }
-    .mod:focus-visible, .jump a:focus-visible, .btn:focus-visible { outline: 2px solid var(--a1); outline-offset: 3px; }
-    .mod-thumb { position: relative; flex: 0 0 auto; width: 128px; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; border: 1px solid var(--c-border); }
-    .mod-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    a.mod:hover {
+      transform: translateX(4px);
+      border-color: var(--accent-c);
+      background: var(--surface-2);
+    }
+    .mod-row.watched .mod {
+      border-color: rgba(16, 185, 129, 0.35);
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .mod-thumb {
+      position: relative;
+      flex: 0 0 auto;
+      width: 132px;
+      aspect-ratio: 16 / 9;
+      border-radius: 9px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--bg-2);
+    }
+    .mod-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     .mod-num {
-      flex: 0 0 auto; min-width: 40px; height: 40px; padding: 0 8px; display: grid; place-items: center;
-      border-radius: 11px; font-weight: 800; font-size: 0.85em; color: #fff;
-      background: linear-gradient(135deg, var(--a1), var(--a2));
+      flex: 0 0 auto;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--accent-soft-c);
+      color: var(--accent-c);
     }
-    .mod-intro .mod-num { background: rgba(148, 163, 184, 0.15); color: var(--c-text-muted); font-size: 0.75em; }
-    .mod-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-    .mod-label { font-size: 0.7em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--a1); }
-    .mod-title { font-weight: 600; font-size: 0.97em; line-height: 1.35; }
-    .mod-blurb { color: var(--c-text-muted); font-size: 0.85em; line-height: 1.5; margin-top: 2px; }
-    .mod-dur { flex: 0 0 auto; font-size: 0.82em; font-variant-numeric: tabular-nums; color: var(--c-text-dim); font-weight: 600; }
 
-    .note { color: var(--c-text-dim); font-size: 0.9em; text-align: center; margin: 8px 0 56px; }
-    .note a { color: #93c5fd; }
+    .mod-body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .mod-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-c);
+      margin-bottom: 2px;
+    }
+    .mod-title {
+      font-weight: 700;
+      font-size: 0.96rem;
+      line-height: 1.35;
+    }
+    .mod-blurb {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.52;
+      margin-top: 3px;
+    }
+    .mod-dur {
+      flex: 0 0 auto;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--dim);
+      font-weight: 600;
+    }
 
-    footer { padding: 50px 0 70px; border-top: 1px solid var(--c-border); text-align: center; }
-    footer p { color: var(--c-text-dim); font-size: 0.9em; margin-bottom: 16px; }
-    .social { display: flex; justify-content: center; gap: 14px; }
-    .social a {
-      width: 42px; height: 42px; display: grid; place-items: center; border-radius: 11px;
-      background: rgba(148, 163, 184, 0.06); border: 1px solid var(--c-border);
-      color: var(--c-text-muted); text-decoration: none; transition: all 0.3s var(--ease);
+    .mod-check {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--bg-0);
+      color: transparent;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
     }
-    .social a:hover { color: var(--c-text); border-color: var(--c-primary); background: rgba(59, 130, 246, 0.1); transform: translateY(-2px); }
+    .mod-check:hover {
+      border-color: var(--emerald);
+      color: var(--dim);
+    }
+    .mod-row.watched .mod-check {
+      background: var(--emerald);
+      border-color: var(--emerald);
+      color: #07090e;
+    }
 
-    @media (max-width: 920px) {
-      .nav-links a:not(.active) { display: none; }
-      .nav-links a.home { display: inline-block; }
+    .expand-syllabus-btn {
+      margin-top: 14px;
+      width: 100%;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      background: var(--line-subtle);
+      border: 1px dashed var(--line-strong);
+      color: var(--ink-2);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    @media (max-width: 860px) {
-      .course-top { grid-template-columns: 1fr; }
-      .course-cover { order: -1; }
+    .expand-syllabus-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--gold-soft);
     }
+
+    @media (max-width: 900px) {
+      .course-top {
+        grid-template-columns: 1fr;
+      }
+      .course-cover {
+        order: -1;
+      }
+      .academy-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .course-prog-pill {
+        margin-left: 0;
+      }
+    }
+
     @media (max-width: 640px) {
-      .mod-thumb { width: 96px; }
-      .container { padding: 0 20px; }
-      .course { padding: 30px 22px 26px; }
-      .mod { padding: 12px 14px; gap: 12px; }
-      .mod-dur { display: none; }
+      .mod-thumb {
+        width: 92px;
+      }
+      .mod-dur {
+        display: none;
+      }
+      .mod {
+        padding: 11px 12px;
+        gap: 11px;
+      }
     }
-    @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
-    ::selection { background: var(--c-primary); color: #fff; }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
-  <div class="container">
-    <nav>
-      <a href="../index.html" class="brand">
-        <span class="brand-mark">OK</span>
-        <span>Omar Kamal Hosney</span>
-      </a>
-      <div class="nav-links">
-        <a href="../cheatsheets/index.html">Cheatsheets</a>
-        <a href="../articles/index.html">Blog</a>
-        <a href="index.html" class="active">Courses</a>
-        <a href="../books/index.html">Books</a>
-        <a href="../resume.html" target="_blank">Resume</a>
-      </div>
-    </nav>
+  <a href="#main" class="skip-link">Skip to courses</a>
+  <div class="ambient-bg" aria-hidden="true"></div>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="ambient-grain" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"></div>
 
-    <header class="hero">
-      <div class="eyebrow">🎓 Free video courses</div>
-      <h1>Learn it <span class="gradient">step by step</span>.</h1>
-      <p class="tagline">
-        Structured, module-by-module video courses on topics I work with every day: AI for consultants, reinforcement learning, graph-based retrieval,
-        context management, agent memory and distributed system design. Each module is a self-contained video of roughly 15 to 35 minutes,
-        and most courses are public YouTube playlists you can follow in order (the reinforcement learning videos are coming soon; its code is on GitHub).
-      </p>
-      <p class="tagline">
-        Start with the one that matches where you are. Pick the AI for business consultants course for a technical orientation to generative AI, agents and AI transformation, the reinforcement learning course to train your first agents with plain Python, the microservices course for architecture fundamentals,
-        begin the context and agent-memory course if you want a gentle start with LLM agents, or the GraphRAG series if you already know basic RAG.
-      </p>
-      <div class="stats">
-        <span class="stat">6 courses</span>
-        <span class="stat">49 modules</span>
-        <span class="stat">Free · YouTube and GitHub</span>
+  <header class="site-header">
+    <div class="shell nav-bar">
+      <a href="../index.html" class="brand-link">
+        <span class="ok-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span class="brand-text">
+          <span class="brand-name">Omar Kamal Hosney</span>
+          <span class="brand-role">AI Architect · Author</span>
+        </span>
+      </a>
+
+      <nav class="nav-center" aria-label="Primary">
+        <a href="../index.html">Home</a>
+        <a href="../books/index.html">Books</a>
+        <a href="index.html" class="active">Courses</a>
+        <a href="../articles/index.html">Articles</a>
+        <a href="../cheatsheets/index.html">Cheatsheets</a>
+        <a href="../resume.html">Resume</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="cmdk-trigger" data-cmdk-open aria-label="Search entire site">
+          <i class="fas fa-magnifying-glass"></i>
+          <span class="label-txt">Search</span>
+          <kbd>⌘K</kbd>
+        </button>
+        <button type="button" class="icon-btn" data-theme-toggle aria-label="Toggle theme">
+          <i class="fas fa-sun"></i>
+        </button>
+        <a href="https://www.youtube.com/channel/UCTLyZbX-h91QEkgz3_Tspwg" target="_blank" rel="noopener" class="nav-cta hide-sm">
+          <i class="fab fa-youtube"></i> YouTube
+        </a>
+        <button type="button" class="icon-btn mobile-toggle" data-mobile-open aria-label="Open menu">
+          <i class="fas fa-bars"></i>
+        </button>
       </div>
+    </div>
+  </header>
+
+  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+    <div class="mobile-panel">
+      <div class="mobile-panel-head">
+        <span class="brand-name">Navigation</span>
+        <button type="button" class="icon-btn" data-mobile-close aria-label="Close menu"><i class="fas fa-xmark"></i></button>
+      </div>
+      <nav class="mobile-links">
+        <a href="../index.html"><span>Home</span><span class="sub">Overview</span></a>
+        <a href="../books/index.html"><span>Books</span><span class="sub">6 Monographs</span></a>
+        <a href="index.html" class="active"><span>Courses</span><span class="sub">49 Modules</span></a>
+        <a href="../articles/index.html"><span>Blog &amp; Field Notes</span><span class="sub">14 Deep Reads</span></a>
+        <a href="../cheatsheets/index.html"><span>Cheatsheets</span><span class="sub">30+ References</span></a>
+        <a href="../resume.html"><span>Resume / CV</span><span class="sub">30+ Yrs</span></a>
+      </nav>
+    </div>
+  </div>
+
+  <main id="main" class="shell">
+    <header class="academy-hero">
+      <div class="sec-kicker">Video Curriculum // Structured Playlists</div>
+      <h1 class="display-xl" style="margin-bottom:20px;">
+        Learn it <span class="serif-em">step by step</span>.
+      </h1>
+      <p class="lede" style="margin-bottom:14px;">
+        Structured, module-by-module video courses on topics I work with every day: AI strategy for consultants, reinforcement learning in Python, graph-based retrieval, context engineering, agent memory, and distributed microservice architecture.
+      </p>
+      <p class="lede" style="font-size:0.96rem;">
+        Each module is a self-contained 15–35 minute lesson on YouTube or GitHub. Tick off modules with the checkmark button on the right to track your progress locally in your browser.
+      </p>
+
+      <div class="academy-stats">
+        <div class="a-stat"><strong data-count="6">6</strong><span>Complete Courses</span></div>
+        <div class="a-stat"><strong data-count="49">49</strong><span>Video Modules</span></div>
+        <div class="a-stat"><strong>~15.7h</strong><span>Total Runtime</span></div>
+        <div class="a-stat"><strong id="total-watched-stat">0 / 53</strong><span>Lessons Completed</span></div>
+      </div>
+
+      <nav class="jump-chips" aria-label="Jump to a course">
+        <a href="#ai-consultants">01 · AI for Consultants</a>
+        <a href="#rl-python">02 · Reinforcement Learning (SB3)</a>
+        <a href="#microservices">03 · Python Microservices</a>
+        <a href="#graphrag-1">04 · Advanced GraphRAG I</a>
+        <a href="#graphrag-2">05 · Advanced GraphRAG II</a>
+        <a href="#context-memory">06 · Context &amp; Agent Memory</a>
+      </nav>
     </header>
 
-    <div class="jump" aria-label="Jump to a course"><a href="#ai-consultants">💼 AI for Business Consultants</a><a href="#rl-python">🤖 Reinforcement Learning (SB3)</a><a href="#microservices">🧩 Microservices for Python Developers</a><a href="#graphrag-1">🕸️ Advanced GraphRAG (Part 1)</a><a href="#graphrag-2">🧠 Advanced GraphRAG (Part 2)</a><a href="#context-memory">🧠 Context &amp; Agent Memory in LLMs</a></div>
+    <!-- Interactive Filter & Live Syllabus Search -->
+    <div class="toolbar-row" style="margin-top:28px;">
+      <div class="filter-pills" role="tablist" aria-label="Filter courses by level">
+        <button type="button" class="pill-btn active" data-lvl-filter="all">All Courses <span class="count">6</span></button>
+        <button type="button" class="pill-btn" data-lvl-filter="orientation">Orientation</button>
+        <button type="button" class="pill-btn" data-lvl-filter="beginner">Beginner → Intermediate</button>
+        <button type="button" class="pill-btn" data-lvl-filter="advanced">Advanced</button>
+        <button type="button" class="pill-btn" id="toggle-all-syllabi">Expand All Modules</button>
+      </div>
 
-    <section class="course teal" id="ai-consultants">
+      <div class="search-box">
+        <i class="fas fa-magnifying-glass s-icon" aria-hidden="true"></i>
+        <input type="search" id="course-search" data-local-search placeholder="Filter 49 modules (e.g. PPO, Zep, HippoRAG, MCP)…" aria-label="Search course modules" />
+      </div>
+    </div>
+
+    <section data-level="orientation" class="spot-card course-panel teal" id="ai-consultants">
       <div class="course-top">
        <div class="course-main">
       <div class="course-head">
-        <div class="course-icon">💼</div>
+        <span class="course-index-badge">COURSE 01 · ORIENTATION</span>
         <div class="course-meta">
           <span class="chip level">Technical orientation</span>
           <span class="chip">5 modules</span>
@@ -636,40 +923,41 @@
       <p class="course-intro">A panoramic, technically literate view of AI for the consultant who has to lead the room. It moves quickly through classical machine learning, spends its weight on generative AI, agents, platforms and guardrails, then turns to what makes AI transformations succeed or fail. The last module scores two real cases against that framework and ends with an interview toolkit. Every figure on screen carries its source, and the vendor landscape is dated November 2026.</p>
       <p class="course-who"><strong>Who it's for:</strong> business and technology consultants, and anyone who knows software and finance but not machine learning, and has to challenge vendors and engineers, lead AI-transformation engagements or sit an interview on them. It follows the book <a href="../book/ai-transformation-consultant.html"><em>The AI Transformation Consultant</em></a>.</p>
       <div class="card-tags"><span>Generative AI</span><span>LLMs</span><span>Agents</span><span>MCP</span><span>Guardrails</span><span>AI Transformation</span><span>EU AI Act</span><span>Case Studies</span></div>
-      <a class="btn btn-primary" href="https://www.youtube.com/playlist?list=PLEIqpypBwz8c" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Watch the full playlist</a>
+      <div class="course-actions-row"><a class="btn btn-gold" href="https://www.youtube.com/playlist?list=PLEIqpypBwz8c" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Watch the full playlist</a> <a class="btn btn-surface" href="../book/ai-transformation-consultant.html"><i class="fas fa-book-open"></i> Explore Companion Book</a><div class="course-prog-pill" data-course-prog="ai-consultants"><span>0</span> completed</div></div>
       <h3 class="mods-label">Course modules</h3>
       <ol class="mods">
-          <li><a class="mod mod-intro" href="https://www.youtube.com/watch?v=iBX_mB9ne_E&amp;list=PLEIqpypBwz8c" target="_blank" rel="noopener">
+          <li class="mod-row" data-mod-id="ai-consultants-m1"><a class="mod mod-intro" href="https://www.youtube.com/watch?v=iBX_mB9ne_E&amp;list=PLEIqpypBwz8c" target="_blank" rel="noopener">
             <span class="mod-num">▶</span>
             <span class="mod-body"><span class="mod-title">Course trailer</span></span>
-            <span class="mod-dur">0:32</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=jCzMi7Zjd3w&amp;list=PLEIqpypBwz8c" target="_blank" rel="noopener">
+            <span class="mod-dur">0:32</span></a><button type="button" class="mod-check" data-toggle-watch="ai-consultants-m1" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="ai-consultants-m2"><a class="mod" href="https://www.youtube.com/watch?v=jCzMi7Zjd3w&amp;list=PLEIqpypBwz8c" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/ai-consultants-m1.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 1</span><span class="mod-title">AI in One Sitting: From Rules to Learning to Transformers</span><span class="mod-blurb">The mental-model shift from rules to learning, the AI map, classical machine learning, deep learning, model quality for non-engineers, MLOps, and why data is the real asset.</span></span>
-            <span class="mod-dur">19:22</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=emnpvHKUB_s&amp;list=PLEIqpypBwz8c" target="_blank" rel="noopener">
+            <span class="mod-dur">19:22</span></a><button type="button" class="mod-check" data-toggle-watch="ai-consultants-m2" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="ai-consultants-m3"><a class="mod" href="https://www.youtube.com/watch?v=emnpvHKUB_s&amp;list=PLEIqpypBwz8c" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/ai-consultants-m2.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 2</span><span class="mod-title">Generative AI and LLMs, Inside Out</span><span class="mod-blurb">How an LLM works and is built, its limits, prompting and context, RAG, open versus closed models, the vendor landscape, and how to choose with your own evals.</span></span>
-            <span class="mod-dur">17:38</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=OBWEJag7IIs&amp;list=PLEIqpypBwz8c" target="_blank" rel="noopener">
+            <span class="mod-dur">17:38</span></a><button type="button" class="mod-check" data-toggle-watch="ai-consultants-m3" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="ai-consultants-m4"><a class="mod" href="https://www.youtube.com/watch?v=OBWEJag7IIs&amp;list=PLEIqpypBwz8c" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/ai-consultants-m3.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 3</span><span class="mod-title">Agents, Platforms, Hyperscalers and Guardrails</span><span class="mod-blurb">Agents, tool use, MCP and A2A, frameworks, the hyperscalers and wider ecosystem, a reference architecture, guardrails, LLMOps, and the EU AI Act and NIST rules.</span></span>
-            <span class="mod-dur">16:53</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=wUpOOvm0bDM&amp;list=PLEIqpypBwz8c" target="_blank" rel="noopener">
+            <span class="mod-dur">16:53</span></a><button type="button" class="mod-check" data-toggle-watch="ai-consultants-m4" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="ai-consultants-m5"><a class="mod" href="https://www.youtube.com/watch?v=wUpOOvm0bDM&amp;list=PLEIqpypBwz8c" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/ai-consultants-m4.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 4</span><span class="mod-title">Making AI Transformation Work</span><span class="mod-blurb">Why transformations fail and what makes them succeed: the eight failure modes and seven success factors, a consulting playbook, business case and ROI, operating model and industry lenses.</span></span>
-            <span class="mod-dur">16:51</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=iGGTma0N_60&amp;list=PLEIqpypBwz8c" target="_blank" rel="noopener">
+            <span class="mod-dur">16:51</span></a><button type="button" class="mod-check" data-toggle-watch="ai-consultants-m5" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="ai-consultants-m6"><a class="mod" href="https://www.youtube.com/watch?v=iGGTma0N_60&amp;list=PLEIqpypBwz8c" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/ai-consultants-m5.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 5</span><span class="mod-title">Case Studies and the Interview Toolkit</span><span class="mod-blurb">A success (JPMorgan Chase) and a failure (MD Anderson with IBM Watson) scored against the framework, a lightning round of four more cases, 15 interview questions and a 30-day plan.</span></span>
-            <span class="mod-dur">16:48</span></a></li>
+            <span class="mod-dur">16:48</span></a><button type="button" class="mod-check" data-toggle-watch="ai-consultants-m6" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
       </ol>
     </section>
-    <section class="course amber" id="rl-python">
+
+    <section data-level="beginner" class="spot-card course-panel amber" id="rl-python">
       <div class="course-top">
        <div class="course-main">
       <div class="course-head">
-        <div class="course-icon">🤖</div>
+        <span class="course-index-badge">COURSE 02 · HANDS-ON PYTHON</span>
         <div class="course-meta">
           <span class="chip level">Beginner → Intermediate</span>
           <span class="chip">5 modules</span>
@@ -688,37 +976,38 @@
       <p class="course-who"><strong>Who it's for:</strong> Python developers who know classes and pip and want to <em>use</em> reinforcement learning. No calculus, no statistics. The course is available in English and in Egyptian Arabic (Arabic narration, English terms, code and on-screen text).</p>
       <p class="course-who" lang="ar" dir="rtl"><strong>بالعربي:</strong> الكورس متاح بنسخة بالعربي المصري: شرح بالمصري، والـ code والمصطلحات بالإنجليزي، في خمس أجزاء.</p>
       <div class="card-tags"><span>Python</span><span>Reinforcement Learning</span><span>Stable-Baselines3</span><span>PPO</span><span>DQN</span><span>SAC</span><span>Gymnasium</span><span>PyTorch</span></div>
-      <a class="btn btn-primary" href="https://github.com/omkamal/reinforcement-learning-using-stable-baslines3-arabic-course" target="_blank" rel="noopener"><i class="fab fa-github"></i> Get the code on GitHub</a>
+      <div class="course-actions-row"><a class="btn btn-gold" href="https://github.com/omkamal/reinforcement-learning-using-stable-baslines3-arabic-course" target="_blank" rel="noopener"><i class="fab fa-github"></i> Get the code on GitHub</a><div class="course-prog-pill" data-course-prog="rl-python"><span>0</span> completed</div></div>
       <p class="course-who" style="margin-top:18px"><strong>Videos:</strong> coming soon to YouTube. The code, notes and examples are public now; run times below are the English videos (the Arabic videos run about 10% shorter).</p>
       <h3 class="mods-label">Course modules</h3>
       <ol class="mods">
-          <li><div class="mod mod-static">
+          <li class="mod-row" data-mod-id="rl-python-m1"><div class="mod mod-static">
             <span class="mod-thumb"><img src="img/rl-m1.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 1</span><span class="mod-title">The Game Loop</span><span class="mod-blurb">Agent, environment and reward as plain Python objects, the reset() / step() contract, spaces, a first trained player in one line, and your own CoffeeShop environment.</span></span>
-            <span class="mod-dur">24:54</span></div></li>
-          <li><div class="mod mod-static">
+            <span class="mod-dur">24:54</span></div><button type="button" class="mod-check" data-toggle-watch="rl-python-m1" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="rl-python-m2"><div class="mod mod-static">
             <span class="mod-thumb"><img src="img/rl-m2.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 2</span><span class="mod-title">The Dog Trainer (PPO and A2C)</span><span class="mod-blurb">Why PPO is the safe default, the trainer knobs (n_steps, gamma, clip_range), parallel environments, TensorBoard, and a fair PPO vs A2C race.</span></span>
-            <span class="mod-dur">32:22</span></div></li>
-          <li><div class="mod mod-static">
+            <span class="mod-dur">32:22</span></div><button type="button" class="mod-check" data-toggle-watch="rl-python-m2" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="rl-python-m3"><div class="mod mod-static">
             <span class="mod-thumb"><img src="img/rl-m3.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 3</span><span class="mod-title">The Notebook of Experience (DQN)</span><span class="mod-blurb">Q-values as a notebook, the replay buffer, epsilon-greedy exploration, the frozen target network, and why DQN needs buttons, not dials.</span></span>
-            <span class="mod-dur">29:55</span></div></li>
-          <li><div class="mod mod-static">
+            <span class="mod-dur">29:55</span></div><button type="button" class="mod-check" data-toggle-watch="rl-python-m3" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="rl-python-m4"><div class="mod mod-static">
             <span class="mod-thumb"><img src="img/rl-m4.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 4</span><span class="mod-title">The Steady Hand (SAC, TD3, DDPG)</span><span class="mod-blurb">Continuous actions, entropy as curiosity, twin critics and exploration noise: a three-way race on the Pendulum, then CoffeeShop with a dial.</span></span>
-            <span class="mod-dur">31:59</span></div></li>
-          <li><div class="mod mod-static">
+            <span class="mod-dur">31:59</span></div><button type="button" class="mod-check" data-toggle-watch="rl-python-m4" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="rl-python-m5"><div class="mod mod-static">
             <span class="mod-thumb"><img src="img/rl-m5.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 5</span><span class="mod-title">The Workshop (shipping it)</span><span class="mod-blurb">Reward hacking, callbacks, save and load, VecNormalize, CPU vs GPU, Atari pixels, the algorithm chooser, and shipping your own bot.</span></span>
-            <span class="mod-dur">36:55</span></div></li>
+            <span class="mod-dur">36:55</span></div><button type="button" class="mod-check" data-toggle-watch="rl-python-m5" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
       </ol>
     </section>
-    <section class="course blue" id="microservices">
+
+    <section data-level="beginner" class="spot-card course-panel blue" id="microservices">
       <div class="course-top">
        <div class="course-main">
       <div class="course-head">
-        <div class="course-icon">🧩</div>
+        <span class="course-index-badge">COURSE 03 · ARCHITECTURE</span>
         <div class="course-meta">
           <span class="chip level">Beginner → Intermediate</span>
           <span class="chip">4 modules</span>
@@ -736,36 +1025,37 @@
       <p class="course-intro">You can build a web app in Python, but you've never designed a distributed system. This is a high-level, architect's-eye course on how large applications are designed, decomposed, built and deployed as microservices on AWS and Google Cloud. It follows the book <em>A Gentle Introduction to Microservices for Python Developers</em>, one module per major part of the book.</p>
       <p class="course-who"><strong>Who it's for:</strong> Python developers and aspiring architects who want the big picture before diving into frameworks.</p>
       <div class="card-tags"><span>Python</span><span>Microservices</span><span>AWS</span><span>Google Cloud</span><span>Architecture</span></div>
-      <a class="btn btn-primary" href="https://www.youtube.com/playlist?list=PLHu2YXyCjx6A" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Watch the full playlist</a>
+      <div class="course-actions-row"><a class="btn btn-gold" href="https://www.youtube.com/playlist?list=PLHu2YXyCjx6A" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Watch the full playlist</a> <a class="btn btn-surface" href="../books/index.html#microservices"><i class="fas fa-book-open"></i> Explore Companion Book</a><div class="course-prog-pill" data-course-prog="microservices"><span>0</span> completed</div></div>
       <h3 class="mods-label">Course modules</h3>
       <ol class="mods">
-          <li><a class="mod mod-intro" href="https://www.youtube.com/watch?v=2GROaBD5a-0&amp;list=PLHu2YXyCjx6A" target="_blank" rel="noopener">
+          <li class="mod-row" data-mod-id="microservices-m1"><a class="mod mod-intro" href="https://www.youtube.com/watch?v=2GROaBD5a-0&amp;list=PLHu2YXyCjx6A" target="_blank" rel="noopener">
             <span class="mod-num">▶</span>
             <span class="mod-body"><span class="mod-title">Course trailer</span></span>
-            <span class="mod-dur">0:11</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=mZdsznUX0oM&amp;list=PLHu2YXyCjx6A" target="_blank" rel="noopener">
+            <span class="mod-dur">0:11</span></a><button type="button" class="mod-check" data-toggle-watch="microservices-m1" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="microservices-m2"><a class="mod" href="https://www.youtube.com/watch?v=mZdsznUX0oM&amp;list=PLHu2YXyCjx6A" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/microservices-m1.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 1</span><span class="mod-title">Microservices Fundamentals</span><span class="mod-blurb">What microservices are, how they differ from a monolith, and when the trade-offs are worth it.</span></span>
-            <span class="mod-dur">18:07</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=zCM95pq7q0Q&amp;list=PLHu2YXyCjx6A" target="_blank" rel="noopener">
+            <span class="mod-dur">18:07</span></a><button type="button" class="mod-check" data-toggle-watch="microservices-m2" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="microservices-m3"><a class="mod" href="https://www.youtube.com/watch?v=zCM95pq7q0Q&amp;list=PLHu2YXyCjx6A" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/microservices-m2.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 2</span><span class="mod-title">Designing &amp; Decomposing a Large System</span><span class="mod-blurb">How to break a big system into services with clear boundaries and responsibilities.</span></span>
-            <span class="mod-dur">16:58</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=RorSAQwYCKw&amp;list=PLHu2YXyCjx6A" target="_blank" rel="noopener">
+            <span class="mod-dur">16:58</span></a><button type="button" class="mod-check" data-toggle-watch="microservices-m3" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="microservices-m4"><a class="mod" href="https://www.youtube.com/watch?v=RorSAQwYCKw&amp;list=PLHu2YXyCjx6A" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/microservices-m3.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 3</span><span class="mod-title">Microservice Architecture Patterns</span><span class="mod-blurb">The recurring patterns that make a set of services work together reliably.</span></span>
-            <span class="mod-dur">19:27</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=QxQBUxAe8MA&amp;list=PLHu2YXyCjx6A" target="_blank" rel="noopener">
+            <span class="mod-dur">19:27</span></a><button type="button" class="mod-check" data-toggle-watch="microservices-m4" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="microservices-m5"><a class="mod" href="https://www.youtube.com/watch?v=QxQBUxAe8MA&amp;list=PLHu2YXyCjx6A" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/microservices-m4.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 4</span><span class="mod-title">Building Microservices on AWS &amp; Google Cloud</span><span class="mod-blurb">Taking the design to the cloud: building and deploying services on AWS and Google Cloud.</span></span>
-            <span class="mod-dur">23:30</span></a></li>
+            <span class="mod-dur">23:30</span></a><button type="button" class="mod-check" data-toggle-watch="microservices-m5" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
       </ol>
     </section>
-    <section class="course purple" id="graphrag-1">
+
+    <section data-level="advanced" class="spot-card course-panel purple" id="graphrag-1">
       <div class="course-top">
        <div class="course-main">
       <div class="course-head">
-        <div class="course-icon">🕸️</div>
+        <span class="course-index-badge">COURSE 04 · ADVANCED SERIES I</span>
         <div class="course-meta">
           <span class="chip level">Advanced</span>
           <span class="chip">8 modules</span>
@@ -783,52 +1073,53 @@
       <p class="course-intro">A friendly, in-depth course on building structured, graph-based retrieval systems, from first principles to production multi-agent pipelines. It starts with why plain vector RAG hits a ceiling, then walks through the major GraphRAG families: ontology-driven graph construction, Microsoft GraphRAG and DRIFT, LightRAG, HippoRAG, LinearRAG, AGRAG and StructRAG, finishing with multi-tiered architectures and benchmarks.</p>
       <p class="course-who"><strong>Who it's for:</strong> Engineers and data scientists who already know basic RAG and want to go deeper into graphs.</p>
       <div class="card-tags"><span>GraphRAG</span><span>Knowledge Graphs</span><span>RAG</span><span>Neo4j</span><span>LightRAG</span><span>HippoRAG</span></div>
-      <a class="btn btn-primary" href="https://www.youtube.com/playlist?list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Watch the full playlist</a>
+      <div class="course-actions-row"><a class="btn btn-gold" href="https://www.youtube.com/playlist?list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Watch the full playlist</a> <a class="btn btn-surface" href="../books/index.html#graphrag"><i class="fas fa-book-open"></i> Explore Companion Book</a><div class="course-prog-pill" data-course-prog="graphrag-1"><span>0</span> completed</div></div>
       <h3 class="mods-label">Course modules</h3>
       <ol class="mods">
-          <li><a class="mod mod-intro" href="https://www.youtube.com/watch?v=AzI-t7N9wEM&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
+          <li class="mod-row" data-mod-id="graphrag-1-m1"><a class="mod mod-intro" href="https://www.youtube.com/watch?v=AzI-t7N9wEM&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
             <span class="mod-num">▶</span>
             <span class="mod-body"><span class="mod-title">Series intro</span></span>
-            <span class="mod-dur">0:27</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=PockBHV1jco&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
+            <span class="mod-dur">0:27</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-1-m1" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-1-m2"><a class="mod" href="https://www.youtube.com/watch?v=PockBHV1jco&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-1-m1.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 1</span><span class="mod-title">The RAG Bottleneck &amp; Evolution of Graph-Based Retrieval</span><span class="mod-blurb">Where flat vector retrieval breaks down, and how graph-based retrieval evolved to fix it.</span></span>
-            <span class="mod-dur">13:08</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=eNIPO3oyfcY&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
+            <span class="mod-dur">13:08</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-1-m2" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-1-m3"><a class="mod" href="https://www.youtube.com/watch?v=eNIPO3oyfcY&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-1-m2.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 2</span><span class="mod-title">Ontological Foundations &amp; Graph Construction</span><span class="mod-blurb">Turning raw text into a knowledge graph with LlamaIndex and Neo4j.</span></span>
-            <span class="mod-dur">13:47</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=PAJFHiUqSqI&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
+            <span class="mod-dur">13:47</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-1-m3" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-1-m4"><a class="mod" href="https://www.youtube.com/watch?v=PAJFHiUqSqI&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-1-m3.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 3</span><span class="mod-title">Hierarchical Community Indexing &amp; Global-Local Search</span><span class="mod-blurb">Microsoft GraphRAG and DRIFT: community detection, summaries, and global versus local queries.</span></span>
-            <span class="mod-dur">18:54</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=pWgkVIuj0oY&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
+            <span class="mod-dur">18:54</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-1-m4" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-1-m5"><a class="mod" href="https://www.youtube.com/watch?v=pWgkVIuj0oY&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-1-m4.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 4</span><span class="mod-title">Dual-Level Retrieval &amp; Incremental Updates</span><span class="mod-blurb">LightRAG: dual-level retrieval and updating a graph without rebuilding it.</span></span>
-            <span class="mod-dur">16:51</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=lAhVuSGZlnw&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
+            <span class="mod-dur">16:51</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-1-m5" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-1-m6"><a class="mod" href="https://www.youtube.com/watch?v=lAhVuSGZlnw&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-1-m5.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 5</span><span class="mod-title">Neurobiologically Inspired Long-Term Memory</span><span class="mod-blurb">HippoRAG: hippocampus-inspired indexing and Personalized PageRank retrieval.</span></span>
-            <span class="mod-dur">20:35</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=J96u1bP00to&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
+            <span class="mod-dur">20:35</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-1-m6" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-1-m7"><a class="mod" href="https://www.youtube.com/watch?v=J96u1bP00to&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-1-m6.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 6</span><span class="mod-title">Relation-Free Hierarchical Graph Architectures</span><span class="mod-blurb">LinearRAG: building a graph without extracting relations.</span></span>
-            <span class="mod-dur">19:53</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=fLo-EDX3R8M&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
+            <span class="mod-dur">19:53</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-1-m7" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-1-m8"><a class="mod" href="https://www.youtube.com/watch?v=fLo-EDX3R8M&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-1-m7.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 7</span><span class="mod-title">Minimum Cost Subgraphs &amp; Inference-Time Structuring</span><span class="mod-blurb">AGRAG and StructRAG: picking the cheapest useful subgraph and structuring knowledge at query time.</span></span>
-            <span class="mod-dur">20:14</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=yqRTH2oVpdw&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
+            <span class="mod-dur">20:14</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-1-m8" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-1-m9"><a class="mod" href="https://www.youtube.com/watch?v=yqRTH2oVpdw&amp;list=PLRuVe7tBSyC84B1OiCQL8FnnnZII0PIUZ" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-1-m8.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 8</span><span class="mod-title">Multi-Tiered Architectures, Workflows &amp; Benchmarks</span><span class="mod-blurb">Putting the pieces together into multi-tier pipelines and measuring them with GraphRAG-Bench.</span></span>
-            <span class="mod-dur">25:12</span></a></li>
+            <span class="mod-dur">25:12</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-1-m9" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
       </ol>
     </section>
-    <section class="course pink" id="graphrag-2">
+
+    <section data-level="advanced" class="spot-card course-panel pink" id="graphrag-2">
       <div class="course-top">
        <div class="course-main">
       <div class="course-head">
-        <div class="course-icon">🧠</div>
+        <span class="course-index-badge">COURSE 05 · ADVANCED SERIES II</span>
         <div class="course-meta">
           <span class="chip level">Advanced · Sequel</span>
           <span class="chip">11 modules</span>
@@ -846,65 +1137,65 @@
       <p class="course-intro">The sequel to Part 1 covers the next five families of graph retrieval. It begins with LazyGraphRAG, which defers the cost of indexing, then spends a long module on temporal and agent-memory graphs (two clocks, validity intervals, contradiction handling, Graphiti and Zep, and the wider memory-system landscape). It closes with learned graph retrievers, hypergraphs and agentic graph traversal.</p>
       <p class="course-who"><strong>Who it's for:</strong> Anyone who finished Part 1, or who is building agents that need memory that changes over time.</p>
       <div class="card-tags"><span>Agent Memory</span><span>Temporal Graphs</span><span>Graphiti</span><span>Mem0</span><span>Hypergraphs</span><span>GNN-RAG</span></div>
-      <a class="btn btn-primary" href="https://www.youtube.com/playlist?list=PLantNyHhFkMc" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Watch the full playlist</a>
+      <div class="course-actions-row"><a class="btn btn-gold" href="https://www.youtube.com/playlist?list=PLantNyHhFkMc" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Watch the full playlist</a> <a class="btn btn-surface" href="../books/index.html#graphrag"><i class="fas fa-book-open"></i> Explore Companion Book</a><div class="course-prog-pill" data-course-prog="graphrag-2"><span>0</span> completed</div></div>
       <h3 class="mods-label">Course modules</h3>
       <ol class="mods">
-          <li><a class="mod mod-intro" href="https://www.youtube.com/watch?v=M3YziZK0DqY&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
+          <li class="mod-row" data-mod-id="graphrag-2-m1"><a class="mod mod-intro" href="https://www.youtube.com/watch?v=M3YziZK0DqY&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
             <span class="mod-num">▶</span>
             <span class="mod-body"><span class="mod-title">Part II intro</span></span>
-            <span class="mod-dur">0:29</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=Im1XYnf_9QI&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
+            <span class="mod-dur">0:29</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-2-m1" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-2-m2"><a class="mod" href="https://www.youtube.com/watch?v=Im1XYnf_9QI&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-2-m01.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 1</span><span class="mod-title">LazyGraphRAG: Deferring the Cost of Understanding</span><span class="mod-blurb">Build a usable graph with zero LLM calls at index time and pay for understanding only when a question arrives.</span></span>
-            <span class="mod-dur">24:34</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=qGrKe8svgzw&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
+            <span class="mod-dur">24:34</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-2-m2" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-2-m3"><a class="mod" href="https://www.youtube.com/watch?v=qGrKe8svgzw&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-2-m02a.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 2A</span><span class="mod-title">Why Static Memory Breaks</span><span class="mod-blurb">Real agents accumulate facts that change. Why a graph that assumes a still corpus ends up confidently wrong.</span></span>
-            <span class="mod-dur">13:07</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=CHv1n-YnH-I&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
+            <span class="mod-dur">13:07</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-2-m3" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-2-m4"><a class="mod" href="https://www.youtube.com/watch?v=CHv1n-YnH-I&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-2-m02b.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 2B</span><span class="mod-title">Two Clocks: Event Time vs Ingestion Time</span><span class="mod-blurb">Every fact has two timestamps: when it happened and when you learned it.</span></span>
-            <span class="mod-dur">15:12</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=QYvc4eAOY3E&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
+            <span class="mod-dur">15:12</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-2-m4" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-2-m5"><a class="mod" href="https://www.youtube.com/watch?v=QYvc4eAOY3E&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-2-m02c.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 2C</span><span class="mod-title">Validity Intervals &amp; As-Of Queries</span><span class="mod-blurb">Edge validity fields, and asking both what was true on a date and what you believed on it.</span></span>
-            <span class="mod-dur">17:56</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=_3nAhyepyGs&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
+            <span class="mod-dur">17:56</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-2-m5" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-2-m6"><a class="mod" href="https://www.youtube.com/watch?v=_3nAhyepyGs&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-2-m02d.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 2D</span><span class="mod-title">Contradiction &amp; Invalidation</span><span class="mod-blurb">What to do when a new fact disagrees with a stored one, even when they share no words.</span></span>
-            <span class="mod-dur">13:24</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=eDw7ZRdk4gc&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
+            <span class="mod-dur">13:24</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-2-m6" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-2-m7"><a class="mod" href="https://www.youtube.com/watch?v=eDw7ZRdk4gc&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-2-m02e.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 2E</span><span class="mod-title">Meet Graphiti &amp; Zep</span><span class="mod-blurb">A system that implements the whole temporal-memory specification built up so far.</span></span>
-            <span class="mod-dur">18:39</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=kvuU9_0OvEY&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
+            <span class="mod-dur">18:39</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-2-m7" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-2-m8"><a class="mod" href="https://www.youtube.com/watch?v=kvuU9_0OvEY&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-2-m02f.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 2F</span><span class="mod-title">The Memory Systems Landscape</span><span class="mod-blurb">Mem0, A-MEM, G-Memory and ATOM: what each is and the one idea that makes it different.</span></span>
-            <span class="mod-dur">16:39</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=vmfhUbKBZ5I&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
+            <span class="mod-dur">16:39</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-2-m8" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-2-m9"><a class="mod" href="https://www.youtube.com/watch?v=vmfhUbKBZ5I&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-2-m02g.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 2G</span><span class="mod-title">Auditability &amp; Choosing Your Memory</span><span class="mod-blurb">SAGE and MOSS on trust and auditability, plus how to choose a memory system with no common leaderboard.</span></span>
-            <span class="mod-dur">16:32</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=ewoDWwtN5HA&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
+            <span class="mod-dur">16:32</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-2-m9" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-2-m10"><a class="mod" href="https://www.youtube.com/watch?v=ewoDWwtN5HA&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-2-m03.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 3</span><span class="mod-title">Learned Graph Retrievers</span><span class="mod-blurb">GNN-RAG and GFM-RAG: retrievers that are trained rather than computed in closed form.</span></span>
-            <span class="mod-dur">25:49</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=VNox0VhqsSw&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
+            <span class="mod-dur">25:49</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-2-m10" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-2-m11"><a class="mod" href="https://www.youtube.com/watch?v=VNox0VhqsSw&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-2-m04.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 4</span><span class="mod-title">Beyond Triples: Hypergraphs, Atoms &amp; Trees</span><span class="mod-blurb">Representing facts that are not binary, with hypergraphs, atomic facts and tree structures.</span></span>
-            <span class="mod-dur">28:44</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=E_jyL3pqgjY&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
+            <span class="mod-dur">28:44</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-2-m11" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="graphrag-2-m12"><a class="mod" href="https://www.youtube.com/watch?v=E_jyL3pqgjY&amp;list=PLantNyHhFkMc" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/graphrag-2-m05.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 5</span><span class="mod-title">Agentic Graph Traversal</span><span class="mod-blurb">Think-on-Graph, KAG and Structure-R1: retrievers that walk the graph, look, decide and look again.</span></span>
-            <span class="mod-dur">36:17</span></a></li>
+            <span class="mod-dur">36:17</span></a><button type="button" class="mod-check" data-toggle-watch="graphrag-2-m12" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
       </ol>
     </section>
 
-    <section class="course green" id="context-memory">
+    <section data-level="beginner" class="spot-card course-panel green" id="context-memory">
       <div class="course-top">
        <div class="course-main">
       <div class="course-head">
-        <div class="course-icon">🧠</div>
+        <span class="course-index-badge">COURSE 06 · DEEP RESEARCH TOUR</span>
         <div class="course-meta">
           <span class="chip level">Beginner → Advanced</span>
           <span class="chip">16 modules</span>
@@ -922,93 +1213,283 @@
       <p class="course-intro">Why does your AI assistant forget? This gentle, visual course starts with the basics (what context is and why models forget), then moves slowly through recent research on how agents manage context and memory: just-in-time retrieval, learned summaries, pruning, folding, memory editing, evolving playbooks, memory operating systems, graph memory and memory beyond text. Animated diagrams, slow and clear explanations, and real code demos run on local models.</p>
       <p class="course-who"><strong>Who it's for:</strong> Anyone building or using LLM agents who wants to understand context windows, long-task memory and the newest research, with no prior knowledge needed for the first two modules.</p>
       <div class="card-tags"><span>Context Engineering</span><span>Agent Memory</span><span>LLM Agents</span><span>Summarization</span><span>Memory Graphs</span><span>Local Models</span></div>
-      <a class="btn btn-primary" href="https://www.youtube.com/playlist?list=PLGuXM7Vkm1J8" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Watch the full playlist</a>
+      <div class="course-actions-row"><a class="btn btn-gold" href="https://www.youtube.com/playlist?list=PLGuXM7Vkm1J8" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Watch the full playlist</a><div class="course-prog-pill" data-course-prog="context-memory"><span>0</span> completed</div></div>
       <h3 class="mods-label">Course modules</h3>
       <ol class="mods">
-          <li><a class="mod mod-intro" href="https://www.youtube.com/watch?v=Py63G0dg880&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+          <li class="mod-row" data-mod-id="context-memory-m1"><a class="mod mod-intro" href="https://www.youtube.com/watch?v=Py63G0dg880&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-num">▶</span>
             <span class="mod-body"><span class="mod-title">Course introduction</span></span>
-            <span class="mod-dur">0:50</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=kLe9RhRvE80&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">0:50</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m1" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m2"><a class="mod" href="https://www.youtube.com/watch?v=kLe9RhRvE80&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m01.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 1</span><span class="mod-title">What Is Context?</span><span class="mod-blurb">A gentle start: what &quot;context&quot; means for an AI model, how much of it the model can see at once, and why simply adding more is not always better.</span></span>
-            <span class="mod-dur">11:03</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=pVhXMpr67ys&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">11:03</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m2" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m3"><a class="mod" href="https://www.youtube.com/watch?v=pVhXMpr67ys&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m02.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 2</span><span class="mod-title">Why Models Forget</span><span class="mod-blurb">Why long conversations and long agent tasks make models lose track: the ever-growing record, the &quot;lost in the middle&quot; effect, four ways context fails, and the difference between forgetting and memory.</span></span>
-            <span class="mod-dur">12:03</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=C0v2xMiKP2w&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">12:03</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m3" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m4"><a class="mod" href="https://www.youtube.com/watch?v=C0v2xMiKP2w&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m03.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 3</span><span class="mod-title">A Map of the Field</span><span class="mod-blurb">Two maps of the field, agent memory and shrinking the context, so that every later module has a place to land.</span></span>
-            <span class="mod-dur">13:49</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=AKK_fA4EuD8&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">13:49</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m4" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m5"><a class="mod" href="https://www.youtube.com/watch?v=AKK_fA4EuD8&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m04.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 4</span><span class="mod-title">Four Production Patterns</span><span class="mod-blurb">Four patterns used in real agent products to keep context under control: fetch just in time, clear old results, compact the history, and hand work to sub-agents. Plus how to choose between them.</span></span>
-            <span class="mod-dur">11:22</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=vyRUlQRJ4hE&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">11:22</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m5" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m6"><a class="mod" href="https://www.youtube.com/watch?v=vyRUlQRJ4hE&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m05.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 5</span><span class="mod-title">The Surprisingly Simple Winner</span><span class="mod-blurb">A surprising result from JetBrains Research (The Complexity Trap): on software-engineering tasks, a very simple context strategy holds its own against more elaborate ones. The three strategies, the results, why summaries fall short, a hybrid, and cautions.</span></span>
-            <span class="mod-dur">12:38</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=t1DMc4crHNA&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">12:38</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m6" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m7"><a class="mod" href="https://www.youtube.com/watch?v=t1DMc4crHNA&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m06.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 6</span><span class="mod-title">Summaries That Learn</span><span class="mod-blurb">Summaries that are learned instead of hand-written: ReSum (summarize, then restart) and ACON (learning what to keep), with a hands-on look at the summary step and how the two compare.</span></span>
-            <span class="mod-dur">14:36</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=LpbOh4Y8yh0&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">14:36</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m7" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m8"><a class="mod" href="https://www.youtube.com/watch?v=LpbOh4Y8yh0&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m07.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 7</span><span class="mod-title">Skimming Tool Output</span><span class="mod-blurb">SWE-Pruner: a small helper that skims code the way a reader does and keeps only what matters for the goal, with a hands-on run. Then SWE-Pruner Pro, which needs no second model.</span></span>
-            <span class="mod-dur">13:59</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=yDGGX8sYMdY&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">13:59</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m8" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m9"><a class="mod" href="https://www.youtube.com/watch?v=yDGGX8sYMdY&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m08.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 8</span><span class="mod-title">Rebuilding the Workspace</span><span class="mod-blurb">IterResearch: instead of piling everything onto the agent&#x27;s desk, rebuild a compact workspace every round. How it is trained for efficiency, and the results.</span></span>
-            <span class="mod-dur">13:23</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=Z_HaqkJF0eU&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">13:23</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m9" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m10"><a class="mod" href="https://www.youtube.com/watch?v=Z_HaqkJF0eU&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m09.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 9</span><span class="mod-title">Folding the Trajectory</span><span class="mod-blurb">AgentFold and Context-Folding: letting the agent decide when to fold its past into a compact record, or branch off a sub-task and return, with a hands-on run of the real branch loop.</span></span>
-            <span class="mod-dur">15:12</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=TsfMGQBwaZ0&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">15:12</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m10" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m11"><a class="mod" href="https://www.youtube.com/watch?v=TsfMGQBwaZ0&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m10.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 10</span><span class="mod-title">Letting the Agent Edit Its Own Memory</span><span class="mod-blurb">Teaching agents to edit their own memory: Memory-as-Action, AgeMem with its two kinds of memory, and FoldGRPO, which trains the fold.</span></span>
-            <span class="mod-dur">17:09</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=mGEK64m20wc&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">17:09</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m11" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m12"><a class="mod" href="https://www.youtube.com/watch?v=mGEK64m20wc&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m11.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 11</span><span class="mod-title">Context as an Evolving Playbook</span><span class="mod-blurb">Agentic Context Engineering (ACE): treat context as an evolving playbook with three roles instead of rewriting it from scratch. The results and a hands-on run of the real code.</span></span>
-            <span class="mod-dur">14:36</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=jAuB60JKzeg&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">14:36</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m12" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m13"><a class="mod" href="https://www.youtube.com/watch?v=jAuB60JKzeg&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m12.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 12</span><span class="mod-title">Lifelong Memory, Far Cheaper</span><span class="mod-blurb">SimpleMem: a three-stage approach (write, tidy, look up) that gives agents lifelong memory at a much lower cost. The results and a hands-on run of the real code.</span></span>
-            <span class="mod-dur">14:06</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=F2TGCGM_7lk&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">14:06</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m13" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m14"><a class="mod" href="https://www.youtube.com/watch?v=F2TGCGM_7lk&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m13.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 13</span><span class="mod-title">A Memory Operating System</span><span class="mod-blurb">EverMemOS: a self-organizing memory operating system built from MemCells, scenes and recollection. The results and a hands-on run of its successor code, EverOS.</span></span>
-            <span class="mod-dur">18:42</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=YAFChv3wFRI&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">18:42</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m14" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m15"><a class="mod" href="https://www.youtube.com/watch?v=YAFChv3wFRI&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m14.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 14</span><span class="mod-title">Memory as Graphs</span><span class="mod-blurb">MAGMA: agent memory as several connected graphs, with four kinds of connection, retrieval paths chosen by the question, and two speeds of writing. The results and a hands-on run of the real code.</span></span>
-            <span class="mod-dur">19:49</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=2TSD0g_emEs&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">19:49</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m15" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m16"><a class="mod" href="https://www.youtube.com/watch?v=2TSD0g_emEs&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m15.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 15</span><span class="mod-title">Beyond Text: Latent and Parametric Memory</span><span class="mod-blurb">Beyond text: three places to keep memory. AgentOCR (history as a picture), CommitKV (trimming the model&#x27;s notes) and Cortex (memory in the weights).</span></span>
-            <span class="mod-dur">22:01</span></a></li>
-          <li><a class="mod" href="https://www.youtube.com/watch?v=4VbrZeyowbU&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
+            <span class="mod-dur">22:01</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m16" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
+          <li class="mod-row" data-mod-id="context-memory-m17"><a class="mod" href="https://www.youtube.com/watch?v=4VbrZeyowbU&amp;list=PLGuXM7Vkm1J8" target="_blank" rel="noopener">
             <span class="mod-thumb"><img src="img/context-m16.jpg" alt="" width="180" height="101" loading="lazy" /></span>
             <span class="mod-body"><span class="mod-label">Module 16</span><span class="mod-title">Putting It All Together</span><span class="mod-blurb">Putting it all together: a lifecycle for context, how memory is measured (LongMemEval and LoCoMo), a decision guide, and what to do next.</span></span>
-            <span class="mod-dur">17:39</span></a></li>
+            <span class="mod-dur">17:39</span></a><button type="button" class="mod-check" data-toggle-watch="context-memory-m17" aria-label="Mark module completed" title="Mark module completed"><i class="fas fa-check"></i></button></li>
       </ol>
     </section>
 
-    <p class="note">
-      New modules are added to these playlists as they are published. Subscribe on
-      <a href="https://www.youtube.com/channel/UCTLyZbX-h91QEkgz3_Tspwg" target="_blank" rel="noopener">YouTube</a> to follow along.
+    <p style="text-align:center;color:var(--muted);font-size:0.92rem;margin:24px 0 12px;">
+      New modules are added to these playlists as they publish. Subscribe on
+      <a href="https://www.youtube.com/channel/UCTLyZbX-h91QEkgz3_Tspwg" target="_blank" rel="noopener" style="color:var(--gold);font-weight:700;">YouTube ↗</a> to follow along.
     </p>
+  </main>
 
-    <footer>
-      <p>© 2026 Omar Kamal Hosney · Built with care on GitHub Pages</p>
-      <div class="social">
-        <a href="https://www.linkedin.com/in/okhosney/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-        <a href="https://medium.com/@omkamal" target="_blank" aria-label="Medium"><i class="fab fa-medium-m"></i></a>
-        <a href="https://github.com/omkamal" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-bio">
+          <a href="../index.html" class="brand-link">
+            <span class="ok-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+            <span class="brand-text">
+              <span class="brand-name">Omar Kamal Hosney</span>
+              <span class="brand-role">omkamal.github.io</span>
+            </span>
+          </a>
+          <p>Structured video courses, illustrated books, GPU field notes, and dense reference cheatsheets for AI &amp; ML practitioners.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Libraries</h4>
+          <ul>
+            <li><a href="../books/index.html">Published Books (6)</a></li>
+            <li><a href="index.html">Video Courses (49 Modules)</a></li>
+            <li><a href="../articles/index.html">GPU Field Notes (14)</a></li>
+            <li><a href="../cheatsheets/index.html">Cheatsheets (30+)</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Course Tracks</h4>
+          <ul>
+            <li><a href="#ai-consultants">AI for Business Consultants</a></li>
+            <li><a href="#rl-python">Reinforcement Learning (SB3)</a></li>
+            <li><a href="#graphrag-1">Advanced GraphRAG I &amp; II</a></li>
+            <li><a href="#context-memory">Context &amp; Agent Memory</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="../resume.html">Executive Resume / CV</a></li>
+            <li><a href="https://www.youtube.com/channel/UCTLyZbX-h91QEkgz3_Tspwg" target="_blank" rel="noopener">YouTube Channel</a></li>
+            <li><a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener">LinkedIn</a></li>
+            <li><a href="../privacy.html">Privacy Policy</a></li>
+          </ul>
+        </div>
       </div>
-    </footer>
-  </div>
+      <div class="footer-bottom">
+        <span>© 2026 Omar Kamal Hosney · Built natively on GitHub Pages</span>
+        <div class="social-row">
+          <a href="https://www.linkedin.com/in/okhosney/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://medium.com/@omkamal" target="_blank" rel="noopener" aria-label="Medium"><i class="fab fa-medium-m"></i></a>
+          <a href="https://github.com/omkamal" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="https://www.youtube.com/channel/UCTLyZbX-h91QEkgz3_Tspwg" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/catalog.js" defer></script>
+  <script src="../assets/site.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const PREVIEW_COUNT = 4;
+      const panels = Array.from(document.querySelectorAll('.course-panel'));
+      const searchInput = document.getElementById('course-search');
+      const toggleAllBtn = document.getElementById('toggle-all-syllabi');
+      let allExpanded = false;
+
+      /* --- Progress Persistence --- */
+      let watched = new Set();
+      try {
+        watched = new Set(JSON.parse(localStorage.getItem('omar-watched-mods') || '[]'));
+      } catch (_) {}
+
+      function saveWatched() {
+        try { localStorage.setItem('omar-watched-mods', JSON.stringify(Array.from(watched))); } catch (_) {}
+      }
+
+      function refreshWatchedUI() {
+        const allRows = document.querySelectorAll('.mod-row');
+        allRows.forEach((row) => {
+          row.classList.toggle('watched', watched.has(row.getAttribute('data-mod-id')));
+        });
+        panels.forEach((p) => {
+          const cid = p.id;
+          const rows = p.querySelectorAll('.mod-row');
+          const done = Array.from(rows).filter((r) => watched.has(r.getAttribute('data-mod-id'))).length;
+          const pill = p.querySelector(`[data-course-prog="${cid}"]`);
+          if (pill) pill.innerHTML = `<i class="fas fa-circle-check" style="color:var(--emerald);margin-right:5px;"></i>${done} / ${rows.length} completed`;
+        });
+        const totalEl = document.getElementById('total-watched-stat');
+        if (totalEl) totalEl.textContent = `${watched.size} / ${allRows.length}`;
+      }
+
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-toggle-watch]');
+        if (!btn) return;
+        const id = btn.getAttribute('data-toggle-watch');
+        if (watched.has(id)) watched.delete(id);
+        else watched.add(id);
+        saveWatched();
+        refreshWatchedUI();
+      });
+
+      /* --- Collapsible Syllabi --- */
+      panels.forEach((panel) => {
+        const rows = Array.from(panel.querySelectorAll('.mod-row'));
+        if (rows.length <= PREVIEW_COUNT + 1) return;
+        panel.dataset.collapsed = 'true';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'expand-syllabus-btn';
+        const extra = rows.length - PREVIEW_COUNT;
+        const syncPanel = () => {
+          const isCollapsed = panel.dataset.collapsed === 'true';
+          rows.forEach((r, idx) => {
+            if (!r.dataset.filteredOut) {
+              r.hidden = isCollapsed && idx >= PREVIEW_COUNT;
+            }
+          });
+          btn.textContent = isCollapsed
+            ? `Show all ${rows.length} lessons (+${extra} more) ↓`
+            : `Collapse module list ↑`;
+        };
+        btn.addEventListener('click', () => {
+          panel.dataset.collapsed = panel.dataset.collapsed === 'true' ? 'false' : 'true';
+          syncPanel();
+        });
+        panel._syncCollapse = syncPanel;
+        panel.appendChild(btn);
+        syncPanel();
+      });
+
+      /* Auto-expand targeted hash course */
+      function expandHashTarget() {
+        if (!location.hash) return;
+        const target = document.querySelector(location.hash);
+        if (target && target._syncCollapse) {
+          target.dataset.collapsed = 'false';
+          target._syncCollapse();
+        }
+      }
+      expandHashTarget();
+      window.addEventListener('hashchange', expandHashTarget);
+
+      toggleAllBtn.addEventListener('click', () => {
+        allExpanded = !allExpanded;
+        panels.forEach((p) => {
+          if (p._syncCollapse) {
+            p.dataset.collapsed = allExpanded ? 'false' : 'true';
+            p._syncCollapse();
+          }
+        });
+        toggleAllBtn.textContent = allExpanded ? 'Collapse Modules' : 'Expand All Modules';
+        toggleAllBtn.classList.toggle('active', allExpanded);
+      });
+
+      /* --- Level Filter & Live Module Search --- */
+      let activeLvl = 'all';
+      function applyFilters() {
+        const q = (searchInput.value || '').trim().toLowerCase();
+        panels.forEach((panel) => {
+          const lvlMatch = activeLvl === 'all' || panel.getAttribute('data-level') === activeLvl;
+          if (!lvlMatch) {
+            panel.hidden = true;
+            return;
+          }
+          const rows = Array.from(panel.querySelectorAll('.mod-row'));
+          const expBtn = panel.querySelector('.expand-syllabus-btn');
+          if (!q) {
+            panel.hidden = false;
+            rows.forEach((r) => { delete r.dataset.filteredOut; });
+            if (expBtn) expBtn.style.display = '';
+            if (panel._syncCollapse) panel._syncCollapse();
+            else rows.forEach((r) => { r.hidden = false; });
+            return;
+          }
+          const courseText = (panel.querySelector('h2').textContent + ' ' + panel.querySelector('.course-intro').textContent).toLowerCase();
+          let anyRow = false;
+          rows.forEach((r) => {
+            const match = r.textContent.toLowerCase().includes(q) || courseText.includes(q);
+            r.hidden = !match;
+            if (!match) r.dataset.filteredOut = '1';
+            else { delete r.dataset.filteredOut; anyRow = true; }
+          });
+          if (expBtn) expBtn.style.display = 'none';
+          panel.hidden = !anyRow;
+        });
+      }
+
+      document.querySelectorAll('[data-lvl-filter]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-lvl-filter]').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeLvl = btn.getAttribute('data-lvl-filter');
+          applyFilters();
+        });
+      });
+      searchInput.addEventListener('input', applyFilters);
+
+      refreshWatchedUI();
+    });
+  </script>
 </body>
 </html>

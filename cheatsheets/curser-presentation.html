@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-root="..">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RT1G8VP79X"></script>
@@ -10,175 +10,263 @@
 
   gtag('config', 'G-RT1G8VP79X');
 </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curser AI Presentation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        .slide {
-            display: none;
-            padding: 20px;
-            text-align: center;
-        }
-        .active {
-            display: block;
-        }
-        .controls {
-            margin-top: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 5px;
-            border: none;
-            background-color: #007BFF;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cursor AI Adoption Briefing Deck — Omar Kamal Hosney</title>
+  <meta name="description" content="9-slide interactive presentation covering Cursor AI capabilities, applications, adoption challenges, and enterprise rollout steps." />
+  <link rel="canonical" href="https://omkamal.github.io/cheatsheets/curser-presentation.html" />
+  <link rel="icon" type="image/jpeg" href="../omar.jpeg" />
+  <script>try{const t=localStorage.getItem('omar-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/site.css" />
+  <style>
+    .deck-shell {
+      min-height: calc(100vh - 72px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 36px 0 64px;
+    }
+    .deck-stage {
+      min-height: 460px;
+      padding: clamp(32px, 5vw, 60px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .slide { display: none; animation: fadeSlide 0.35s var(--ease-out); }
+    .slide.active { display: block; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .slide-num {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+    .slide h1 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.9rem, 3.8vw, 3rem);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .slide ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+    .slide li {
+      padding: 18px 20px;
+      border-radius: var(--radius-md);
+      background: var(--bg-0);
+      border: 1px solid var(--line-strong);
+      border-left: 3px solid var(--cobalt);
+      color: var(--ink-2);
+      font-weight: 600;
+      font-size: 0.96rem;
+    }
+    .deck-controls {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .deck-dots { display: flex; gap: 6px; flex-wrap: wrap; }
+    .deck-dot {
+      width: 20px; height: 6px; border-radius: 999px;
+      background: var(--line-strong); border: none; cursor: pointer;
+      transition: background 0.2s, width 0.2s;
+    }
+    .deck-dot.active { width: 36px; background: var(--gold); }
+  </style>
 </head>
 <body>
-    <a href="https://omkamal.github.io/" target="_blank">Home</a>
+  <div class="ambient-bg" aria-hidden="true"></div>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="ambient-grain" aria-hidden="true"></div>
 
-    <div class="slide active">
-        <h1>Introduction to Curser AI</h1>
+  <header class="site-header">
+    <div class="shell nav-bar">
+      <a href="index.html" class="brand-link">
+        <span class="ok-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span class="brand-text">
+          <span class="brand-name">← All Cheatsheets</span>
+          <span class="brand-role">9-Slide Briefing Deck</span>
+        </span>
+      </a>
+      <div class="nav-actions">
+        <a href="github_copilot.html" class="btn btn-surface btn-sm">Copilot Cheatsheet</a>
+        <a href="../book/ai-transformation-consultant.html" class="btn btn-surface btn-sm">AI Transformation Book</a>
+        <button type="button" class="cmdk-trigger" data-cmdk-open aria-label="Search site">
+          <i class="fas fa-magnifying-glass"></i><kbd>⌘K</kbd>
+        </button>
+        <button type="button" class="icon-btn" data-theme-toggle aria-label="Toggle theme"><i class="fas fa-sun"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell deck-shell">
+    <div class="spot-card deck-stage">
+      <div class="slide active">
+        <div class="slide-num">Slide 01 / 09 · Executive Agenda</div>
+        <h1>Introduction to Cursor AI</h1>
         <ul>
-            <li>What is Curser AI?</li>
-            <li>Key features of Curser AI</li>
-            <li>Applications in various industries</li>
-            <li>Benefits of using Curser AI</li>
-            <li>Future of AI technology</li>
+          <li>What is an AI-native IDE &amp; workflow?</li>
+          <li>Key architectural capabilities</li>
+          <li>Applications across engineering &amp; analytics</li>
+          <li>Measurable productivity &amp; quality benefits</li>
+          <li>Governance &amp; adoption roadmap</li>
         </ul>
-    </div>
+      </div>
 
-    <div class="slide">
-        <h1>Key Features</h1>
+      <div class="slide">
+        <div class="slide-num">Slide 02 / 09 · Capabilities</div>
+        <h1>Key Technical Features</h1>
         <ul>
-            <li>Natural Language Processing</li>
-            <li>Machine Learning Capabilities</li>
-            <li>Real-time Data Analysis</li>
-            <li>User-friendly Interface</li>
-            <li>Integration with existing systems</li>
+          <li>Codebase-wide semantic indexing &amp; retrieval</li>
+          <li>Multi-file Composer &amp; Agentic diff generation</li>
+          <li>Context-aware next-action Tab prediction</li>
+          <li>Inline terminal error &amp; lint resolution</li>
+          <li>Seamless VS Code extension &amp; MCP integration</li>
         </ul>
-    </div>
+      </div>
 
-    <div class="slide">
-        <h1>Applications</h1>
+      <div class="slide">
+        <div class="slide-num">Slide 03 / 09 · Use Cases</div>
+        <h1>Enterprise Applications</h1>
         <ul>
-            <li>Customer Support Automation</li>
-            <li>Data Insights and Reporting</li>
-            <li>Personalized Marketing Strategies</li>
-            <li>Healthcare Diagnostics</li>
-            <li>Financial Forecasting</li>
+          <li>Legacy service refactoring &amp; type migration</li>
+          <li>Automated unit &amp; integration test authoring</li>
+          <li>Data pipeline &amp; SQL analytics acceleration</li>
+          <li>API documentation &amp; schema generation</li>
+          <li>Rapid full-stack prototype delivery</li>
         </ul>
-    </div>
+      </div>
 
-    <div class="slide">
-        <h1>Benefits</h1>
+      <div class="slide">
+        <div class="slide-num">Slide 04 / 09 · Value Drivers</div>
+        <h1>Engineering Benefits</h1>
         <ul>
-            <li>Increased Efficiency</li>
-            <li>Cost Reduction</li>
-            <li>Improved Decision Making</li>
-            <li>Enhanced Customer Experience</li>
-            <li>Scalability of Solutions</li>
+          <li>Faster onboarding onto unfamiliar repositories</li>
+          <li>Reduced boilerplate &amp; repetitive glue code</li>
+          <li>Higher test coverage on edge cases</li>
+          <li>Tighter feedback loops in code review</li>
+          <li>Scalable architectural consistency via rules</li>
         </ul>
-    </div>
+      </div>
 
-    <div class="slide">
-        <h1>Challenges</h1>
+      <div class="slide">
+        <div class="slide-num">Slide 05 / 09 · Risk Management</div>
+        <h1>Adoption Challenges &amp; Guardrails</h1>
         <ul>
-            <li>Data Privacy Concerns</li>
-            <li>Integration Issues</li>
-            <li>High Initial Investment</li>
-            <li>Need for Continuous Learning</li>
-            <li>Dependence on Data Quality</li>
+          <li>Source-code privacy &amp; Zero-Data-Retention mode</li>
+          <li>Subtle logic bugs in unreviewed large diffs</li>
+          <li>License &amp; seat cost management per team</li>
+          <li>Context hygiene &amp; <code>.cursorrules</code> discipline</li>
+          <li>Preventing skill atrophy on core architecture</li>
         </ul>
-    </div>
+      </div>
 
-    <div class="slide">
-        <h1>Future Trends</h1>
+      <div class="slide">
+        <div class="slide-num">Slide 06 / 09 · Horizon</div>
+        <h1>Future Trends in AI Engineering</h1>
         <ul>
-            <li>Advancements in AI Algorithms</li>
-            <li>Increased Automation</li>
-            <li>AI Ethics and Governance</li>
-            <li>Greater Personalization</li>
-            <li>Collaboration between AI and Humans</li>
+          <li>Background cloud agents running PRs &amp; CI</li>
+          <li>Model Context Protocol (MCP) tool ecosystems</li>
+          <li>Deterministic evals &amp; policy-gated merges</li>
+          <li>Repository-specific conventions &amp; memory</li>
+          <li>Human-architect + multi-agent execution</li>
         </ul>
-    </div>
+      </div>
 
-    <div class="slide">
-        <h1>Case Studies</h1>
+      <div class="slide">
+        <div class="slide-num">Slide 07 / 09 · Outcomes</div>
+        <h1>Representative Adoption Patterns</h1>
         <ul>
-            <li>Company A: Improved Customer Retention</li>
-            <li>Company B: Streamlined Operations</li>
-            <li>Company C: Enhanced Product Recommendations</li>
-            <li>Company D: Reduced Operational Costs</li>
-            <li>Company E: Increased Sales through AI</li>
+          <li>Platform Team: Faster monolith-to-FastAPI extraction</li>
+          <li>Data Science: Accelerated feature &amp; test pipelines</li>
+          <li>QA Engineering: Automated Playwright regression suites</li>
+          <li>DevOps: Infrastructure-as-Code &amp; Dockerfile audits</li>
+          <li>Consulting: Rapid client discovery prototypes</li>
         </ul>
-    </div>
+      </div>
 
-    <div class="slide">
-        <h1>Getting Started</h1>
+      <div class="slide">
+        <div class="slide-num">Slide 08 / 09 · Playbook</div>
+        <h1>Getting Started Rollout Plan</h1>
         <ul>
-            <li>Assessing Business Needs</li>
-            <li>Choosing the Right Tools</li>
-            <li>Training Staff on AI Solutions</li>
-            <li>Implementing Pilot Projects</li>
-            <li>Measuring Success and ROI</li>
+          <li>1. Establish privacy mode &amp; security policy</li>
+          <li>2. Configure shared project rules &amp; conventions</li>
+          <li>3. Run a 3-week measured pilot cohort</li>
+          <li>4. Track PR cycle time, review defects &amp; satisfaction</li>
+          <li>5. Codify best practices before org-wide scale</li>
         </ul>
-    </div>
+      </div>
 
-    <div class="slide">
-        <h1>Conclusion</h1>
+      <div class="slide">
+        <div class="slide-num">Slide 09 / 09 · Summary</div>
+        <h1>Key Takeaways</h1>
         <ul>
-            <li>Curser AI is a game changer</li>
-            <li>Potential for growth and innovation</li>
-            <li>Importance of ethical AI use</li>
-            <li>Collaboration is key</li>
-            <li>Stay updated with trends</li>
+          <li>AI-native IDEs amplify disciplined engineering teams</li>
+          <li>Pair small atomic diffs with automated test suites</li>
+          <li>Enforce privacy &amp; human architectural review</li>
+          <li>Invest in team enablement, not just licenses</li>
+          <li>Measure real delivery outcomes over raw lines of code</li>
         </ul>
+      </div>
     </div>
 
-    <div class="controls">
-        <button onclick="prevSlide()">Previous</button>
-        <button onclick="nextSlide()">Next</button>
-        <button onclick="goHome()">Home</button>
+    <div class="deck-controls">
+      <div style="display:flex;gap:10px;">
+        <button type="button" class="btn btn-surface btn-sm" onclick="prevSlide()"><i class="fas fa-arrow-left"></i> Previous</button>
+        <button type="button" class="btn btn-gold btn-sm" onclick="nextSlide()">Next <i class="fas fa-arrow-right"></i></button>
+        <button type="button" class="btn btn-surface btn-sm" onclick="goHome()">Slide 1</button>
+      </div>
+      <div class="deck-dots" id="deck-dots"></div>
+      <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);">Use <kbd>←</kbd> <kbd>→</kbd> or <kbd>Space</kbd></span>
     </div>
+  </main>
 
-    <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
+  <script src="../assets/catalog.js" defer></script>
+  <script src="../assets/site.js" defer></script>
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dotsWrap = document.getElementById('deck-dots');
 
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.classList.toggle('active', i === index);
-            });
-        }
+    slides.forEach((_, idx) => {
+      const d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'deck-dot' + (idx === 0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Go to slide ' + (idx + 1));
+      d.onclick = () => showSlide(idx);
+      dotsWrap.appendChild(d);
+    });
 
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % slides.length;
-            showSlide(currentSlide);
-        }
+    function showSlide(index) {
+      slides.forEach((s, i) => s.classList.toggle('active', i === index));
+      dotsWrap.querySelectorAll('.deck-dot').forEach((d, i) => d.classList.toggle('active', i === index));
+      currentSlide = index;
+    }
+    function nextSlide() { showSlide((currentSlide + 1) % slides.length); }
+    function prevSlide() { showSlide((currentSlide - 1 + slides.length) % slides.length); }
+    function goHome() { showSlide(0); }
 
-        function prevSlide() {
-            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-            showSlide(currentSlide);
-        }
-
-        function goHome() {
-            currentSlide = 0;
-            showSlide(currentSlide);
-        }
-    </script>
-
+    window.addEventListener('keydown', (e) => {
+      if (document.querySelector('.cmdk-backdrop.open')) return;
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'Home') { e.preventDefault(); goHome(); }
+    });
+  </script>
 </body>
 </html>
